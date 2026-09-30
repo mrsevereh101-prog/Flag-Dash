@@ -2642,7 +2642,8 @@ function hostPeer(){return gamePeers().find(p=>p.presence.h)||null;}
 async function initNet(){
   let ns=null;
   try{if(window.claude&&window.claude.use)ns=await window.claude.use('room');}catch(e){ns=null;}
-  if(!ns&&LOCAL_TEST)ns=mockRoom();
+  if(!ns&&LOCAL_TEST&&!/[?&]supa/.test(location.search))ns=mockRoom();
+  if(!ns&&!(window.claude&&window.claude.use)){try{ns=await supaRoom();}catch(e){ns=null;}}
   NET.ns=ns;NET.status=ns?(LOCAL_TEST&&!(window.claude&&window.claude.use)?'local':'ready'):'off';
   renderOnline();
   if(ns){try{ns.onPeers(ch=>{renderOpenRooms();ingestPeers(ch&&ch.peers);if(typeof plaza!=='undefined')plaza.onPeers(ch&&ch.peers);},()=>{});}catch(e){}try{ingestPeers(ns.peers());}catch(e){}pushSocial();if(SET.chat)initChat();}
@@ -2757,6 +2758,44 @@ function mockRoom(){
   setInterval(()=>{for(const r of rooms.values()){r.post();for(const [p,v] of r.peers)if(Date.now()-v.seen>5000){r.peers.delete(p);r.notify([],[p]);}}},1000);
   const lobby=makeRoom('lobby');lobby.hello();
   return Object.assign({},lobby.api,{join(name){if(/nojoin/.test(location.search))return Promise.reject({code:'not_permitted'});const r=rooms.get(name)||makeRoom(name);r.hello();return Promise.resolve(r.api);}});
+}
+
+// Online play outside Claude (e.g. GitHub Pages): the same room API, carried over Supabase Realtime.
+// Presence tracks who is connected; each player's state travels as broadcasts, throttled to 10 per second.
+const SUPA={url:'https://hzzqnwzsasuwjafmsgqh.supabase.co',key:'sb_publishable_qGKTJMIxFDbPRyGFXHskOw_mIC8x1wY',
+  lib:'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js'};
+function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+async function supaRoom(){
+  if(!(window.supabase&&window.supabase.createClient))await loadScript(SUPA.lib);
+  const sb=window.supabase.createClient(SUPA.url,SUPA.key,{auth:{persistSession:false},realtime:{params:{eventsPerSecond:40}}});
+  const me='s'+Math.random().toString(36).slice(2,10);const rooms=new Map();
+  function makeRoom(name){
+    const peers=new Map();let mine={};const hs=new Set(),conns=new Set();let frozen=Object.freeze([]);let up=false,sendT=0,lastSend=0,beat=0;
+    const rebuild=()=>{const arr=[Object.freeze({peer:me,by:null,isMe:true,sameTab:true,kind:'viewer',guest:false,presence:Object.freeze(Object.assign({},mine)),updatedAt:Date.now()})];for(const [p,v] of peers)arr.push(Object.freeze({peer:p,by:null,isMe:false,sameTab:false,kind:'viewer',guest:false,presence:v.presence,updatedAt:v.at}));frozen=Object.freeze(arr);return frozen;};
+    let pending=null;const notify=(joined,left)=>{if(pending){pending.j.push(...joined);pending.l.push(...left);return;}pending={j:joined.slice(),l:left.slice()};setTimeout(()=>{const p=pending;pending=null;const all=rebuild();hs.forEach(h=>{try{h({peers:all,joined:all.filter(x=>p.j.includes(x.peer)),left:p.l.map(id=>({peer:id})),updated:all});}catch(e){}});},0);};
+    const ch=sb.channel('fd:'+name,{config:{broadcast:{self:false},presence:{key:me}}});
+    const send=()=>{if(!up)return;lastSend=Date.now();ch.send({type:'broadcast',event:'p',payload:{peer:me,pres:mine}}).catch(()=>{});};
+    const queue=()=>{if(sendT)return;sendT=setTimeout(()=>{sendT=0;send();},Math.max(0,100-(Date.now()-lastSend)));};
+    // Drop players who left the channel, or whose broadcasts stopped (a closed laptop can linger in presence).
+    const prune=()=>{if(!up)return;const live=ch.presenceState();const gone=[];for(const [p,v] of peers){if(live[p])v.seen=true;else if(v.seen||Date.now()-v.at>4000)gone.push(p);else continue;if(Date.now()-v.at>15000&&!gone.includes(p))gone.push(p);}gone.forEach(p=>peers.delete(p));if(gone.length)notify([],gone);};
+    ch.on('broadcast',{event:'p'},({payload:m})=>{if(!m||typeof m.peer!=='string'||m.peer===me)return;const had=peers.has(m.peer);peers.set(m.peer,{presence:Object.freeze(m.pres&&typeof m.pres==='object'?m.pres:{}),at:Date.now(),seen:had&&peers.get(m.peer).seen});notify(had?[]:[m.peer],[]);});
+    ch.on('presence',{event:'join'},()=>queue());
+    ch.on('presence',{event:'sync'},prune);
+    const ready=new Promise((ok,no)=>{let done=false;const t=setTimeout(()=>{if(!done){done=true;no({code:'upstream_error'});}},10000);
+      ch.subscribe(async st=>{
+        if(st==='SUBSCRIBED'){up=true;try{await ch.track({t:Date.now()});}catch(e){}send();conns.forEach(h=>h(true));if(!done){done=true;clearTimeout(t);ok();}}
+        else if(st==='CHANNEL_ERROR'||st==='TIMED_OUT'||st==='CLOSED'){up=false;conns.forEach(h=>h(false));}
+      });});
+    beat=setInterval(()=>{send();prune();},3000);
+    const api={name,
+      presence(patch){for(const k in patch){if(patch[k]===null||patch[k]===undefined)delete mine[k];else mine[k]=JSON.parse(JSON.stringify(patch[k]));}queue();notify([],[]);return Promise.resolve();},
+      peers(){return frozen;},onPeers(h){hs.add(h);notify([me,...peers.keys()],[]);return ()=>hs.delete(h);},
+      connected(){return up;},onConnection(h){conns.add(h);setTimeout(()=>h(up),0);return ()=>conns.delete(h);},emit(){return Promise.resolve();},on(){return ()=>{};},
+      leave(){clearInterval(beat);clearTimeout(sendT);up=false;rooms.delete(name);try{ch.untrack();}catch(e){}sb.removeChannel(ch);return Promise.resolve();}};
+    rebuild();const r={api,ready};rooms.set(name,r);return r;
+  }
+  const lobby=makeRoom('lobby');await lobby.ready;
+  return Object.assign({},lobby.api,{join(name){const r=rooms.get(name)||makeRoom(name);return r.ready.then(()=>r.api,e=>{r.api.leave();throw e;});}});
 }
 
 /* =========================================================
@@ -3641,7 +3680,7 @@ document.querySelectorAll('.emote-row [data-emote]').forEach(b=>b.onclick=()=>{i
 function setOnlineMsg(t){$('onlineStatus').textContent=t;}
 function renderOnline(){
   const st=NET.status;$('onlineControls').hidden=!(st==='ready'||st==='local');
-  setOnlineMsg(st==='checking'?'Connecting…':st==='off'?'Online play needs this page open on claude.ai while signed in. Offline races still work here.':st==='local'?'Local test mode: open this file in two tabs on this computer to try online play.':'Create a room and share its code, or join a friend. Friends need access to this page to join.');
+  setOnlineMsg(st==='checking'?'Connecting…':st==='off'?'Could not reach the online server. Check your connection and reload. Offline races still work.':st==='local'?'Local test mode: open this file in two tabs on this computer to try online play.':'Create a room and share its code, or join a friend. Friends need access to this page to join.');
   renderOpenRooms();
 }
 function renderOpenRooms(){
