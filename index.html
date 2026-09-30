@@ -1887,7 +1887,7 @@ function makeRunner(e,idx,n,online){
   const owned=isLocal||(!!e.bot&&(!online||NET.isHost));
   const team=isTeamMode(RACE.mode)?clamp(e.tm|0,0,teamCount(RACE.mode)-1):null;
   const x=-5.25+idx*(10.5/Math.max(1,n-1));
-  const nm=e.bot?flag.name:(cleanName(e.nm)||flag.name);
+  const nm=e.bot?(e.nm&&cleanName(e.nm)||flag.name):(cleanName(e.nm)||flag.name);
   const skin=skinById(e.sk);
   const r={id:e.id,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag,char:ch,team,lane:idx+1,skin,lap:1,
     d:0,x,y:0,vx:0,vy:0,speed:0,stun:0,stunKind:'trip',slide:0,boost:0,boostMul:1,phase:0,shield:0,slow:0,leaping:false,flip:0,
@@ -1896,7 +1896,7 @@ function makeRunner(e,idx,n,online){
   r.mods=kind==='local'?myMods():skinMods(skin.id);
   if(RACE.lo&&owned)r.lo=kind==='local'?{atk:wallet.lo.atk,def:wallet.lo.def,usedA:false,usedD:false}:{atk:pick(BOT_LOADOUT.atk),def:pick(BOT_LOADOUT.def),usedA:false,usedD:false};
   const gear=kind==='local'?myGear():(Array.isArray(e.gr)?e.gr.filter(id=>attireById(id)):[]);
-  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(e.bot?flag.code:(e.gt?'['+e.gt+'] ':'')+nm)});
+  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(e.bot?(e.nm?nm:flag.code):(e.gt?'['+e.gt+'] ':'')+nm)});
   scene.add(r.m.root);
   return r;
 }
@@ -3193,6 +3193,11 @@ function evaluateRace(place){
       else notes.push(`Challenge complete: ${ch.name} (reward already claimed)`);
       CHAL.done[ch.id]=true;saveJSON('flagdash-challenges',CHAL);if(rw)giveReward(rw);}
     else notes.push(`Challenge not completed: ${ch.desc} Try again!`);}}
+  // rival duel
+  if(RACE.rival){const rv=rivalById(RACE.rival);if(rv){
+    if(place===1){const first=!RIVAL_WINS[rv.id];const rw=first?rv.rw:RIVAL_REMATCH;RIVAL_WINS[rv.id]=(RIVAL_WINS[rv.id]|0)+1;saveJSON('flagdash-rivals',RIVAL_WINS);giveReward(rw);
+      notes.push(first?`You beat ${rv.nm}! +${rewardText(rw)}`:`You beat ${rv.nm} again. +${rewardText(rw)}`);}
+    else notes.push(`${rv.nm} wins this time. Challenge ${rv.nm} again in the plaza.`);}}
   // leaderboard points
   const pts=(RACE_POINTS[place-1]||2)+(st.online?5:0)+(st.teamWin?5:0);
   if(typeof addRacePoints==='function')addRacePoints(pts,st);
@@ -3751,7 +3756,7 @@ function startOffline(){
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
   GP=null;startRaceFromGo({id:'off'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:selMode,laps:selLaps,lo:loOn,roster:shuffle(roster)},false);
 }
-$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else startOffline();};
+$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline();};
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
@@ -3851,6 +3856,27 @@ const STATIONS=[
   {id:'guild',name:'Guild Hall',sub:'Your team & guild goals',col:0x3fc8f0,a:7},
 ];
 const PZ_R=34,PZ_ST_R=21;
+// Rivals: CPU runners who wait around the plaza for a 1-on-1 race. Each pays out the first time you beat them.
+const RIVAL_TIERS=[{name:'Rookie',skill:0.62,pace:0.95,col:'#5fd08a'},{name:'Pro',skill:0.86,pace:1.0,col:'#4fa3ff'},{name:'Champion',skill:0.97,pace:1.05,col:'#f2b631'}];
+const RIVALS=[
+  {id:'tomas',nm:'Tomas',cc:'MEX',ch:'dwarf',sk:'rookie',tier:0,trk:'stadium',rw:{c:60},k:0},
+  {id:'aiko',nm:'Aiko',cc:'JPN',ch:'samurai',sk:'frost',tier:0,trk:'city',rw:{c:80},k:2},
+  {id:'wanjiru',nm:'Wanjiru',cc:'KEN',ch:'elf',sk:'jungle',tier:1,trk:'sahara',rw:{c:150},k:3},
+  {id:'luca',nm:'Luca',cc:'ITA',ch:'warrior',sk:'crimson',tier:1,trk:'paris',rw:{c:180},k:5},
+  {id:'shelly',nm:'Shelly',cc:'JAM',ch:'archer',sk:'shadow',tier:2,trk:'coast',rw:{c:250,g:2},k:6},
+];
+const RIVAL_REMATCH={c:20};
+const rivalById=id=>RIVALS.find(r=>r.id===id);
+let RIVAL_WINS=loadJSON('flagdash-rivals',{});
+function startRival(rv){
+  if(!rv)return;const t=RIVAL_TIERS[rv.tier];
+  const roster=shuffle([{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin},{id:'rv',bot:true,nm:rv.nm,cc:rv.cc,ch:rv.ch,tm:0,sk:rv.sk}]);
+  GP=null;initAudio();
+  startRaceFromGo({id:'rv'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:rv.trk,mode:'solo',laps:1,lo:true,roster},false);
+  RACE.rival=rv.id;
+  RACE.bots.forEach(b=>{b.ai.skill=t.skill;b.ai.pace=t.pace;});
+  $('trackLabel').textContent=`${t.name} duel · ${rv.nm}`;
+}
 const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(Math.cos(1.178)*13,0,Math.sin(1.178)*13),ry:Math.atan2(-Math.cos(1.178),-Math.sin(1.178)),vel:0,zoom:1,goal:null,goalSt:null,camYaw:Math.atan2(-Math.cos(1.178),-Math.sin(1.178))+Math.PI,keys:{},stick:null,near:null,
   others:new Map(),sendT:0,lastSent:'',saved:null,emoteN:0,
   build(){
@@ -3891,6 +3917,11 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       const sign=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(512,150,(c,w,h)=>{c.fillStyle='rgba(14,18,48,.92)';c.fillRect(0,0,w,h);R(c,0,0,w,10,hex);c.fillStyle='#fff';c.font='52px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(s.name,w/2,62);c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.fillText(s.sub,w/2,118);}),depthWrite:false}));
       sign.scale.set(4.2,1.23,1);sign.position.set(0,s.tower?10:6,-0.4);b.add(sign);
       b.updateMatrixWorld(true);const wp=new THREE.Vector3();pad.getWorldPosition(wp);const core=b.localToWorld(new THREE.Vector3(0,0,-1.6));return {s,b,pad,pos:wp,core,badge:null};});
+    // rivals waiting between the booths
+    this.rivals=RIVALS.map(rv=>{const a=(rv.k+0.5)/STATIONS.length*TAU+Math.PI/2,x=Math.cos(a)*15.5,z=Math.sin(a)*15.5;
+      const r=fakeRunner();r.pose=null;r.m=buildModel(flagCanvas(rv.cc),rv.ch,{skin:skinById(rv.sk),tag:rv.nm});r.m.root.position.set(x,0,z);g.add(r.m.root);
+      const ry=Math.atan2(-x,-z);const o={rival:rv,r,x,z,ry,baseRy:ry,emoteT:rand(3,9),pos:new THREE.Vector3(x+Math.sin(ry)*1.5,0,z+Math.cos(ry)*1.5),sign:null};
+      this.drawRivalSign(o);return o;});
     // palms, lamps and benches around the edge
     const palms=[];for(let i=0;i<16;i++){const a=(i+0.5)/16*TAU,r=PZ_R+rand(3,9);palms.push({m:mtx(Math.cos(a)*r,0,Math.sin(a)*r,0,rand(0,TAU),0,rand(0.9,1.3))});}
     g.add(instanced(palmGeo(),vc,palms));
@@ -3899,8 +3930,15 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     this.sky=skyTexture(['#2a6db8','#8cc3e6','#f6e3c0']);
     this.built=true;
   },
+  drawRivalSign(o){const rv=o.rival,t=RIVAL_TIERS[rv.tier],won=RIVAL_WINS[rv.id]|0;
+    const tex=canvasTex(512,130,(c,w,h)=>{c.fillStyle='rgba(14,18,48,.92)';c.fillRect(0,0,w,h);R(c,0,0,w,10,t.col);c.textAlign='center';c.textBaseline='middle';
+      c.fillStyle=t.col;c.font='44px Bungee, Impact, sans-serif';c.fillText(t.name.toUpperCase(),w/2,52);
+      c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.fillText(won?`Beaten ${won}\u00d7 \u00b7 wants a rematch`:'Waiting for a challenge',w/2,102);});
+    if(o.sign){o.sign.material.map.dispose();o.sign.material.map=tex;o.sign.material.needsUpdate=true;}
+    else{o.sign=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthWrite:false,transparent:true}));o.sign.scale.set(2.6,0.66,1);o.sign.position.y=3.85;o.r.m.root.add(o.sign);}},
   enter(){
     if(!this.built)this.build();
+    if(this.rivals)this.rivals.forEach(o=>this.drawRivalSign(o));
     if(this.active)return;this.active=true;
     // swap the race world out and the plaza in
     this.saved={bg:scene.background,fog:scene.fog,hc:hemi.color.getHex(),hg:hemi.groundColor.getHex(),hi:hemi.intensity,si:sun.intensity,far:camera.far};
@@ -3925,8 +3963,9 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
   // tap or click: a booth walks you to it and opens it, a player opens their chat menu, the ground walks you there
   pick(cx,cy){if(this.blocked())return;const rc=this._rc||(this._rc=new THREE.Raycaster());const b=renderer.domElement.getBoundingClientRect();
     rc.setFromCamera({x:(cx-b.left)/b.width*2-1,y:-(cy-b.top)/b.height*2+1},camera);
-    const hits=rc.intersectObjects([...this.st.map(o=>o.b),...[...this.others.values()].map(o=>o.r.m.root)],true);
+    const hits=rc.intersectObjects([...this.st.map(o=>o.b),...this.rivals.map(o=>o.r.m.root),...[...this.others.values()].map(o=>o.r.m.root)],true);
     for(const h of hits){let n=h.object;while(n&&n.parent!==this.group)n=n.parent;const st=this.st.find(o=>o.b===n);if(st){this.setGoal(st.pos.x,st.pos.z,st);return;}
+      const rv=this.rivals.find(o=>o.r.m.root===n);if(rv){this.setGoal(rv.pos.x,rv.pos.z,rv);return;}
       for(const [peer,o] of this.others)if(o.r.m.root===n){const info=[...ONLINE.values()].find(x=>x.peer===peer);if(info){openChat('w');playerPop(info.pid);}return;}}
     const ray=rc.ray;if(ray.direction.y>=-0.01)return;const t=-ray.origin.y/ray.direction.y;const x=ray.origin.x+ray.direction.x*t,z=ray.origin.z+ray.direction.z*t;
     if(Math.hypot(x,z)>PZ_R+6)return;this.setGoal(x,z,null);},
@@ -3956,7 +3995,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     const p=this.pos;p.x+=Math.sin(this.ry)*this.vel*dt;p.z+=Math.cos(this.ry)*this.vel*dt;
     // stay on the plaza, out of the fountain and the booths
     const push=(cx,cz,rad)=>{const dx=p.x-cx,dz=p.z-cz,d=Math.hypot(dx,dz);if(d<rad&&d>0.001){p.x=cx+dx/d*rad;p.z=cz+dz/d*rad;}};
-    push(0,0,5.8);this.st.forEach(o=>push(o.core.x,o.core.z,o.s.tower?2.6:3.1));
+    push(0,0,5.8);this.st.forEach(o=>push(o.core.x,o.core.z,o.s.tower?2.6:3.1));this.rivals.forEach(o=>push(o.x,o.z,1));
     const dd=Math.hypot(p.x,p.z);if(dd>PZ_R){p.x*=PZ_R/dd;p.z*=PZ_R/dd;}
     r.speed=this.vel*2.2;r.m.root.position.set(p.x,0,p.z);r.m.root.rotation.y=this.ry+Math.PI;poseRunner(r,dt,now);
     // camera: follows behind, swings slowly round to where you run
@@ -3970,8 +4009,13 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     this.trophy.rotation.y+=dt*0.8;this.flags.forEach((f,i)=>{f.rotation.y+=Math.sin(now*0.004+i)*0.004;});
     if(Math.random()<0.6)emit(PA,{x:rand(-0.5,0.5),y:3.4,z:rand(-0.5,0.5),vx:rand(-2,2),vy:rand(2,4),vz:rand(-2,2),life:0.8,size:0.18,c:[0.7,0.9,1],a:0.7,grav:9});
     this.st.forEach((o,i)=>{o.pad.material.opacity=0.55+0.35*Math.sin(now*0.004+i);});
-    // nearest booth
+    // rivals: stretch and emote, and turn to face you when you come close
+    this.rivals.forEach(o=>{const d=Math.hypot(p.x-o.x,p.z-o.z);const want=d<9?Math.atan2(p.x-o.x,p.z-o.z):o.baseRy;let dr=want-o.ry;while(dr>Math.PI)dr-=TAU;while(dr<-Math.PI)dr+=TAU;o.ry+=dr*Math.min(1,dt*4);
+      o.emoteT-=dt;if(o.emoteT<=0){o.emoteT=rand(5,11);o.r.emote={id:d<9?'wave':pick(EMOTES),t:1.8};}
+      o.r.speed=0;o.r.m.root.rotation.y=o.ry+Math.PI;poseRunner(o.r,dt,now);});
+    // nearest booth or rival
     let near=null,best=3.2;this.st.forEach(o=>{const d=Math.hypot(o.pos.x-p.x,o.pos.z-p.z);if(d<best){best=d;near=o;}});
+    this.rivals.forEach(o=>{const d=Math.hypot(o.x-p.x,o.z-p.z);if(d<2.8&&d<best+1){best=d;near=o;}});
     if(near!==this.near){this.near=near;this.refreshHud();}
     // other players
     this.others.forEach(o=>{const k=Math.min(1,dt*8);o.p.x+=(o.t.x-o.p.x)*k;o.p.z+=(o.t.z-o.p.z)*k;let d=o.t.ry-o.ry;while(d>Math.PI)d-=TAU;while(d<-Math.PI)d+=TAU;o.ry+=d*k;
@@ -3992,11 +4036,11 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       if(z.e!==o.e){o.e=z.e;o.r.emote={id:pick(EMOTES),t:1.8};}});
     this.others.forEach((o,peer)=>{if(!seen.has(peer)){this.group.remove(o.r.m.root);disposeModel(o.r.m);this.others.delete(peer);}});
     const n=this.others.size;const el=$('pzOnline');if(el)el.textContent=n?`${n} other player${n>1?'s':''} here`:'';},
-  refreshHud(){const o=this.near;const b=$('pzAct');b.hidden=!o;if(o){b.textContent=(isTouch?'':'E · ')+'Enter '+o.s.name;b.style.setProperty('--sc','#'+o.s.col.toString(16).padStart(6,'0'));}
-    $('pzHint').textContent=o?o.s.sub:(isTouch?'Tap anywhere to walk there, or tap a booth to open it. Pinch to zoom.':'Click to walk there, or click a booth to open it. WASD to walk, scroll to zoom, 1\u20134 emotes.');
+  refreshHud(){const o=this.near;const b=$('pzAct');b.hidden=!o;if(o&&o.rival){b.textContent=(isTouch?'':'E · ')+'Challenge '+o.rival.nm;b.style.setProperty('--sc',RIVAL_TIERS[o.rival.tier].col);}else if(o){b.textContent=(isTouch?'':'E · ')+'Enter '+o.s.name;b.style.setProperty('--sc','#'+o.s.col.toString(16).padStart(6,'0'));}
+    $('pzHint').textContent=o&&o.rival?`${RIVAL_TIERS[o.rival.tier].name} \u00b7 1-on-1 at ${themeById(o.rival.trk).name} \u00b7 ${RIVAL_WINS[o.rival.id]?'Win: +'+rewardText(RIVAL_REMATCH):'First win: +'+rewardText(o.rival.rw)}`:o?o.s.sub:(isTouch?'Tap anywhere to walk there, or tap a booth to open it. Pinch to zoom.':'Click to walk there, or click a booth to open it. WASD to walk, scroll to zoom, 1\u20134 emotes.');
     $('pzName').textContent=(GUILD?'['+GUILD.tag+'] ':'')+myName;renderWallet();
     const n=dailyReady();$('pzTasks').textContent=n?`${n} reward${n>1?'s':''} ready at the Task Board`:'';},
-  act(){const o=this.near;if(!o||this.blocked())return;const id=o.s.id;sfx.pop();
+  act(){const o=this.near;if(!o||this.blocked())return;sfx.pop();if(o.rival){leavePlaza();startRival(o.rival);return;}const id=o.s.id;
     if(id==='desk'||id==='online'){goDesk(id==='online');}
     else if(id==='start'){initAudio();leavePlaza();startOffline();}
     else if(id==='gp'){initAudio();leavePlaza();startGP();}
