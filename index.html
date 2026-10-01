@@ -587,7 +587,7 @@ body:not(.touch) .pz-stick{opacity:.55}
       <div class="lobby-players"><h3>Runners <span id="pCount"></span></h3><ul id="playerList"></ul><p class="muted" id="lobbyNote" style="margin-top:12px"></p></div>
       <div class="lobby-side">
         <div><h3>Track</h3><div class="mini-tracks" id="lobbyTracks"></div></div>
-        <div><h3>Mode</h3><div class="seg" id="lobbyMode" role="group" aria-label="Mode"><button data-mode="solo">Solo</button><button data-mode="teams">3 v 3</button><button data-mode="trio">2 v 2 v 2</button></div></div>
+        <div><h3>Mode</h3><div class="seg" id="lobbyMode" role="group" aria-label="Mode"><button data-mode="solo">Solo</button><button data-mode="teams">3 v 3</button><button data-mode="trio">2 v 2 v 2</button><button data-mode="fc">Flag Challenge</button></div></div>
         <div><h3>Laps</h3><div class="seg" id="lobbyLaps" role="group" aria-label="Laps"><button data-laps="1">1</button><button data-laps="2">2</button><button data-laps="3">3</button></div></div>
         <div id="teamBlock"><h3>Your team</h3><div class="seg team-seg" id="teamSeg" role="group" aria-label="Team"><button data-team="0">Gold</button><button data-team="1">Blue</button><button data-team="2">Green</button></div></div>
         <label class="check"><input type="checkbox" id="botsToggle" checked> Fill empty lanes with CPU runners</label>
@@ -2080,7 +2080,7 @@ function startFlagChallenge(){
 function fcInit(){
   RACE.fc={next:FC_ROUND,round:1,stole:0,lost:0};
   runners.forEach(r=>{r.flags=FC_START;r.fcImm=0;r.fcCd=0;r.out=false;r.outRound=0;});
-  $('fcHud').hidden=false;
+  $('fcHud').hidden=false;$('trackLabel').textContent='Flag Challenge · '+TH.name;
   feed('Flag Challenge! Catch rivals from behind to steal flags. Fewest flags when the clock hits 0 is out.','gold');
   fcHud(true);
 }
@@ -2095,16 +2095,29 @@ function fcSteal(th,vi){
 function fcEliminate(){
   const fc=RACE.fc,cand=fcAlive().filter(r=>!r.finished);if(!cand.length)return;
   // fewest flags is out; a tie goes against whoever is furthest behind
-  cand.sort((a,b)=>a.flags-b.flags||prog(a)-prog(b));const r=cand[0];
-  r.out=true;r.outRound=fc.round;r.finished=true;r.time=raceTime;r.item=null;r.speed=0;
+  cand.sort((a,b)=>a.flags-b.flags||prog(a)-prog(b));fcOut(cand[0],fc.round);
+}
+function fcOut(r,round){
+  r.out=true;r.outRound=round;if(!r.finished){r.finished=true;r.time=raceTime;}r.item=null;r.speed=0;
   const p=wpos(r,1.5);burst(p.x,p.y,p.z,24,[1,0.35,0.25],{max:6,up:5,grav:8,size:0.3});
   showBanner('ELIMINATED',`${r===player?'You are':r.nm+' is'} out with ${r.flags} flag${r.flags===1?'':'s'}`,[1,0.35,0.2]);
-  if(r===player){state='finished';resultsT=2.6;music.stop(0.5);music.sting(MUS.lose);feed('You are out of the Flag Challenge','bad');}
+  if(r===player&&state==='race'){state='finished';resultsT=2.6;music.stop(0.5);music.sting(MUS.lose);feed('You are out of the Flag Challenge','bad');}
   else feed(`${r.nm} is out with ${r.flags} flag${r.flags===1?'':'s'}`,'');
   computeRanks();
 }
+// Online, the host referees: it sends everyone's flags, who is out and the clock, and the others apply it.
+function fcPack(){const fc=RACE.fc,f={},o={};runners.forEach(r=>{f[r.id]=r.flags;if(r.out)o[r.id]=r.outRound;});return {f,o,n:Math.round(fc.next*10)/10,r:fc.round};}
+function fcApply(pk){
+  const fc=RACE.fc;if(!fc||!pk.f||typeof pk.f!=='object')return;
+  for(const r of runners){const nf=pk.f[r.id];if(!Number.isFinite(nf)||nf===r.flags)continue;
+    if(r===player){if(nf>r.flags){fc.stole+=nf-r.flags;sfx.pick();feed(`You stole a flag! (${nf})`,'good');}else{fc.lost+=r.flags-nf;sfx.beep(false);feed(`A rival stole one of your flags (${nf} left)`,'bad');}}
+    r.flags=clamp(nf|0,0,99);}
+  if(pk.o&&typeof pk.o==='object')for(const r of runners)if(!r.out&&Number.isFinite(pk.o[r.id]))fcOut(r,pk.o[r.id]|0);
+  if(Number.isFinite(pk.n))fc.next=pk.n;if(Number.isFinite(pk.r))fc.round=pk.r|0;
+}
 function fcUpdate(dt){
   const fc=RACE.fc;if(!fc)return;
+  if(RACE.online&&!NET.isHost){fc.next=Math.max(0,fc.next-dt);fcHud();return;}
   for(const r of runners){r.fcImm=Math.max(0,r.fcImm-dt);r.fcCd=Math.max(0,r.fcCd-dt);}
   // contact from behind steals a flag (not in the first seconds, while everyone is bunched at the start)
   if(raceTime>FC_GRACE)for(let i=0;i<runners.length;i++)for(let j=i+1;j<runners.length;j++){
@@ -2112,7 +2125,7 @@ function fcUpdate(dt){
     const dz=prog(a)-prog(b);if(Math.abs(dz)>1.3||Math.abs(a.x-b.x)>1.05||Math.abs(a.y-b.y)>1.2)continue;
     const th=dz<0?a:b,vi=th===a?b:a;if(th.fcCd>0||vi.fcImm>0||vi.flags<=0)continue;fcSteal(th,vi);}
   // elimination clock, until only FC_KEEP runners are left
-  if(state==='race'||state==='finished'){
+  if(state==='race'||state==='finished'||(state==='results'&&RACE.online)){
     if(fcAlive().filter(r=>!r.finished).length&&fcAlive().length>FC_KEEP){const before=Math.ceil(fc.next);fc.next-=dt;
       if(Math.ceil(fc.next)!==before&&fc.next<=3&&fc.next>0&&!player.out&&!player.finished)sfx.beep(false);
       if(fc.next<=0){fcEliminate();fc.round++;fc.next=FC_ROUND;}}
@@ -2159,7 +2172,7 @@ function showFlagResults(){
   if(!RACE.fcPaid){RACE.fcPaid=true;RACE.fcCoins=player.flags*FC_FLAG_COINS;wallet.coins+=RACE.fcCoins;saveWallet();}
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon+RACE.fcCoins,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(rank)} place, ${RACE.fcCoins} for the ${player.flags} flag${player.flags===1?'':'s'} you carried${rw.extra?`, ${rw.extra} from coin bonuses`:''}${rank===1?', 1 diamond for the win':''})</span>`;
   {const notes=evaluateRace(rank);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
-  $('againBtn').textContent='Play again';$('changeBtn').textContent='Change setup';
+  $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 
@@ -2804,6 +2817,7 @@ function electHost(){
 function handlePeer(peer,pr){
   if(pr.h&&pr.go&&typeof pr.go==='object'&&pr.go.id&&String(pr.go.id)!==NET.goId&&!(state==='countdown'||state==='race'||state==='finished'||state==='paused'))onGo(pr.go);
   if(RACE&&RACE.online&&pr.rid===RACE.id){
+    if(pr.h&&RACE.fc&&!NET.isHost&&pr.fc&&typeof pr.fc==='object')fcApply(pr.fc);
     const r=runnerById('p:'+peer);if(r&&!r.owned)applyNet(r,pr.s,pr.fin);
     if(pr.h&&Array.isArray(pr.bots))pr.bots.forEach((b,i)=>{const bot=RACE.bots[i];if(bot&&!bot.owned&&Array.isArray(b))applyNet(bot,b,b[6]);});
     if(Array.isArray(pr.acts))for(const a of pr.acts){if(!a||typeof a!=='object'||a.rid!==RACE.id||!(a.n>(NET.lastSeq.get(peer)||0)))continue;NET.lastSeq.set(peer,a.n);const src=runnerById(a.src);if(src&&(!src.owned||a.t==='say'))handleAct(src,a);}
@@ -2814,21 +2828,22 @@ function onGo(go){
   if(!Array.isArray(go.roster)||!go.roster.length)return;
   const roster=go.roster.slice(0,8).map(e=>({id:String(e.id||''),peer:e.peer?String(e.peer):null,bot:!!e.bot,nm:cleanName(e.nm),cc:COUNTRY_CODES.has(e.cc)?e.cc:'USA',ch:CHAR_IDS.includes(e.ch)?e.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===e.sk)?e.sk:'classic',gr:Array.isArray(e.gr)?e.gr.slice(0,2):[],gt:cleanTag(e.gt),tm:clamp(e.tm|0,0,2)}));
   if(!roster.some(e=>e.peer===NET.myPeer)){$('lobbyHint').textContent='A race started without you. You will be in the next one.';return;}
-  startRaceFromGo({id:go.id,seed:go.seed,trk:go.trk,mode:go.mode,laps:go.laps,lo:go.lo!==false,tn:go.tn,gb:!!go.gb,roster},true);
+  startRaceFromGo({id:go.id,seed:go.seed,trk:go.trk,mode:go.mode,fc:!!go.fc,laps:go.laps,lo:go.lo!==false,tn:go.tn,gb:!!go.gb,roster},true);
 }
 function hostStart(){
   if(!NET.isHost||!NET.game)return;
+  const fc=NET.cfg.mode==='fc',mode=fc?'solo':NET.cfg.mode;
   const ps=gamePeers().slice(0,8);
   const roster=ps.map(p=>({id:'p:'+p.peer,peer:p.peer,nm:cleanName(p.presence.nm),cc:COUNTRY_CODES.has(p.presence.cc)?p.presence.cc:'USA',ch:CHAR_IDS.includes(p.presence.ch)?p.presence.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===p.presence.sk)?p.presence.sk:'classic',gr:Array.isArray(p.presence.gr)?p.presence.gr.slice(0,2):[],gt:cleanTag(p.presence.gt),gid:typeof p.presence.gid==='string'?p.presence.gid.slice(0,16):null,tm:clamp(p.presence.tm|0,0,2)}));
   let tn=null;
-  if(NET.cfg.gb&&isTeamMode(NET.cfg.mode)){const nT=teamCount(NET.cfg.mode);const cnt=new Map();roster.forEach(e=>{if(e.gid)cnt.set(e.gid,(cnt.get(e.gid)||0)+1);});
+  if(NET.cfg.gb&&isTeamMode(mode)){const nT=teamCount(mode);const cnt=new Map();roster.forEach(e=>{if(e.gid)cnt.set(e.gid,(cnt.get(e.gid)||0)+1);});
     const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,nT).map(x=>x[0]);tn=[];
     top.forEach((g,t)=>{tn[t]=(roster.find(e=>e.gid===g)||{}).gt||TEAMS[t].name;});
     roster.forEach(e=>{const t=top.indexOf(e.gid);if(t>=0)e.tm=t;else{const c=[0,1,2].slice(0,nT).map(k=>roster.filter(x=>x!==e&&x.tm===k&&top.indexOf(x.gid)===k).length);e.tm=c.indexOf(Math.min(...c));}});
     for(let t=0;t<nT;t++)if(!tn[t])tn[t]=TEAMS[t].name;}
   if(NET.cfg.bots){const used=new Set(roster.map(e=>e.cc));const pool=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>!used.has(c)));let i=0;
-    const nT=teamCount(NET.cfg.mode);while(roster.length<6){const cnt=[0,1,2].slice(0,nT).map(t=>roster.filter(e=>e.tm===t).length);const tm=cnt.indexOf(Math.min(...cnt));roster.push({id:'b'+i,bot:true,cc:pool[i],ch:pick(CHAR_IDS),sk:pick(BOT_SKINS),tm,nm:''});i++;}}
-  const go={tn,gb:!!tn,id:'g'+Date.now().toString(36)+Math.floor(Math.random()*1e4),seed:Math.floor(Math.random()*1e9),trk:NET.cfg.trk,mode:NET.cfg.mode,laps:clamp(NET.cfg.laps|0,1,3)||1,lo:NET.cfg.lo!==false,roster:shuffle(roster)};
+    const nT=teamCount(mode);while(roster.length<6){const cnt=[0,1,2].slice(0,nT).map(t=>roster.filter(e=>e.tm===t).length);const tm=cnt.indexOf(Math.min(...cnt));roster.push({id:'b'+i,bot:true,cc:pool[i],ch:pick(CHAR_IDS),sk:pick(BOT_SKINS),tm,nm:''});i++;}}
+  const go={tn,gb:!!tn,id:'g'+Date.now().toString(36)+Math.floor(Math.random()*1e4),seed:Math.floor(Math.random()*1e9),trk:NET.cfg.trk,mode,fc,laps:clamp(NET.cfg.laps|0,1,3)||1,lo:NET.cfg.lo!==false,roster:shuffle(roster)};
   NET.goId=go.id;pushPresence({go,rdy:false});NET.me.rdy=false;
   startRaceFromGo(go,true);
 }
@@ -2838,6 +2853,7 @@ function sendState(){
   if(!RACE||!RACE.online||!NET.game)return;
   const patch={rid:RACE.id,s:netState(player),fin:player.finished?Math.round(player.time*1000)/1000:null};
   if(NET.isHost)patch.bots=RACE.bots.map(b=>netState(b).concat([b.finished?Math.round(b.time*1000)/1000:null]));
+  if(NET.isHost&&RACE.fc)patch.fc=fcPack();
   pushPresence(patch);
 }
 function applyNet(r,s,fin){
@@ -3856,7 +3872,7 @@ function renderLobby(){
     li.append(im,mid,bd);list.appendChild(li);});
   $('pCount').textContent=`(${ps.length}/8)`;
   $('lobbyTracks').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.id===trk);b.disabled=!NET.isHost;});
-  $('lobbyMode').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.mode===mode);b.disabled=!NET.isHost;});
+  $('lobbyMode').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',cfg.mode==='fc'?b.dataset.mode==='fc':b.dataset.mode===mode);b.disabled=!NET.isHost;});
   $('lobbyLaps').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',+b.dataset.laps===(clamp(cfg.laps|0,1,3)||1));b.disabled=!NET.isHost;});
   $('teamBlock').hidden=!isTeamMode(mode);if(NET.me.tm>=teamCount(mode))NET.me.tm=0;$('teamSeg').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',+b.dataset.team===NET.me.tm);b.hidden=+b.dataset.team>=teamCount(mode);});
   $('botsToggle').checked=bots;$('botsToggle').disabled=!NET.isHost;$('loLobby').checked=cfg.lo!==false;$('loLobby').disabled=!NET.isHost;$('gbWrap').hidden=!isTeamMode(mode);$('gbToggle').checked=!!cfg.gb;$('gbToggle').disabled=!NET.isHost;
@@ -3874,7 +3890,7 @@ function startOffline(){
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
   GP=null;startRaceFromGo({id:'off'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:selMode,laps:selLaps,lo:loOn,roster:shuffle(roster)},false);
 }
-$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline();};
+$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline();};
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
@@ -4258,6 +4274,7 @@ function tick(now){
   }else if(state==='results'){
     raceTime+=dt;
     for(const r of runners){if(r.owned){if(!r.finished||r.speed>0.1)stepRunner(r,dt);}else updateRemote(r,dt);}
+    if(RACE.fc&&RACE.online&&NET.isHost)fcUpdate(dt);
     updateWorldFx(dt,now);for(const r of runners)placeModel(r,dt,now);if(RACE.fc)runners.forEach(r=>{if(r.out)r.m.root.visible=false;});
     if(RACE.online){NET.sendT-=dt;if(NET.sendT<=0){NET.sendT=0.1;sendState();}}
     resSigT-=dt;if(resSigT<=0){resSigT=0.5;const sig=resultRows().map(x=>x.r.id+(x.est?'e':'f')).join('|');if(sig!==NET.resultsSig)renderResults();}
