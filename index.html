@@ -1,4 +1,220 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+#layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
+body.layout-edit #hud,body.layout-edit #touch{z-index:90}
+body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
+body.layout-edit .lay-piece.lay-sel{outline:3px solid var(--gold)}
+body.layout-edit #swipeHint{opacity:1}
+#layBar{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%);z-index:95;display:grid;gap:8px;width:min(330px,calc(100vw - 24px));background:var(--panel-solid);border:1px solid var(--gold);border-radius:14px;padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5);touch-action:none}
+#layBar .lay-grip{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;cursor:move;padding:2px 0}
+#layBar .lay-sel-name{font-weight:700;text-align:center;min-height:1.2em}
+#layBar .lay-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#layBar button{min-width:44px;min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--night-2);font-weight:700;padding:6px 12px}
+body.layout-desk .lay-piece{outline-offset:1px}
+#layBar.lay-bottom{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%)}
+.desk-top{display:flex;gap:8px;align-items:stretch}.desk-top .brand-back{flex:1}#deskEdit{width:48px;flex:none;font-size:18px;margin-bottom:8px}
+#layBar button.primary{background:var(--gold);color:#1a1405;border-color:var(--gold)}
+
+/* borders around Race Desk options and settings */
+#menu .field,#menu .emote-row,#menu .mode-wrap,#menu #lapSeg,#playChoices > .play-block,#settings .set-row{border:1.5px solid rgba(242,182,49,.45);border-radius:12px;background:rgba(10,14,34,.35)}
+#menu .field,#menu .emote-row,#settings .set-row{padding:10px 12px}
+#playChoices > .play-block{padding:14px}
+#playChoices > .play-block + .play-block{border-top:1.5px solid rgba(242,182,49,.45);margin-top:14px;padding-top:14px}
+#menu .mode-wrap{display:grid;gap:8px;padding:8px;width:max-content;max-width:100%}
+#menu .mode-wrap .seg{border:0}
+#menu .team-sub{border:1px solid var(--line)!important;justify-self:start}
+#menu .team-sub button{padding:10px 16px}
+#settings .set-body{display:grid;gap:8px}
+
+/* ---------- Race Desk v2: two columns ---------- */
+.desk2{grid-template-columns:minmax(0,760px)!important;justify-content:center}
+.desk2 .desk-top{justify-content:space-between}.desk2 .desk-top .brand-back{flex:none;width:auto;padding:8px 14px;font-size:18px;margin-bottom:0}.desk2 #deskEdit{margin-bottom:0}
+.desk-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:start;padding:10px}
+.dcol{display:grid;gap:10px;min-width:0;align-content:start}
+.desk2 .field,.desk2 .emote-row,.desk2 .pick-row{margin-top:0}
+.desk2 .preview-wrap{margin:0;border:1.5px solid rgba(242,182,49,.45);border-radius:12px;overflow:hidden}
+.desk2 #preview{height:clamp(200px,48vw,320px)}
+.cpu-btns{display:grid;gap:10px}
+.cpu-btns .ghost{border:1.5px solid rgba(242,182,49,.45);border-radius:12px}
+.desk2 .sum-row{border:2px solid var(--gold);border-radius:10px;padding:0;gap:10px;overflow:hidden;background:rgba(10,14,34,.35)}
+.desk2 .sum-row img{width:64px;height:44px;border-radius:0;box-shadow:none}
+.desk2 .sum-country{font-size:16px;text-transform:uppercase}.desk2 .sum-char{font-size:12px}
+.desk2 .pick-row{gap:6px;padding:4px;border:1.5px solid rgba(242,182,49,.45);border-radius:12px}
+.desk2 .pick-btn{padding:8px 10px}.desk2 .pick-btn b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.desk2 .emote-row{justify-content:center;padding:8px}
+.desk2 #playChoices{display:grid;gap:12px}
+.desk2 #playChoices > .play-block + .play-block{margin-top:0}
+.desk2 .offline-block{border:0!important;background:transparent!important;padding:0!important;gap:10px}
+.desk2 #offTitle{border:1.5px solid rgba(242,182,49,.45);border-radius:12px;padding:8px 10px;background:rgba(10,14,34,.35)}
+.desk2 #lapSeg,.desk2 .mode-wrap{width:100%;box-sizing:border-box}
+.desk2 #lapSeg{display:flex}.desk2 #lapSeg button{flex:1;font-size:16px;padding:10px 6px}
+.desk2 .mode-wrap #modeSeg{display:flex}.desk2 #modeSeg button{flex:1;font-size:16px;padding:10px 6px}
+.desk2 .online-block h2,.desk2 #offTitle h2{font-size:18px}
+.desk2 .join-row input{width:100%;min-width:0}.desk2 .join-row{display:grid;grid-template-columns:1fr auto}
+@media (max-width:480px){
+  .desk-grid{gap:8px;padding:8px}
+  .desk2 .pick-btn span{font-size:9px}.desk2 .pick-btn b{font-size:12.5px}.desk2 .pick-btn{padding:6px 8px}
+  .desk2 .chip-btn{padding:5px 9px;font-size:12px}
+  .desk2 .cpu-btns .ghost{font-size:12.5px;padding:10px 6px}
+  .desk2 .online-block{padding:10px!important}.desk2 .online-block .muted{font-size:12px}
+  .desk2 #lapSeg button,.desk2 #modeSeg button{font-size:14px}
+}
+
+/* Race Desk v2 phone tuning */
+.desk-grid{grid-template-columns:minmax(0,45fr) minmax(0,55fr)}
+.desk2 .pick-btn b{white-space:normal;overflow:visible;line-height:1.15}
+.desk2 .join-row{grid-template-columns:1fr;gap:8px}
+.desk2 #lapSeg button,.desk2 #modeSeg button{white-space:nowrap}
+.desk2 .sum-char{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.desk2 .sum-row > div{min-width:0}
+@media (max-width:480px){
+  #menu.overlay{padding-left:8px;padding-right:8px}
+  .desk2 .desk-grid{padding:6px;gap:6px}
+  .desk2 .dcol{gap:8px}
+  .desk2 #lapSeg button,.desk2 #modeSeg button{font-size:13px;padding:9px 4px}
+  .desk2 .online-block .ghost{font-size:13px;padding:9px 6px}
+  .desk2 .online-block h2,.desk2 #offTitle h2{font-size:16px}
+  .desk2 .sum-row img{width:52px;height:38px}.desk2 .sum-country{font-size:14px}.desk2 .sum-char{font-size:11px}
+  .desk2 .field{padding:8px 10px}
+}
+
+.desk2 .pick-btn{overflow:hidden}
+.desk2 .pick-btn b{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#menu .desk2 .mode-wrap{width:100%;box-sizing:border-box}
+#menu .desk2 .mode-wrap #modeSeg,#menu .desk2 .team-sub{width:100%}
+#menu .desk2 .team-sub{display:flex}#menu .desk2 .team-sub button{flex:1}
+#menu .desk2 .team-sub[hidden]{display:none}
+
+/* ================= Race Desk v3: navy & gold ================= */
+.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:root{--d3-gold:#e9c46a;--d3-gold2:#b88a2c;--d3-navy:#13296f;--d3-navy2:#0b1a4f}
+#menu.overlay:has(.desk3){background:linear-gradient(180deg,rgba(8,18,60,.55) 0%,rgba(8,18,60,0) 22%,rgba(8,18,60,0) 48%,rgba(8,18,60,.75) 72%,rgba(8,18,60,.9) 100%)}
+.desk3{grid-template-columns:minmax(0,520px)!important;justify-content:center}
+.desk3 .left-col{gap:12px}
+.desk3 .d3-glass,.desk3 .d3-top,.desk3 .d3-picks,.desk3 .d3-card,.desk3 .d3-emotes{background:linear-gradient(180deg,rgba(40,70,170,.82),rgba(14,30,98,.9));border:2px solid rgba(233,196,106,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 18px rgba(120,160,255,.15),0 8px 22px rgba(0,0,0,.35);border-radius:18px}
+.d3-top{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;padding:8px 10px}
+.desk3 .desk-top{display:flex;gap:6px}
+.d3-round{width:44px;height:44px;border-radius:50%;border:2px solid rgba(233,196,106,.75);background:radial-gradient(circle at 50% 35%,#2f54b8,#13296f);color:var(--d3-gold);font-size:20px;line-height:1;padding:0;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.d3-logo{font-family:var(--display);font-size:22px;color:#f6e3a8;text-align:center;letter-spacing:.02em;text-shadow:0 2px 0 rgba(0,0,0,.35);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d3-logo-ic{color:var(--d3-gold);margin-right:6px}
+.d3-wallet{display:flex;align-items:center;gap:8px;border:2px solid rgba(233,196,106,.7);border-radius:999px;padding:6px 10px;background:rgba(8,18,60,.55);color:#f6e3a8;font-weight:800;font-size:14px;white-space:nowrap}
+.d3-wallet .coin-ic{display:inline-block;vertical-align:-3px}
+.desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
+.desk3 .d3-name input{text-align:center;font-size:20px;font-weight:700;color:#f3ead0;border-radius:14px;padding:10px 14px;background:linear-gradient(180deg,rgba(44,76,180,.85),rgba(16,34,104,.9));border:2px solid rgba(233,196,106,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.d3-stage{position:relative;min-height:clamp(300px,52vh,480px)}
+.desk3 .preview-wrap{position:absolute;inset:0;margin:0;border:0;background:transparent}
+.desk3 #preview{width:100%;height:100%;background:transparent;border-radius:0}
+.desk3 .preview-tip{display:none}
+.d3-arrow{position:absolute;bottom:10%;width:46px;height:46px;border-radius:50%;border:2px solid rgba(233,196,106,.7);background:rgba(10,22,70,.6);color:var(--d3-gold);font-size:18px;padding:0}
+.d3-l{left:12%}.d3-r{left:calc(64% - 46px)}
+.d3-edit{position:absolute;left:4px;top:4px;width:38px;height:38px;font-size:16px}
+.desk3 .d3-emotes{position:absolute;right:0;top:50%;transform:translateY(-50%);display:grid;gap:8px;padding:10px;width:116px;margin:0}
+.d3-emote-t{text-align:center;color:#f6e3a8;font-weight:700;font-size:16px;padding-bottom:6px;border-bottom:1px solid rgba(233,196,106,.45)}
+.desk3 .d3-emotes .chip-btn{border:2px solid rgba(233,196,106,.65);background:linear-gradient(180deg,#2a4cb0,#152f86);color:#f3ead0;font-size:15px;padding:8px 6px;border-radius:999px}
+.desk3 .d3-picks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:0;padding:10px 6px}
+.desk3 .d3-picks .pick-btn{display:grid;justify-items:center;align-content:start;gap:6px;text-align:center;background:transparent;border:0;border-radius:0;padding:4px 6px;min-width:0}
+.desk3 .d3-picks .pick-btn + .pick-btn{border-left:2px solid rgba(233,196,106,.55)}
+.desk3 .d3-picks img{width:54px;height:36px;object-fit:cover;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.desk3 .d3-picks i{font-style:normal;font-size:30px;line-height:36px;filter:sepia(1) saturate(4) hue-rotate(5deg) brightness(1.05)}
+.desk3 .d3-picks b{color:#f6e3a8;font-size:14px;line-height:1.15;font-weight:700;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.desk3 .d3-picks .pick-btn[aria-expanded="true"] b{color:#fff;text-decoration:underline}
+.d3-card{padding:0 12px 14px;overflow:hidden}
+.d3-tabs{display:grid;grid-template-columns:1fr 1fr;margin:0 -12px 12px;border-bottom:2px solid rgba(233,196,106,.6)}
+.d3-tabs button{background:transparent;border:0;padding:14px 6px;font-family:var(--display);font-size:16px;color:#f6e3a8;letter-spacing:.02em;text-transform:uppercase}
+.d3-tabs button[aria-selected="true"]{background:linear-gradient(180deg,rgba(80,120,230,.55),rgba(20,44,130,.2));border-radius:16px 16px 0 0;box-shadow:inset 0 0 0 2px rgba(233,196,106,.7);color:#fff3c4}
+.d3-pane{display:grid;gap:10px}
+.d3-pane[hidden]{display:none}
+.desk3 #playChoices{display:block}
+.desk3 .online-block,.desk3 .offline-block{border:0!important;background:transparent!important;padding:0!important;margin:0!important}
+.d3-pill-row{display:grid;gap:8px}
+.d3-join{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.d3-join input{border-radius:999px;border:2px solid rgba(233,196,106,.6);background:rgba(8,18,60,.6);text-align:center;letter-spacing:.25em;font-weight:800;text-transform:uppercase;min-width:0}
+.d3-pill{border-radius:999px;border:2px solid rgba(233,196,106,.65);background:linear-gradient(180deg,#2c50b8,#162f88);color:#f3ead0;font-weight:700;padding:11px 14px;font-size:15px}
+.d3-pill-dark{background:rgba(8,18,60,.6)}
+.d3-status{margin:0;font-size:13px}
+.d3-friends{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:2px solid rgba(233,196,106,.6);border-radius:16px;padding:6px 8px;background:rgba(8,18,60,.45)}
+.d3-friends-btn{display:flex;gap:10px;align-items:center;background:transparent;border:0;text-align:left;color:#f3ead0;padding:4px}
+.d3-friends-btn b{display:block;font-size:16px}.d3-friends-btn small{color:#b9c3e8;font-size:12px}
+.d3-fr-ic{position:relative;font-size:26px}.d3-fr-ic i{position:absolute;right:-2px;bottom:2px;width:10px;height:10px;border-radius:50%;background:#3ddc6a;border:2px solid #0b1a4f}
+.d3-cart{background:transparent;border:0;font-size:24px}
+.desk3 .d3-opts{display:grid;gap:8px}
+.desk3 #lapSeg,.desk3 #modeSeg,.desk3 .team-sub{display:flex;width:100%;border:2px solid rgba(233,196,106,.6)!important;border-radius:999px;background:rgba(8,18,60,.5)}
+.desk3 .team-sub[hidden]{display:none}
+.desk3 .seg button{flex:1;color:#f3ead0;font-weight:700;font-size:15px;padding:10px 6px;white-space:nowrap}
+.desk3 .seg button + button{border-left:1px solid rgba(233,196,106,.35)}
+.desk3 .seg button[aria-pressed="true"]{background:linear-gradient(180deg,#f5d77f,#c4952f);color:#2a1d04}
+#menu .desk3 .mode-wrap{width:100%;padding:0;border:0!important;background:transparent!important;display:grid;gap:8px}
+.d3-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.d3-modes .d3-pill{padding:10px 4px;font-size:13px;border-radius:14px}
+.desk3 #lapHint{margin:0;font-size:12px;text-align:center}
+.d3-go{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:12px;align-items:stretch}
+.d3-gold{font-family:var(--display);font-size:26px;letter-spacing:.03em;text-transform:uppercase;color:#4a3208;border-radius:16px;border:2px solid #f7e3a3;background:linear-gradient(180deg,#f8e19a 0%,#e2b54e 45%,#b9862a 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.55),0 6px 0 #7d5a16,0 10px 20px rgba(0,0,0,.35);padding:16px 10px;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.d3-gold:disabled{filter:grayscale(.6) brightness(.8)}
+.d3-quick{border-radius:16px;border:2px solid #f7e3a3;background:linear-gradient(180deg,#f3d98c,#c99a3a);color:#3a2706;font-weight:800;font-size:16px;line-height:1.1;padding:8px 14px;box-shadow:inset 0 2px 0 rgba(255,255,255,.5),0 6px 0 #7d5a16}
+@media (max-width:420px){
+  #menu.overlay:has(.desk3){padding-left:8px;padding-right:8px}
+  .d3-logo{font-size:18px}.d3-wallet{font-size:12px;padding:5px 8px;gap:6px}
+  .d3-round{width:40px;height:40px;font-size:18px}
+  .desk3 .d3-emotes{width:100px;padding:8px}.desk3 .d3-emotes .chip-btn{font-size:13px}
+  .desk3 .d3-picks b{font-size:12.5px}.desk3 .d3-picks i{font-size:26px}
+  .d3-tabs button{font-size:14px}.d3-gold{font-size:22px}
+}
+.desk3 .d3-picks b{white-space:normal!important;max-width:100%;text-overflow:clip}
+.desk3 .d3-picks .pick-btn{overflow:hidden}
+
+/* course map: tall rectangle on the right edge */
+#minimap{top:calc(50% - 120px)!important;right:10px;width:96px!important;height:240px!important;border-radius:14px}
+@media (max-width:860px){#minimap{top:calc(env(safe-area-inset-top,0px) + var(--app-top,0px) + 186px)!important;width:68px!important;height:170px!important}}
+/* Grand Prix podium fits phone screens */
+.podium-card{grid-template-columns:minmax(0,1fr);overflow:hidden;padding:20px 14px}
+.podium-card>*{min-width:0}
+.podium-card .eyebrow{white-space:normal;overflow-wrap:anywhere}
+.podium-card h2{font-size:clamp(22px,7vw,38px);overflow-wrap:anywhere;line-height:1.05}
+.pod-steps{width:100%;gap:8px}
+.pod-steps .step{flex:1 1 0;min-width:0;width:auto;max-width:none}
+.pod-nm{font-size:clamp(10px,3.1vw,14px);letter-spacing:.03em;overflow-wrap:normal;word-break:keep-all}
+.podium-card .actions{flex-wrap:wrap;gap:10px}
+.podium-card .actions>*{flex:1 1 140px;min-width:0}
+
+/* ---------- race celebration ---------- */
+#celebrate{z-index:40;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 30%,rgba(40,70,170,.75),rgba(6,12,40,.94) 70%)}
+#celebrate[hidden]{display:none}
+.cel-card{position:relative;z-index:2;width:min(100%,560px);box-sizing:border-box;display:grid;gap:14px;text-align:center;padding:22px 14px;border-radius:22px;border:2px solid rgba(233,196,106,.75);background:linear-gradient(180deg,rgba(40,70,170,.85),rgba(14,30,98,.92));box-shadow:0 0 40px rgba(233,196,106,.25),inset 0 1px 0 rgba(255,255,255,.2)}
+.cel-card>*{min-width:0}
+.cel-eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#cfd7f5}
+.cel-title{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(24px,7.5vw,42px);line-height:1.05;color:#f6e3a8;text-shadow:0 3px 0 rgba(0,0,0,.35);overflow-wrap:anywhere}
+.cel-title.win{animation:celPulse 1s ease-in-out 3}
+@keyframes celPulse{50%{transform:scale(1.08);color:#fff3c4}}
+.cel-podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;min-height:250px}
+.cel-step{flex:1 1 0;min-width:0;display:grid;justify-items:center;gap:4px;opacity:0;transform:translateY(40px) scale(.8);transition:opacity .45s,transform .55s cubic-bezier(.2,1.6,.4,1)}
+.cel-step.show{opacity:1;transform:none}
+.cel-medal{font-size:34px;line-height:1}
+.cel-step.s1 .cel-medal{font-size:46px}
+.cel-step img{width:58px;height:39px;border-radius:4px;box-shadow:0 0 0 2px rgba(255,255,255,.35),0 4px 10px rgba(0,0,0,.4);object-fit:cover}
+.cel-step.s1 img{width:74px;height:50px}
+.cel-nm{font-weight:800;font-size:clamp(11px,3.4vw,15px);color:#fff;letter-spacing:.02em;overflow-wrap:normal;word-break:keep-all}
+.cel-step.me .cel-nm{color:#f6e3a8}
+.cel-time{font-size:12px;color:#cfd7f5}
+.cel-block{width:100%;border-radius:10px 10px 0 0;display:grid;place-items:center;font-family:var(--display);font-size:30px;color:#2a1d04;box-shadow:inset 0 2px 0 rgba(255,255,255,.5)}
+.cel-step.s1 .cel-block{height:120px;background:linear-gradient(180deg,#f8e19a,#d9a83e)}
+.cel-step.s2 .cel-block{height:86px;background:linear-gradient(180deg,#eef2fb,#a9b4cc)}
+.cel-step.s3 .cel-block{height:62px;background:linear-gradient(180deg,#f0b27a,#b8743a)}
+.cel-step.s1.show{animation:celWin 1.2s ease-in-out .5s 2}
+@keyframes celWin{50%{filter:drop-shadow(0 0 18px rgba(255,215,90,.9))}}
+.cel-gifts{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;min-height:0}
+.cel-gift{display:grid;justify-items:center;gap:4px;min-width:84px;padding:10px 8px;border-radius:14px;border:2px solid rgba(233,196,106,.6);background:rgba(8,18,60,.55);opacity:0;transform:scale(.6);transition:opacity .35s,transform .45s cubic-bezier(.2,1.6,.4,1)}
+.cel-gift.show{opacity:1;transform:none}
+.cel-gift .gbox{font-size:34px;line-height:1}
+.cel-gift.show .gbox{animation:celShake .5s ease-in-out 2}
+@keyframes celShake{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.cel-gift b{color:#f6e3a8;font-size:17px}
+.cel-gift small{color:#cfd7f5;font-size:11px}
+.cel-actions{display:flex;gap:10px;justify-content:center}
+.cel-actions .d3-gold{font-size:20px;padding:12px 26px}
+.cel-confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.cel-confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:celFall linear forwards}
+@keyframes celFall{to{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot))}}
+@media (prefers-reduced-motion:reduce){.cel-step,.cel-gift{transition:none}.cel-title.win,.cel-step.s1.show,.cel-gift.show .gbox{animation:none}}
+</style></head><body>
 <title>Flag Dash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -261,7 +477,12 @@ body.touch .hud-bottom{bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}/* --
 .slot-name{font-family:var(--display);font-size:16px;margin-top:3px;white-space:nowrap}
 .meter{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--gold) calc(var(--p,0)*1%),var(--line) 0)}
 .meter span{width:40px;height:40px;border-radius:50%;background:var(--panel-solid);display:grid;place-items:center;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
-.slot.ready{border-color:var(--gold);box-shadow:0 0 0 2px rgba(242,182,49,.35)}
+.slot.ready{border-color:var(--gold);box-shadow:0 0 0 2px rgba(242,182,49,.35);animation:ultGlow 1.1s ease-in-out infinite}
+.slot.ready .meter{animation:ultMeter 1.1s ease-in-out infinite}
+.slot.ready #meterPct{color:var(--gold);text-shadow:0 0 8px rgba(242,182,49,.9)}
+@keyframes ultGlow{0%,100%{box-shadow:0 0 0 2px rgba(242,182,49,.55),0 0 14px 4px rgba(242,182,49,.45)}50%{box-shadow:0 0 0 3px rgba(255,215,90,.95),0 0 30px 12px rgba(242,182,49,.75)}}
+@keyframes ultMeter{0%,100%{filter:brightness(1)}50%{filter:brightness(1.45) drop-shadow(0 0 6px rgba(255,215,90,.9))}}
+@media (prefers-reduced-motion:reduce){.slot.ready,.slot.ready .meter{animation:none;box-shadow:0 0 0 3px rgba(255,215,90,.95),0 0 22px 8px rgba(242,182,49,.65)}}
 .emote-hint{align-self:center;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
 #countdown{position:absolute;top:30%;left:0;right:0;text-align:center;font-family:var(--display);font-size:clamp(90px,16vw,170px);color:var(--gold);text-shadow:6px 6px 0 var(--tartan);transition:transform .25s}
 #countdown.pop{transform:scale(1.25)}
@@ -374,7 +595,8 @@ tr.me td.pl{color:var(--gold)}
 .pz-top{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);left:16px;right:16px;display:flex;justify-content:space-between;align-items:start;gap:12px}
 .pz-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;display:grid;gap:4px;max-width:60vw}
 .pz-name{font-family:var(--display);font-size:18px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pz-wallet{font-size:17px}.pz-small{font-size:12.5px;color:var(--muted)}.pz-small:empty{display:none}.pz-alert{color:var(--good);font-weight:700}
-.pz-btns{display:flex;gap:8px;pointer-events:auto}.pz-btns button{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:700;font-size:14px}
+.pz-btns{display:flex;gap:8px;pointer-events:auto}.pz-btns button{white-space:nowrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:44px;height:44px;padding:0 10px;font-weight:700;font-size:20px;line-height:1}
+.pz-rail{position:absolute;left:16px;top:calc(env(safe-area-inset-top,0px) + 12px + var(--app-top,0px) + 118px);display:grid;gap:8px;pointer-events:auto}.pz-rail button{width:44px;height:44px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-size:21px;line-height:1;padding:0}
 .pz-hint{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 150px);background:rgba(16,21,54,.8);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;text-align:center;max-width:calc(100% - 32px)}
 .pz-stick{position:absolute;left:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);width:120px;height:120px;border-radius:50%;background:rgba(16,21,54,.55);border:2px solid rgba(255,255,255,.25);pointer-events:auto;touch-action:none;display:grid;place-items:center}
 .pz-knob{width:52px;height:52px;border-radius:50%;background:rgba(242,182,49,.9);box-shadow:0 2px 8px rgba(0,0,0,.4);pointer-events:none}
@@ -402,7 +624,7 @@ body:not(.touch) .pz-stick{opacity:.55}
 .hub-form label{display:grid;gap:4px;font-size:13px;color:var(--muted)}.g-colors{display:flex;gap:8px;flex-wrap:wrap}.g-col{width:30px;height:30px;border-radius:8px;border:2px solid transparent}.g-col[aria-pressed="true"]{border-color:#fff}
 .g-head{display:flex;gap:14px;align-items:center;border-left:6px solid;padding:6px 12px;border-radius:8px;background:var(--night-2)}.g-badge{font-family:var(--display);font-size:20px;padding:8px 10px;border-radius:10px;color:#141a44}.g-name{font-family:var(--display);font-size:22px}
 .g-code{display:flex;gap:8px;align-items:center}.g-code code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--night);padding:8px;border-radius:8px;font-size:12px}
-#hub{z-index:25}
+#hub{z-index:25}#howto{z-index:25}
 @media (max-width:520px){.lb-row{grid-template-columns:24px 26px minmax(0,1fr) 54px}.lb-tag{display:none}.hub-row{flex-direction:column;align-items:stretch}.hub-side{justify-content:space-between}}
 .set-card{max-width:420px;text-align:left}.set-body{display:grid;gap:12px}
 .set-row{display:grid;grid-template-columns:1fr auto 120px;gap:12px;align-items:center;font-weight:600}
@@ -459,69 +681,70 @@ body:not(.touch) .pz-stick{opacity:.55}
 <div id="stage"></div>
 
 <div id="menu" class="overlay">
-  <div class="menu-inner">
+  <div class="menu-inner desk3">
     <div class="left-col">
-      <button class="ghost brand-back" id="plazaBtn">← Back to the plaza</button>
-      <header class="brand">
-        <div class="step">1,500 m obstacle sprint</div>
-        <h1>Flag<span>Dash</span></h1>
-        <p>Race for your nation across fourteen tracks on every continent. Clear hurdles, duck barriers, grab item boxes, and race friends online in solo or team mode.</p>
-        <div class="lanes-rule"></div>
-      </header>
-      <section class="panel" aria-label="Your runner">
-        <div class="preview-wrap"><canvas id="preview" aria-label="3D preview of your runner"></canvas><span class="preview-tip">Drag to turn</span></div>
-        <div class="sum-row">
-          <img id="sumFlag" alt="">
-          <div><div class="sum-country" id="sumCountry"></div><div class="sum-char" id="sumChar"></div></div>
+      <div class="d3-top">
+        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button></div>
+        <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Flag Dash</div>
+        <div class="d3-wallet" aria-label="Wallet"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
+      </div>
+      <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
+      <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"></label>
+      <section class="d3-stage" id="playPanel" aria-label="Race Desk">
+        <div class="preview-wrap"><canvas id="preview" aria-label="3D preview of your runner"></canvas>
+          <button class="d3-arrow d3-l" id="pvLeft" aria-label="Turn runner left">◀</button><button class="d3-arrow d3-r" id="pvRight" aria-label="Turn runner right">▶</button>
+          <button class="d3-round d3-edit" id="deskEdit" aria-label="Edit Race Desk layout">✏️</button>
         </div>
-        <div class="pick-row">
-          <button class="pick-btn" data-pick="flag" aria-expanded="false"><span>Flag</span><b id="pkFlag"></b></button>
-          <button class="pick-btn" data-pick="runner" aria-expanded="false"><span>Runner</span><b id="pkRunner"></b></button>
-          <button class="pick-btn" data-pick="track" aria-expanded="false"><span>Track</span><b id="pkTrack"></b></button>
-          <button class="pick-btn" data-pick="loadout" aria-expanded="false"><span>Loadout</span><b id="pkLoadout"></b></button>
-        </div>
-        <label class="field" for="nameInput"><span>Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"></label>
-        <div class="emote-row" aria-label="Emotes">
+        <div class="emote-row d3-emotes" aria-label="Emotes"><div class="d3-emote-t">Emote</div>
           <button class="chip-btn" data-emote="wave">Wave</button><button class="chip-btn" data-emote="flex">Flex</button><button class="chip-btn" data-emote="dance">Dance</button><button class="chip-btn" data-emote="point">Point</button>
         </div>
       </section>
-      <section class="panel wallet-panel" aria-label="Wallet">
+      <div class="sum-row" hidden><div id="sumCountry"></div><div id="sumChar"></div></div>
+      <div class="pick-row d3-picks">
+        <button class="pick-btn" data-pick="flag" aria-expanded="false"><img id="sumFlag" alt=""><b id="pkFlag"></b><span class="sr-only">Flag</span></button>
+        <button class="pick-btn" data-pick="runner" aria-expanded="false"><i aria-hidden="true">🏃</i><b id="pkRunner"></b><span class="sr-only">Runner</span></button>
+        <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true">🏟️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
+        <button class="pick-btn" data-pick="loadout" aria-expanded="false"><i aria-hidden="true" id="pkLoadIc">🎯</i><b id="pkLoadTxt"></b><b id="pkLoadout" hidden></b><span class="sr-only">Loadout</span></button>
+      </div>
+      <section class="d3-card">
+        <div class="d3-tabs" role="tablist"><button role="tab" id="tabOnline" data-tab="online">Online Battle</button><button role="tab" id="tabSolo" data-tab="solo">Solo Practice</button></div>
+        <div id="lobbyReturn" class="play-block d3-pane" hidden>
+          <p class="muted">You are in room <b id="returnCode"></b>. Changes to your flag and runner show up in the lobby.</p>
+          <button class="primary d3-gold" id="backLobbyBtn">Back to lobby</button>
+        </div>
+        <div id="playChoices">
+          <div class="d3-pane online-block" id="paneOnline">
+            <div id="onlineControls" hidden>
+              <button id="createBtn" hidden>Create room</button><div class="d3-pill-row"><div class="d3-join"><input type="text" id="codeInput" placeholder="CODE" maxlength="4" aria-label="Room code" autocomplete="off"><button class="d3-pill d3-pill-dark" id="joinBtn">Join room</button></div></div>
+              <div class="open-rooms" id="openRooms"></div>
+            </div>
+            <p class="muted d3-status" id="onlineStatus">Connecting…</p>
+            <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Online Friends</b><small>Chat, friends and rooms</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store">🛒</button></div>
+          </div>
+          <div class="d3-pane offline-block" id="paneSolo">
+            <div id="offTitle" hidden><div class="step">Offline</div><h2>Race the CPU</h2></div>
+            <div class="d3-opts">
+              <div class="seg" id="lapSeg" role="group" aria-label="Laps"><button data-laps="1">1 lap</button><button data-laps="2">2 laps</button><button data-laps="3">3 laps</button></div>
+              <div class="mode-wrap"><div class="seg" id="modeSeg" role="group" aria-label="Race mode"><button data-mode="solo">Solo</button><button data-mode="teams" id="teamsBtn" aria-haspopup="true" aria-expanded="false">Teams ▾</button></div>
+              <div class="seg team-sub" id="teamSub" role="group" aria-label="Team size" hidden><button data-tmode="teams">3 v 3</button><button data-tmode="trio">2 v 2 v 2</button></div></div>
+            </div>
+            <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button></div>
+            <p class="muted" id="lapHint"></p>
+            <p class="muted desk-info">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
+            <p class="muted desk-info">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
+          </div>
+        </div>
+        <div class="cpu-btns d3-go" id="cpuBtns"><button class="primary d3-gold" id="startBtn">Start Race</button><button class="primary d3-gold" id="d3Create" hidden>Create Room</button><button class="d3-quick" id="quickBtn">Quick<br>Race</button></div>
+      </section>
+      <section class="panel wallet-panel" aria-label="Wallet" hidden>
         <div class="wallet-big"><span class="coin-ic"></span><b id="wCoins">0</b><span class="gem-ic"></span><b id="wGems">0</b></div>
         <p class="muted" id="wBuffs"></p>
         <button class="ghost" id="storeBtn">Open store</button>
         <div class="hub-btns"><button class="ghost badge-btn" id="menuTasksBtn">Task Board</button><button class="ghost badge-btn" id="menuBoardsBtn">Leaderboards</button><button class="ghost" id="menuGuildBtn">Guild</button><button class="ghost chat-open badge-btn" id="menuChatBtn">💬 Chat</button></div>
         <button class="ghost" id="menuSetBtn">⚙ Settings: music, sounds, voices</button>
       </section>
-      <section class="panel" id="playPanel">
-        <div id="lobbyReturn" class="play-block" hidden>
-          <p class="muted">You are in room <b id="returnCode"></b>. Changes to your flag and runner show up in the lobby.</p>
-          <button class="primary" id="backLobbyBtn">Back to lobby</button>
-        </div>
-        <div id="playChoices">
-          <div class="play-block">
-            <div><div class="step">Offline</div><h2>Race the CPU</h2></div>
-            <div class="seg" id="modeSeg" role="group" aria-label="Race mode"><button data-mode="solo">Solo</button><button data-mode="teams">Teams 3 v 3</button><button data-mode="trio">3 teams 2 v 2 v 2</button></div>
-            <div class="seg" id="lapSeg" role="group" aria-label="Laps"><button data-laps="1">1 lap</button><button data-laps="2">2 laps</button><button data-laps="3">3 laps</button></div>
-            <p class="muted" id="lapHint"></p>
-            <button class="primary" id="startBtn">Start race</button>
-            <button class="ghost" id="gpBtn">Grand Prix · 4 races</button>
-            <button class="ghost" id="svBtn">Survival · zombies</button>
-            <button class="ghost" id="fcBtn">Flag Challenge · steal flags</button>
-            <p class="muted">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
-            <p class="muted">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
-          </div>
-          <div class="play-block">
-            <div><div class="step">Online</div><h2>Race friends</h2></div>
-            <p class="muted" id="onlineStatus">Connecting…</p>
-            <div id="onlineControls" class="play-block" style="gap:10px" hidden>
-              <button class="ghost" id="createBtn">Create a room</button>
-              <div class="join-row"><input type="text" id="codeInput" placeholder="CODE" maxlength="4" aria-label="Room code" autocomplete="off"><button class="ghost" id="joinBtn">Join room</button></div>
-              <div class="open-rooms" id="openRooms"></div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="panel two-col" id="legendPanel">
+      
+<section class="panel two-col" id="legendPanel">
         <div class="items-legend">
           <h2 style="margin-bottom:4px">Item boxes</h2>
           <div><b>🍌 Banana Peel</b><span>Dropped behind you. Rivals slip.</span></div>
@@ -529,6 +752,9 @@ body:not(.touch) .pz-stick{opacity:.55}
           <div><b>❄️ Freeze Bomb</b><span>Slows rivals within 20 m.</span></div>
           <div><b>💨 Turbo Shoes</b><span>Short speed boost.</span></div>
           <div><b>🛡️ Shield</b><span>Blocks the next hit.</span></div>
+          <div><b>👻 Ghost</b><span>For 6 s every attack passes through you and hits the next runner in line.</span></div>
+          <div><b>🔥 Fire Trail</b><span>For 5 s you leave fire behind you. Rivals who step in it get burned.</span></div>
+          <div><b>⚠️ Track traps</b><span>Each track has its own: land mines, oil, manholes, snakes, quicksand, crabs, cactus and more. Jump or switch lanes.</span></div>
         </div>
         <div>
           <h2 style="margin-bottom:10px">Controls</h2>
@@ -616,10 +842,10 @@ body:not(.touch) .pz-stick{opacity:.55}
     </div>
     <div class="clock-box">
       <div class="clock" id="clock">0.00</div>
-      <div class="hud-btns"><button id="qcBtn" hidden aria-label="Quick chat">💬</button><button id="setBtn" aria-label="Settings">⚙ Settings</button><button id="pauseBtn">Pause</button></div>
+      <div class="hud-btns"><button id="qcBtn" hidden aria-label="Quick chat">💬</button><button id="setBtn" hidden aria-label="Settings">⚙ Settings</button><button id="pauseBtn" aria-label="Pause and settings">⏸ Pause</button></div>
     </div>
   </div>
-  <canvas id="minimap" width="240" height="240" aria-label="Course map" hidden></canvas>
+  <canvas id="minimap" width="160" height="400" aria-label="Course map" hidden></canvas>
   <div id="feed"></div>
   <div class="hud-bottom">
     <button class="slot" id="itemSlot" aria-label="Use item"><div class="slot-icon" id="itemIcon"></div><div><div class="slot-label">Item <span class="k">· Q</span></div><div class="slot-name" id="itemName">Empty</div></div></button>
@@ -647,8 +873,9 @@ body:not(.touch) .pz-stick{opacity:.55}
 <div id="plazaHud" hidden>
   <div class="pz-top">
     <div class="pz-card"><div class="pz-name" id="pzName"></div><div class="wallet-big pz-wallet"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><div class="pz-small" id="pzOnline"></div><div class="pz-small pz-alert" id="pzTasks"></div></div>
-    <div class="pz-btns"><button class="chat-open badge-btn" id="pzChat">💬 Chat</button><button id="pzDesk">Race Desk</button><button id="pzTime" aria-label="Day or night"></button><button id="pzSet" aria-label="Settings">⚙</button></div>
+    <div class="pz-btns"><button class="chat-open badge-btn" id="pzChat" aria-label="Chat">💬</button><button id="pzDesk" aria-label="Race Desk">🏁</button><button id="pzTime" aria-label="Day or night"></button><button id="pzSet" aria-label="Settings">⚙</button></div>
   </div>
+  <div class="pz-rail"><button id="pzStore" aria-label="Store">🛒</button><button class="badge-btn" id="pzTasksBtn" aria-label="Task Board">✅</button><button class="badge-btn" id="pzBoards" aria-label="Leaderboards">📊</button><button id="pzGuild" aria-label="Guild">🛡️</button><button id="pzHelp" aria-label="How to play">❓</button></div>
   <div class="pz-hint" id="pzHint"></div>
   <div class="pz-zoom"><button id="pzZoomIn" aria-label="Zoom in">+</button><button id="pzZoomOut" aria-label="Zoom out">−</button></div>
   <div class="pz-stick" id="pzStick" aria-label="Walk"><div class="pz-knob" id="pzKnob"></div></div>
@@ -672,6 +899,12 @@ body:not(.touch) .pz-stick{opacity:.55}
     <div id="hubBody" class="hub-body"></div>
   </div>
 </div>
+<div id="howto" class="overlay" hidden>
+  <div class="store-card hub-card" role="dialog" aria-labelledby="howtoTitle">
+    <div class="store-head"><h2 id="howtoTitle">❓ How to play</h2><button class="ghost" id="howtoClose">Close</button></div>
+    <div id="howtoBody" class="hub-body" style="display:grid;gap:12px"></div>
+  </div>
+</div>
 <div id="settings" class="overlay" hidden>
   <div class="pause-card set-card" role="dialog" aria-label="Settings">
     <h2>Settings</h2>
@@ -682,11 +915,20 @@ body:not(.touch) .pz-stick{opacity:.55}
       <div class="set-row set-row2"><span>Chat</span><button class="set-tog" id="set_chat"></button></div>
       <div class="set-row set-row2"><span>Hide bad words</span><button class="set-tog" id="set_filter"></button></div>
       <div class="set-row set-row2"><span>Private messages from friends only</span><button class="set-tog" id="set_dmFriends"></button></div>
+      <div class="set-row set-row2"><span>Screen layout <small class="muted" style="display:block;font-weight:400">Move and resize buttons</small></span><button class="set-tog" id="setLayout">Edit</button></div>
       <p class="muted" id="setVoiceNote"></p>
       <button class="ghost" id="setTest">Test voice</button>
     </div>
     <button class="primary" id="setClose">Done</button>
+    <button class="ghost" id="setQuit" hidden>Quit to menu</button>
   </div>
+</div>
+<div id="layBackdrop" hidden></div>
+<div id="layBar" hidden role="dialog" aria-label="Edit screen layout">
+  <div class="lay-grip" id="layGrip">✥ Drag here to move this box</div>
+  <div class="lay-sel-name" id="laySelName">Drag any outlined piece to move it</div>
+  <div class="lay-row"><button id="laySmaller" aria-label="Make smaller">− Smaller</button><button id="layBigger" aria-label="Make bigger">+ Bigger</button><button id="layHide">🚫 Hide</button><button id="layResetOne">Reset piece</button></div>
+  <div class="lay-row"><button id="layStraight">⇔ Straighten</button><button id="layResetAll">Reset all</button><button class="primary" id="layDone">Done</button></div>
 </div>
 <div id="pause" class="overlay" hidden>
   <div class="pause-card"><h2>Paused</h2><button class="primary" id="resumeBtn">Resume</button><button class="ghost" id="quitBtn">Quit to menu</button></div>
@@ -713,6 +955,18 @@ body:not(.touch) .pz-stick{opacity:.55}
   </div>
 </div>
 
+<div id="celebrate" class="overlay" hidden>
+  <div class="cel-confetti" id="celConfetti" aria-hidden="true"></div>
+  <div class="cel-card" role="dialog" aria-labelledby="celTitle" aria-live="polite">
+    <div class="cel-eyebrow" id="celEyebrow">🏁 Race complete</div>
+    <h2 class="cel-title" id="celTitle">And the winner is…</h2>
+    <div class="cel-podium">
+      <div class="cel-step s2" id="celS2"></div><div class="cel-step s1" id="celS1"></div><div class="cel-step s3" id="celS3"></div>
+    </div>
+    <div class="cel-gifts" id="celGifts"></div>
+    <div class="cel-actions"><button class="ghost" id="celSkip">Skip</button><button class="primary d3-gold" id="celNext" hidden>Continue</button></div>
+  </div>
+</div>
 <div id="results" class="overlay" hidden>
   <div class="board">
     <div class="board-head"><div class="eyebrow" id="resEyebrow">Official result</div><h2 id="resTitle"></h2></div>
@@ -969,7 +1223,7 @@ const CHARS=[
 ];
 const CHAR_IDS=CHARS.map(c=>c.id);
 const charById=id=>CHARS.find(c=>c.id===id)||CHARS[0];
-const ITEMS={banana:{name:'Banana Peel',icon:'🍌'},rocket:{name:'Rocket',icon:'🚀'},freeze:{name:'Freeze Bomb',icon:'❄️'},turbo:{name:'Turbo Shoes',icon:'💨'},shield:{name:'Shield',icon:'🛡️'}};
+const ITEMS={banana:{name:'Banana Peel',icon:'🍌'},rocket:{name:'Rocket',icon:'🚀'},freeze:{name:'Freeze Bomb',icon:'❄️'},turbo:{name:'Turbo Shoes',icon:'💨'},shield:{name:'Shield',icon:'🛡️'},mine:{name:'Land Mine',icon:'💣'},ghost:{name:'Ghost',icon:'👻'},fire:{name:'Fire Trail',icon:'🔥'}};
 const EMOTES=['wave','flex','dance','point'];
 const TEAMS=[{name:'Gold',css:'var(--gold)',hex:0xf2b631,col:'#f2b631'},{name:'Blue',css:'var(--blue)',hex:0x4fa3ff,col:'#4fa3ff'},{name:'Green',css:'var(--good)',hex:0x5fd08a,col:'#5fd08a'}];
 // Race modes: solo, teams (3 v 3), trio (three teams of two, 2 v 2 v 2)
@@ -1819,23 +2073,39 @@ function renderPreview(dt,now){
    GAME STATE
    ========================================================= */
 let state='menu',prevState=null,raceTime=0,cd=0,cdShown=null,resultsT=0,shake=0,menuT=0,goT=0,camAng=0;
-let runners=[],player=null,obstacles=[],boxes=[],patches=[],bananas=[],rockets=[],fx=[],RACE=null,runnerMap=new Map(),uidN=0;
+let runners=[],player=null,obstacles=[],boxes=[],patches=[],bananas=[],rockets=[],fx=[],traps=[],fires=[],RACE=null,runnerMap=new Map(),uidN=0;
 const input={left:false,right:false};
 const runnerById=id=>runnerMap.get(id)||null;
 const sameTeam=(a,b)=>!!(RACE&&isTeamMode(RACE.mode)&&a&&b&&a.team!=null&&a.team===b.team);
 const uid=()=>((NET.myPeer||'off').slice(-4))+'-'+(++uidN);
 
-function courseClear(){pads.forEach(p=>{if(p.type==='boost')p.mesh.geometry.dispose();});while(courseGroup.children.length)courseGroup.remove(courseGroup.children[0]);obstacles=[];boxes=[];patches=[];pads=[];coins=[];gems=[];coinIM=null;}
+function courseClear(){pads.forEach(p=>{if(p.type==='boost')p.mesh.geometry.dispose();});while(courseGroup.children.length)courseGroup.remove(courseGroup.children[0]);obstacles=[];boxes=[];patches=[];pads=[];coins=[];gems=[];traps=[];coinIM=null;}
 function clearRace(){
   clearBubbles();svClear();fcClear();
   runners.forEach(r=>{scene.remove(r.m.root);disposeModel(r.m);});
-  bananas.forEach(b=>courseGroup.remove(b.mesh));rockets.forEach(k=>scene.remove(k.mesh));fx.forEach(f=>{scene.remove(f.m);});
-  runners=[];bananas=[];rockets=[];fx=[];runnerMap=new Map();player=null;PN.list.length=0;PA.list.length=0;
+  bananas.forEach(b=>{courseGroup.remove(b.mesh);if(b.mesh.userData&&b.mesh.userData.dispose)b.mesh.userData.dispose();});rockets.forEach(k=>scene.remove(k.mesh));fx.forEach(f=>{scene.remove(f.m);});fires.forEach(f=>courseGroup.remove(f.mesh));
+  runners=[];bananas=[];rockets=[];fx=[];fires=[];traps.forEach(t=>{t.cd=0;t.mesh.visible=true;});runnerMap=new Map();player=null;PN.list.length=0;PA.list.length=0;
 }
 const boxGeo=sharedGeo('qbox',()=>new THREE.BoxGeometry(0.9,0.9,0.9));
 const qTex=canvasTex(128,128,(c,w,h)=>{const g=c.createLinearGradient(0,0,w,h);g.addColorStop(0,'#ffd766');g.addColorStop(1,'#e59a12');c.fillStyle=g;c.fillRect(0,0,w,h);c.strokeStyle='rgba(255,255,255,.4)';c.lineWidth=8;c.strokeRect(4,4,w-8,h-8);c.fillStyle='#2a1a00';c.font='84px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('?',w/2,h/2+6);});
 const boxMat=new THREE.MeshLambertMaterial({map:qTex,emissive:0x3a2600,transparent:true,opacity:0.95});
 const bananaGeo=sharedGeo('banana',()=>new THREE.TorusGeometry(0.26,0.09,6,12,Math.PI)),bananaMat=new THREE.MeshLambertMaterial({color:0xffd83a,emissive:0x2a2000});
+const mineGeo=sharedGeo('mine',()=>new THREE.CylinderGeometry(0.34,0.4,0.14,16)),mineMat=new THREE.MeshLambertMaterial({color:0x3b4030,emissive:0x0a0c08});
+const mineCapGeo=sharedGeo('minecap',()=>new THREE.CylinderGeometry(0.12,0.14,0.08,10)),mineLightGeo=sharedGeo('minelight',()=>new THREE.SphereGeometry(0.07,8,6));
+function makeMineMesh(){const g=new THREE.Group();const base=new THREE.Mesh(mineGeo,mineMat);base.position.y=0.07;g.add(base);const cap=new THREE.Mesh(mineCapGeo,mineMat);cap.position.y=0.18;g.add(cap);
+  const lm=new THREE.MeshBasicMaterial({color:0xff2a1a});const l=new THREE.Mesh(mineLightGeo,lm);l.position.y=0.25;g.add(l);g.userData.light=lm;g.userData.dispose=()=>lm.dispose();return g;}
+const TRAP_BY_THEME={stadium:'mine',streets:'oil',city:'manhole',canyon:'snake',glacier:'crack',coast:'crab',giza:'scorpion',sahara:'quicksand',grandcanyon:'cactus',amazon:'vine',greatwall:'firecracker',paris:'pothole',outback:'dustdevil',antarctica:'snowdrift'};
+const TRAP_KINDS={mine:{ic:'💥',name:'land mine',fx:'knock',col:0x3b4030},oil:{ic:'🛢️',name:'oil slick',fx:'slip',col:0x101010},manhole:{ic:'🕳️',name:'open manhole',fx:'trip',col:0x1c1c22},
+  snake:{ic:'🐍',name:'rattlesnake',fx:'trip',col:0x8a6a32},crack:{ic:'🧊',name:'ice crack',fx:'slip',col:0xbfe8ff},crab:{ic:'🦀',name:'crab',fx:'trip',col:0xe07040},
+  scorpion:{ic:'🦂',name:'scorpion',fx:'trip',col:0x8a6a2a},quicksand:{ic:'⏳',name:'quicksand',fx:'slow',col:0xc8a060},cactus:{ic:'🌵',name:'cactus',fx:'trip',col:0x3f7a3a},
+  vine:{ic:'🌿',name:'vine snare',fx:'trip',col:0x2e6b2e},firecracker:{ic:'🧨',name:'firecracker',fx:'knock',col:0xb02020},pothole:{ic:'🚧',name:'pothole',fx:'trip',col:0x3a3a3a},
+  dustdevil:{ic:'🌪️',name:'dust devil',fx:'knock',col:0xb08050},snowdrift:{ic:'❄️',name:'snow drift',fx:'slow',col:0xeaf4ff}};
+const trapGeo=sharedGeo('trapdisc',()=>new THREE.CircleGeometry(0.85,20)),trapTex={},trapMats={};
+function trapMesh(kind){const K=TRAP_KINDS[kind];if(kind==='mine')return makeMineMesh();const g=new THREE.Group();
+  const dm=trapMats[kind]||(trapMats[kind]=new THREE.MeshBasicMaterial({color:K.col,transparent:true,opacity:0.8,depthWrite:false}));const disc=new THREE.Mesh(trapGeo,dm);disc.rotation.x=-Math.PI/2;disc.position.y=0.03;g.add(disc);
+  const tx=trapTex[kind]||(trapTex[kind]=canvasTex(128,128,(c,w,h)=>{c.textAlign='center';c.textBaseline='middle';c.font='96px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(K.ic,w/2,h/2+6);}));
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,depthWrite:false}));sp.scale.set(1.15,1.15,1);sp.position.y=0.62;g.add(sp);g.userData.sp=sp;return g;}
+const fireGeo=sharedGeo('firedisc',()=>new THREE.CircleGeometry(0.7,16)),fireMat=new THREE.MeshBasicMaterial({color:0xff3d0a,transparent:true,opacity:0.85,depthWrite:false});
 const ringGeo=sharedGeo('fxring',()=>new THREE.RingGeometry(0.85,1,56));
 
 /* ---------- pads, coins and diamonds ---------- */
@@ -1890,6 +2160,10 @@ function genCourse(seed){
   for(let gd=260;gd<TRACK-60;gd+=300+rng()*150){const x=LANES[Math.floor(rng()*4)];if(laneFree(x,gd-2,gd+2))gems.push({x,d:gd,y:1.1,taken:false});}
   if(coins.length){coinIM=new THREE.InstancedMesh(coinGeo,coinMat,coins.length);coins.forEach((c,i)=>{c.i=i;setCoinMatrix(c,0);});coinIM.instanceMatrix.needsUpdate=true;courseGroup.add(coinIM);}
   gems.forEach(g=>{g.mesh=new THREE.Mesh(gemGeo,gemMat);g.mesh.position.copy(W(g.x,g.d,Hf(g.d)+g.y));courseGroup.add(g.mesh);});
+  // track traps: one kind per track, matching where the race is
+  {const kind=TRAP_BY_THEME[TH.id]||'mine';for(let td=130;td<TRACK-60;td+=85+rng()*95){const x=LANES[Math.floor(rng()*4)];
+    if(!laneFree(x,td-5,td+5)||rows.some(b=>Math.abs(b-td)<9)||pads.some(p=>Math.abs(p.d-td)<9&&p.x===x)||coins.some(c=>Math.abs(c.d-td)<2&&c.x===x))continue;
+    const m=trapMesh(kind);m.position.copy(W(x,td,Hf(td)));m.rotation.y=heading(td);courseGroup.add(m);traps.push({x,d:td,kind,mesh:m,cd:0,bt:rng()*3});}}
 }
 function triggerPad(r,p){
   const wp=wpos(r,0.1);
@@ -1946,7 +2220,7 @@ function startRaceFromGo(go,online){
   closePicker();touchLane=null;if(isTouch){const h=$('swipeHint');h.classList.add('show');clearTimeout(h._t);h._t=setTimeout(()=>h.classList.remove('show'),7000);}
   ['menu','results','pause','lobby','store','podium'].forEach(id=>$(id).hidden=true);$('hud').hidden=false;$('touch').hidden=!isTouch;
   $('powerName').textContent=player.char.power;$('qcBtn').hidden=!online||!SET.chat;$('qcRow').hidden=true;$('feed').innerHTML='';$('countdown').innerHTML='';
-  $('trackLabel').textContent=(GP&&RACE.gp?`GP ${GP.round+1}/${GP.tracks.length} · `:'')+TH.name;$('teamScore').hidden=!isTeamMode(RACE.mode);$('tsR').hidden=RACE.mode!=='trio';$('pauseBtn').hidden=online;
+  $('trackLabel').textContent=(GP&&RACE.gp?`GP ${GP.round+1}/${GP.tracks.length} · `:'')+TH.name;$('teamScore').hidden=!isTeamMode(RACE.mode);$('tsR').hidden=RACE.mode!=='trio';$('pauseBtn').hidden=false;
   const bar=$('trackBar');bar.innerHTML='';
   runners.slice().sort((a,b)=>(a.kind==='local')-(b.kind==='local')).forEach(r=>{const im=document.createElement('img');im.src=r.flag.url;im.alt='';im.title=r.nm;im.className='marker'+(r.kind==='local'?' me':'')+(r.team!=null?' t'+r.team:'');bar.appendChild(im);r.marker=im;});
   hudCache={};setupMinimap();$('hudLo').hidden=!player.lo;
@@ -2306,6 +2580,7 @@ function renderSettings(){
 }
 let settingsPaused=false;
 function openSettings(){const o=$('settings');o.hidden=false;renderSettings();
+  {const inRace=!$('hud').hidden;$('setQuit').hidden=!inRace;$('setClose').textContent=inRace?'Resume':'Done';$('settings').querySelector('h2').textContent=inRace?'Paused':'Settings';}
   if((canAct()||state==='countdown')&&!(RACE&&RACE.online)&&state!=='paused'){togglePause();$('pause').hidden=true;settingsPaused=true;}
   $('setClose').focus();}
 function closeSettings(){$('settings').hidden=true;if(settingsPaused){settingsPaused=false;togglePause();}}
@@ -2363,17 +2638,28 @@ function sendAct(src,a){
 function handleAct(src,a){
   switch(a.t){
     case 'box':{const b=boxes[a.i|0];if(b&&b.hidden<=0){b.hidden=3;b.mesh.visible=false;{const p=W(b.x,b.d,Hf(b.d)+1);burst(p.x,p.y,p.z,14,[1,0.85,0.3],{add:true,max:5,grav:4});}}break;}
-    case 'ban':{if(bananas.some(b=>b.id===a.id))break;const m=new THREE.Mesh(bananaGeo,bananaMat);m.rotation.x=-Math.PI/2;const x=+a.x||0,d=+a.d||0;m.position.copy(W(x,d,Hf(d)+0.1));courseGroup.add(m);bananas.push({id:a.id,x,d,owner:src,safe:0.6,mesh:m});break;}
-    case 'banx':{const i=bananas.findIndex(b=>b.id===a.id);if(i>=0){courseGroup.remove(bananas[i].mesh);bananas.splice(i,1);}break;}
+    case 'ban':{if(bananas.some(b=>b.id===a.id))break;const x=+a.x||0,d=+a.d||0;
+      if(a.k==='mine'){const m=makeMineMesh();m.position.copy(W(x,d,Hf(d)));courseGroup.add(m);bananas.push({id:a.id,x,d,owner:src,safe:1,mesh:m,kind:'mine',bt:0});if(src===player)feed('Land mine planted','');break;}
+      const m=new THREE.Mesh(bananaGeo,bananaMat);m.rotation.x=-Math.PI/2;m.position.copy(W(x,d,Hf(d)+0.1));courseGroup.add(m);bananas.push({id:a.id,x,d,owner:src,safe:0.6,mesh:m});break;}
+    case 'banx':{const i=bananas.findIndex(b=>b.id===a.id);if(i>=0){const b=bananas[i];courseGroup.remove(b.mesh);
+      if(b.kind==='mine'){if(b.mesh.userData.dispose)b.mesh.userData.dispose();const p=W(b.x,b.d,Hf(b.d)+0.4);burst(p.x,p.y,p.z,26,[1,0.55,0.15],{add:true,max:7,grav:6});burst(p.x,p.y,p.z,14,[0.35,0.33,0.3],{max:4,grav:2});
+        if(player&&Math.abs(prog(player)-b.d)<30){sfx.smash();sfx.meteor();if(!reduceMotion)shake=Math.max(shake,Math.abs(prog(player)-b.d)<6?0.6:0.25);}}
+      bananas.splice(i,1);}break;}
     case 'rkt':{if(rockets.some(k=>k.id===a.id))break;const m=makeRocketMesh();scene.add(m);rockets.push({id:a.id,x:+a.x||src.x,d:+a.d||src.d,target:runnerById(a.tg),owner:src,life:4,mesh:m});if(runnerById(a.tg)===player&&src!==player)feed(`${src.nm} fired a rocket at you`,'bad');break;}
     case 'rktx':{const i=rockets.findIndex(k=>k.id===a.id);if(i>=0){const k=rockets[i];{const p=W(k.x,k.d,Hf(k.d)+1.2);explode(p.x,p.y,p.z);}scene.remove(k.mesh);rockets.splice(i,1);}break;}
     case 'frz':{ringFx(src.x,src.d,0x8fd8ff,20,0.7);{const p=wpos(src,1.2);burst(p.x,p.y,p.z,40,[0.7,0.9,1],{add:true,max:12,grav:2,size:0.3});}
-      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.shield>0){o.shield=0;notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);if(o.kind==='local')feed(`${src.nm} froze you`,'bad');sayHit(src,o);notifyAttacker(src,o,'frz');}
+      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.ghost>0){ghostFx(o);continue;}if(o.shield>0){o.shield=0;notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);if(o.kind==='local')feed(`${src.nm} froze you`,'bad');sayHit(src,o);notifyAttacker(src,o,'frz');}
       break;}
     case 'qk':{ringFx(src.x,src.d,0xe0654a,12,0.6);{const p=wpos(src,0.2);burst(p.x,p.y,p.z,50,TH.dust,{max:9,up:5,grav:10,size:0.45});}if(!reduceMotion&&player&&Math.abs(player.d-src.d)<25)shake=Math.max(shake,0.35);if(src.kind==='local')sfx.hit();
       for(const o of runners){if(!o.owned||o===src)continue;if(Math.abs(o.d-src.d)<12&&Math.abs(o.x-src.x)<12)hit(o,1.2,src,'knock',`${src.nm}'s quake knocked you down`);}break;}
     case 'vlt':{(Array.isArray(a.tg)?a.tg:[]).slice(0,2).forEach(id=>{const o=runnerById(id);if(!o)return;boltFx(src,o);if(o.owned)hit(o,1.3,src,'knock',`${src.nm} zapped you`);});break;}
-    case 'pw':{const c={bolt:0xf2b631,hopper:0x5fd08a,phantom:0x9a7be0,turbo:0xffffff,shield:0x8fd8ff}[a.p]||0xffffff;ringFx(src.x,src.d,c,3,0.4);if(a.p==='hopper'){const p=wpos(src,0.1);burst(p.x,p.y,p.z,24,[0.5,1,0.6],{add:true,max:6,grav:3});}break;}
+    case 'redir':{const t=runnerById(a.to),by=runnerById(a.by);if(t&&t.owned)hit(t,+a.dur||1,by,a.k||'trip',`${by?by.nm+'\'s':'An'} attack passed through ${src.nm} and hit you`);break;}
+    case 'trap':{const t=traps[a.i|0];if(t&&t.cd<=0){t.cd=5;t.mesh.visible=false;const K=TRAP_KINDS[t.kind],p=W(t.x,t.d,Hf(t.d)+0.4);
+      if(K.fx==='knock'){burst(p.x,p.y,p.z,26,[1,0.55,0.15],{add:true,max:7,grav:6});burst(p.x,p.y,p.z,14,[0.35,0.33,0.3],{max:4,grav:2});if(player&&Math.abs(prog(player)-prog(src))<30){sfx.smash();sfx.meteor();if(!reduceMotion)shake=Math.max(shake,src===player?0.6:0.2);}}
+      else{const c=new THREE.Color(K.col);burst(p.x,p.y,p.z,16,[c.r,c.g,c.b],{max:4,up:2,grav:5,size:0.3});}}break;}
+    case 'pw':{const c={bolt:0xf2b631,hopper:0x5fd08a,phantom:0x9a7be0,turbo:0xffffff,shield:0x8fd8ff,ghost:0xc4b5ff,fire:0xff7a1a}[a.p]||0xffffff;ringFx(src.x,src.d,c,3,0.4);
+      if(a.p==='ghost'){src.ghost=6;if(src.kind==='local')feed('Ghost: attacks pass through you for 6 s','good');}
+      if(a.p==='fire'){src.fireT=5;src.fireLast=-99;if(src.kind==='local')feed('Fire trail lit for 5 s','good');}if(a.p==='hopper'){const p=wpos(src,0.1);burst(p.x,p.y,p.z,24,[0.5,1,0.6],{add:true,max:6,grav:3});}break;}
     case 'ult':{
       const ch=src.char,p=ch.id;lastUltT=raceTime;if(src.kind==='local')showUlt(src);if(src.owned)speak(src,'power');
       const victims=runners.filter(o=>o!==src&&!o.finished&&!sameTeam(o,src));
@@ -2397,9 +2683,15 @@ function notifyAttacker(src,o,res){
   else if(!src.owned&&RACE.online)sendAct(o,{t:'ouch',by:src.id,res});
   if(src.owned&&src.kind==='bot'&&res==='hit'&&Math.random()<0.35)sendAct(src,{t:'emo',e:pick(['point','dance','flex'])});
 }
+function nextInLine(o,src){const fwd=prog(src)<=prog(o),po=prog(o);let best=null,bd=60;
+  for(const c of runners){if(c===o||c===src||c.finished)continue;const dd=fwd?prog(c)-po:po-prog(c);if(dd>0&&dd<bd){bd=dd;best=c;}}return best;}
+function ghostFx(o){const p=wpos(o,1.2);burst(p.x,p.y,p.z,14,[0.8,0.75,1],{add:true,max:4,up:1,grav:0,size:0.3});}
 function hit(o,dur,src,kind,why,quiet){
   if(!o.owned||o.finished||o.phase>0||o.leaping||o.grace>0)return false;
   if(src&&src!==o&&sameTeam(o,src))return false;
+  if(o.ghost>0){ghostFx(o);if(src&&src!==o){const nx=nextInLine(o,src);if(o.kind==='local')feed(nx?`${src.nm}'s attack went through you and hit ${nx.nm}`:`${src.nm}'s attack went through you`,'good');
+      if(nx){if(nx.owned)hit(nx,dur,src,kind,`${src.nm}'s attack passed through ${o.nm} and hit you`,quiet);else if(RACE&&RACE.online)sendAct(o,{t:'redir',to:nx.id,by:src.id,dur:Math.round(dur*100)/100,k:kind});}}
+    return false;}
   if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
   dur*=1-((o.mods&&o.mods.stun)||0);
   o.stun=Math.max(o.stun,dur);o.grace=dur+1.2;o.stunKind=kind||'trip';o.speed*=0.35;o.slide=0;if(kind==='knock')o.vy=Math.max(o.vy,5.5);
@@ -2411,7 +2703,7 @@ function hit(o,dur,src,kind,why,quiet){
   return true;
 }
 function giveItem(r){
-  const lead=r.place<=2;const table=lead?[['banana',35],['shield',25],['freeze',15],['rocket',15],['turbo',10]]:[['rocket',30],['turbo',25],['freeze',20],['banana',15],['shield',10]];
+  const lead=r.place<=2;const table=lead?[['banana',26],['shield',20],['ghost',10],['fire',12],['freeze',12],['rocket',12],['turbo',8]]:[['rocket',26],['turbo',20],['freeze',16],['fire',12],['ghost',10],['banana',8],['shield',8]];
   let t=Math.random()*100;r.item='turbo';for(const [k,w] of table){if((t-=w)<0){r.item=k;break;}}
   if(RACE&&RACE.rules&&RACE.rules.bananas)r.item='banana';if(RACE&&RACE.survival)r.item=pick(['shield','turbo','turbo']);r.ai.itemT=rand(0.6,2.4);if(r.kind==='local')sfx.pick();
 }
@@ -2421,10 +2713,13 @@ function useItem(r){
   if(!r||!r.item||r.finished||!canAct())return;
   const it=r.item;r.item=null;if(r.kind==='local'){sfx.use();raceStat('items');}
   if(it==='banana'){sendAct(r,{t:'ban',id:uid(),x:rnd2(r.x),d:rnd2(r.d-1.8)});;}
+  else if(it==='mine'){sendAct(r,{t:'ban',k:'mine',id:uid(),x:rnd2(r.x),d:rnd2(r.d-1.8)});}
   else if(it==='rocket'){const tg=nearestAhead(r,120);sendAct(r,{t:'rkt',id:uid(),x:rnd2(r.x),d:rnd2(r.d+0.8),tg:tg?tg.id:null});;}
   else if(it==='freeze')sendAct(r,{t:'frz'});
   else if(it==='turbo'){r.boost=2.2;r.boostMul=1.55;sendAct(r,{t:'pw',p:'turbo'});}
   else if(it==='shield'){r.shield=8;sendAct(r,{t:'pw',p:'shield'});}
+  else if(it==='ghost'){sendAct(r,{t:'pw',p:'ghost'});}
+  else if(it==='fire'){sendAct(r,{t:'pw',p:'fire'});}
 }
 function usePower(r){
   if(!r||r.charge<1||r.finished||r.stun>0||!canAct())return;
@@ -2614,6 +2909,8 @@ function aiThink(r,dt){
     for(let i=0;i<4;i++){const lx=LANES[i];let s=-Math.abs(lx-r.x)*0.35+(i===ai.lane?0.4:0)+Math.random()*0.3;
       for(let j=r.oi;j<obstacles.length;j++){const o=obstacles[j];const dist=o.d-r.d;if(dist>look)break;if(dist<-0.2||Math.abs(o.x-lx)>1.7)continue;const w=o.type==='wall'?10:(3.2*(1.2-ai.skill)+0.7);s-=w*(1-Math.max(0,dist)/look*0.6);}
       for(const b of bananas){const dist=b.d-r.d;if(dist>0&&dist<look&&Math.abs(b.x-lx)<1.3)s-=4;}
+      for(const t of traps){if(t.cd>0)continue;const dist=t.d-r.d;if(dist>0&&dist<look&&Math.abs(t.x-lx)<1.3)s-=3.5;}
+      for(const f of fires){if(f.owner===r)continue;const dist=f.d-r.d;if(dist>-0.5&&dist<look&&Math.abs(f.x-lx)<1.2)s-=2.5;}
       for(const p of patches){const dist=p.d-r.d;if(dist+p.len>0&&dist<look&&Math.abs(p.x-lx)<1)s-=(p.kind==='ice'||p.kind==='oil')?0.8:1.8;}
       for(const p of pads){const dist=p.d-r.d;if(dist>2&&dist<look&&Math.abs(p.x-lx)<0.6)s+=p.type==='boost'?1.6:0.9;}
       if(RACE.fc&&!r.out)for(const o of runners){if(o===r||o.out||o.finished||!(o.flags>0))continue;const dist=prog(o)-prog(r);if(dist>0.3&&dist<12&&Math.abs(o.x-lx)<1)s+=1.8*ai.greed;}
@@ -2626,8 +2923,10 @@ function aiThink(r,dt){
     else if(o.type==='bar'&&dist<r.speed*0.42+0.5){ai.handled.add(o.id);if(Math.random()<ai.skill)doSlide(r);}}
   if(r.item){ai.itemT-=dt;if(ai.itemT<=0){const it=r.item;
     if(it==='rocket'){if(nearestAhead(r,90))useItem(r);else ai.itemT=0.5;}
-    else if(it==='banana'){if(runners.some(o=>o!==r&&!sameTeam(o,r)&&r.d-o.d>1&&r.d-o.d<15)||Math.random()<0.12)useItem(r);else ai.itemT=0.5;}
+    else if(it==='banana'||it==='mine'){if(runners.some(o=>o!==r&&!sameTeam(o,r)&&r.d-o.d>1&&r.d-o.d<15)||Math.random()<0.12)useItem(r);else ai.itemT=0.5;}
     else if(it==='freeze'){if(runners.some(o=>o!==r&&!o.finished&&!sameTeam(o,r)&&Math.abs(o.d-r.d)<18))useItem(r);else ai.itemT=0.5;}
+    else if(it==='fire'){if(runners.some(o=>o!==r&&!sameTeam(o,r)&&r.d-o.d>1&&r.d-o.d<25)||Math.random()<0.1)useItem(r);else ai.itemT=0.5;}
+    else if(it==='ghost'){if(rockets.some(k=>k.target===r)||runners.some(o=>o!==r&&!sameTeam(o,r)&&Math.abs(o.d-r.d)<10)||Math.random()<0.1)useItem(r);else ai.itemT=0.4;}
     else useItem(r);}}
   if(r.lo){const L=r.lo;
     if(!L.usedD&&L.def==='escape'&&r.stun>0.9&&Math.random()<dt*3)useLoadout(r,'def');
@@ -2681,7 +2980,15 @@ function stepRunner(r,dt){
   if(!r.finished)collide(r,prevD);
   for(let i=0;i<boxes.length;i++){const b=boxes[i];if(b.hidden>0||r.item)continue;if(prevD<=b.d+0.6&&r.d>=b.d-0.6&&Math.abs(r.x-b.x)<1.1&&r.y<2.2){giveItem(r);sendAct(r,{t:'box',i});}}
   for(let i=bananas.length-1;i>=0;i--){const b=bananas[i];if((b.owner===r&&b.safe>0)||sameTeam(b.owner,r)&&b.owner!==r)continue;
-    if(Math.abs(r.d-b.d)<0.8&&Math.abs(r.x-b.x)<0.8&&r.y<0.4&&r.phase<=0&&!r.leaping&&!r.finished){sendAct(r,{t:'banx',id:b.id});hit(r,1.1,b.owner===r?null:b.owner,'slip','Slipped on a banana');}}
+    if(Math.abs(r.d-b.d)<0.8&&Math.abs(r.x-b.x)<0.8&&r.y<0.4&&r.phase<=0&&!r.leaping&&!r.finished){sendAct(r,{t:'banx',id:b.id});
+      if(b.kind==='mine'){if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
+      else hit(r,1.1,b.owner===r?null:b.owner,'slip','Slipped on a banana');}}
+  if(!r.finished&&!r.leaping&&r.phase<=0&&r.y<0.45)for(let i=0;i<traps.length;i++){const t=traps[i];if(t.cd>0||Math.abs(r.d-t.d)>0.85||Math.abs(r.x-t.x)>0.85)continue;
+    const K=TRAP_KINDS[t.kind],nm=K.name[0].toUpperCase()+K.name.slice(1);sendAct(r,{t:'trap',i});
+    if(K.fx==='slow'){if(r.ghost<=0){r.slow=Math.max(r.slow,2.2);r.speed*=0.6;if(r.kind==='local')feed(`Stuck in the ${K.name}`,'bad');}}
+    else if(hit(r,K.fx==='knock'?1.6:K.fx==='slip'?1.1:1.0,null,K.fx,K.fx==='knock'?`${nm}! You got blown up`:K.fx==='slip'?`Slipped on the ${K.name}`:`Tripped by the ${K.name}`)&&K.fx==='knock'&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
+  if(!r.finished&&!r.leaping&&r.y<0.5)for(const f of fires){if(f.owner===r||sameTeam(f.owner,r)||Math.abs(r.d-f.d)>0.8||Math.abs(r.x-f.x)>0.75)continue;
+    if(hit(r,0.9,f.owner,'trip',`Burned by ${f.owner.nm}'s fire trail`)){const p=wpos(r,0.6);burst(p.x,p.y,p.z,16,[1,0.5,0.1],{add:true,max:5,up:3,grav:-1,size:0.3});}}
   for(let i=rockets.length-1;i>=0;i--){const k=rockets[i];if(k.owner===r||r.finished)continue;if(k.target&&k.target!==r)continue;
     if(Math.abs(r.d-k.d)<1&&Math.abs(r.x-k.x)<0.9){sendAct(r,{t:'rktx',id:k.id});hit(r,1.4,k.owner,'knock',`Hit by ${k.owner.nm}'s rocket`);}}
   if(!r.finished)r.charge=Math.min(1,r.charge+dt/r.char.charge*(1+(r.mods.chg||0))*(r.kind==='bot'?0.75:1));
@@ -2730,7 +3037,14 @@ function updateWorldFx(dt,now){
     k.x+=dx*sp*dt;k.d+=dd*sp*dt;const y=Hf(k.d)+1.2;k.mesh.position.copy(W(k.x,k.d,y));k.mesh.rotation.y=_w.t+Math.atan2(-dx,dd);const kp=k.mesh.position,bd=backDir(k.d);
     emit(PN,{x:kp.x+bd.x*0.6,y,z:kp.z+bd.z*0.6,vy:0.4,life:0.6,size:0.3,grow:2,c:[0.55,0.55,0.6],a:0.5});emit(PA,{x:kp.x+bd.x*0.5,y,z:kp.z+bd.z*0.5,life:0.15,size:0.3,c:[1,0.6,0.2]});
     if(k.life<=0){scene.remove(k.mesh);rockets.splice(i,1);}}
-  for(const b of bananas)b.safe=Math.max(0,b.safe-dt);
+  for(const t of traps){if(t.cd>0){t.cd-=dt;if(t.cd<=0)t.mesh.visible=true;}else{t.bt+=dt;if(t.mesh.userData.light){const on=(t.bt*1.6%1)<0.25;t.mesh.userData.light.color.setHex(on?0xff2a1a:0x3a0a06);}else if(t.mesh.userData.sp)t.mesh.userData.sp.position.y=0.62+Math.sin(t.bt*3)*0.08;}}
+  for(const r of runners){if(r.ghost>0){r.ghost=Math.max(0,r.ghost-dt);if(Math.random()<dt*14){const p=wpos(r,rand(0.4,2));emit(PA,{x:p.x+rand(-0.4,0.4),y:p.y,z:p.z+rand(-0.4,0.4),vy:0.6,life:0.5,size:0.35,c:[0.75,0.7,1]});}}
+    if(r.fireT>0){r.fireT=Math.max(0,r.fireT-dt);const pg=prog(r);if(!r.finished&&r.y<1.2&&Math.abs(pg-(r.fireLast||-99))>1.4){r.fireLast=pg;const m=new THREE.Mesh(fireGeo,fireMat);m.rotation.x=-Math.PI/2;m.position.copy(W(r.x,r.d,Hf(r.d)+0.05));courseGroup.add(m);fires.push({x:r.x,d:r.d,owner:r,life:4,mesh:m});}}}
+  fireMat.opacity=0.75+Math.sin(now/70)*0.15;fireMat.color.setHSL(0.03+Math.sin(now/120)*0.02,1,0.5);
+  for(let i=fires.length-1;i>=0;i--){const f=fires[i];f.life-=dt;const k=Math.min(1,f.life/0.6);f.mesh.scale.setScalar(0.4+0.6*k+Math.sin(now/90+i)*0.06);
+    if(Math.random()<dt*16){const p=f.mesh.position;emit(PA,{x:p.x+rand(-0.4,0.4),y:p.y+0.1,z:p.z+rand(-0.4,0.4),vy:rand(1.5,3),life:0.45,size:0.4,c:[1,rand(0.35,0.6),0.1]});}
+    if(f.life<=0){courseGroup.remove(f.mesh);fires.splice(i,1);}}
+  for(const b of bananas){b.safe=Math.max(0,b.safe-dt);if(b.kind==='mine'){b.bt+=dt;const on=b.safe>0?(b.bt*4%1)<0.5:(b.bt*1.6%1)<0.25;b.mesh.userData.light.color.setHex(on?0xff2a1a:0x3a0a06);}}
   for(const b of boxes){if(b.hidden>0){b.hidden-=dt;if(b.hidden<=0)b.mesh.visible=true;}b.mesh.rotation.y+=dt*1.6;b.mesh.position.y=Hf(b.d)+1+Math.sin(now/400+b.d)*0.12;}
   for(let i=fx.length-1;i>=0;i--){const f=fx[i];f.t+=dt;const k=Math.min(1,f.t/f.dur);f.update(k);if(k>=1){scene.remove(f.m);if(f.dispose)f.dispose();else{if(f.m.geometry!==ringGeo)f.m.geometry.dispose();f.m.material.dispose();}fx.splice(i,1);}}
 }
@@ -2944,7 +3258,7 @@ function setupMinimap(){
   const cv=mm.cv;cv.hidden=!TH.turns;if(cv.hidden)return;
   const raw=[];let x0=1e9,x1=-1e9,z0=1e9,z1=-1e9;
   for(let d=0;d<=TRACK;d+=10){cl(d);raw.push([_w.x,_w.z]);x0=Math.min(x0,_w.x);x1=Math.max(x1,_w.x);z0=Math.min(z0,_w.z);z1=Math.max(z1,_w.z);}
-  const pad=26,s=Math.min((cv.width-2*pad)/Math.max(1,x1-x0),(cv.height-2*pad)/Math.max(1,z1-z0));
+  const pad=16,s=Math.min((cv.width-2*pad)/Math.max(1,x1-x0),(cv.height-2*pad)/Math.max(1,z1-z0));
   const ox=(cv.width-(x1-x0)*s)/2,oy=(cv.height-(z1-z0)*s)/2;
   mm.map=(x,z)=>[ox+(x-x0)*s,oy+(z-z0)*s];mm.pts=raw.map(p=>mm.map(p[0],p[1]));
 }
@@ -2991,7 +3305,7 @@ function showResults(){
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
   $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?'Back to lobby':'Race again';$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';
-  $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
+  $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{$('results').hidden=false;$('againBtn').focus();});
 }
 function renderResults(){
   if(RACE&&(RACE.survival||RACE.fc))return;
@@ -3212,15 +3526,16 @@ function startGP(){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
   const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
-  GP={tracks:shuffle(THEMES.map(t=>t.id)).slice(0,4),round:0,laps:selLaps,mode:selMode,lo:loOn,roster,pts:{},counted:-1};
+  GP={tracks:[null,null,null,null],used:[],round:0,laps:selLaps,mode:selMode,lo:loOn,roster,pts:{},counted:-1};
   roster.forEach(e=>GP.pts[e.id]=0);gpRace();
 }
-function gpRace(){startRaceFromGo({id:'gp'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:GP.tracks[GP.round],mode:GP.mode,laps:GP.laps,lo:GP.lo,roster:shuffle(GP.roster.slice()),gp:true},false);}
+function gpRace(){if(!GP.tracks[GP.round]){const pool=THEMES.map(t=>t.id).filter(id=>!(GP.used||[]).includes(id));GP.tracks[GP.round]=pick(pool.length?pool:THEMES.map(t=>t.id));(GP.used=GP.used||[]).push(GP.tracks[GP.round]);}
+  startRaceFromGo({id:'gp'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:GP.tracks[GP.round],mode:GP.mode,laps:GP.laps,lo:GP.lo,roster:shuffle(GP.roster.slice()),gp:true},false);}
 function gpStandings(){return GP.roster.map(e=>({e,pts:GP.pts[e.id]|0,r:runnerById(e.id)})).sort((a,b)=>b.pts-a.pts);}
 function renderGPBox(){
   const box=$('gpBox');if(!(GP&&RACE&&RACE.gp)){box.hidden=true;return;}
   box.hidden=false;const st=gpStandings();
-  box.innerHTML=`<div class="gp-head"><span class="eyebrow">Grand Prix standings · after race ${GP.round+1} of ${GP.tracks.length}</span><span class="gp-tracks">${GP.tracks.map((t,i)=>`<i class="${i<=GP.round?'done':''}">${themeById(t).name}</i>`).join('')}</span></div>`;
+  box.innerHTML=`<div class="gp-head"><span class="eyebrow">Grand Prix standings · after race ${GP.round+1} of ${GP.tracks.length}</span><span class="gp-tracks">${GP.tracks.map((t,i)=>`<i class="${i<=GP.round?'done':''}">${t?themeById(t).name:'❓ Random'}</i>`).join('')}</span></div>`;
   const ol=document.createElement('ol');ol.className='gp-list';
   st.forEach((x,i)=>{const li=document.createElement('li');if(x.e.local)li.className='me';const f=flagCanvas(x.e.cc);
     li.innerHTML=`<span class="gp-pos">${i+1}</span><img alt="" src="${f.url}"><span class="gp-nm"></span><b>${x.pts} pts</b>`;li.querySelector('.gp-nm').textContent=(x.e.bot?f.name:(cleanName(x.e.nm)||f.name))+(x.e.local?' (you)':'');ol.appendChild(li);});
@@ -3850,17 +4165,21 @@ function refreshMenu(emote){
   flagGrid.querySelectorAll('.flag-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.code===selCountry));
   charGrid.querySelectorAll('.char-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===selChar));
   trackGrid.querySelectorAll('.track-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===selTrack));
-  $('modeSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===selMode));
+  {const tm=selMode==='teams'||selMode==='trio';$('modeSeg').querySelector('[data-mode="solo"]').setAttribute('aria-pressed',!tm);const tb=$('teamsBtn');tb.setAttribute('aria-pressed',tm);tb.textContent=tm?(selMode==='trio'?'Teams · 2v2v2 ▾':'Teams · 3v3 ▾'):'Teams ▾';
+    $('teamSub').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tmode===selMode));}
   $('lapSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.laps===selLaps));$('lapHint').textContent=selLaps===1?'One lap of 1,500 m.':`${selLaps} laps of ${LAP_LEN[selLaps]} m (${(selLaps*LAP_LEN[selLaps]).toLocaleString()} m total).`;renderWallet();renderLoadout();
   const f=flagCanvas(selCountry),ch=charById(selChar);
   $('sumFlag').src=f.url;$('sumCountry').textContent=f.name;$('sumChar').textContent=`${ch.name} · ${ch.power}`;
   $('pkFlag').textContent=f.name;$('pkRunner').textContent=ch.name;$('pkTrack').textContent=themeById(selTrack).name;
-  const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;$('returnCode').textContent=NET.code||'';
+  const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;$('cpuBtns').hidden=inRoom;$('returnCode').textContent=NET.code||'';
   if(emote!==undefined)rebuildPreview(emote);
 }
 $('nameInput').value=myName;
 $('nameInput').addEventListener('input',e=>{const v=cleanName(e.target.value);if(v){myName=v;store.set('flagdash-name',v);syncLobbyPresence();pushSocial();}});
-$('modeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;selMode=b.dataset.mode;store.set('flagdash-mode',selMode);refreshMenu();});
+$('modeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.mode==='teams'){const open=$('teamSub').hidden;$('teamSub').hidden=!open;b.setAttribute('aria-expanded',open);return;}
+  $('teamSub').hidden=true;$('teamsBtn').setAttribute('aria-expanded','false');selMode='solo';store.set('flagdash-mode',selMode);refreshMenu();});
+$('teamSub').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;selMode=b.dataset.tmode;store.set('flagdash-mode',selMode);$('teamSub').hidden=true;$('teamsBtn').setAttribute('aria-expanded','false');refreshMenu();});
 document.querySelectorAll('.emote-row [data-emote]').forEach(b=>b.onclick=()=>{if(pv.runner)pv.runner.emote={id:b.dataset.emote,t:1.8};pv.autoT=5;});
 function setOnlineMsg(t){$('onlineStatus').textContent=t;}
 function renderOnline(){
@@ -3956,17 +4275,18 @@ $('chatInput').addEventListener('keydown',e=>e.stopPropagation());$('resPlaza').
 document.querySelectorAll('[data-pze]').forEach(b=>b.onclick=()=>plaza.emote(b.dataset.pze));
 $('lapSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;selLaps=+b.dataset.laps;store.set('flagdash-laps',String(selLaps));refreshMenu();});
 $('lobbyLaps').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!NET.isHost)return;NET.cfg.laps=+b.dataset.laps;syncLobbyPresence();renderLobby();});
-$('setBtn').onclick=openSettings;$('menuSetBtn').onclick=openSettings;$('setClose').onclick=closeSettings;
+$('setBtn').onclick=openSettings;$('menuSetBtn').onclick=openSettings;$('setClose').onclick=closeSettings;$('setQuit').onclick=()=>{settingsPaused=false;$('settings').hidden=true;if(state==='paused')state=prevState;music.setPaused(false);$('pause').hidden=true;toMenu();};
 ['chat','filter','dmFriends'].forEach(k=>{$('set_'+k).onclick=()=>{SET[k]=!SET[k];applySettings();if(hubChatOpen())renderChat();};});
 ['music','sfx','voice'].forEach(k=>{$('set_'+k).onclick=()=>{SET[k]=!SET[k];applySettings();};$('set_'+k+'Vol').oninput=e=>{SET[k+'Vol']=(+e.target.value)/100;applySettings();};});
 $('setTest').onclick=()=>{initAudio();voice.unlock();const r={id:'test',char:charById(selChar)};voice.say(pick(SAY.hit),r,'en',null,3);};
-$('pauseBtn').onclick=()=>togglePause();$('resumeBtn').onclick=()=>togglePause();$('quitBtn').onclick=()=>toMenu();
+$('pauseBtn').onclick=()=>openSettings();$('resumeBtn').onclick=()=>togglePause();$('quitBtn').onclick=()=>toMenu();
 function togglePause(){
   if(RACE&&RACE.online)return;
   if(state==='paused'){state=prevState;$('pause').hidden=true;last=performance.now();music.setPaused(false);}
   else if(canAct()||state==='countdown'){prevState=state;state='paused';$('pause').hidden=false;music.setPaused(true);input.left=input.right=false;$('resumeBtn').focus();}
 }
 function toMenu(desk){
+  if(typeof CEL!=='undefined'&&CEL.open){CEL.timers.forEach(clearTimeout);CEL.timers=[];CEL.open=false;CEL.done=null;$('celebrate').hidden=true;$('celConfetti').innerHTML='';}
   refreshHubBadges();crowd.stop();music.play(MUS.menu,{fade:1.2});GP=null;state='menu';['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('menu').hidden=false;
   clearRace();const th=themeById(selTrack);if(TH!==th)buildWorld(th);genCourse(7);refreshMenu(null);RACE=null;
   enterPlaza();if(desk)goDesk(false);
@@ -4027,14 +4347,14 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)music.setPa
    Other players who have the game open show up here too.
    ========================================================= */
 const STATIONS=[
-  {id:'desk',name:'Race Desk',sub:'Pick flag, runner, track',col:0xf2b631,a:0},
-  {id:'start',name:'Quick Race',sub:'Race the CPU now',col:0xe0654a,a:1,arch:true},
-  {id:'online',name:'Online Arena',sub:'Race friends',col:0x4fa3ff,a:2},
-  {id:'gp',name:'Grand Prix',sub:'4 races, one podium',col:0xc98a4a,a:3},
-  {id:'store',name:'Store',sub:'Items, skins, attire',col:0xff7ab0,a:4},
-  {id:'tasks',name:'Task Board',sub:'Daily tasks & challenges',col:0x5fd08a,a:5},
-  {id:'boards',name:'Leaderboards',sub:'Rankings & rewards',col:0x9a7be0,a:6,tower:true},
-  {id:'guild',name:'Guild Hall',sub:'Your team & guild goals',col:0x3fc8f0,a:7},
+  {id:'desk',ic:'🏁',name:'Race Desk',sub:'Pick flag, runner, track',col:0xf2b631,a:0},
+  {id:'start',ic:'⚡',name:'Quick Race',sub:'Race the CPU now',col:0xe0654a,a:1,arch:true},
+  {id:'online',ic:'🌐',name:'Online Arena',sub:'Race friends',col:0x4fa3ff,a:2},
+  {id:'gp',ic:'🏆',name:'Grand Prix',sub:'4 races, one podium',col:0xc98a4a,a:3},
+  {id:'store',ic:'🛒',name:'Store',sub:'Items, skins, attire',col:0xff7ab0,a:4},
+  {id:'tasks',ic:'✅',name:'Task Board',sub:'Daily tasks & challenges',col:0x5fd08a,a:5},
+  {id:'boards',ic:'📊',name:'Leaderboards',sub:'Rankings & rewards',col:0x9a7be0,a:6,tower:true},
+  {id:'guild',ic:'🛡️',name:'Guild Hall',sub:'Your team & guild goals',col:0x3fc8f0,a:7},
 ];
 const PZ_R=34,PZ_ST_R=21;
 // Rivals: CPU runners who wait around the plaza for a 1-on-1 race. Each pays out the first time you beat them.
@@ -4100,7 +4420,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     // flags of this week's top 15 nations around the fountain
     this.flagGroup=new THREE.Group();g.add(this.flagGroup);this.flags=[];this.placeFlags();
     {const sg=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(512,80,(c,w,h)=>{c.fillStyle='rgba(10,14,34,.9)';c.fillRect(0,0,w,h);c.save();c.strokeStyle='#f2b631';c.lineWidth=4;c.shadowColor='#f2b631';c.shadowBlur=12;c.strokeRect(4,4,w-8,h-8);c.restore();
-      c.fillStyle='#f2b631';c.font='34px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText("THIS WEEK'S TOP 15 NATIONS",w/2,h/2+2);}),depthWrite:false}));sg.scale.set(4.6,0.72,1);sg.position.set(0,6.4,0);g.add(sg);}
+      c.fillStyle='#f2b631';c.font='46px Bungee, "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji", Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('\u{1F3C6} \u{1F30D} 15',w/2,h/2+3);}),depthWrite:false}));sg.scale.set(4.6,0.72,1);sg.position.set(0,6.4,0);g.add(sg);}
     // booths: sleek pavilions trimmed in each booth's colour
     const body=tone(new THREE.MeshLambertMaterial(),0xd9dde6,0x283046),trim=tone(new THREE.MeshLambertMaterial(),0x5a6278,0x3a4361),glass=tone(new THREE.MeshLambertMaterial(),0x2b3550,0x0b0e18,0x000000,0x0a1a2a);
     this.st=STATIONS.map(s=>{const a=s.a/STATIONS.length*TAU+Math.PI/2,x=Math.cos(a)*PZ_ST_R,z=Math.sin(a)*PZ_ST_R;const b=new THREE.Group();b.position.set(x,0,z);b.rotation.y=-a-Math.PI/2;g.add(b);
@@ -4119,9 +4439,9 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
         strip(b,4.6,0.05,0.12,0,0.04,0.1,C);glow(b,0,1.2,0.4,3.2,C,0.28);}
       const pad=new THREE.Mesh(new THREE.RingGeometry(1.3,1.7,40),new THREE.MeshBasicMaterial({color:C,transparent:true,opacity:0.8}));pad.rotation.x=-Math.PI/2;pad.position.set(0,0.05,1.8);b.add(pad);
       const hex='#'+C.toString(16).padStart(6,'0');
-      const sign=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(512,150,(c,w,h)=>{c.fillStyle='rgba(10,14,34,.94)';c.fillRect(0,0,w,h);c.save();c.strokeStyle=hex;c.lineWidth=6;c.shadowColor=hex;c.shadowBlur=16;c.strokeRect(6,6,w-12,h-12);c.restore();
-        c.fillStyle='#fff';c.font='52px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(s.name,w/2,62);c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.fillText(s.sub,w/2,116);}),depthWrite:false}));
-      sign.scale.set(4.2,1.23,1);sign.position.set(0,s.tower?10:s.arch?6.2:4.6,-0.4);b.add(sign);
+      const sign=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(200,200,(c,w,h)=>{c.fillStyle='rgba(10,14,34,.94)';c.beginPath();c.arc(w/2,h/2,w/2-10,0,Math.PI*2);c.fill();c.save();c.strokeStyle=hex;c.lineWidth=8;c.shadowColor=hex;c.shadowBlur=18;c.stroke();c.restore();
+        c.textAlign='center';c.textBaseline='middle';c.font='110px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(s.ic,w/2,h/2+6);}),depthWrite:false}));
+      sign.scale.set(2,2,1);sign.position.set(0,s.tower?10:s.arch?6.2:4.6,-0.4);b.add(sign);
       b.updateMatrixWorld(true);const wp=new THREE.Vector3();pad.getWorldPosition(wp);const core=b.localToWorld(new THREE.Vector3(0,0,-1.6));return {s,b,pad,pos:wp,core,badge:null};});
     // rivals waiting between the booths
     this.rivals=RIVALS.map(rv=>{const a=(rv.k+0.5)/STATIONS.length*TAU+Math.PI/2,x=Math.cos(a)*15.5,z=Math.sin(a)*15.5;
@@ -4151,7 +4471,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
   drawRivalSign(o){const rv=o.rival,t=RIVAL_TIERS[rv.tier],won=RIVAL_WINS[rv.id]|0;
     const tex=canvasTex(512,130,(c,w,h)=>{c.fillStyle='rgba(14,18,48,.92)';c.fillRect(0,0,w,h);R(c,0,0,w,10,t.col);c.textAlign='center';c.textBaseline='middle';
       c.fillStyle=t.col;c.font='44px Bungee, Impact, sans-serif';c.fillText(t.name.toUpperCase(),w/2,52);
-      c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.fillText(won?`Beaten ${won}\u00d7 \u00b7 wants a rematch`:'Waiting for a challenge',w/2,102);});
+      c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.font='34px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(won?`\u{1F3C6} \u00d7${won}  \u2694\uFE0F`:'\u2694\uFE0F',w/2,102);});
     if(o.sign){o.sign.material.map.dispose();o.sign.material.map=tex;o.sign.material.needsUpdate=true;}
     else{o.sign=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthWrite:false,transparent:true}));o.sign.scale.set(2.6,0.66,1);o.sign.position.y=3.85;o.r.m.root.add(o.sign);}},
   // Flags round the fountain: the 15 nations with the most leaderboard points this week, #1 nearest the start.
@@ -4175,7 +4495,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
   isNight(){const m=this.timeMode();if(m!=='auto')return m==='night';const h=new Date().getHours();return h<6||h>=18;},
   // switch the plaza between day and night: sky, light, floor, glows and stars
   applyTime(){const n=this.isNight(),D=this.dn;this.night=n;
-    const bt=$('pzTime');if(bt)bt.textContent=(n?'\u{1F319} ':'\u2600\uFE0F ')+{auto:'Auto',day:'Day',night:'Night'}[this.timeMode()];
+    const bt=$('pzTime');if(bt){const md=this.timeMode();bt.textContent=(n?'\u{1F319}':'\u2600\uFE0F')+(md==='auto'?'\u{1F504}':'');bt.setAttribute('aria-label','Day or night: '+{auto:'Auto',day:'Day',night:'Night'}[md]);}
     if(!D)return;
     D.mats.forEach(o=>{o.mat.color.setHex(n?o.night:o.day);if(o.eDay!=null)o.mat.emissive.setHex(n?o.eNight:o.eDay);});
     D.halos.forEach(o=>{o.mat.opacity=n?o.op:o.op*0.35;});D.night.forEach(o=>{o.visible=n;});
@@ -4284,8 +4604,8 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       if(z.e!==o.e){o.e=z.e;o.r.emote={id:pick(EMOTES),t:1.8};}});
     this.others.forEach((o,peer)=>{if(!seen.has(peer)){this.group.remove(o.r.m.root);disposeModel(o.r.m);this.others.delete(peer);}});
     const n=this.others.size;const el=$('pzOnline');if(el)el.textContent=n?`${n} other player${n>1?'s':''} here`:'';},
-  refreshHud(){const o=this.near;const b=$('pzAct');b.hidden=!o;if(o&&o.rival){b.textContent=(isTouch?'':'E · ')+'Challenge '+o.rival.nm;b.style.setProperty('--sc',RIVAL_TIERS[o.rival.tier].col);}else if(o){b.textContent=(isTouch?'':'E · ')+'Enter '+o.s.name;b.style.setProperty('--sc','#'+o.s.col.toString(16).padStart(6,'0'));}
-    $('pzHint').textContent=o&&o.rival?`${RIVAL_TIERS[o.rival.tier].name} \u00b7 1-on-1 at ${themeById(o.rival.trk).name} \u00b7 ${RIVAL_WINS[o.rival.id]?'Win: +'+rewardText(RIVAL_REMATCH):'First win: +'+rewardText(o.rival.rw)}`:o?o.s.sub:(isTouch?'Tap anywhere to walk there, or tap a booth to open it. Pinch to zoom.':'Click to walk there, or click a booth to open it. WASD to walk, scroll to zoom, 1\u20134 emotes.');
+  refreshHud(){const o=this.near;const b=$('pzAct');b.hidden=!o;if(o&&o.rival){b.textContent=(isTouch?'':'E · ')+'\u2694\uFE0F '+o.rival.nm;b.setAttribute('aria-label','Challenge '+o.rival.nm);b.style.setProperty('--sc',RIVAL_TIERS[o.rival.tier].col);}else if(o){b.textContent=(isTouch?'':'E · ')+o.s.ic+' \u25B6';b.setAttribute('aria-label','Enter '+o.s.name);b.style.setProperty('--sc','#'+o.s.col.toString(16).padStart(6,'0'));}
+    $('pzHint').textContent=o&&o.rival?`${RIVAL_TIERS[o.rival.tier].name} \u00b7 1-on-1 at ${themeById(o.rival.trk).name} \u00b7 ${RIVAL_WINS[o.rival.id]?'Win: +'+rewardText(RIVAL_REMATCH):'First win: +'+rewardText(o.rival.rw)}`:o?o.s.ic+' '+o.s.name:(isTouch?'Tap anywhere to walk there, or tap a booth to open it. Pinch to zoom.':'Click to walk there, or click a booth to open it. WASD to walk, scroll to zoom, 1\u20134 emotes.');
     $('pzName').textContent=(GUILD?'['+GUILD.tag+'] ':'')+myName;renderWallet();
     const n=dailyReady();$('pzTasks').textContent=n?`${n} reward${n>1?'s':''} ready at the Task Board`:'';},
   act(){const o=this.near;if(!o||this.blocked())return;sfx.pop();if(o.rival){leavePlaza();startRival(o.rival);return;}const id=o.s.id;
@@ -4407,6 +4727,200 @@ applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
 goDesk(false);
 initNet();
 glbSubmit();
+/* ---------- screen layout editor: drag HUD pieces anywhere, saved on this device ---------- */
+const LAYOUT=(()=>{
+  const KEY='flagdash-layout';
+  // [key, selector, label, screen]
+  const PIECES=[
+    ['place','.hud-top .place','Race position','race'],['wallet','.wallet-hud','Coins & diamonds','race'],
+    ['progress','.hud-top .progress','Progress bar','race'],['clock','#clock','Race clock','race'],
+    ['buttons','.hud-btns','Pause button','race'],['item','#itemSlot','Item button','race'],
+    ['atk','#atkSlot','Attack button','race'],['def','#defSlot','Defence button','race'],
+    ['power','#powerSlot','Power meter','race'],['emote','#touch .tgroup','Emote button','race'],
+    ['hint','#swipeHint','Swipe hint','race'],['minimap','#minimap','Course map','race'],
+    ['d_top','#menu .d3-top','Top bar','desk'],['d_name','#menu .d3-name','Your name','desk'],
+    ['d_preview','#menu .preview-wrap','Runner preview','desk'],['d_emotes','#menu .d3-emotes','Emotes','desk'],
+    ['d_picks','#menu .d3-picks','Flag · Runner · Track · Loadout','desk'],['d_card','#menu .d3-card','Race card','desk']];
+  let data={};try{data=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){data={};}
+  // Race Desk v2 is built in as the default layout, so older Race Desk moves are cleared once.
+  const migrate=d=>{let ch=false;if(d&&!d._desk3){Object.keys(d).forEach(k=>{if(k.startsWith('d_'))delete d[k];});d._desk2=1;d._desk3=1;ch=true;}
+    if(d&&!d._mm2){delete d.minimap;d._mm2=1;ch=true;}return ch;};
+  const mig0=migrate(data);
+  // Saved to your Claude account (db, private to you) so it survives game updates; this browser keeps a copy too.
+  let cloud=null,cloudT=0;
+  const isStraight=()=>{try{return localStorage.getItem(KEY+'-straight')==='1';}catch(e){return false;}};
+  const pushCloud=()=>{if(!cloud)return;clearTimeout(cloudT);cloudT=setTimeout(()=>{cloud.set({pieces:data,straight:isStraight(),at:Date.now()}).catch(()=>{});},600);};
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}pushCloud();};
+  let editing=false,scope='race',sel=null,drag=null,saved=null;
+  (async()=>{try{if(!(window.claude&&window.claude.use))return;
+    const [db,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);if(!db||!u)return;
+    const uid=await u.id();if(!uid)return;const ref=db.doc('data/users/'+uid+'/layout');
+    const snap=await ref.get();cloud=ref;
+    if(snap.exists){const d=snap.data()||{};if(!drag&&!editing){data=JSON.parse(JSON.stringify(d.pieces||{}));if(migrate(data))pushCloud();
+        try{localStorage.setItem(KEY,JSON.stringify(data));if(d.straight)localStorage.setItem(KEY+'-straight','1');}catch(e){}applyAll();}}
+    else if(Object.keys(data).length)pushCloud();
+  }catch(e){cloud=null;}})();
+  const act=()=>PIECES.filter(p=>p[3]===scope);
+  const el=k=>{const p=PIECES.find(x=>x[0]===k);return p&&document.querySelector(p[1]);};
+  function apply(k){const e=el(k);if(!e)return;const d=data[k]||{};
+    e.style.translate=(d.x||d.y)?`${d.x||0}px ${d.y||0}px`:'';e.style.scale=(d.s&&d.s!==1)?String(d.s):'';
+    const inEdit=editing&&PIECES.find(p=>p[0]===k)[3]===scope;
+    e.style.display=d.h&&!inEdit?'none':'';e.style.opacity=d.h&&inEdit?'.35':'';}
+  const applyAll=()=>PIECES.forEach(p=>apply(p[0]));
+  function select(k){sel=k;PIECES.forEach(p=>{const e=el(p[0]);if(e)e.classList.toggle('lay-sel',p[0]===k);});
+    $('laySelName').textContent=k?PIECES.find(p=>p[0]===k)[2]:'Drag any outlined piece to move it';
+    $('layHide').textContent=k&&data[k]&&data[k].h?'👁 Show':'🚫 Hide';}
+  function pieceOf(t){if(!t||!t.closest)return null;let best=null,bestEl=null;
+    for(const p of act()){const e=el(p[0]);if(e&&(e===t||e.contains(t))&&(!bestEl||bestEl.contains(e))){best=p[0];bestEl=e;}}return best;}
+  function down(ev){if(!editing)return;if($('layBar').contains(ev.target))return;
+    const k=pieceOf(ev.target);if(!k){if(scope==='race'){ev.preventDefault();ev.stopPropagation();}return;}
+    ev.preventDefault();ev.stopPropagation();
+    select(k);const d=data[k]||(data[k]={});drag={k,id:ev.pointerId,sx:ev.clientX,sy:ev.clientY,ox:d.x||0,oy:d.y||0};}
+  function move(ev){if(!drag||ev.pointerId!==drag.id)return;ev.preventDefault();ev.stopPropagation();
+    const d=data[drag.k];d.x=Math.round(drag.ox+ev.clientX-drag.sx);d.y=Math.round(drag.oy+ev.clientY-drag.sy);apply(drag.k);}
+  function up(ev){if(!drag||ev.pointerId!==drag.id)return;ev.stopPropagation();drag=null;save();}
+  function block(ev){if(!editing||$('layBar').contains(ev.target))return;
+    // on the scrolling Race Desk, touches outside the pieces still scroll the page
+    if(scope==='desk'&&(ev.type==='touchstart'||ev.type==='touchend')&&!pieceOf(ev.target))return;
+    ev.preventDefault();ev.stopPropagation();}
+  document.addEventListener('pointerdown',down,true);
+  document.addEventListener('pointermove',move,true);
+  document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);
+  ['click','touchstart','touchend','mousedown'].forEach(t=>document.addEventListener(t,block,{capture:true,passive:false}));
+  // the toolbar itself can be dragged out of the way (not saved)
+  let bar=null;$('layGrip').addEventListener('pointerdown',ev=>{ev.preventDefault();const r=$('layBar').getBoundingClientRect();
+    bar={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top};try{$('layGrip').setPointerCapture(ev.pointerId);}catch(_){}});
+  $('layGrip').addEventListener('pointermove',ev=>{if(!bar||ev.pointerId!==bar.id)return;const b=$('layBar');
+    b.style.transform='none';b.style.left=Math.max(4,Math.min(innerWidth-b.offsetWidth-4,ev.clientX-bar.dx))+'px';
+    b.style.top=Math.max(4,Math.min(innerHeight-b.offsetHeight-4,ev.clientY-bar.dy))+'px';});
+  $('layGrip').addEventListener('pointerup',()=>{bar=null;});
+  function resize(f){if(!sel)return;const d=data[sel]||(data[sel]={});d.s=Math.round(Math.max(.5,Math.min(2,(d.s||1)+f))*10)/10;apply(sel);save();}
+  $('laySmaller').onclick=()=>resize(-.1);$('layBigger').onclick=()=>resize(.1);
+  $('layHide').onclick=()=>{if(!sel)return;const d=data[sel]||(data[sel]={});d.h=!d.h;if(!d.h)delete d.h;apply(sel);select(sel);save();};
+  $('layResetOne').onclick=()=>{if(!sel)return;delete data[sel];apply(sel);select(sel);save();};
+  $('layResetAll').onclick=()=>{act().forEach(p=>delete data[p[0]]);applyAll();save();select(null);};
+  function placeBar(){const b=$('layBar');b.style.transform='';b.style.left='';b.style.top='';b.classList.toggle('lay-bottom',scope==='desk');}
+  function open(sc){scope=sc||'race';editing=true;
+    if(scope==='race'){saved={hud:$('hud').hidden,touch:$('touch').hidden,lo:$('hudLo').hidden,map:$('minimap').hidden};
+      $('hud').hidden=false;$('touch').hidden=false;$('hudLo').hidden=false;$('layBackdrop').hidden=false;}
+    else saved=null;
+    document.body.classList.add('layout-edit');document.body.classList.toggle('layout-desk',scope==='desk');$('layBar').hidden=false;placeBar();
+    act().forEach(p=>{const e=el(p[0]);if(e)e.classList.add('lay-piece');});applyAll();select(null);}
+  function close(){const was=scope;editing=false;drag=null;select(null);
+    PIECES.forEach(p=>{const e=el(p[0]);if(e)e.classList.remove('lay-piece','lay-sel');});
+    document.body.classList.remove('layout-edit','layout-desk');$('layBackdrop').hidden=true;$('layBar').hidden=true;
+    if(saved){$('hud').hidden=saved.hud;$('touch').hidden=saved.touch;$('hudLo').hidden=saved.lo;$('minimap').hidden=saved.map;}
+    applyAll();if(was==='race'){$('settings').hidden=false;renderSettings();}}
+  $('layDone').onclick=()=>{straighten();close();};
+  // Straighten: line up pieces that sit in roughly the same row or column (and on the race screen, keep everything on screen).
+  function straighten(){
+    // only pieces you moved or resized get lined up; untouched pieces stay put and act as guides
+    const moved=k=>{const d=data[k];return !!(d&&(d.x||d.y||(d.s&&d.s!==1)));};
+    const items=act().map(p=>{const e=el(p[0]);if(!e||(data[p[0]]&&data[p[0]].h))return null;const r=e.getBoundingClientRect();
+      if(!r.width||!r.height)return null;return {k:p[0],l:r.left,t:r.top,w:r.width,h:r.height,fixed:!moved(p[0])};}).filter(Boolean);
+    const shift=(it,dx,dy)=>{if(it.fixed||(!dx&&!dy))return;const d=data[it.k]||(data[it.k]={});d.x=Math.round((d.x||0)+dx);d.y=Math.round((d.y||0)+dy);it.l+=dx;it.t+=dy;};
+    const group=(arr,key,tol)=>{const s=arr.slice().sort((a,b)=>key(a)-key(b)),out=[];
+      s.forEach(it=>{const g=out[out.length-1];if(g&&Math.abs(key(it)-g.reduce((a,b)=>a+key(b),0)/g.length)<=tol)g.push(it);else out.push([it]);});
+      return out.filter(g=>g.length>1&&g.some(i=>!i.fixed));};
+    const target=(g,key,pick)=>{const f=g.filter(i=>i.fixed);const src=f.length?f:g;return pick(src.map(key));};
+    const mean=a=>a.reduce((x,y)=>x+y,0)/a.length;
+    group(items,it=>it.t+it.h/2,scope==='desk'?16:28).forEach(g=>{
+      const hs=g.map(i=>i.h),similar=Math.max(...hs)/Math.min(...hs)<1.25;
+      if(similar){const c=target(g,i=>i.t+i.h/2,mean);g.forEach(i=>shift(i,0,c-(i.t+i.h/2)));}
+      else{const t=target(g,i=>i.t,a=>Math.min(...a));g.forEach(i=>shift(i,0,t-i.t));}});
+    const done=new Set();
+    group(items,it=>it.l,20).forEach(g=>{const l=target(g,i=>i.l,a=>Math.min(...a));g.forEach(i=>{shift(i,l-i.l,0);done.add(i);});});
+    group(items.filter(i=>!done.has(i)),it=>it.l+it.w,20).forEach(g=>{const r=target(g,i=>i.l+i.w,a=>Math.max(...a));g.forEach(i=>{shift(i,r-(i.l+i.w),0);done.add(i);});});
+    group(items.filter(i=>!done.has(i)),it=>it.l+it.w/2,20).forEach(g=>{const c=target(g,i=>i.l+i.w/2,mean);g.forEach(i=>shift(i,c-(i.l+i.w/2),0));});
+    const m=8;items.forEach(i=>{let dx=0,dy=0;
+      if(i.l<m)dx=m-i.l;else if(i.l+i.w>innerWidth-m)dx=Math.max(m-i.l,innerWidth-m-(i.l+i.w));
+      if(scope==='race'){if(i.t<m)dy=m-i.t;else if(i.t+i.h>innerHeight-m)dy=Math.max(m-i.t,innerHeight-m-(i.t+i.h));}
+      shift(i,dx,dy);});
+    if(scope==='race'){try{localStorage.setItem(KEY+'-straight','1');}catch(e){}}applyAll();save();
+  }
+  $('layStraight').onclick=straighten;
+  // straighten the race screen once automatically the next time it shows
+  new MutationObserver(()=>{if(editing||isStraight()||$('hud').hidden||!PIECES.some(p=>p[3]==='race'&&data[p[0]]))return;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{if(editing)return;scope='race';straighten();}));
+  }).observe($('hud'),{attributes:true,attributeFilter:['hidden']});
+  $('setLayout').onclick=()=>{$('settings').hidden=true;open('race');};
+  $('deskEdit').onclick=()=>open('desk');
+  applyAll();if(mig0)save();
+  return {applyAll,isEditing:()=>editing};
+})();
+
+/* ---------- plaza icon rail + How to play (moved off the Race Desk) ---------- */
+(()=>{const hb=$('howtoBody');const lp=$('legendPanel');if(lp)hb.appendChild(lp);
+  document.querySelectorAll('.desk-info').forEach(p=>hb.appendChild(p));
+  $('pzStore').onclick=()=>openStore();$('pzTasksBtn').onclick=()=>openHub('tasks');$('pzBoards').onclick=()=>openHub('boards');$('pzGuild').onclick=()=>openHub('guild');
+  $('pzHelp').onclick=()=>{$('howto').hidden=false;$('howtoClose').focus();};$('howtoClose').onclick=()=>{$('howto').hidden=true;};
+  const sync=()=>{const a=$('menuTasksBtn'),b=$('menuBoardsBtn');$('pzTasksBtn').dataset.badge=a?a.dataset.badge||'':'';$('pzBoards').dataset.badge=b?b.dataset.badge||'':'';};
+  new MutationObserver(sync).observe($('menuTasksBtn'),{attributes:true,attributeFilter:['data-badge']});
+  new MutationObserver(sync).observe($('menuBoardsBtn'),{attributes:true,attributeFilter:['data-badge']});sync();
+})();
+
+/* ---------- Race Desk v3 wiring ---------- */
+(()=>{
+  const tabs=['online','solo'];let tab=store.get('flagdash-desktab');if(!tabs.includes(tab))tab='solo';
+  function setTab(t){tab=t;store.set('flagdash-desktab',t);
+    tabs.forEach(x=>{const b=$(x==='online'?'tabOnline':'tabSolo');b.setAttribute('aria-selected',x===t);b.tabIndex=x===t?0:-1;});
+    $('paneOnline').hidden=t!=='online';$('paneSolo').hidden=t!=='solo';
+    $('startBtn').hidden=t!=='solo';$('d3Create').hidden=t!=='online';syncCreate();}
+  function syncCreate(){$('d3Create').disabled=$('onlineControls').hidden;}
+  new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});
+  $('tabOnline').onclick=()=>setTab('online');$('tabSolo').onclick=()=>setTab('solo');
+  $('d3Create').onclick=()=>$('createBtn').click();
+  $('quickBtn').onclick=()=>{const L=selLaps,Mo=selMode;selLaps=1;selMode='solo';try{$('startBtn').click();}finally{selLaps=L;selMode=Mo;}};
+  $('deskSet').onclick=()=>openSettings();$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
+  const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
+  $('pvLeft').onclick=()=>cycle(-1);$('pvRight').onclick=()=>cycle(1);
+  const wal=()=>{$('d3Coins').textContent=$('wCoins').textContent;$('d3Gems').textContent=$('wGems').textContent;};
+  ['wCoins','wGems'].forEach(id=>new MutationObserver(wal).observe($(id),{childList:true,characterData:true,subtree:true}));wal();
+  const ld=()=>{const t=($('pkLoadout').textContent||'').trim();const m=t.match(/^(\p{Extended_Pictographic}\uFE0F?)\s*/u);
+    $('pkLoadIc').textContent=m?m[1]:'🎒';$('pkLoadTxt').textContent=(m?t.slice(m[0].length):t).split('·')[0].trim();};
+  new MutationObserver(ld).observe($('pkLoadout'),{childList:true,characterData:true,subtree:true});ld();
+  setTab(tab);
+})();
+
+/* ---------- big race celebration: 3rd, then 2nd, then the winner, then your gifts ---------- */
+var CEL={timers:[],open:false,done:null};
+function celebrate(rows,place,rw,done){
+  if(CEL.open){CEL.done=done;return;}
+  CEL.open=true;CEL.done=done;CEL.timers.forEach(clearTimeout);CEL.timers=[];
+  const ov=$('celebrate'),teams=RACE&&isTeamMode(RACE.mode);
+  const nm=r=>r.nm||(r.flag&&r.flag.name)||'Runner';
+  $('celEyebrow').textContent=`🏁 Race complete · ${TH.name}`+(GP&&RACE&&RACE.gp?` · Grand Prix ${GP.round+1}/${GP.tracks.length}`:'');
+  const t=$('celTitle');t.textContent='And the winner is…';t.classList.remove('win');
+  [1,2,3].forEach(n=>{const el=$('celS'+n),x=rows[n-1];el.classList.remove('show','me');el.innerHTML='';if(!x)return;
+    if(x.r.kind==='local')el.classList.add('me');
+    el.innerHTML=`<div class="cel-medal">${['🥇','🥈','🥉'][n-1]}</div><img alt="" src="${x.r.flag?x.r.flag.url:''}"><div class="cel-nm"></div><div class="cel-time">${x.est?'≈ ':''}${fmt(x.t)}</div><div class="cel-block">${n}</div>`;
+    el.querySelector('.cel-nm').textContent=nm(x.r)+(x.r.kind==='local'?' (you)':'');});
+  const gifts=[];
+  gifts.push({ic:'🎁',v:priceHTML(rw.coinsWon,'coin'),l:'Coins earned'});
+  if(rw.gemsWon)gifts.push({ic:'💎',v:'+'+rw.gemsWon,l:rw.gemsWon>1?'Diamonds':'Diamond'});
+  gifts.push({ic:place===1?'🏆':place<=3?'🏅':'🎽',v:ord(place),l:place===1?'Winner!':'Your place'});
+  if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
+  const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
+  $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
+  const win=rows[0]?rows[0].r:null,winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
+  const steps=[[700,()=>{$('celS3').classList.add('show');sfx.beep(false);}],
+    [2000,()=>{$('celS2').classList.add('show');sfx.beep(false);}],
+    [3500,()=>{$('celS1').classList.add('show');t.textContent='🏆 '+winName;t.classList.add('win');sfx.fanfare();confetti(win&&win.kind==='local'?160:110);}],
+    [4900,()=>{[...g.children].forEach((d,i)=>CEL.timers.push(setTimeout(()=>d.classList.add('show'),i*350)));}],
+    [4900+gifts.length*350+500,()=>{$('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}]];
+  if(reduceMotion)steps.forEach(([,f])=>f());else steps.forEach(([ms,f])=>CEL.timers.push(setTimeout(f,ms)));
+}
+function celFinish(){CEL.timers.forEach(clearTimeout);CEL.timers=[];
+  ['celS3','celS2','celS1'].forEach(id=>$(id).classList.add('show'));[...$('celGifts').children].forEach(d=>d.classList.add('show'));
+  const t=$('celTitle');if(!t.classList.contains('win')){const w=$('celS1').querySelector('.cel-nm');if(w)t.textContent='🏆 '+(w.textContent.includes('(you)')?'YOU WIN!':w.textContent+' wins!');t.classList.add('win');}
+  $('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}
+function confetti(n){if(reduceMotion)return;const box=$('celConfetti');const cols=['#f6d77f','#e9c46a','#ffffff','#5fa8ff','#ff6b6b','#5fd08a','#c4b5ff'];
+  for(let i=0;i<n;i++){const c=document.createElement('i');c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];
+    c.style.setProperty('--dx',(Math.random()*30-15)+'vw');c.style.setProperty('--rot',(Math.random()*1440-720)+'deg');
+    c.style.animationDuration=(2.4+Math.random()*2.2)+'s';c.style.animationDelay=(Math.random()*0.8)+'s';box.appendChild(c);setTimeout(()=>c.remove(),6000);}}
+$('celSkip').onclick=celFinish;
+$('celNext').onclick=()=>{CEL.timers.forEach(clearTimeout);CEL.timers=[];CEL.open=false;$('celebrate').hidden=true;$('celConfetti').innerHTML='';const d=CEL.done;CEL.done=null;if(d)d();};
+
 requestAnimationFrame(frame);
 })();
 </script>
