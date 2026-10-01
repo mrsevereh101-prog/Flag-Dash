@@ -4052,11 +4052,10 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     [[0,0],[Math.PI/2,0.5]].forEach(([ry,rx])=>{const t=new THREE.Mesh(new THREE.TorusGeometry(0.95,0.2,14,48),chrome);t.rotation.set(rx,ry,0);trophy.add(t);});
     glow(g,0,1.2,0,9,NEON,0.35);
     const fl=new THREE.PointLight(NEON,0,15);fl.position.set(0,2.2,0);g.add(fl);this.fountainLight=fl;
-    // flags of every nation around the fountain
-    const poleM=new THREE.MeshPhongMaterial({color:0xdfe3ef,specular:0xffffff,shininess:80});const fls=shuffle(COUNTRIES.map(c=>c[0])).slice(0,16);
-    this.flags=[];fls.forEach((cc,i)=>{const a=i/fls.length*TAU,x=Math.cos(a)*7,z=Math.sin(a)*7;const p=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.06,4.2,6),poleM);p.position.set(x,2.1,z);g.add(p);
-      const f=flagCanvas(cc);if(!f.tex){f.tex=new THREE.CanvasTexture(f.canvas);f.tex.__shared=true;}
-      const fg=new THREE.PlaneGeometry(1.2,0.8,6,1);fg.translate(0.6,0,0);const m=new THREE.Mesh(fg,new THREE.MeshLambertMaterial({map:f.tex,side:THREE.DoubleSide}));m.position.set(x,3.7,z);m.rotation.y=-a;g.add(m);this.flags.push(m);});
+    // flags of this week's top 15 nations around the fountain
+    this.flagGroup=new THREE.Group();g.add(this.flagGroup);this.flags=[];this.placeFlags();
+    {const sg=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(512,80,(c,w,h)=>{c.fillStyle='rgba(10,14,34,.9)';c.fillRect(0,0,w,h);c.save();c.strokeStyle='#f2b631';c.lineWidth=4;c.shadowColor='#f2b631';c.shadowBlur=12;c.strokeRect(4,4,w-8,h-8);c.restore();
+      c.fillStyle='#f2b631';c.font='34px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText("THIS WEEK'S TOP 15 NATIONS",w/2,h/2+2);}),depthWrite:false}));sg.scale.set(4.6,0.72,1);sg.position.set(0,6.4,0);g.add(sg);}
     // booths: sleek pavilions trimmed in each booth's colour
     const body=tone(new THREE.MeshLambertMaterial(),0xd9dde6,0x283046),trim=tone(new THREE.MeshLambertMaterial(),0x5a6278,0x3a4361),glass=tone(new THREE.MeshLambertMaterial(),0x2b3550,0x0b0e18,0x000000,0x0a1a2a);
     this.st=STATIONS.map(s=>{const a=s.a/STATIONS.length*TAU+Math.PI/2,x=Math.cos(a)*PZ_ST_R,z=Math.sin(a)*PZ_ST_R;const b=new THREE.Group();b.position.set(x,0,z);b.rotation.y=-a-Math.PI/2;g.add(b);
@@ -4110,6 +4109,22 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       c.fillStyle='#c9d1ee';c.font='600 30px "Chakra Petch", sans-serif';c.fillText(won?`Beaten ${won}\u00d7 \u00b7 wants a rematch`:'Waiting for a challenge',w/2,102);});
     if(o.sign){o.sign.material.map.dispose();o.sign.material.map=tex;o.sign.material.needsUpdate=true;}
     else{o.sign=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,depthWrite:false,transparent:true}));o.sign.scale.set(2.6,0.66,1);o.sign.position.y=3.85;o.r.m.root.add(o.sign);}},
+  // Flags round the fountain: the 15 nations with the most leaderboard points this week, #1 nearest the start.
+  placeFlags(){
+    const wk=weekKey(),tot=new Map();buildBoard('w',wk).forEach(r=>{if(r.pts>0)tot.set(r.cc,(tot.get(r.cc)||0)+r.pts);});
+    const top=[...tot].sort((a,b)=>b[1]-a[1]).map(x=>x[0]).slice(0,15);
+    if(top.length<15)shuffle(COUNTRIES.map(c=>c[0]),mulberry32(hashStr('flags'+wk))).forEach(cc=>{if(top.length<15&&!top.includes(cc))top.push(cc);});
+    const sig=wk+'|'+top.join(',');if(sig===this.flagSig)return;this.flagSig=sig;
+    const G=this.flagGroup;while(G.children.length){const o=G.children.pop();if(o.material&&o.material.map&&!o.material.map.__shared)o.material.map.dispose();}this.flags=[];
+    const poleM=new THREE.MeshPhongMaterial({color:0xdfe3ef,specular:0xffffff,shininess:80}),goldM=new THREE.MeshPhongMaterial({color:0xf2c14a,specular:0xffffff,shininess:90}),n=top.length;
+    top.forEach((cc,i)=>{const k=i===0?0:(i%2?1:-1)*Math.ceil(i/2),a=1.178+k*TAU/n,x=Math.cos(a)*7,z=Math.sin(a)*7,h=i===0?4.8:i<3?4.5:4.2;
+      const p=new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.06,h,6),i<3?goldM:poleM);p.position.set(x,h/2,z);G.add(p);
+      const f=flagCanvas(cc);if(!f.tex){f.tex=new THREE.CanvasTexture(f.canvas);f.tex.__shared=true;}
+      const fg=new THREE.PlaneGeometry(1.2,0.8,6,1);fg.translate(0.6,0,0);const m=new THREE.Mesh(fg,new THREE.MeshLambertMaterial({map:f.tex,side:THREE.DoubleSide}));m.position.set(x,h-0.5,z);m.rotation.y=-a;G.add(m);this.flags.push(m);
+      const col=['#f2b631','#c9d1e4','#d08a4c'][i]||'#eef1f8';
+      const tag=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(128,64,(c,w,hh)=>{c.fillStyle='rgba(10,14,34,.88)';c.fillRect(0,0,w,hh);R(c,0,0,w,5,col);c.fillStyle=col;c.font='34px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('#'+(i+1),w/2,hh/2+3);}),depthWrite:false}));
+      tag.scale.set(0.62,0.31,1);tag.position.set(x,h-1.2,z);G.add(tag);});
+  },
   timeMode(){const m=store.get('flagdash-plaza-time');return m==='day'||m==='night'?m:'auto';},
   isNight(){const m=this.timeMode();if(m!=='auto')return m==='night';const h=new Date().getHours();return h<6||h>=18;},
   // switch the plaza between day and night: sky, light, floor, glows and stars
@@ -4122,7 +4137,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     if(this.active){scene.background=n?this.skies.night:this.skies.day;scene.fog=new THREE.Fog(n?0x0b1530:0xcfe0ee,n?70:60,n?260:190);
       hemi.color.setHex(n?0x8ea6ff:0xffffff);hemi.groundColor.setHex(n?0x1a2030:0x55604a);hemi.intensity=n?0.75:1.05;sun.intensity=n?0.3:0.75;}},
   enter(){
-    if(!this.built)this.build();
+    if(!this.built)this.build();else this.placeFlags();
     if(this.rivals)this.rivals.forEach(o=>this.drawRivalSign(o));
     if(this.active)return;this.active=true;
     // swap the race world out and the plaza in
