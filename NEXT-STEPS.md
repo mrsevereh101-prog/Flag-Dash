@@ -6,14 +6,14 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 ## Done
 - Online play through Supabase Realtime (rooms, lobby, races, Flag Challenge online)
 - Worldwide leaderboards (`supabase/leaderboard.sql`, already run)
-- Play counts (`supabase/plays.sql`)
+- Play counts (`supabase/plays.sql`, run Oct 2)
 - Rivals in the plaza, Flag Challenge mode, hero perks, random Quick Race tracks
 - Neon plaza with day/night, weekly top 15 flags
 - Race Desk in a locker room, one equipped perk per race, store button on the home screen
 - Accounts with a soft gate: Google sign-in tested and working (Oct 2)
 
 ## To finish sign-in (accounts)
-1. [ ] Run `supabase/accounts.sql` in the Supabase SQL editor (click "Run query" on the warning).
+1. [x] Run `supabase/accounts.sql` in the Supabase SQL editor (click "Run query" on the warning).
 2. [x] Supabase > Authentication > URL Configuration
    - Site URL: `https://mrsevereh101-prog.github.io/Flag-Dash/`
    - Redirect URLs: add `https://mrsevereh101-prog.github.io/Flag-Dash/**`
