@@ -214,6 +214,72 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .cel-confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:celFall linear forwards}
 @keyframes celFall{to{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot))}}
 @media (prefers-reduced-motion:reduce){.cel-step,.cel-gift{transition:none}.cel-title.win,.cel-step.s1.show,.cel-gift.show .gbox{animation:none}}
+
+/* ---------- Race Desk bottom sheet: ▲ pulls up the rest ---------- */
+.desk3 .d3-stage{min-height:clamp(300px,calc(100dvh - 330px),680px)}
+.desk3 .left-col{padding-bottom:150px}
+.d3-sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:7;width:min(100% - 16px,520px);box-sizing:border-box;display:grid;gap:10px;padding:0 10px calc(10px + env(safe-area-inset-bottom,0px));
+  border-radius:22px 22px 0 0;border:2px solid rgba(233,196,106,.7);border-bottom:0;background:linear-gradient(180deg,rgba(30,56,150,.94),rgba(10,24,80,.97));box-shadow:0 -10px 30px rgba(0,0,0,.45)}
+.d3-handle{display:grid;justify-items:center;gap:2px;width:100%;background:transparent;border:0;padding:8px 0 2px;color:var(--d3-gold);touch-action:none;cursor:pointer}
+.d3-handle-bar{width:46px;height:5px;border-radius:3px;background:rgba(233,196,106,.7)}
+.d3-handle-arrow{font-size:16px;line-height:1;transition:transform .3s}
+.d3-sheet.open .d3-handle-arrow{transform:rotate(180deg)}
+.d3-sheet-body{display:grid;gap:10px;max-height:0;overflow:hidden;transition:max-height .35s ease}
+.d3-sheet.open .d3-sheet-body{max-height:calc(100dvh - 300px);overflow:auto;overscroll-behavior:contain}
+.d3-sheet .d3-go{margin-top:0}
+.d3-sheet .d3-picks,.d3-sheet .d3-card{box-shadow:none}
+@media (prefers-reduced-motion:reduce){.d3-sheet-body,.d3-handle-arrow{transition:none}}
+
+#layBar{grid-auto-rows:min-content;align-content:start;max-height:calc(100dvh - 24px);overflow:auto}
+#layBar button{min-height:40px;height:auto}
+
+#layBar.lay-mini .lay-row{display:none}#layBar.lay-mini{width:auto;min-width:220px}
+
+/* emote panel: one icon that opens the four emotes */
+.desk3 .d3-emotes{width:auto;padding:6px;border-radius:999px;gap:6px;justify-items:center}
+.desk3 .d3-emotes .chip-btn{display:none;width:100px}
+.desk3 .d3-emotes.open{border-radius:18px;padding:8px}
+.desk3 .d3-emotes.open .chip-btn{display:block}
+.d3-emote-ic{width:52px;height:52px;border-radius:50%;border:2px solid rgba(233,196,106,.75);background:radial-gradient(circle at 50% 35%,#2f54b8,#13296f);font-size:26px;line-height:1;padding:0;display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.25)}
+.desk3 .d3-emotes.open .d3-emote-ic{box-shadow:0 0 0 3px rgba(233,196,106,.45)}
+
+/* ---------- bottom tab bar ---------- */
+.d3-sheet{gap:0;padding-top:0}
+.d3-sheet-body{display:grid;gap:10px}
+.d3-sheet.open .d3-sheet-body{padding-bottom:10px}
+.d3-sheet .d3-card{padding:12px}
+.d3-sheet .d3-handle{padding:6px 0 0}
+.d3-tabbar{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding-top:8px}
+.d3-tabbar button{display:grid;justify-items:center;gap:2px;padding:8px 4px;border-radius:14px;border:2px solid rgba(233,196,106,.45);background:rgba(8,18,60,.55);color:#f3ead0;font-weight:800;font-size:13px}
+.d3-tabbar i{font-style:normal;font-size:24px;line-height:1.1}
+.d3-tabbar button.cur{border-color:#f7e3a3;background:linear-gradient(180deg,#f8e19a,#c9973a);color:#3a2706;box-shadow:inset 0 2px 0 rgba(255,255,255,.5)}
+.d3-sheet:not(.open) .d3-tabbar button.cur{background:rgba(233,196,106,.22);color:#f6e3a8}
+.d3-qinfo{display:flex;gap:12px;align-items:center;text-align:left}
+.d3-qic{font-size:38px}.d3-qinfo b{display:block;color:#f6e3a8;font-size:18px}.d3-qinfo small{color:#cfd7f5}
+.d3-qnote{margin:0;font-size:12.5px}
+.cpu-go .d3-gold,#d3Create{width:100%}
+.desk3 .left-col{padding-bottom:110px}
+.desk3 .d3-stage{min-height:clamp(300px,calc(100dvh - 300px),700px)}
+/* emote icon moves to the top-right of the runner stage and opens downward */
+.desk3 .d3-emotes{top:6px;transform:none;right:4px}
+
+.d3-sheet.open .d3-handle-arrow{transform:none}
+.d3-sheet.open .d3-sheet-body{max-height:calc(100dvh - 160px)}
+.d3-sheet .d3-picks{padding:6px 4px}
+.d3-sheet .d3-picks img{height:30px;width:46px}.d3-sheet .d3-picks i{font-size:24px;line-height:30px}
+
+/* ---------- static Race Desk: no page scroll; swipe anywhere to turn the runner ---------- */
+#menu.overlay:has(.desk3){overflow:hidden;overscroll-behavior:none;touch-action:none}
+#menu.overlay:has(.desk3) .d3-sheet-body{touch-action:pan-y}
+#menu.overlay:has(.desk3) input{touch-action:manipulation}
+.desk3 .left-col{padding-bottom:0}
+.desk3 .d3-stage{min-height:0;height:calc(100dvh - var(--app-top,0px) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 260px)}
+.d3-l{left:6%}.d3-r{left:auto;right:6%}
+.d3-arrow{bottom:6%;width:50px;height:50px;font-size:20px;z-index:2}
+.d3-rname{position:absolute;left:50%;bottom:calc(6% + 12px);transform:translateX(-50%);padding:5px 14px;border-radius:999px;border:2px solid rgba(233,196,106,.6);background:rgba(8,18,60,.7);color:#f6e3a8;font-weight:800;font-size:15px;white-space:nowrap;pointer-events:none}
+
+.hero-tag{font-size:11px;font-weight:800;letter-spacing:.04em;color:#f6e3a8;text-transform:uppercase}
+.shop-card.hero-skin .swatch{box-shadow:0 0 18px rgba(242,182,49,.35),inset 0 0 0 2px rgba(255,255,255,.25)}
 </style></head><body>
 <title>Flag Dash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -692,14 +758,17 @@ body:not(.touch) .pz-stick{opacity:.55}
       <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"></label>
       <section class="d3-stage" id="playPanel" aria-label="Race Desk">
         <div class="preview-wrap"><canvas id="preview" aria-label="3D preview of your runner"></canvas>
-          <button class="d3-arrow d3-l" id="pvLeft" aria-label="Turn runner left">◀</button><button class="d3-arrow d3-r" id="pvRight" aria-label="Turn runner right">▶</button>
+          <button class="d3-arrow d3-l" id="pvLeft" aria-label="Previous runner">◀</button><span class="d3-rname" id="pvName" aria-live="polite"></span><button class="d3-arrow d3-r" id="pvRight" aria-label="Next runner">▶</button>
           <button class="d3-round d3-edit" id="deskEdit" aria-label="Edit Race Desk layout">✏️</button>
         </div>
-        <div class="emote-row d3-emotes" aria-label="Emotes"><div class="d3-emote-t">Emote</div>
+        <div class="emote-row d3-emotes" aria-label="Emotes"><button class="d3-emote-ic" id="emoteToggle" aria-expanded="false" aria-label="Emotes">🙌</button>
           <button class="chip-btn" data-emote="wave">Wave</button><button class="chip-btn" data-emote="flex">Flex</button><button class="chip-btn" data-emote="dance">Dance</button><button class="chip-btn" data-emote="point">Point</button>
         </div>
       </section>
       <div class="sum-row" hidden><div id="sumCountry"></div><div id="sumChar"></div></div>
+      <div class="d3-sheet" id="d3Sheet">
+      <div class="d3-sheet-body" id="d3SheetBody">
+        <button class="d3-handle" id="d3Handle" aria-label="Close panel"><span class="d3-handle-bar"></span><span class="d3-handle-arrow">▼</span></button>
       <div class="pick-row d3-picks">
         <button class="pick-btn" data-pick="flag" aria-expanded="false"><img id="sumFlag" alt=""><b id="pkFlag"></b><span class="sr-only">Flag</span></button>
         <button class="pick-btn" data-pick="runner" aria-expanded="false"><i aria-hidden="true">🏃</i><b id="pkRunner"></b><span class="sr-only">Runner</span></button>
@@ -707,21 +776,26 @@ body:not(.touch) .pz-stick{opacity:.55}
         <button class="pick-btn" data-pick="loadout" aria-expanded="false"><i aria-hidden="true" id="pkLoadIc">🎯</i><b id="pkLoadTxt"></b><b id="pkLoadout" hidden></b><span class="sr-only">Loadout</span></button>
       </div>
       <section class="d3-card">
-        <div class="d3-tabs" role="tablist"><button role="tab" id="tabOnline" data-tab="online">Online Battle</button><button role="tab" id="tabSolo" data-tab="solo">Solo Practice</button></div>
         <div id="lobbyReturn" class="play-block d3-pane" hidden>
           <p class="muted">You are in room <b id="returnCode"></b>. Changes to your flag and runner show up in the lobby.</p>
           <button class="primary d3-gold" id="backLobbyBtn">Back to lobby</button>
         </div>
         <div id="playChoices">
-          <div class="d3-pane online-block" id="paneOnline">
+          <div class="d3-pane quick-pane" id="paneQuick" role="tabpanel" aria-labelledby="tabQuick">
+            <div class="d3-qinfo"><span class="d3-qic">🏁</span><div><b>Quick Race</b><small>1 lap · solo · 5 CPU rivals · <span id="qTrack"></span></small></div></div>
+            <p class="muted d3-qnote">Jump straight in with your flag, runner and track. Your saved race settings stay the same.</p>
+            <div class="cpu-go"><button class="primary d3-gold" id="quickBtn">🏁 Go!</button></div>
+          </div>
+          <div class="d3-pane online-block" id="paneOnline" role="tabpanel" aria-labelledby="tabOnline" hidden>
             <div id="onlineControls" hidden>
               <button id="createBtn" hidden>Create room</button><div class="d3-pill-row"><div class="d3-join"><input type="text" id="codeInput" placeholder="CODE" maxlength="4" aria-label="Room code" autocomplete="off"><button class="d3-pill d3-pill-dark" id="joinBtn">Join room</button></div></div>
               <div class="open-rooms" id="openRooms"></div>
             </div>
             <p class="muted d3-status" id="onlineStatus">Connecting…</p>
             <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Online Friends</b><small>Chat, friends and rooms</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store">🛒</button></div>
+            <button class="primary d3-gold" id="d3Create">🌐 Create Room</button>
           </div>
-          <div class="d3-pane offline-block" id="paneSolo">
+          <div class="d3-pane offline-block" id="paneSolo" role="tabpanel" aria-labelledby="tabSolo" hidden>
             <div id="offTitle" hidden><div class="step">Offline</div><h2>Race the CPU</h2></div>
             <div class="d3-opts">
               <div class="seg" id="lapSeg" role="group" aria-label="Laps"><button data-laps="1">1 lap</button><button data-laps="2">2 laps</button><button data-laps="3">3 laps</button></div>
@@ -732,10 +806,17 @@ body:not(.touch) .pz-stick{opacity:.55}
             <p class="muted" id="lapHint"></p>
             <p class="muted desk-info">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
             <p class="muted desk-info">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
+            <div class="cpu-go"><button class="primary d3-gold" id="startBtn">🏆 Start Race</button></div>
           </div>
         </div>
-        <div class="cpu-btns d3-go" id="cpuBtns"><button class="primary d3-gold" id="startBtn">Start Race</button><button class="primary d3-gold" id="d3Create" hidden>Create Room</button><button class="d3-quick" id="quickBtn">Quick<br>Race</button></div>
       </section>
+      </div>
+      <nav class="d3-tabbar" role="tablist" aria-label="Race options">
+        <button role="tab" id="tabQuick" data-tab="quick" aria-controls="paneQuick"><i>🏁</i><span>Quick Race</span></button>
+        <button role="tab" id="tabOnline" data-tab="online" aria-controls="paneOnline"><i>🌐</i><span>Online</span></button>
+        <button role="tab" id="tabSolo" data-tab="solo" aria-controls="paneSolo"><i>🏆</i><span>Start Race</span></button>
+      </nav>
+      </div>
       <section class="panel wallet-panel" aria-label="Wallet" hidden>
         <div class="wallet-big"><span class="coin-ic"></span><b id="wCoins">0</b><span class="gem-ic"></span><b id="wGems">0</b></div>
         <p class="muted" id="wBuffs"></p>
@@ -925,7 +1006,7 @@ body:not(.touch) .pz-stick{opacity:.55}
 </div>
 <div id="layBackdrop" hidden></div>
 <div id="layBar" hidden role="dialog" aria-label="Edit screen layout">
-  <div class="lay-grip" id="layGrip">✥ Drag here to move this box</div>
+  <div class="lay-grip" id="layGrip">✥ Drag to move this box · tap to shrink</div>
   <div class="lay-sel-name" id="laySelName">Drag any outlined piece to move it</div>
   <div class="lay-row"><button id="laySmaller" aria-label="Make smaller">− Smaller</button><button id="layBigger" aria-label="Make bigger">+ Bigger</button><button id="layHide">🚫 Hide</button><button id="layResetOne">Reset piece</button></div>
   <div class="lay-row"><button id="layStraight">⇔ Straighten</button><button id="layResetAll">Reset all</button><button class="primary" id="layDone">Done</button></div>
@@ -1838,6 +1919,15 @@ const OUTFIT_TEX={
   rune:()=>ctex('rune',64,64,(c,w,h)=>{noiseFill(c,w,h,'#5d626b',30,[1,1,1]);c.strokeStyle='#e0b64a';c.lineWidth=2.5;[[14,14],[34,24],[20,40],[40,46]].forEach(([x,y])=>{c.beginPath();c.moveTo(x,y);c.lineTo(x+8,y+10);c.lineTo(x,y+14);c.moveTo(x+4,y);c.lineTo(x+4,y+14);c.stroke();});R(c,0,0,w,4,'#b9bec6');}),
 };
 
+// Recolour an outfit texture with a skin's 3-colour palette (dark -> main -> accent by brightness). Cached per texture and skin.
+const GRADC=new Map();
+function gradMapTex(tex,sk){const img=tex&&tex.image;if(!img||!img.getContext||!img.width)return null;const key=tex.uuid+'|'+sk.id;if(GRADC.has(key))return GRADC.get(key);
+  try{const w=img.width,h=img.height,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(img,0,0);const d=x.getImageData(0,0,w,h),p=d.data;
+    const P=sk.pal.map(v=>[(v>>16&255),(v>>8&255),(v&255)]);
+    for(let i=0;i<p.length;i+=4){const L=(0.299*p[i]+0.587*p[i+1]+0.114*p[i+2])/255;let A,B,t;if(L<0.45){A=P[0];B=P[1];t=L/0.45;}else{A=P[1];B=P[2];t=Math.min(1,(L-0.45)/0.4);}
+      p[i]=A[0]+(B[0]-A[0])*t;p[i+1]=A[1]+(B[1]-A[1])*t;p[i+2]=A[2]+(B[2]-A[2])*t;}
+    x.putImageData(d,0,0);const t2=new THREE.CanvasTexture(c);t2.wrapS=tex.wrapS;t2.wrapT=tex.wrapT;t2.repeat.copy(tex.repeat);t2.offset.copy(tex.offset);t2.anisotropy=tex.anisotropy;t2.__shared=true;GRADC.set(key,t2);return t2;}
+  catch(e){GRADC.set(key,null);return null;}}
 function buildModel(flag,charId,opt){
   opt=opt||{};const ch=charById(charId),lk=ch.look,b=lk.b,ls=lk.ls,id=ch.id;
   const [kA]=flag.kit;const body=[];const DS=THREE.DoubleSide;
@@ -1980,6 +2070,10 @@ function buildModel(flag,charId,opt){
     else if(gid==='wings'){const w=L(0xf4f4fa);[-1,1].forEach(s=>{const m=add(Sph(0.3),w,s*0.26,0.5,tr+0.12,torso,0,0,s*-0.6);m.scale.set(1.5,0.5,0.12);});}
     else if(gid==='jetpack'){const gr=L(0x8a90a0),rd=L(0xd8342a);[-0.09,0.09].forEach(x=>{add(Cyl(0.075,0.075,0.42),gr,x,0.36,tr+0.14,torso);add(new THREE.ConeGeometry(0.075,0.12,10),rd,x,0.1,tr+0.14,torso,Math.PI);});}
   });
+  if(opt.skin&&opt.skin.pal){const P=opt.skin.pal.map(c=>new THREE.Color(c)),a=opt.skin.amt||0.8,ex=new Set([skin,sash,flagMesh.material]);
+    body.forEach(mt=>{if(ex.has(mt)||!mt.color)return;const c=mt.color,L=0.2126*c.r+0.7152*c.g+0.0722*c.b;
+      if(mt.map){const gm=gradMapTex(mt.map,opt.skin);if(gm){mt.map=gm;c.setRGB(1,1,1);}else c.lerp(P[1],a);}else{const tgt=L<0.2?P[0]:L>0.6?P[2]:P[1];c.lerp(tgt,a);}
+      if(opt.skin.emissive)mt.userData.be=new THREE.Color(opt.skin.emissive).multiplyScalar(L>0.6?1.6:1);});}
   if(opt.skin&&opt.skin.tint!=null){const tc=new THREE.Color(opt.skin.tint),ex=new Set([skin,sash,flagMesh.material]);body.forEach(mt=>{if(ex.has(mt))return;mt.color.lerp(tc,opt.skin.amt);if(opt.skin.emissive)mt.userData.be=new THREE.Color(opt.skin.emissive);});}
   return {root,pelvis,torso,headP,eyes,mouth,stars,armL,armR,legL,legR,flagPivot,flagMesh,shadow,shield,ring,tag,body,hipH,look:lk,sc:lk.sc,cape};
 }
@@ -2055,17 +2149,17 @@ pv.cam.position.set(0,1.3,-4.5);pv.cam.lookAt(0,1.02,0);
 function fakeRunner(){return {speed:0,stun:0,slide:0,y:0,finished:false,slow:0,boost:0,anim:Math.random()*5,spin:0,emote:null,charge:0,phase:0,shield:0,pose:'idle',world:false};}
 function rebuildPreview(emote){
   if(pv.runner&&pv.runner.m){pv.scene.remove(pv.runner.m.root);disposeModel(pv.runner.m);}
-  const f=flagCanvas(selCountry);const r=fakeRunner();r.m=buildModel(f,selChar,{lane:7,skin:skinById(wallet.skin),gear:myGear()});pv.scene.add(r.m.root);pv.runner=r;
+  const f=flagCanvas(selCountry);const r=fakeRunner();r.m=buildModel(f,selChar,{lane:7,skin:skinById(mySkinId()),gear:myGear()});pv.scene.add(r.m.root);pv.runner=r;
   if(emote)r.emote={id:emote,t:1.8};
 }
 pvCanvas.addEventListener('pointerdown',e=>{pv.drag={x:e.clientX,r:pv.rotY};try{pvCanvas.setPointerCapture(e.pointerId);}catch(_){} });
 pvCanvas.addEventListener('pointermove',e=>{if(pv.drag){pv.rotY=pv.drag.r+(e.clientX-pv.drag.x)*0.012;}});
-['pointerup','pointercancel'].forEach(ev=>pvCanvas.addEventListener(ev,()=>{pv.drag=null;}));
+['pointerup','pointercancel'].forEach(ev=>pvCanvas.addEventListener(ev,()=>{if(pv.drag)pv.base=pv.rotY;pv.drag=null;}));
 function renderPreview(dt,now){
   if(!pv.runner)return;const w=pvCanvas.clientWidth,h=pvCanvas.clientHeight;if(!w||!h)return;
   if(w!==pv.w||h!==pv.h){pv.w=w;pv.h=h;pv.r.setSize(w,h,false);pv.cam.aspect=w/h;pv.cam.updateProjectionMatrix();}
   pv.autoT-=dt;if(pv.autoT<=0&&!pv.runner.emote){pv.runner.emote={id:pick(EMOTES),t:1.8};pv.autoT=rand(4,7);}
-  if(!pv.drag)pv.rotY+=(Math.sin(now/2600)*0.5-pv.rotY)*Math.min(1,dt*0.8);
+  if(!pv.drag)pv.rotY+=((pv.base||0)+Math.sin(now/2600)*(pv.base==null?0.5:0.12)-pv.rotY)*Math.min(1,dt*0.8);
   pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);pv.r.render(pv.scene,pv.cam);
 }
 
@@ -2181,7 +2275,8 @@ function makeRunner(e,idx,n,online){
   const team=isTeamMode(RACE.mode)?clamp(e.tm|0,0,teamCount(RACE.mode)-1):null;
   const x=-5.25+idx*(10.5/Math.max(1,n-1));
   const nm=e.bot?(e.nm&&cleanName(e.nm)||flag.name):(cleanName(e.nm)||flag.name);
-  const skin=skinById(e.sk);
+  let skin=skinById(e.sk);if(skin.hero&&skin.hero!==ch.id)skin=skinById('classic');
+  if(e.bot&&!skin.hero){const hs=SKINS_SHOP.filter(x=>x.hero===ch.id);let hh=0;for(const c of String(e.id)+ch.id+(RACE&&RACE.id||''))hh=(hh*31+c.charCodeAt(0))>>>0;if(hs.length&&hh%10<4)skin=hs[hh%hs.length];}
   const r={id:e.id,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag,char:ch,team,lane:idx+1,skin,lap:1,
     d:0,x,y:0,vx:0,vy:0,speed:0,stun:0,stunKind:'trip',slide:0,boost:0,boostMul:1,phase:0,shield:0,slow:0,leaping:false,flip:0,
     item:null,charge:0.35,finished:false,time:0,place:1,jumpBuf:0,anim:Math.random()*TAU,spin:0,oi:0,lastWall:null,lastPad:null,emote:null,world:true,
@@ -2325,7 +2420,7 @@ function svUpdate(dt,now){
   const w=clamp((30-sv.gap)/30,0,1);if(Math.abs(w-sv.warn)>0.03){sv.warn=w;$('svWarn').style.opacity=String(w*0.9);}
 }
 function startSurvival(){
-  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   GP=null;startRaceFromGo({id:'sv'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:'solo',laps:1,lo:false,sv:true,roster},false);
 }
 function showSurvivalResults(){
@@ -2350,7 +2445,7 @@ function showSurvivalResults(){
 const FC_START=3,FC_ROUND=15,FC_KEEP=2,FC_GRACE=3,FC_PLACE_PTS=[10,8,6,4,2,1],FC_FLAG_COINS=5;
 function startFlagChallenge(){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
-  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:0,sk:pick(BOT_SKINS)}));
   GP=null;startRaceFromGo({id:'fc'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:'solo',laps:1,lo:true,fc:true,roster:shuffle(roster)},false);
   $('trackLabel').textContent='Flag Challenge · '+TH.name;
@@ -2893,6 +2988,7 @@ function auraFx(r,dt){
   if(!r.world)return;const p=wpos(r,1.1),bd=backDir(r.d);
   if(r.boost>0&&Math.random()<0.8)emit(PA,{x:p.x+rand(-0.4,0.4)+bd.x*0.5,y:p.y+rand(-0.6,0.6),z:p.z+bd.z*0.5,vx:bd.x*6,vz:bd.z*6,life:0.35,size:0.18,c:r.char.id==='bolt'?[1,0.8,0.2]:[0.9,0.9,1],a:0.9});
   if(r.phase>0&&Math.random()<0.6)emit(PA,{x:p.x+rand(-0.5,0.5),y:p.y+rand(-0.8,0.8),z:p.z+rand(0,0.6),vy:1.2,life:0.7,size:0.3,c:[0.6,0.45,1],a:0.6});
+  if(r.skin&&r.skin.aura&&Math.random()<0.35)emit(PA,{x:p.x+rand(-0.55,0.55),y:p.y+rand(-0.9,0.9),z:p.z+rand(-0.4,0.4),vx:rand(-0.3,0.3),vy:rand(0.5,1.4),vz:rand(-0.3,0.3),life:rand(0.6,1.1),size:rand(0.1,0.2),c:r.skin.aura,a:0.85});
   if(r.skin&&r.skin.trail&&r.speed>6&&Math.random()<0.8)emit(PA,{x:p.x+rand(-0.3,0.3)+bd.x*0.4,y:p.y+rand(-0.8,0.6),z:p.z+bd.z*0.4,vx:bd.x*3,vz:bd.z*3,vy:rand(0,0.6),life:0.6,size:0.16,c:r.skin.trail,a:0.8});
   if(r.charge>=1&&Math.random()<0.3)emit(PA,{x:p.x+rand(-0.5,0.5),y:p.y+rand(-0.7,0.9),z:p.z+rand(-0.3,0.3),vx:rand(-1,1),vy:rand(0.5,2),life:0.4,size:0.13,c:r.char.rgb});
   if(r.slow>0&&Math.random()<0.4)emit(PA,{x:p.x+rand(-0.5,0.5),y:p.y+rand(-0.8,0.8),z:p.z,vy:-0.5,life:0.6,size:0.14,c:[0.8,0.95,1],a:0.8});
@@ -3073,7 +3169,7 @@ function placeModel(r,dt,now){
 const NET={ns:null,status:'checking',game:null,code:null,isHost:false,myPeer:null,seq:0,acts:[],lastSeq:new Map(),goId:null,cfg:{trk:'stadium',mode:'solo',bots:true},me:{rdy:false,tm:0},sendT:0,joinedAt:0,conn:false,seen:new Map(),resultsSig:''};
 const LOCAL_TEST=!(window.claude&&window.claude.use)&&(location.protocol==='file:'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname));
 function pushPresence(patch){if(NET.game)NET.game.presence(patch).catch(()=>{});}
-function lobbyFields(){return {v:2,gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:wallet.skin,gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
+function lobbyFields(){return {v:2,gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
 function syncLobbyPresence(){if(NET.game)pushPresence(lobbyFields());}
 const CODE_CHARS='ABCDEFGHJKLMNPQRSTUVWXYZ';
 const genCode=()=>Array.from({length:4},()=>CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)]).join('');
@@ -3354,6 +3450,16 @@ const SKINS_SHOP=[
   {id:'gold',name:'Royal Gold',tier:'gem',cost:8,desc:'Solid gold, with a sparkling trail.',buff:{coin:0.15},tint:0xf2c14a,amt:0.65,emissive:0x3a2a00,trail:[1,0.85,0.3],sw:'linear-gradient(135deg,#fff1b0,#d89a1a)'},
   {id:'neon',name:'Neon',tier:'gem',cost:12,desc:'Glowing cyan with a light trail.',buff:{spd:0.03},tint:0x22e0ff,amt:0.5,emissive:0x0a4a5a,trail:[0.3,1,1],sw:'linear-gradient(135deg,#6ffcff,#ff4fa3)'},
   {id:'inferno',name:'Inferno',tier:'usd',usd:'$3.99',desc:'Molten armour and a trail of fire.',buff:{spd:0.03,chg:0.08},tint:0xff5a1a,amt:0.6,emissive:0x5a1400,trail:[1,0.45,0.1],sw:'linear-gradient(135deg,#ffd24a,#ff4a1a 55%,#5a0a00)'},
+  {id:'oni',hero:'samurai',name:'Oni Shogun',tier:'free',desc:'Black lacquer armour, blood-red cords and gold horns. Embers follow every step.',pal:[0x0c0a0c,0xa8141c,0xf0c24a],amt:0.82,emissive:0x3a0604,trail:[1,0.35,0.1],aura:[1,0.3,0.15],sw:'linear-gradient(135deg,#f0c24a,#a8141c 45%,#0c0a0c)'},
+  {id:'sakura',hero:'samurai',name:'Sakura Ronin',tier:'free',desc:'Pearl-white armour with cherry-blossom pink. Petals drift behind you.',pal:[0x6a5a66,0xf4f0f4,0xff8cc0],amt:0.8,emissive:0x2a0a1a,trail:[1,0.6,0.8],aura:[1,0.7,0.85],sw:'linear-gradient(135deg,#ffffff,#ffb3d6 55%,#ff5ca8)'},
+  {id:'stormlord',hero:'warrior',name:'Storm Lord',tier:'free',desc:'Midnight steel crackling with electric blue. Sparks trail your run.',pal:[0x0a1030,0x1e5aff,0xd8e8ff],amt:0.82,emissive:0x0a1a5a,trail:[0.5,0.8,1],aura:[0.6,0.85,1],sw:'linear-gradient(135deg,#d8e8ff,#1e5aff 50%,#0a1030)'},
+  {id:'titan',hero:'warrior',name:'Golden Titan',tier:'free',desc:'Polished bronze and blazing gold, like a statue come to life.',pal:[0x5a3410,0xd89a2a,0xfff2b8],amt:0.85,emissive:0x3a2200,trail:[1,0.85,0.35],aura:[1,0.9,0.4],sw:'linear-gradient(135deg,#fff2b8,#d89a2a 50%,#5a3410)'},
+  {id:'shadowranger',hero:'archer',name:'Shadow Ranger',tier:'free',desc:'Charcoal hood and forest leathers with a ghostly teal glow.',pal:[0x0e1210,0x234a32,0x4affd0],amt:0.82,emissive:0x04302a,trail:[0.3,1,0.85],aura:[0.35,1,0.85],sw:'linear-gradient(135deg,#4affd0,#234a32 50%,#0e1210)'},
+  {id:'phoenix',hero:'archer',name:'Phoenix Hunter',tier:'free',desc:'Crimson and flame orange with golden feathers. Leaves fire in the air.',pal:[0x5a0a0a,0xff5a14,0xffd24a],amt:0.84,emissive:0x5a1400,trail:[1,0.5,0.1],aura:[1,0.6,0.15],sw:'linear-gradient(135deg,#ffd24a,#ff5a14 50%,#5a0a0a)'},
+  {id:'moonblade',hero:'elf',name:'Moonblade',tier:'free',desc:'Midnight silks and silver, glowing soft lavender under the moon.',pal:[0x12102a,0x8a86c8,0xeef0ff],amt:0.8,emissive:0x1a1450,trail:[0.8,0.75,1],aura:[0.8,0.75,1],sw:'linear-gradient(135deg,#eef0ff,#8a86c8 50%,#12102a)'},
+  {id:'ancientoak',hero:'elf',name:'Ancient Oak',tier:'free',desc:'Living bark and moss with glowing green runes. Leaves swirl around you.',pal:[0x2e1c0e,0x3f7a2a,0x9cff5a],amt:0.82,emissive:0x163a08,trail:[0.6,1,0.35],aura:[0.6,1,0.4],sw:'linear-gradient(135deg,#9cff5a,#3f7a2a 50%,#2e1c0e)'},
+  {id:'forgeking',hero:'dwarf',name:'Forge King',tier:'free',desc:'Black iron plates glowing with molten orange seams and a gold crown trim.',pal:[0x161414,0x2e2a28,0xff7a1a],amt:0.85,emissive:0x5a1a00,trail:[1,0.45,0.1],aura:[1,0.5,0.15],sw:'linear-gradient(135deg,#ff7a1a,#2e2a28 50%,#161414)'},
+  {id:'frostgiant',hero:'dwarf',name:'Frost Giant',tier:'free',desc:'Glacier-blue steel and white fur. Snowflakes fall wherever you run.',pal:[0x1a2a40,0x7ac8f0,0xf4fbff],amt:0.82,emissive:0x0a2a4a,trail:[0.8,0.95,1],aura:[0.85,0.95,1],sw:'linear-gradient(135deg,#f4fbff,#7ac8f0 50%,#1a2a40)'},
   {id:'celestial',name:'Celestial',tier:'usd',usd:'$4.99',desc:'Night-sky armour that leaves stars behind.',buff:{spd:0.03,stun:0.15},tint:0x3a3aa8,amt:0.6,emissive:0x1a1a5a,trail:[0.8,0.8,1],sw:'linear-gradient(135deg,#1a1a5a,#6a5ae8 55%,#fff3b0)'},
 ];
 // Attire lasts 7 days from purchase. Equipped pieces give their full buff; pieces you own but aren't wearing give 10%.
@@ -3406,7 +3512,8 @@ let wallet=(()=>{let w=null;try{w=JSON.parse(store.get('flagdash-wallet')||'null
   const attire={};if(w.attire&&typeof w.attire==='object')for(const k in w.attire)if(attireById(k)&&typeof w.attire[k]==='number')attire[k]=w.attire[k];
   const equip={};SLOTS.forEach(s=>{const id=w.equip&&w.equip[s.id];if(id&&attire[id]&&attireById(id).slot===s.id)equip[s.id]=id;});
   return {coins:typeof w.coins==='number'?Math.max(0,Math.floor(w.coins)):200,gems:typeof w.gems==='number'?Math.max(0,Math.floor(w.gems)):0,skins,
-    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip};})();
+    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip,hs:(w.hs&&typeof w.hs==='object')?Object.fromEntries(Object.entries(w.hs).filter(([h,id])=>{const k=SKINS_SHOP.find(x=>x.id===id);return k&&k.hero===h;})):{}};})();
+function mySkinId(){const h=wallet.hs&&wallet.hs[selChar];if(h)return h;const k=skinById(wallet.skin);return k.hero&&k.hero!==selChar?'classic':wallet.skin;}
 let loOn=store.get('flagdash-loadout')!=='off';
 function saveWallet(){store.set('flagdash-wallet',JSON.stringify(wallet));renderWallet();}
 const DAY=86400000;
@@ -3418,7 +3525,7 @@ function addBuff(into,b,k){for(const key in b||{})into[key]=(into[key]||0)+b[key
 function capMods(m){for(const k in BUFF_CAP)m[k]=Math.min(BUFF_CAP[k],m[k]||0);return m;}
 const skinMods=id=>{const m={};addBuff(m,skinById(id).buff,1);return capMods(m);};
 // The local player's total bonus: equipped skin, worn attire in full, and attire kept in stock at 10%.
-function myMods(){pruneAttire();const m={};addBuff(m,skinById(wallet.skin).buff,1);
+function myMods(){pruneAttire();const m={};addBuff(m,skinById(mySkinId()).buff,1);
   for(const id in wallet.attire){const a=attireById(id);const worn=wallet.equip[a.slot]===id;addBuff(m,a.buff,worn?1:STOCK_SHARE);}return capMods(m);}
 const myGear=()=>SLOTS.filter(s=>s.id!=='charm').map(s=>wallet.equip[s.id]||'');
 function renderWallet(){['wCoins','stCoins'].forEach(id=>{const e=$(id);if(e)e.textContent=wallet.coins.toLocaleString();});document.querySelectorAll('.hubCoins').forEach(e=>e.textContent=wallet.coins.toLocaleString());document.querySelectorAll('.hubGems').forEach(e=>e.textContent=wallet.gems.toLocaleString());['wGems','stGems'].forEach(id=>{const e=$(id);if(e)e.textContent=wallet.gems.toLocaleString();});
@@ -3429,7 +3536,7 @@ function spend(cost,cur){if(!canAfford(cost,cur))return false;if(cur==='gem')wal
 let storeTab='items';
 function openStore(){closePicker();$('store').hidden=false;renderStore();$('storeClose').focus();}
 const STORE_NOTE={items:'Pick one attack and one defence before each race. Each can be used once per race: R for attack, F for defence. Items you buy are yours to keep.',
-  skins:'Skins work on every runner and are yours to keep. Some give a bonus while you wear them.',
+  skins:'⚔️ Hero skins are free, two for each hero: equipping one switches you to that hero. Other skins work on every runner and are yours to keep; some give a bonus while you wear them.',
   attire:`Attire lasts ${ATTIRE_DAYS} days from purchase. Wear one piece per slot for its full bonus. Pieces you own but aren't wearing still give 10% of their bonus.`,
   buffs:'Each buff lasts one race.'};
 function priceTag(it){if(it.tier==='free')return '<span class="price">Free</span>';if(it.tier==='usd')return `<span class="price usd">${it.usd}</span>`;return priceHTML(it.cost,curOf(it));}
@@ -3449,7 +3556,7 @@ function renderStore(){
   const m=myMods(),mb=$('storeMods');mb.textContent=Object.keys(m).some(k=>m[k]>0)?'Your bonuses now: '+buffLine(Object.fromEntries(Object.entries(m).filter(([,v])=>v>0))):'You have no bonuses right now.';
   const grid=$('storeGrid');grid.innerHTML='';
   const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS;
-  TIERS.forEach(t=>{const its=list.filter(i=>i.tier===t.id);if(!its.length)return;
+  TIERS.forEach(t=>{let its=list.filter(i=>i.tier===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
     const h=document.createElement('h3');h.className='tier-head t-'+t.id;h.textContent=t.name;grid.appendChild(h);
     its.forEach(it=>grid.appendChild(storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it)));});
 }
@@ -3478,14 +3585,16 @@ function closePicker(){if(!pickOpen)return;pickOpen=null;const pk=$('picker');pk
 document.querySelectorAll('.pick-btn').forEach(b=>b.onclick=()=>{if(pickOpen===b.dataset.pick)closePicker();else openPicker(b.dataset.pick);});
 $('pickDone').onclick=()=>closePicker();
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&pickOpen&&state==='menu')closePicker();if(e.key==='Escape'&&!$('settings').hidden){closeSettings();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('hub').hidden){closeHub();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('chat').hidden){closeChat();e.stopImmediatePropagation();}},true);
+function equipSkin(s){if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
 function skinCard(s){
-  const owned=wallet.skins.includes(s.id),eq=wallet.skin===s.id;
+  const owned=wallet.skins.includes(s.id)||s.tier==='free',eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
   const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
-  else if(owned||s.tier==='free'){btn.textContent='Equip';btn.onclick=()=>{if(!owned)wallet.skins.push(s.id);wallet.skin=s.id;saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
-  else buyButton(btn,s,'Buy',()=>{wallet.skins.push(s.id);wallet.skin=s.id;saveWallet();rebuildPreview('dance');syncLobbyPresence();});
-  if(owned)card.querySelector('.shop-row .price').outerHTML='<span class="owned">Owned</span>';
+  else if(owned||s.tier==='free'){btn.textContent='Equip';btn.onclick=()=>{if(!wallet.skins.includes(s.id))wallet.skins.push(s.id);equipSkin(s);saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
+  else buyButton(btn,s,'Buy',()=>{wallet.skins.push(s.id);equipSkin(s);saveWallet();rebuildPreview('dance');syncLobbyPresence();});
+  if(owned&&!s.hero)card.querySelector('.shop-row .price').outerHTML='<span class="owned">Owned</span>';
+  if(s.hero){const t=document.createElement('div');t.className='hero-tag';t.textContent='⚔️ '+charById(s.hero).name+' skin · free';card.querySelector('.shop-desc').before(t);const pr=card.querySelector('.shop-row .price');if(pr)pr.outerHTML='<span class="owned">Free</span>';card.classList.add('hero-skin');}
   return card;
 }
 function itemCard(l){
@@ -3516,6 +3625,7 @@ function buffCard(b){
   return card;
 }
 function grantRaceRewards(place){
+  try{playLog('race');}catch(e){}
   if(RACE.rewarded)return RACE.reward;RACE.rewarded=true;
   const bonus=PLACE_COINS[place-1]||5,cm=(player&&player.mods.coin)||0,extra=Math.round((RACE.coins+bonus)*cm),coinsWon=RACE.coins+bonus+extra,gemsWon=RACE.gems+(place===1?1:0);
   wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();
@@ -3524,7 +3634,7 @@ function grantRaceRewards(place){
 let GP=null;
 function startGP(){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
-  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
   GP={tracks:[null,null,null,null],used:[],round:0,laps:selLaps,mode:selMode,lo:loOn,roster,pts:{},counted:-1};
   roster.forEach(e=>GP.pts[e.id]=0);gpRace();
@@ -3616,7 +3726,7 @@ let CHAL=loadJSON('flagdash-challenges',{done:{},feat:{}});
 function startChallenge(id){
   const ch=chById(id);if(!ch)return;closeHub();
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
-  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(ch.mode,i),sk:pick(BOT_SKINS)}));
   GP=null;initAudio();
   startRaceFromGo({id:'ch'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:ch.trk,mode:ch.mode,laps:ch.laps,lo:ch.lo,roster:shuffle(roster)},false);
@@ -4171,7 +4281,7 @@ function refreshMenu(emote){
   const f=flagCanvas(selCountry),ch=charById(selChar);
   $('sumFlag').src=f.url;$('sumCountry').textContent=f.name;$('sumChar').textContent=`${ch.name} · ${ch.power}`;
   $('pkFlag').textContent=f.name;$('pkRunner').textContent=ch.name;$('pkTrack').textContent=themeById(selTrack).name;
-  const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;$('cpuBtns').hidden=inRoom;$('returnCode').textContent=NET.code||'';
+  const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;document.querySelectorAll('.cpu-go').forEach(e=>e.hidden=inRoom);$('returnCode').textContent=NET.code||'';
   if(emote!==undefined)rebuildPreview(emote);
 }
 $('nameInput').value=myName;
@@ -4252,7 +4362,7 @@ $('svBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resum
 $('fcBtn').onclick=()=>{if(plaza.active)leavePlaza();initAudio();if(actx&&actx.state==='suspended')actx.resume();startFlagChallenge();};
 function startOffline(){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
-  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin}];
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
   GP=null;startRaceFromGo({id:'off'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:selMode,laps:selLaps,lo:loOn,roster:shuffle(roster)},false);
 }
@@ -4371,7 +4481,7 @@ const rivalById=id=>RIVALS.find(r=>r.id===id);
 let RIVAL_WINS=loadJSON('flagdash-rivals',{});
 function startRival(rv){
   if(!rv)return;const t=RIVAL_TIERS[rv.tier];
-  const roster=shuffle([{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:wallet.skin},{id:'rv',bot:true,nm:rv.nm,cc:rv.cc,ch:rv.ch,tm:0,sk:rv.sk}]);
+  const roster=shuffle([{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()},{id:'rv',bot:true,nm:rv.nm,cc:rv.cc,ch:rv.ch,tm:0,sk:rv.sk}]);
   GP=null;initAudio();
   startRaceFromGo({id:'rv'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:rv.trk,mode:'solo',laps:1,lo:true,roster},false);
   RACE.rival=rv.id;
@@ -4536,10 +4646,10 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       for(const [peer,o] of this.others)if(o.r.m.root===n){const info=[...ONLINE.values()].find(x=>x.peer===peer);if(info){openChat('w');playerPop(info.pid);}return;}}
     const ray=rc.ray;if(ray.direction.y>=-0.01)return;const t=-ray.origin.y/ray.direction.y;const x=ray.origin.x+ray.direction.x*t,z=ray.origin.z+ray.direction.z*t;
     if(Math.hypot(x,z)>PZ_R+6)return;this.setGoal(x,z,null);},
-  lookKey(){return [selCountry,selChar,wallet.skin,myGear().join(','),myName,GUILD?GUILD.tag:''].join('|');},
+  lookKey(){return [selCountry,selChar,mySkinId(),myGear().join(','),myName,GUILD?GUILD.tag:''].join('|');},
   rebuildMe(){const k=this.lookKey();if(this.me&&this.me.key===k)return;
     if(this.me){this.group.remove(this.me.m.root);disposeModel(this.me.m);}
-    const r=fakeRunner();r.pose=null;r.m=buildModel(flagCanvas(selCountry),selChar,{skin:skinById(wallet.skin),gear:myGear()});r.key=k;r.char=charById(selChar);r.id='me';
+    const r=fakeRunner();r.pose=null;r.m=buildModel(flagCanvas(selCountry),selChar,{skin:skinById(mySkinId()),gear:myGear()});r.key=k;r.char=charById(selChar);r.id='me';
     this.group.add(r.m.root);this.me=r;},
   blocked(){return !$('menu').hidden||!$('hub').hidden||!$('store').hidden||!$('settings').hidden||!$('chat').hidden;},
   update(dt,now){
@@ -4590,7 +4700,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
       const mv=Math.hypot(o.t.x-o.p.x,o.t.z-o.p.z);o.r.speed=o.t.mv?16:(mv>0.05?10:0);o.r.m.root.position.set(o.p.x,0,o.p.z);o.r.m.root.rotation.y=o.ry+Math.PI;poseRunner(o.r,dt,now);});
     this.sendT-=dt;if(this.sendT<=0){this.sendT=0.25;this.send(false);}
   },
-  send(force){if(!NET.ns)return;const p=this.pos;const card={x:Math.round(p.x*10)/10,z:Math.round(p.z*10)/10,ry:Math.round(this.ry*100)/100,mv:this.vel>1?1:0,cc:selCountry,ch:selChar,sk:wallet.skin,gr:myGear(),nm:myName,gt:GUILD?GUILD.tag:'',e:this.emoteN};
+  send(force){if(!NET.ns)return;const p=this.pos;const card={x:Math.round(p.x*10)/10,z:Math.round(p.z*10)/10,ry:Math.round(this.ry*100)/100,mv:this.vel>1?1:0,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),nm:myName,gt:GUILD?GUILD.tag:'',e:this.emoteN};
     const sig=JSON.stringify(card);if(!force&&sig===this.lastSent)return;this.lastSent=sig;NET.ns.presence({pz:card}).catch(()=>{});},
   emote(id){if(!this.me||!EMOTES.includes(id))return;this.me.emote={id,t:1.8};this.emoteN=(this.emoteN+1)%1000;this.emoteId=id;this.send(true);},
   onPeers(peers){if(!this.built)return;const seen=new Set();
@@ -4739,12 +4849,12 @@ const LAYOUT=(()=>{
     ['power','#powerSlot','Power meter','race'],['emote','#touch .tgroup','Emote button','race'],
     ['hint','#swipeHint','Swipe hint','race'],['minimap','#minimap','Course map','race'],
     ['d_top','#menu .d3-top','Top bar','desk'],['d_name','#menu .d3-name','Your name','desk'],
-    ['d_preview','#menu .preview-wrap','Runner preview','desk'],['d_emotes','#menu .d3-emotes','Emotes','desk'],
-    ['d_picks','#menu .d3-picks','Flag · Runner · Track · Loadout','desk'],['d_card','#menu .d3-card','Race card','desk']];
+    ['d_preview','#menu .preview-wrap','Runner preview','desk'],['d_emotes','#menu .d3-emotes','Emotes','desk']];
   let data={};try{data=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){data={};}
   // Race Desk v2 is built in as the default layout, so older Race Desk moves are cleared once.
   const migrate=d=>{let ch=false;if(d&&!d._desk3){Object.keys(d).forEach(k=>{if(k.startsWith('d_'))delete d[k];});d._desk2=1;d._desk3=1;ch=true;}
-    if(d&&!d._mm2){delete d.minimap;d._mm2=1;ch=true;}return ch;};
+    if(d&&!d._mm2){delete d.minimap;d._mm2=1;ch=true;}
+    if(d&&!d._desk4){Object.keys(d).forEach(k=>{if(k.startsWith('d_'))delete d[k];});d._desk4=1;ch=true;}return ch;};
   const mig0=migrate(data);
   // Saved to your Claude account (db, private to you) so it survives game updates; this browser keeps a copy too.
   let cloud=null,cloudT=0;
@@ -4789,17 +4899,17 @@ const LAYOUT=(()=>{
   ['click','touchstart','touchend','mousedown'].forEach(t=>document.addEventListener(t,block,{capture:true,passive:false}));
   // the toolbar itself can be dragged out of the way (not saved)
   let bar=null;$('layGrip').addEventListener('pointerdown',ev=>{ev.preventDefault();const r=$('layBar').getBoundingClientRect();
-    bar={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top};try{$('layGrip').setPointerCapture(ev.pointerId);}catch(_){}});
-  $('layGrip').addEventListener('pointermove',ev=>{if(!bar||ev.pointerId!==bar.id)return;const b=$('layBar');
-    b.style.transform='none';b.style.left=Math.max(4,Math.min(innerWidth-b.offsetWidth-4,ev.clientX-bar.dx))+'px';
+    bar={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top,sx:ev.clientX,sy:ev.clientY,mv:false};try{$('layGrip').setPointerCapture(ev.pointerId);}catch(_){}});
+  $('layGrip').addEventListener('pointermove',ev=>{if(!bar||ev.pointerId!==bar.id)return;if(!bar.mv&&Math.hypot(ev.clientX-bar.sx,ev.clientY-bar.sy)<8)return;bar.mv=true;const b=$('layBar');
+    b.style.transform='none';b.style.bottom='auto';b.style.left=Math.max(4,Math.min(innerWidth-b.offsetWidth-4,ev.clientX-bar.dx))+'px';
     b.style.top=Math.max(4,Math.min(innerHeight-b.offsetHeight-4,ev.clientY-bar.dy))+'px';});
-  $('layGrip').addEventListener('pointerup',()=>{bar=null;});
+  $('layGrip').addEventListener('pointerup',()=>{if(bar&&!bar.mv){const b=$('layBar');const mini=b.classList.toggle('lay-mini');$('layGrip').textContent=mini?'✥ Drag to move · tap to open':'✥ Drag to move this box · tap to shrink';}bar=null;});
   function resize(f){if(!sel)return;const d=data[sel]||(data[sel]={});d.s=Math.round(Math.max(.5,Math.min(2,(d.s||1)+f))*10)/10;apply(sel);save();}
   $('laySmaller').onclick=()=>resize(-.1);$('layBigger').onclick=()=>resize(.1);
   $('layHide').onclick=()=>{if(!sel)return;const d=data[sel]||(data[sel]={});d.h=!d.h;if(!d.h)delete d.h;apply(sel);select(sel);save();};
   $('layResetOne').onclick=()=>{if(!sel)return;delete data[sel];apply(sel);select(sel);save();};
   $('layResetAll').onclick=()=>{act().forEach(p=>delete data[p[0]]);applyAll();save();select(null);};
-  function placeBar(){const b=$('layBar');b.style.transform='';b.style.left='';b.style.top='';b.classList.toggle('lay-bottom',scope==='desk');}
+  function placeBar(){const b=$('layBar');b.style.transform='';b.style.left='';b.style.top='';b.style.bottom='';b.classList.toggle('lay-bottom',scope==='desk');}
   function open(sc){scope=sc||'race';editing=true;
     if(scope==='race'){saved={hud:$('hud').hidden,touch:$('touch').hidden,lo:$('hudLo').hidden,map:$('minimap').hidden};
       $('hud').hidden=false;$('touch').hidden=false;$('hudLo').hidden=false;$('layBackdrop').hidden=false;}
@@ -4861,14 +4971,8 @@ const LAYOUT=(()=>{
 
 /* ---------- Race Desk v3 wiring ---------- */
 (()=>{
-  const tabs=['online','solo'];let tab=store.get('flagdash-desktab');if(!tabs.includes(tab))tab='solo';
-  function setTab(t){tab=t;store.set('flagdash-desktab',t);
-    tabs.forEach(x=>{const b=$(x==='online'?'tabOnline':'tabSolo');b.setAttribute('aria-selected',x===t);b.tabIndex=x===t?0:-1;});
-    $('paneOnline').hidden=t!=='online';$('paneSolo').hidden=t!=='solo';
-    $('startBtn').hidden=t!=='solo';$('d3Create').hidden=t!=='online';syncCreate();}
   function syncCreate(){$('d3Create').disabled=$('onlineControls').hidden;}
-  new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});
-  $('tabOnline').onclick=()=>setTab('online');$('tabSolo').onclick=()=>setTab('solo');
+  new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});syncCreate();
   $('d3Create').onclick=()=>$('createBtn').click();
   $('quickBtn').onclick=()=>{const L=selLaps,Mo=selMode;selLaps=1;selMode='solo';try{$('startBtn').click();}finally{selLaps=L;selMode=Mo;}};
   $('deskSet').onclick=()=>openSettings();$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
@@ -4879,7 +4983,6 @@ const LAYOUT=(()=>{
   const ld=()=>{const t=($('pkLoadout').textContent||'').trim();const m=t.match(/^(\p{Extended_Pictographic}\uFE0F?)\s*/u);
     $('pkLoadIc').textContent=m?m[1]:'🎒';$('pkLoadTxt').textContent=(m?t.slice(m[0].length):t).split('·')[0].trim();};
   new MutationObserver(ld).observe($('pkLoadout'),{childList:true,characterData:true,subtree:true});ld();
-  setTab(tab);
 })();
 
 /* ---------- big race celebration: 3rd, then 2nd, then the winner, then your gifts ---------- */
@@ -4920,6 +5023,55 @@ function confetti(n){if(reduceMotion)return;const box=$('celConfetti');const col
     c.style.animationDuration=(2.4+Math.random()*2.2)+'s';c.style.animationDelay=(Math.random()*0.8)+'s';box.appendChild(c);setTimeout(()=>c.remove(),6000);}}
 $('celSkip').onclick=celFinish;
 $('celNext').onclick=()=>{CEL.timers.forEach(clearTimeout);CEL.timers=[];CEL.open=false;$('celebrate').hidden=true;$('celConfetti').innerHTML='';const d=CEL.done;CEL.done=null;if(d)d();};
+
+/* ---------- anonymous play counter (Supabase table fd_plays, see supabase/plays.sql). Only outside Claude. ---------- */
+function playLog(event){
+  if(!GLB.enabled||typeof SUPA==='undefined'||!SUPA.url)return;
+  const w=Math.min(screen.width,screen.height),device=/iPad|Tablet/i.test(navigator.userAgent)||(w>=600&&'ontouchstart' in window)?'tablet':('ontouchstart' in window&&w<600?'phone':'computer');
+  const mode=RACE?(RACE.survival?'survival':RACE.fc?'flag-challenge':RACE.gp?'grand-prix':RACE.online?'online':(RACE.mode||'solo')):null;
+  const track=RACE&&typeof TH!=='undefined'?TH.id:null;
+  sbCall('rpc/fd_log_play',{p_pid:PID,p_event:event,p_mode:event==='race'?mode:null,p_track:event==='race'?track:null,p_device:device}).catch(()=>{});
+}
+setTimeout(()=>playLog('open'),1500);
+
+/* ---------- Race Desk bottom tabs: Quick Race · Online · Start Race. Each opens its own panel; tap it again to close. ---------- */
+(()=>{const sh=$('d3Sheet'),hd=$('d3Handle'),T={quick:['tabQuick','paneQuick'],online:['tabOnline','paneOnline'],solo:['tabSolo','paneSolo']};
+  let tab=store.get('flagdash-desktab');if(!T[tab])tab='solo';let open=store.get('flagdash-sheet')==='1';
+  function render(){sh.classList.toggle('open',open);
+    Object.entries(T).forEach(([k,[t,p]])=>{const on=k===tab;$(t).setAttribute('aria-selected',on&&open);$(t).classList.toggle('cur',on);$(p).hidden=!on;});
+    store.set('flagdash-desktab',tab);store.set('flagdash-sheet',open?'1':'0');}
+  Object.entries(T).forEach(([k,[t]])=>$(t).addEventListener('click',()=>{if(open&&tab===k)open=false;else{tab=k;open=true;}render();}));
+  let y0=null,moved=false;
+  hd.addEventListener('pointerdown',e=>{y0=e.clientY;moved=false;try{hd.setPointerCapture(e.pointerId);}catch(_){}});
+  hd.addEventListener('pointermove',e=>{if(y0==null)return;if(e.clientY-y0>24){moved=true;open=false;render();y0=null;}});
+  hd.addEventListener('pointerup',()=>{y0=null;});
+  hd.addEventListener('click',()=>{if(moved){moved=false;return;}open=false;render();});
+  const qt=()=>{$('qTrack').textContent=$('pkTrack').textContent||'';};new MutationObserver(qt).observe($('pkTrack'),{childList:true,characterData:true,subtree:true});qt();
+  // in a room, open the panel so the Back to lobby button shows
+  new MutationObserver(()=>{if(!$('lobbyReturn').hidden){open=true;render();}}).observe($('lobbyReturn'),{attributes:true,attributeFilter:['hidden']});
+  const vis=()=>{sh.style.display=$('menu').hidden?'none':'';};new MutationObserver(vis).observe($('menu'),{attributes:true,attributeFilter:['hidden']});vis();
+  render();
+})();
+
+/* ---------- Race Desk emote icon ---------- */
+(()=>{const box=document.querySelector('.d3-emotes'),bt=$('emoteToggle');if(!box||!bt)return;
+  const set=o=>{box.classList.toggle('open',o);bt.setAttribute('aria-expanded',o);};
+  bt.addEventListener('click',e=>{e.stopPropagation();set(!box.classList.contains('open'));});
+  box.querySelectorAll('.chip-btn').forEach(b=>b.addEventListener('click',()=>setTimeout(()=>set(false),150)));
+  document.addEventListener('pointerdown',e=>{if(box.classList.contains('open')&&!box.contains(e.target)&&!(typeof LAYOUT!=='undefined'&&LAYOUT.isEditing()))set(false);});
+})();
+
+/* ---------- swipe anywhere on the Race Desk to turn the runner ---------- */
+(()=>{const menu=$('menu');let d=null;
+  const skip=t=>!document.querySelector('.desk3')||(LAYOUT&&LAYOUT.isEditing())||t.closest('button,input,a,label,select,.d3-sheet,.d3-top,.d3-emotes,.overlay:not(#menu)');
+  menu.addEventListener('pointerdown',e=>{if(e.target===pvCanvas||skip(e.target))return;d={id:e.pointerId,x:e.clientX,r:pv.rotY};pv.drag={x:e.clientX,r:pv.rotY};});
+  menu.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;pv.rotY=d.r+(e.clientX-d.x)*0.012;});
+  const end=e=>{if(!d||e.pointerId!==d.id)return;pv.base=pv.rotY;pv.drag=null;d=null;};
+  menu.addEventListener('pointerup',end);menu.addEventListener('pointercancel',end);
+  const nm=()=>{$('pvName').textContent=$('pkRunner').textContent||'';};new MutationObserver(nm).observe($('pkRunner'),{childList:true,characterData:true,subtree:true});nm();
+  // a new runner starts facing forward
+  const face=()=>{pv.base=null;pv.rotY=0;};$('pvLeft').addEventListener('click',face);$('pvRight').addEventListener('click',face);
+})();
 
 requestAnimationFrame(frame);
 })();
