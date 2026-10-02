@@ -29,6 +29,8 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 5. [ ] Test: open the game, tap the person button, try "Continue with Google" and the email link.
 
 ## Later
+- [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
+- [ ] Better hero graphics (more detailed models), when there's time
 - [ ] Privacy policy page + link on the sign-in screen (needed now that emails are collected)
 - [ ] Custom email sender (SMTP, e.g. Resend) before a wide launch; Supabase's built-in sender only allows a few emails an hour
 - [ ] Decide on screen-layout editing: keep for everyone (option 1), owner-only, or a built-in default layout

@@ -643,6 +643,10 @@ tr.me td.pl{color:var(--gold)}
 @media (max-width:520px){.chat-card{width:100%;border-left:0}.chat-tabs button{font-size:12px}}
 #plazaHud{position:fixed;inset:0;pointer-events:none;z-index:4}
 .overlay{z-index:6}
+.has-dot{position:relative}.has-dot::after{content:'';position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 2px #0b1440;pointer-events:none;animation:dotPulse 1.6s ease-in-out infinite}
+@keyframes dotPulse{50%{transform:scale(1.18)}}
+@media (max-width:480px){.desk3 .d3-logo{display:none}.desk3 .d3-wallet{justify-self:end;margin-left:auto;width:max-content}}
+@media (prefers-reduced-motion:reduce){.has-dot::after{animation:none}}
 #acct{z-index:35}.acct-card{--mw:440px;max-width:440px}
 .acct-body{display:grid;gap:12px}.acct-body p{margin:0}
 .acct-why{font-weight:700;color:var(--gold);font-size:16px}
@@ -827,7 +831,7 @@ body:not(.touch) .pz-stick{opacity:.55}
               <div class="mode-wrap"><div class="seg" id="modeSeg" role="group" aria-label="Race mode"><button data-mode="solo">Solo</button><button data-mode="teams" id="teamsBtn" aria-haspopup="true" aria-expanded="false">Teams ▾</button></div>
               <div class="seg team-sub" id="teamSub" role="group" aria-label="Team size" hidden><button data-tmode="teams">3 v 3</button><button data-tmode="trio">2 v 2 v 2</button></div></div>
             </div>
-            <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button></div>
+            <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button><button class="d3-pill" id="chalBtn">🎯 Special Challenges</button></div>
             <p class="muted" id="lapHint"></p>
             <p class="muted desk-info">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
             <p class="muted desk-info">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
@@ -839,7 +843,7 @@ body:not(.touch) .pz-stick{opacity:.55}
       <nav class="d3-tabbar" role="tablist" aria-label="Race options">
         <button role="tab" id="tabQuick" data-tab="quick" aria-controls="paneQuick"><i>🏁</i><span>Quick Race</span></button>
         <button role="tab" id="tabOnline" data-tab="online" aria-controls="paneOnline"><i>🌐</i><span>Online</span></button>
-        <button role="tab" id="tabSolo" data-tab="solo" aria-controls="paneSolo"><i>🏆</i><span>Start Race</span></button>
+        <button role="tab" id="tabSolo" data-tab="solo" aria-controls="paneSolo"><i>🏆</i><span>Challenges</span></button>
       </nav>
       </div>
       <section class="panel wallet-panel" aria-label="Wallet" hidden>
@@ -3687,7 +3691,12 @@ const priceHTML=(cost,cur)=>`<span class="price"><span class="${cur==='gem'?'gem
 const canAfford=(cost,cur)=>cur==='gem'?wallet.gems>=cost:wallet.coins>=cost;
 function spend(cost,cur){if(!canAfford(cost,cur))return false;if(cur==='gem')wallet.gems-=cost;else wallet.coins-=cost;return true;}
 let storeTab='items';
-function openStore(){closePicker();$('store').hidden=false;renderStore();$('storeClose').focus();}
+function openStore(){closePicker();$('store').hidden=false;renderStore();$('storeClose').focus();markFreeSeen();}
+// Red dot on the store buttons while there are free items the player hasn't looked at yet. Opening the store clears it.
+function freeIds(){return [...SKINS_SHOP,...ATTIRE,...LOADOUT].filter(i=>i.tier==='free'&&i.id!=='classic').map(i=>i.id);}
+function freeUnseen(){let seen=[];try{seen=JSON.parse(store.get('flagdash-freeseen')||'[]');}catch(e){}return freeIds().filter(id=>!seen.includes(id));}
+function renderStoreDot(){const on=freeUnseen().length>0;['deskStore','pzStore','d3Store','storeBtn'].forEach(id=>{const b=$(id);if(b){b.classList.toggle('has-dot',on);b.setAttribute('aria-label',on?'Store, free items waiting':'Store');}});}
+function markFreeSeen(){store.set('flagdash-freeseen',JSON.stringify(freeIds()));renderStoreDot();}
 const STORE_NOTE={items:'Pick one attack and one defence before each race. Each can be used once per race: R for attack, F for defence. Items you buy are yours to keep.',
   skins:'⚔️ Hero skins are free, two for each hero: equipping one switches you to that hero. Other skins work on every runner and are yours to keep; some give a bonus while you wear them.',
   attire:`Attire lasts ${ATTIRE_DAYS} days from purchase. Wear one piece per slot for its full bonus. Pieces you own but aren't wearing still give 10% of their bonus.`,
@@ -5092,6 +5101,7 @@ refreshMenu(null);rebuildPreview('wave');
 applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
 if(wallet.perk===undefined){const f=BUFFS.find(b=>(wallet.buffs[b.id]|0)>0&&wallet.use[b.id]!==false);setPerk(f?f.id:null);}else setPerk(wallet.perk);
 goDesk(false);
+renderStoreDot();
 initAuth();
 initNet();
 glbSubmit();
@@ -5233,7 +5243,7 @@ const LAYOUT=(()=>{
   new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});syncCreate();
   $('d3Create').onclick=()=>$('createBtn').click();
   $('quickBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline(true);};
-  $('deskSet').onclick=()=>openSettings();$('deskAcct').onclick=()=>openAcct();$('acctClose').onclick=()=>closeAcct();$('setAcct').onclick=()=>{closeSettings();openAcct();};
+  $('deskSet').onclick=()=>openSettings();$('chalBtn').onclick=()=>openHub('tasks','challenges');$('deskAcct').onclick=()=>openAcct();$('acctClose').onclick=()=>closeAcct();$('setAcct').onclick=()=>{closeSettings();openAcct();};
   $('acct').addEventListener('click',e=>{if(e.target===$('acct'))closeAcct();});$('deskStore').onclick=()=>openStore();
   $('deskWallet').onclick=()=>openStore();$('deskWallet').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openStore();}};$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
   const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
@@ -5294,7 +5304,7 @@ function playLog(event){
 }
 setTimeout(()=>playLog('open'),1500);
 
-/* ---------- Race Desk bottom tabs: Quick Race · Online · Start Race. Each opens its own panel; tap it again to close. ---------- */
+/* ---------- Race Desk bottom tabs: Quick Race · Online · Challenges. Each opens its own panel; tap it again to close. ---------- */
 (()=>{const sh=$('d3Sheet'),hd=$('d3Handle'),T={quick:['tabQuick','paneQuick'],online:['tabOnline','paneOnline'],solo:['tabSolo','paneSolo']};
   let tab=store.get('flagdash-desktab');if(!T[tab])tab='solo';let open=store.get('flagdash-sheet')==='1';
   function render(){sh.classList.toggle('open',open);
