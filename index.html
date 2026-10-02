@@ -110,7 +110,7 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .desk3 .d3-emotes{position:absolute;right:0;top:50%;transform:translateY(-50%);display:grid;gap:8px;padding:10px;width:116px;margin:0}
 .d3-emote-t{text-align:center;color:#f6e3a8;font-weight:700;font-size:16px;padding-bottom:6px;border-bottom:1px solid rgba(233,196,106,.45)}
 .desk3 .d3-emotes .chip-btn{border:2px solid rgba(233,196,106,.65);background:linear-gradient(180deg,#2a4cb0,#152f86);color:#f3ead0;font-size:15px;padding:8px 6px;border-radius:999px}
-.desk3 .d3-picks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:0;padding:10px 6px}
+.desk3 .d3-picks{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;margin:0;padding:10px 6px}
 .desk3 .d3-picks .pick-btn{display:grid;justify-items:center;align-content:start;gap:6px;text-align:center;background:transparent;border:0;border-radius:0;padding:4px 6px;min-width:0}
 .desk3 .d3-picks .pick-btn + .pick-btn{border-left:2px solid rgba(233,196,106,.55)}
 .desk3 .d3-picks img{width:54px;height:36px;object-fit:cover;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.4)}
@@ -330,6 +330,13 @@ input[type=text],input[type=search]{background:var(--night);border:1px solid var
 .char-name{font-family:var(--display);font-size:17px;line-height:1}
 .char-power{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:3px}
 .char-desc{font-size:13px;color:var(--muted);line-height:1.4;min-height:3.6em}
+.perk-grid{display:grid;gap:8px}
+.perk-card{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--night-2);border:2px solid transparent;border-radius:12px;padding:10px}
+.perk-card.on{border-color:var(--gold)}
+.perk-ic{font-size:30px;text-align:center}
+.perk-main b{display:block;font-size:15px}.perk-main small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.perk-side{display:grid;justify-items:end;gap:6px}.perk-have{font-weight:700;font-variant-numeric:tabular-nums;color:var(--gold)}
+.perk-side button{padding:7px 11px;border-radius:9px;font-weight:700;font-size:13px}.perk-side button.buy{background:var(--gold);color:#1a1405;border:0}
 .char-perk{font-size:12.5px;line-height:1.35;color:#cfe9c4}.char-perk b{color:var(--gold)}
 .d3-rname small{display:block;font-size:10px;font-weight:600;opacity:.85;letter-spacing:.02em}
 .stats{display:grid;gap:4px}
@@ -776,6 +783,7 @@ body:not(.touch) .pz-stick{opacity:.55}
         <button class="pick-btn" data-pick="runner" aria-expanded="false"><i aria-hidden="true">🏃</i><b id="pkRunner"></b><span class="sr-only">Runner</span></button>
         <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true">🏟️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
         <button class="pick-btn" data-pick="loadout" aria-expanded="false"><i aria-hidden="true" id="pkLoadIc">🎯</i><b id="pkLoadTxt"></b><b id="pkLoadout" hidden></b><span class="sr-only">Loadout</span></button>
+        <button class="pick-btn" data-pick="perk" aria-expanded="false"><i aria-hidden="true" id="pkPerkIc">⭐</i><b id="pkPerk"></b><span class="sr-only">Perk</span></button>
       </div>
       <section class="d3-card">
         <div id="lobbyReturn" class="play-block d3-pane" hidden>
@@ -875,6 +883,12 @@ body:not(.touch) .pz-stick{opacity:.55}
       <section class="panel" data-sec="track">
         <div class="panel-head"><div><h2>Pick your track</h2></div><span class="muted">Profiles show each course's elevation</span></div>
         <div class="track-grid" id="trackGrid"></div>
+      </section>
+      <section class="panel" data-sec="perk">
+        <div class="panel-head"><div><h2>Pick your perk</h2></div><button class="ghost" id="perkStore">Get more perks</button></div>
+        <p class="muted" id="perkHero"></p>
+        <div class="perk-grid" id="perkGrid"></div>
+        <p class="muted small">Your perk is used up when the race starts. Buy more in the store.</p>
       </section>
       <section class="panel lo-panel" data-sec="loadout">
         <div class="panel-head"><div><h2>Pick your loadout</h2></div><button class="ghost" id="loStore">Get more items</button></div>
@@ -2292,7 +2306,7 @@ function makeRunner(e,idx,n,online){
 }
 
 function startRaceFromGo(go,online){
-  if(plaza.active)plaza.exit();$('menu').classList.remove('over-plaza');
+  if(plaza.active)plaza.exit();locker.exit();$('menu').classList.remove('over-plaza');
   const laps=clamp(go.laps|0,1,3)||1;
   RACE={id:String(go.id),fc:null,online,mode:normMode(go.mode),teamNames:Array.isArray(go.tn)?go.tn.slice(0,3).map(x=>cleanName(x).slice(0,10)):null,trk:themeById(go.trk).id,laps,gp:!!go.gp,coins:0,gems:0,rewarded:false,buffs:[],lo:go.lo!==false,st:{},gb:!!go.gb,rules:{},survival:!!go.sv,sv:null};
   clearRace();
@@ -3519,7 +3533,7 @@ let wallet=(()=>{let w=null;try{w=JSON.parse(store.get('flagdash-wallet')||'null
   const attire={};if(w.attire&&typeof w.attire==='object')for(const k in w.attire)if(attireById(k)&&typeof w.attire[k]==='number')attire[k]=w.attire[k];
   const equip={};SLOTS.forEach(s=>{const id=w.equip&&w.equip[s.id];if(id&&attire[id]&&attireById(id).slot===s.id)equip[s.id]=id;});
   return {coins:typeof w.coins==='number'?Math.max(0,Math.floor(w.coins)):200,gems:typeof w.gems==='number'?Math.max(0,Math.floor(w.gems)):0,skins,
-    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip,hs:(w.hs&&typeof w.hs==='object')?Object.fromEntries(Object.entries(w.hs).filter(([h,id])=>{const k=SKINS_SHOP.find(x=>x.id===id);return k&&k.hero===h;})):{}};})();
+    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip,perk:typeof w.perk==='string'&&BUFFS.some(b=>b.id===w.perk)?w.perk:(w.perk===null?null:undefined),hs:(w.hs&&typeof w.hs==='object')?Object.fromEntries(Object.entries(w.hs).filter(([h,id])=>{const k=SKINS_SHOP.find(x=>x.id===id);return k&&k.hero===h;})):{}};})();
 function mySkinId(){const h=wallet.hs&&wallet.hs[selChar];if(h)return h;const k=skinById(wallet.skin);return k.hero&&k.hero!==selChar?'classic':wallet.skin;}
 let loOn=store.get('flagdash-loadout')!=='off';
 function saveWallet(){store.set('flagdash-wallet',JSON.stringify(wallet));renderWallet();}
@@ -3536,7 +3550,7 @@ function myMods(){pruneAttire();const m={};addBuff(m,skinById(mySkinId()).buff,1
   for(const id in wallet.attire){const a=attireById(id);const worn=wallet.equip[a.slot]===id;addBuff(m,a.buff,worn?1:STOCK_SHARE);}return capMods(m);}
 const myGear=()=>SLOTS.filter(s=>s.id!=='charm').map(s=>wallet.equip[s.id]||'');
 function renderWallet(){['wCoins','stCoins'].forEach(id=>{const e=$(id);if(e)e.textContent=wallet.coins.toLocaleString();});document.querySelectorAll('.hubCoins').forEach(e=>e.textContent=wallet.coins.toLocaleString());document.querySelectorAll('.hubGems').forEach(e=>e.textContent=wallet.gems.toLocaleString());['wGems','stGems'].forEach(id=>{const e=$(id);if(e)e.textContent=wallet.gems.toLocaleString();});
-  const act=BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0&&wallet.use[b.id]!==false).map(b=>b.name);const n=$('wBuffs');if(n)n.textContent=act.length?`Next race: ${act.join(', ')}`:'No buffs queued for the next race.';}
+  const pk=curPerk();const n=$('wBuffs');if(n)n.textContent=pk?`Perk for the next race: ${pk.name}`:'No perk equipped for the next race.';renderPerk();}
 const priceHTML=(cost,cur)=>`<span class="price"><span class="${cur==='gem'?'gem-ic':'coin-ic'}"></span>${cost.toLocaleString()}</span>`;
 const canAfford=(cost,cur)=>cur==='gem'?wallet.gems>=cost:wallet.coins>=cost;
 function spend(cost,cur){if(!canAfford(cost,cur))return false;if(cur==='gem')wallet.gems-=cost;else wallet.coins-=cost;return true;}
@@ -3577,7 +3591,7 @@ function renderLoadout(){
   $('loToggle').checked=loOn;
   $('pkLoadout').textContent=loOn?`${A.icon} ${A.name} · ${D.icon} ${D.name}`:'Off';
 }
-const PICK_TITLE={flag:'Pick your flag',runner:'Pick your runner',track:'Pick your track',loadout:'Pick your loadout'};
+const PICK_TITLE={flag:'Pick your flag',runner:'Pick your runner',track:'Pick your track',loadout:'Pick your loadout',perk:'Pick your perk'};
 let pickOpen=null;
 // The pickers slide in beside (desktop) or under (phone) the 3D preview, so you see each choice on your runner right away.
 function openPicker(sec){
@@ -3591,6 +3605,7 @@ function openPicker(sec){
 function closePicker(){if(!pickOpen)return;pickOpen=null;const pk=$('picker');pk.classList.remove('open');pk.setAttribute('aria-hidden','true');$('menu').classList.remove('picking');document.querySelectorAll('.pick-btn').forEach(b=>b.setAttribute('aria-expanded','false'));}
 document.querySelectorAll('.pick-btn').forEach(b=>b.onclick=()=>{if(pickOpen===b.dataset.pick)closePicker();else openPicker(b.dataset.pick);});
 $('pickDone').onclick=()=>closePicker();
+$('perkStore').onclick=()=>openStore();
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&pickOpen&&state==='menu')closePicker();if(e.key==='Escape'&&!$('settings').hidden){closeSettings();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('hub').hidden){closeHub();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('chat').hidden){closeChat();e.stopImmediatePropagation();}},true);
 function equipSkin(s){if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
 function skinCard(s){
@@ -3624,11 +3639,29 @@ function attireCard(a){
   const wb=card.querySelector('.wear');if(wb){wb.textContent=worn?'Take off':'Wear';wb.onclick=()=>{if(worn)delete wallet.equip[a.slot];else wallet.equip[a.slot]=a.id;saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
   return card;
 }
+/* ---------- Perks: the buffs you buy. You take one into each race; it is used up when the race starts. ---------- */
+var BUFF_ICON={start:'🚀',charge:'⚡',shield:'🛡️',magnet:'🧲',double:'💰'};
+function curPerk(){const b=BUFFS.find(x=>x.id===wallet.perk);return b&&(wallet.buffs[b.id]|0)>0?b:null;}
+function setPerk(id){wallet.perk=id||null;BUFFS.forEach(b=>{wallet.use[b.id]=b.id===id;});saveWallet();renderPerk();if(typeof locker!=='undefined'&&locker.active)locker.refresh();}
+function renderPerk(){
+  const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');if(ic)ic.textContent=p?BUFF_ICON[p.id]:'⭐';if(nm)nm.textContent=p?p.name:'No perk';
+  const box=$('perkGrid');if(!box)return;box.innerHTML='';
+  const hero=charById(selChar);const hp=$('perkHero');if(hp&&hero&&hero.perk)hp.textContent=`${hero.name}'s own perk, ⭐ ${hero.perk.name}, always works. Pick one more to bring along.`;
+  const card=(ic,title,desc,have,on,btnTxt,fn,dis)=>{const c=document.createElement('div');c.className='perk-card'+(on?' on':'');
+    c.innerHTML=`<div class="perk-ic"></div><div class="perk-main"><b></b><small></small></div><div class="perk-side"><span class="perk-have"></span><button></button></div>`;
+    c.querySelector('.perk-ic').textContent=ic;c.querySelector('b').textContent=title;c.querySelector('small').textContent=desc;c.querySelector('.perk-have').textContent=have;
+    const bt=c.querySelector('button');bt.textContent=btnTxt;bt.className=on?'ghost':'buy';bt.disabled=!!dis;bt.onclick=fn;box.appendChild(c);};
+  card('🚫','No perk','Race with just your hero\'s own perk.','',!p,!p?'Equipped':'Equip',()=>setPerk(null),!p);
+  BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0,on=p&&p.id===b.id;
+    if(n>0)card(BUFF_ICON[b.id],b.name,b.desc,`×${n}`,on,on?'Equipped':'Equip',()=>setPerk(b.id),on);
+    else card(BUFF_ICON[b.id],b.name,b.desc,'×0',false,`Buy · ${b.cost} ${curOf(b)==='gem'?'💎':'🪙'}`,()=>openStore());});
+}
 function buffCard(b){
   const have=wallet.buffs[b.id]|0,use=wallet.use[b.id]!==false;
-  const card=shopCard(b,'',`<div class="shop-have">You have <b>${have}</b></div><label class="check small"><input type="checkbox"${use?' checked':''}> Use in my next race</label>`);
-  buyButton(card.querySelector('.shop-row button'),b,'Buy one',()=>{wallet.buffs[b.id]=have+1;saveWallet();});
-  card.querySelector('input').onchange=e=>{wallet.use[b.id]=e.target.checked;saveWallet();};
+  const eq=!!curPerk()&&curPerk().id===b.id;
+  const card=shopCard(b,'',`<div class="shop-have">You have <b>${have}</b></div><label class="check small"><input type="checkbox"${eq?' checked':''}${have?'':' disabled'}> My perk for the next race</label>`);
+  buyButton(card.querySelector('.shop-row button'),b,'Buy one',()=>{wallet.buffs[b.id]=have+1;saveWallet();if(!curPerk())setPerk(b.id);});
+  card.querySelector('input').onchange=e=>{setPerk(e.target.checked?b.id:null);renderStore();};
   return card;
 }
 function grantRaceRewards(place){
@@ -4332,7 +4365,7 @@ $('copyCode').onclick=()=>{const code=NET.code||'';const done=()=>{$('copyCode')
   try{navigator.clipboard.writeText(code).then(done,()=>selectCode());}catch(e){selectCode();}};
 function selectCode(){const r=document.createRange();r.selectNodeContents($('roomCode'));const s=getSelection();s.removeAllRanges();s.addRange(r);}
 function showLobby(){
-  pushChat();if(plaza.active)plaza.exit();$('menu').classList.remove('over-plaza');
+  pushChat();if(plaza.active)plaza.exit();locker.exit();$('menu').classList.remove('over-plaza');
   crowd.stop();music.play(MUS.menu,{fade:1.2});state='lobby';['menu','results','pause','hud','touch'].forEach(id=>$(id).hidden=true);$('lobby').hidden=false;
   if(RACE&&RACE.online){pushPresence({rid:null,s:null,fin:null,acts:[],bots:null});if(NET.isHost)pushPresence({go:null});}
   clearRace();RACE=null;
@@ -4736,10 +4769,86 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     else if(id==='store')openStore();
     else openHub(id);}
 };
-function enterPlaza(){if(typeof pushChat==='function')pushChat();['menu','hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);closePicker();state='plaza';music.play(MUS.menu,{fade:1.2});crowd.stop();plaza.enter();$('plazaHud').hidden=false;plaza.refreshHud();}
+/* =========================================================
+   LOCKER ROOM — the Race Desk backdrop. Each locker shows something you own:
+   your perks first (the equipped one glows), then loadout items, attire and skins.
+   ========================================================= */
+const locker={active:false,built:false,group:null,items:null,t:0,
+  emo(ic){return canvasTex(128,128,(c,w,h)=>{c.textAlign='center';c.textBaseline='middle';c.font='92px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(ic,w/2,h/2+6);});},
+  plaque(top,sub,col){return canvasTex(256,96,(c,w,h)=>{c.fillStyle='rgba(10,16,44,.94)';c.fillRect(0,0,w,h);R(c,0,0,w,6,col||'#e9c46a');c.textAlign='center';c.textBaseline='middle';
+    c.fillStyle='#fff';c.font='700 30px "Chakra Petch", sans-serif';c.fillText(top,w/2,38);c.fillStyle=col||'#e9c46a';c.font='600 22px "Chakra Petch", sans-serif';c.fillText(sub,w/2,74);});},
+  build(){
+    const g=this.group=new THREE.Group();g.visible=false;scene.add(g);
+    const navy=new THREE.MeshLambertMaterial({color:0x16224f}),steel=new THREE.MeshLambertMaterial({color:0x2b4590}),inner=new THREE.MeshLambertMaterial({color:0x26346e,emissive:0x0b1640}),
+      gold=new THREE.MeshBasicMaterial({color:0xe9c46a}),wood=new THREE.MeshLambertMaterial({color:0x8a5a32}),light=new THREE.MeshBasicMaterial({color:0xfff4d6});
+    // floor: rubber gym floor with a gold lane line
+    const fl=new THREE.Mesh(new THREE.PlaneGeometry(34,22),new THREE.MeshLambertMaterial({map:canvasTex(256,256,(c,w,h)=>{R(c,0,0,w,h,'#1b2340');for(let i=0;i<900;i++)R(c,Math.random()*w,Math.random()*h,2,2,Math.random()<0.5?'#232c52':'#151c36');R(c,0,124,w,8,'#e9c46a');},3,2)}));
+    fl.rotation.x=-Math.PI/2;fl.position.set(0,0,-1);g.add(fl);
+    const wall=(w,h,x,y,z,ry,m)=>{const o=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m||navy);o.position.set(x,y,z);o.rotation.y=ry||0;g.add(o);return o;};
+    wall(34,9,0,4.5,-6.6);wall(22,9,-15,4.5,-1,Math.PI/2);wall(22,9,15,4.5,-1,-Math.PI/2);
+    const ceil=wall(34,22,0,8,-1);ceil.rotation.x=Math.PI/2;
+    // gold trim, ceiling light strips
+    [0.35,6.15].forEach(y=>{const t=new THREE.Mesh(new THREE.BoxGeometry(34,0.12,0.05),gold);t.position.set(0,y,-6.55);g.add(t);});
+    [-4,1].forEach(z=>{const l=new THREE.Mesh(new THREE.BoxGeometry(22,0.08,0.4),light);l.position.set(0,7.95,z);g.add(l);});
+    // banner above the lockers
+    const ban=new THREE.Mesh(new THREE.PlaneGeometry(10,1.2),new THREE.MeshBasicMaterial({map:canvasTex(1024,128,(c,w,h)=>{c.fillStyle='#0b1440';c.fillRect(0,0,w,h);c.strokeStyle='#e9c46a';c.lineWidth=6;c.strokeRect(4,4,w-8,h-8);
+      c.fillStyle='#e9c46a';c.font='64px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('⚑ FLAG DASH · LOCKER ROOM',w/2,h/2+4);})}));
+    ban.position.set(0,6.9,-6.5);g.add(ban);
+    // nation flag on the left wall, trophy shelf on the right
+    this.flagMat=new THREE.MeshLambertMaterial({side:THREE.DoubleSide});const fm=new THREE.Mesh(new THREE.PlaneGeometry(4.2,2.8),this.flagMat);fm.position.set(-14.9,4.6,-1.5);fm.rotation.y=Math.PI/2;g.add(fm);
+    const tro=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo('🏆'),transparent:true,depthWrite:false}));tro.scale.set(2,2,1);tro.position.set(14,4.4,-2.5);g.add(tro);
+    // nine lockers along the back wall
+    this.slots=[];
+    for(let i=0;i<9;i++){const x=(i-4)*2.6,L=new THREE.Group();L.position.set(x,0,-6);g.add(L);
+      const body=new THREE.Mesh(new THREE.BoxGeometry(2.4,4.8,1.1),steel);body.position.set(0,2.6,0);L.add(body);
+      const hole=new THREE.Mesh(new THREE.BoxGeometry(2.0,4.3,0.2),inner);hole.position.set(0,2.6,0.46);L.add(hole);
+      const shelf=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.08,0.5),new THREE.MeshLambertMaterial({color:0x8a97c4}));shelf.position.set(0,1.75,0.72);L.add(shelf);
+      const side=x>0?1:-1,piv=new THREE.Group();piv.position.set(side*1.2,2.6,0.56);piv.rotation.y=side*1.25;L.add(piv);  // doors open away from the middle
+      const door=new THREE.Mesh(new THREE.BoxGeometry(2.3,4.6,0.06),new THREE.MeshLambertMaterial({map:canvasTex(64,128,(c,w,h)=>{R(c,0,0,w,h,'#35529f');for(let k=0;k<6;k++)R(c,14,10+k*7,36,3,'#1c2c60');R(c,46,60,6,16,'#c9d1e4');})}));
+      door.position.set(-side*1.15,0,0);piv.add(door);
+      const num=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(64,32,(c,w,h)=>{R(c,0,0,w,h,'#e9c46a');c.fillStyle='#1a1405';c.font='bold 24px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(i+1).padStart(2,'0'),w/2,h/2+1);}),depthWrite:false}));
+      num.scale.set(0.5,0.25,1);num.position.set(0,4.75,0.6);L.add(num);
+      this.slots.push(L);}
+    // benches in front
+    [-5.5,5.5].forEach(x=>{const top=new THREE.Mesh(new THREE.BoxGeometry(6.5,0.22,1.1),wood);top.position.set(x,1.0,-2.6);g.add(top);
+      [-2.8,2.8].forEach(o=>{const leg=new THREE.Mesh(new THREE.BoxGeometry(0.2,1.0,0.9),new THREE.MeshLambertMaterial({color:0x2a2f45}));leg.position.set(x+o,0.5,-2.6);g.add(leg);});});
+    this.built=true;
+  },
+  // what to show in the lockers, most important first
+  contents(){pruneAttire();const out=[],p=curPerk();
+    if(p)out.push({ic:BUFF_ICON[p.id],top:p.name,sub:`EQUIPPED PERK ×${wallet.buffs[p.id]|0}`,col:'#5fd08a',on:true});
+    BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0;if(n>0&&(!p||p.id!==b.id))out.push({ic:BUFF_ICON[b.id],top:b.name,sub:`Perk ×${n}`});});
+    const A=loById(wallet.lo.atk),D=loById(wallet.lo.def);if(A)out.push({ic:A.icon,top:A.name,sub:'Attack'});if(D)out.push({ic:D.icon,top:D.name,sub:'Defence'});
+    Object.keys(wallet.attire).forEach(id=>{const a=attireById(id);if(a)out.push({ic:a.icon,top:a.name,sub:Object.values(wallet.equip).includes(id)?'Wearing':'Attire'});});
+    wallet.skins.filter(id=>id!=='classic').forEach(id=>{const k=skinById(id);out.push({ic:'👕',top:k.name,sub:'Skin'});});
+    return out.slice(0,9);},
+  refresh(){
+    if(!this.built)return;if(this.items){this.items.forEach(o=>{o.parent.remove(o);if(o.material&&o.material.map)o.material.map.dispose();});}this.items=[];
+    const list=this.contents();
+    this.slots.forEach((L,i)=>{const it=list[i]||{ic:'🔒',top:'Empty',sub:'Visit the store',col:'#8f9bc4',empty:true};
+      const ic=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo(it.ic),transparent:true,depthWrite:false,opacity:it.empty?0.45:1}));ic.scale.set(1.3,1.3,1);ic.position.set(0,2.55,0.85);L.add(ic);this.items.push(ic);
+      const pl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plaque(it.top,it.sub,it.col),depthWrite:false}));pl.scale.set(1.9,0.71,1);pl.position.set(0,1.2,0.75);L.add(pl);this.items.push(pl);
+      if(it.on){const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo('✨'),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));gl.scale.set(2.4,2.4,1);gl.position.set(0,2.55,0.8);L.add(gl);this.items.push(gl);this.glow=gl;}});
+    const f=flagCanvas(selCountry);if(!f.tex){f.tex=new THREE.CanvasTexture(f.canvas);f.tex.__shared=true;}this.flagMat.map=f.tex;this.flagMat.needsUpdate=true;
+  },
+  enter(){
+    if(!this.built)this.build();this.refresh();if(this.active)return;this.active=true;
+    this.saved={bg:scene.background,fog:scene.fog,hc:hemi.color.getHex(),hg:hemi.groundColor.getHex(),hi:hemi.intensity,si:sun.intensity,far:camera.far};
+    if(world)world.visible=false;courseGroup.visible=false;this.group.visible=true;
+    scene.background=new THREE.Color(0x0b1233);scene.fog=null;hemi.color.setHex(0xfff2dc);hemi.groundColor.setHex(0x26305c);hemi.intensity=1.0;sun.intensity=0.45;camera.far=120;camera.fov=58;camera.updateProjectionMatrix();
+  },
+  exit(){
+    if(!this.active)return;this.active=false;this.group.visible=false;if(world)world.visible=true;courseGroup.visible=true;
+    const S=this.saved;if(S){scene.background=S.bg;scene.fog=S.fog;hemi.color.setHex(S.hc);hemi.groundColor.setHex(S.hg);hemi.intensity=S.hi;sun.intensity=S.si;camera.far=S.far;camera.updateProjectionMatrix();}
+  },
+  update(dt){this.t+=dt;if(world)world.visible=false;courseGroup.visible=false;
+    camera.position.set(Math.sin(this.t*0.12)*1.6,3.1+Math.sin(this.t*0.2)*0.15,7.5);camera.lookAt(Math.sin(this.t*0.12)*0.6,2.6,-6);
+    if(this.glow){const k=1+Math.sin(this.t*3)*0.12;this.glow.scale.set(2.4*k,2.4*k,1);}}
+};
+function enterPlaza(){if(locker.active)locker.exit();if(typeof pushChat==='function')pushChat();['menu','hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);closePicker();state='plaza';music.play(MUS.menu,{fade:1.2});crowd.stop();plaza.enter();$('plazaHud').hidden=false;plaza.refreshHud();}
 function leavePlaza(){plaza.exit();}
-// The Race Desk has its own backdrop: a camera gliding down the Night Stadium (the plaza stays for walking around).
-function goDesk(online){if(plaza.active)plaza.exit();['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('plazaHud').hidden=true;state='menu';music.play(MUS.menu,{fade:1.2});const th=themeById('stadium');if(TH!==th||TRACK!==LAP_LEN[1]){TRACK=LAP_LEN[1];buildWorld(th);genCourse(7);}$('menu').hidden=false;$('menu').classList.add('over-plaza');refreshMenu(null);rebuildPreview('wave');if(online)setTimeout(()=>{const el=$('playPanel');if(el)el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});},60);}
+// The Race Desk sits in the locker room, which shows what you own (the plaza stays for walking around).
+function goDesk(online){if(plaza.active)plaza.exit();['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('plazaHud').hidden=true;state='menu';music.play(MUS.menu,{fade:1.2});locker.enter();$('menu').hidden=false;$('menu').classList.add('over-plaza');refreshMenu(null);rebuildPreview('wave');if(online)setTimeout(()=>{const el=$('playPanel');if(el)el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});},60);}
 window.addEventListener('keydown',e=>{if(state!=='plaza'||(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')))return;plaza.keys[e.code]=true;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
   if(!e.repeat&&!plaza.blocked()){if(e.code==='KeyE'||e.code==='Enter'||e.code==='Space')plaza.act();if(/^Digit[1-4]$/.test(e.code))plaza.emote(EMOTES[+e.code.slice(5)-1]);}});
@@ -4797,6 +4906,7 @@ function frame(now){requestAnimationFrame(frame);tick(now);}
 function tick(now){
   const dt=clamp((now-last)/1000,0,0.05);last=now;
   if(state==='plaza'||(state==='menu'&&plaza.active)){plaza.update(dt,now);if(state==='menu')renderPreview(dt,now);updateParticles(dt);renderer.render(scene,camera);return;}
+  if(state==='menu'&&locker.active){locker.update(dt);updateParticles(dt);renderer.render(scene,camera);renderPreview(dt,now);return;}
   if(state==='menu'||state==='lobby'){
     menuT+=dt;const d=(menuT*9)%(TRACK-100);
     W(Math.sin(menuT*0.25)*3.5,d-9,Hf(d-9)+4.2+Math.sin(menuT*0.4)*0.6,camera.position);
@@ -4846,6 +4956,7 @@ window.addEventListener('resize',resize);resize();
 buildWorld(themeById('stadium'));genCourse(7);
 refreshMenu(null);rebuildPreview('wave');
 applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
+if(wallet.perk===undefined){const f=BUFFS.find(b=>(wallet.buffs[b.id]|0)>0&&wallet.use[b.id]!==false);setPerk(f?f.id:null);}else setPerk(wallet.perk);
 goDesk(false);
 initNet();
 glbSubmit();
