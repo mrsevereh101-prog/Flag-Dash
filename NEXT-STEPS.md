@@ -29,6 +29,10 @@ Supabase project: hzzqnwzsasuwjafmsgqh
    Keep the Client secret private (only in Supabase).
 5. [x] Test: open the game, tap the person button, try "Continue with Google" and the email link.
 
+## To turn on Friends & Inbox
+1. [ ] Run `supabase/social.sql` in the Supabase SQL editor (New query, paste everything, Run; click "Run query" if a warning shows).
+2. [ ] Test with a friend: both tap **Online > Find a Race**, then use the 👥 button during the race to add each other and send a message.
+
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
 - [ ] Better hero graphics (more detailed models), when there's time
@@ -39,9 +43,9 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 ## Roadmap (list from Oct 2)
 Suggested order: free items first, then money, then reach.
 
-1. [ ] **Online**: rooms, lobby, races and Flag Challenge online already work. Next: quick matchmaking (join any open race), reconnecting after a drop, and testing with several phones at once.
+1. [ ] **Online**: rooms, lobby, races and Flag Challenge online work. Done Oct 2: Find a Race matchmaking (players first, CPU runners fill the rest), runner list during races with message + add friend, friend list with friend codes and requests, inbox that keeps messages for offline players. Next: reconnecting after a drop, testing with several phones at once.
 2. [ ] **Plaza**: neon plaza with day/night, rivals and top 15 flags is done. Next: decide what more to add (mini games, friends visible in the plaza, events).
-3. [ ] **Chat and inbox**: room chat exists. Next: an inbox for rewards, news and friend messages (needs a database table), plus friend requests.
+3. [ ] **Chat and inbox**: room chat, inbox and friend requests done. Next: rewards and news delivered to the inbox.
 4. [ ] **Character graphics**: 5 heroes (samurai, warrior, archer, elf, dwarf) built from simple shapes. Next: more detailed models and animation.
 5. [ ] **More heroes**: each new hero needs a look, a perk and speech lines. Send ideas.
 6. [ ] **Skins**: a skins shop already exists. Next: more skins, rarity, and skins for each hero.

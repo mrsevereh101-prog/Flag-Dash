@@ -695,6 +695,51 @@ tr.me td.pl{color:var(--gold)}
 .pz-zoom{position:absolute;left:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 156px);display:grid;gap:6px;pointer-events:auto}
 .pz-zoom button{width:40px;height:40px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:22px;font-weight:700;line-height:1}
 @media (max-width:520px){.chat-card{width:100%;border-left:0}.chat-tabs button{font-size:12px}}
+/* friends + inbox */
+#social{position:fixed;inset:0;z-index:27;background:rgba(6,8,24,.45);display:flex;justify-content:flex-end}
+#social[hidden]{display:none!important}
+#social .chat-top h2{flex:1}
+.soc-list{display:flex;flex-direction:column;gap:8px}
+.soc-list h3{margin:8px 0 0;font-size:14px;color:var(--gold)}
+.chat-tabs button[data-badge]:not([data-badge=""]){position:relative}
+#socTabs button[data-badge=""]::after{display:none!important}
+#socTabs button[data-badge]:not([data-badge=""])::after{content:attr(data-badge);position:absolute;top:2px;right:2px;min-width:16px;height:16px;border-radius:8px;background:var(--tartan-2);color:#fff;font-size:10px;display:grid;place-items:center;padding:0 3px}
+.soc-code{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;background:var(--night-2);border:1px solid var(--gold);border-radius:12px;padding:10px 12px}
+.soc-code small{grid-column:1/-1;color:var(--muted)}.soc-code b{font-family:var(--display);font-weight:400;font-size:28px;letter-spacing:.14em;color:#f6e3a8}
+.soc-code p{grid-column:1/-1;margin:0;font-size:12px}
+.soc-add{display:flex;gap:8px}.soc-add input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-size:16px;background:var(--night-2);color:#f3ead0;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.soc-add button{border-radius:10px;padding:8px 14px;font-size:15px}
+.soc-msg{margin:0;padding:8px 10px;border-radius:10px;background:rgba(233,196,106,.14);color:#f6e3a8;font-size:13px}
+.soc-row{display:flex;gap:8px;align-items:center;background:var(--night-2);border-radius:10px;padding:7px 9px}
+.soc-row img,.ros-row img{width:26px;height:17px;border-radius:2px;flex:none}
+.soc-row .dot{width:9px;height:9px;border-radius:50%;background:#59607e;flex:none}.soc-row .dot.on{background:#5fd08a;box-shadow:0 0 6px #5fd08a}
+.soc-mid{flex:1;min-width:0;display:grid}.soc-mid span{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.soc-mid small{color:var(--muted);font-size:11.5px}
+.soc-row button,.ros-row button,.inb-acts button{padding:6px 10px;border-radius:8px;font-weight:700;font-size:13px;flex:none}
+.soc-row button.buy,.inb button.buy{background:var(--gold);color:#1a1405;border:0}
+.inb{display:grid;gap:6px;background:var(--night-2);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.inb.new{border-color:var(--gold);box-shadow:0 0 0 1px rgba(233,196,106,.35)}
+.inb .cm-head img{width:22px;height:15px;border-radius:2px}
+.inb-acts{display:flex;flex-wrap:wrap;gap:6px}.warn{color:#ff9a8a}
+.compose{display:grid;gap:8px}.compose-h{display:flex;gap:8px;align-items:center}.compose-h img{width:26px;height:17px;border-radius:2px}
+.compose textarea{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid var(--line);background:var(--night-2);color:inherit;padding:8px;font:inherit;resize:vertical}
+.compose-q{display:flex;flex-wrap:wrap;gap:6px}.compose-q button{padding:5px 9px;border-radius:14px;font-size:12px}
+.compose-note{margin:0;min-height:1em;font-size:12.5px;color:#f6e3a8}.compose-row{display:flex;gap:8px;justify-content:flex-end}
+/* runner list during races */
+#roster{position:fixed;z-index:31;top:calc(env(safe-area-inset-top,0px) + 64px);right:10px;width:min(330px,calc(100% - 20px));max-height:70vh;overflow:auto;background:var(--panel-solid);border:1px solid var(--gold);border-radius:14px;padding:10px;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+#roster[hidden]{display:none!important}
+.roster-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.roster-top button{padding:4px 10px;border-radius:8px}
+#rosterList{display:grid;gap:6px}
+.ros-row{display:flex;gap:8px;align-items:center;background:var(--night-2);border-radius:10px;padding:6px 8px}.ros-row.me{outline:1px solid var(--gold)}
+.ros-pl{width:18px;text-align:center;color:#f6e3a8}.ros-tag{font-size:11px;color:var(--muted);flex:none}
+#rosterNote{margin:6px 0 0;font-size:12px;color:#f6e3a8;min-height:0}
+/* find a race */
+#mm{z-index:32;display:grid;place-items:center;background:rgba(6,10,34,.72)}
+#mm[hidden]{display:none!important}
+.mm-card{background:var(--panel-solid);border:2px solid var(--gold);border-radius:18px;padding:22px 26px;text-align:center;display:grid;gap:8px;justify-items:center;width:min(340px,100%);box-sizing:border-box}
+.mm-card h2{margin:0;font-family:var(--display);font-weight:400}.mm-spin{font-size:42px;animation:mmSpin 2.4s linear infinite}
+@keyframes mmSpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.mm-spin{animation:none}}
+.d3-mmnote{margin:2px 0 8px;font-size:12.5px;text-align:center}
 #plazaHud{position:fixed;inset:0;pointer-events:none;z-index:4}
 .overlay{z-index:6}
 .has-dot{position:relative}.has-dot::after{content:'';position:absolute;top:-3px;right:-3px;width:13px;height:13px;border-radius:50%;background:#ff3b30;box-shadow:0 0 0 2px #0b1440;pointer-events:none;animation:dotPulse 1.6s ease-in-out infinite}
@@ -832,7 +877,7 @@ body:not(.touch) .pz-stick{opacity:.55}
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
+        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Flag Dash</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
@@ -875,8 +920,9 @@ body:not(.touch) .pz-stick{opacity:.55}
               <div class="open-rooms" id="openRooms"></div>
             </div>
             <p class="muted d3-status" id="onlineStatus">Connecting…</p>
-            <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Online Friends</b><small>Chat, friends and rooms</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store">🛒</button></div>
-            <button class="primary d3-gold" id="d3Create">🌐 Create Room</button>
+            <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Friends &amp; Inbox</b><small>Friend list, requests and messages</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store">🛒</button></div>
+            <button class="primary d3-gold" id="mmBtn">⚡ Find a Race</button><p class="muted d3-mmnote">Race players who are online now. CPU runners fill any empty lanes.</p>
+            <button class="ghost" id="d3Create">🔑 Create a private room</button>
           </div>
           <div class="d3-pane offline-block" id="paneSolo" role="tabpanel" aria-labelledby="tabSolo" hidden>
             <div id="offTitle" hidden><div class="step">Offline</div><h2>Race the CPU</h2></div>
@@ -1012,7 +1058,7 @@ body:not(.touch) .pz-stick{opacity:.55}
     </div>
     <div class="clock-box">
       <div class="clock" id="clock">0.00</div>
-      <div class="hud-btns"><button id="qcBtn" hidden aria-label="Quick chat">💬</button><button id="setBtn" hidden aria-label="Settings">⚙ Settings</button><button id="pauseBtn" aria-label="Pause and settings">⏸ Pause</button></div>
+      <div class="hud-btns"><button id="rosterBtn" hidden aria-label="Runners">👥</button><button id="qcBtn" hidden aria-label="Quick chat">💬</button><button id="setBtn" hidden aria-label="Settings">⚙ Settings</button><button id="pauseBtn" aria-label="Pause and settings">⏸ Pause</button></div>
     </div>
   </div>
   <canvas id="minimap" width="160" height="400" aria-label="Course map" hidden></canvas>
@@ -1062,6 +1108,20 @@ body:not(.touch) .pz-stick{opacity:.55}
   </div>
 </div>
 <div id="toast" role="status"></div>
+<div id="social" hidden>
+  <div class="chat-card" role="dialog" aria-labelledby="socTitle">
+    <div class="chat-top"><h2 id="socTitle">Friends</h2><button class="ghost" id="socClose">Close</button></div>
+    <div class="seg chat-tabs" id="socTabs" role="group" aria-label="Friends or inbox"><button data-tab="friends">👥 Friends</button><button data-tab="inbox">✉️ Inbox</button></div>
+    <div class="chat-list soc-list" id="socList" aria-live="polite"></div>
+  </div>
+</div>
+<div id="roster" hidden role="dialog" aria-label="Runners in this race">
+  <div class="roster-top"><b>👥 Runners</b><button class="ghost" id="rosterClose" aria-label="Close">✕</button></div>
+  <div id="rosterList"></div><p id="rosterNote" aria-live="polite"></p>
+</div>
+<div id="mm" class="overlay" hidden>
+  <div class="mm-card" role="dialog" aria-labelledby="mmTitle"><div class="mm-spin" aria-hidden="true">🌐</div><h2 id="mmTitle">Finding a race</h2><p class="muted" id="mmMsg"></p><button class="ghost" id="mmCancel">Cancel</button></div>
+</div>
 <div id="hub" class="overlay" hidden>
   <div class="store-card hub-card" role="dialog" aria-labelledby="hubTitle">
     <div class="store-head"><h2 id="hubTitle"></h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="hubClose">Close</button></div>
@@ -1152,7 +1212,7 @@ body:not(.touch) .pz-stick{opacity:.55}
     <div class="team-result" id="teamResult" hidden></div>
     <div class="table-wrap"><table><thead><tr><th>Pl.</th><th>Lane</th><th>Runner</th><th>Nation</th><th class="t">Time</th><th class="t">Gap</th><th class="t" id="ptsHead">Pts</th></tr></thead><tbody id="resBody"></tbody></table></div>
     <div id="gpBox" class="gp-box" hidden></div>
-    <div class="board-foot"><div id="resRewards" class="rewards"></div><div id="resPB"></div><div class="actions"><button class="primary" id="againBtn">Race again</button><button class="ghost" id="changeBtn">Change setup</button><button class="ghost" id="resPlaza">Plaza</button></div></div>
+    <div class="board-foot"><div id="resRewards" class="rewards"></div><div id="resPB"></div><div class="actions"><button class="primary" id="againBtn">Race again</button><button class="ghost" id="changeBtn">Change setup</button><button class="ghost" id="resRunners" hidden>👥 Runners</button><button class="ghost" id="resPlaza">Plaza</button></div></div>
   </div>
 </div>
 
@@ -2396,7 +2456,7 @@ function startRaceFromGo(go,online){
   if(th!==TH||TRACK!==lapLen){TRACK=lapLen;buildWorld(th);}
   genCourse(Number(go.seed)||1);
   const roster=go.roster.slice(0,8);
-  roster.forEach((e,i)=>{const r=makeRunner(e,i,roster.length,online);runners.push(r);runnerMap.set(r.id,r);});
+  roster.forEach((e,i)=>{const r=makeRunner(e,i,roster.length,online);r.uid=r.kind==='local'?myUid():validUid(e.uid)?e.uid:null;runners.push(r);runnerMap.set(r.id,r);});
   player=runners.find(r=>r.kind==='local')||runners[0];
   if(!go.sv)runners.forEach(r=>{if(r.owned&&r.char.id==='archer')giveItem(r);});  // perk: Full Quiver
   RACE.bots=runners.filter(r=>r.kind==='bot');
@@ -2413,7 +2473,7 @@ function startRaceFromGo(go,online){
   NET.seq=0;NET.acts=[];NET.lastSeq.clear();
   closePicker();touchLane=null;if(isTouch){const h=$('swipeHint');h.classList.add('show');clearTimeout(h._t);h._t=setTimeout(()=>h.classList.remove('show'),7000);}
   ['menu','results','pause','lobby','store','podium'].forEach(id=>$(id).hidden=true);$('hud').hidden=false;$('touch').hidden=!isTouch;
-  $('powerName').textContent=player.char.power;$('qcBtn').hidden=!online||!SET.chat;$('qcRow').hidden=true;$('feed').innerHTML='';$('countdown').innerHTML='';
+  $('powerName').textContent=player.char.power;$('qcBtn').hidden=!online||!SET.chat;$('rosterBtn').hidden=!online;closeRoster();$('qcRow').hidden=true;$('feed').innerHTML='';$('countdown').innerHTML='';
   $('trackLabel').textContent=(GP&&RACE.gp?`GP ${GP.round+1}/${GP.tracks.length} · `:'')+TH.name;$('teamScore').hidden=!isTeamMode(RACE.mode);$('tsR').hidden=RACE.mode!=='trio';$('pauseBtn').hidden=false;
   const bar=$('trackBar');bar.innerHTML='';
   runners.slice().sort((a,b)=>(a.kind==='local')-(b.kind==='local')).forEach(r=>{const im=document.createElement('img');im.src=r.flag.url;im.alt='';im.title=r.nm;im.className='marker'+(r.kind==='local'?' me':'')+(r.team!=null?' t'+r.team:'');bar.appendChild(im);r.marker=im;});
@@ -2535,7 +2595,7 @@ function showSurvivalResults(){
     wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();RACE.reward={coinsWon,gemsWon,extra};}
   const rw=RACE.reward;
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${sv.wave} wave${sv.wave>1?'s':''} reached, ${sv.dodged} zombies dodged${rw.extra?`, ${rw.extra} from coin bonuses`:''}${RACE.gems?', '+RACE.gems+' diamond'+(RACE.gems>1?'s':'')+' found':''})</span>`;
-  $('againBtn').textContent='Survive again';$('changeBtn').textContent='Change setup';
+  $('againBtn').textContent='Survive again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 
@@ -2644,7 +2704,7 @@ function showFlagResults(){
   if(!RACE.fcPaid){RACE.fcPaid=true;RACE.fcCoins=player.flags*FC_FLAG_COINS;wallet.coins+=RACE.fcCoins;saveWallet();}
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon+RACE.fcCoins,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(rank)} place, ${RACE.fcCoins} for the ${player.flags} flag${player.flags===1?'':'s'} you carried${rw.extra?`, ${rw.extra} from coin bonuses`:''}${rank===1?', 1 diamond for the win':''})</span>`;
   {const notes=evaluateRace(rank);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
-  $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';
+  $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 
@@ -3272,7 +3332,7 @@ function placeModel(r,dt,now){
 const NET={ns:null,status:'checking',game:null,code:null,isHost:false,myPeer:null,seq:0,acts:[],lastSeq:new Map(),goId:null,cfg:{trk:'stadium',mode:'solo',bots:true},me:{rdy:false,tm:0},sendT:0,joinedAt:0,conn:false,seen:new Map(),resultsSig:''};
 const LOCAL_TEST=!(window.claude&&window.claude.use)&&(location.protocol==='file:'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname));
 function pushPresence(patch){if(NET.game)NET.game.presence(patch).catch(()=>{});}
-function lobbyFields(){return {v:2,gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
+function lobbyFields(){return {v:2,uid:myUid(),gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
 function syncLobbyPresence(){if(NET.game)pushPresence(lobbyFields());}
 const CODE_CHARS='ABCDEFGHJKLMNPQRSTUVWXYZ';
 const genCode=()=>Array.from({length:4},()=>CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)]).join('');
@@ -3292,8 +3352,8 @@ async function initNet(){
   renderOnline();
   if(ns){try{ns.onPeers(ch=>{renderOpenRooms();ingestPeers(ch&&ch.peers);if(typeof plaza!=='undefined')plaza.onPeers(ch&&ch.peers);},()=>{});}catch(e){}try{ingestPeers(ns.peers());}catch(e){}pushSocial();if(SET.chat)initChat();}
 }
-async function enterRoom(code,asHost){
-  if(!requireAuth('Sign in to play online with friends.',()=>enterRoom(code,asHost)))return;
+async function enterRoom(code,asHost,opt){
+  if(!requireAuth('Sign in to play online with friends.',()=>enterRoom(code,asHost,opt)))return;
   if(!NET.ns||NET.game)return;
   code=String(code||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,4);if(code.length!==4){setOnlineMsg('Room codes are 4 letters.');return;}
   setOnlineMsg('Joining room '+code+'…');
@@ -3301,7 +3361,8 @@ async function enterRoom(code,asHost){
     let g;
     try{g=await NET.ns.join('fd-'+code.toLowerCase());}catch(err){if(err&&(err.code==='not_permitted'||err.code==='limit_reached'||err.code==='upstream_error'||err.code==='invalid_argument'))g=lobbyAsGame();else throw err;}
     NET.code=code;NET.game=g;NET.code=code;NET.isHost=!!asHost;NET.goId=null;NET.me.rdy=false;NET.joinedAt=performance.now();NET.seen.clear();
-    if(asHost){NET.cfg={trk:selTrack,mode:selMode,bots:true,laps:selLaps,lo:loOn};}
+    NET.mmRoom=!!(opt&&opt.mm);NET.lastCfg=null;
+    if(asHost){NET.cfg=NET.mmRoom?{trk:pick(THEMES.map(t=>t.id)),mode:'solo',bots:true,laps:1,lo:true,mm:true,left:MM_WAIT}:{trk:selTrack,mode:selMode,bots:true,laps:selLaps,lo:loOn};NET.mmEnd=Date.now()+MM_WAIT*1000;}
     NET.unsub=[g.onPeers(onGamePeers,e=>{setOnlineMsg('The room connection ended ('+e.code+').');}),g.onConnection(c=>{NET.conn=c;renderLobby();})];
     pushPresence(Object.assign(lobbyFields(),{acts:[],s:null,fin:null,rid:null,go:null,bots:null}));
     if(asHost)NET.ns.presence({host:code,trk:NET.cfg.trk}).catch(()=>{});
@@ -3311,8 +3372,8 @@ async function enterRoom(code,asHost){
 function leaveRoom(){
   (NET.unsub||[]).forEach(u=>{try{u();}catch(e){}});NET.unsub=null;
   if(NET.game){try{NET.game.leave();}catch(e){}}
-  NET.game=null;NET.code=null;NET.isHost=false;NET.goId=null;pushChat();
-  if(NET.ns)NET.ns.presence({host:null}).catch(()=>{});
+  NET.game=null;NET.code=null;NET.isHost=false;NET.goId=null;NET.mmRoom=false;pushChat();
+  if(NET.ns)NET.ns.presence({host:null,mmr:null}).catch(()=>{});
   toMenu();
 }
 function onGamePeers(ch){
@@ -3329,7 +3390,7 @@ function onGamePeers(ch){
 }
 function electHost(){
   if(!NET.game)return;const ps=gamePeers();const hosts=ps.filter(p=>p.presence.h);
-  if(!hosts.length&&!NET.isHost&&performance.now()-NET.joinedAt>2500){const first=ps.slice().sort((a,b)=>a.peer<b.peer?-1:1)[0];if(first&&first.sameTab){NET.isHost=true;NET.cfg=Object.assign({trk:selTrack,mode:'solo',bots:true},NET.cfg);syncLobbyPresence();NET.ns.presence({host:NET.code,trk:NET.cfg.trk}).catch(()=>{});}}
+  if(!hosts.length&&!NET.isHost&&performance.now()-NET.joinedAt>2500){const first=ps.slice().sort((a,b)=>a.peer<b.peer?-1:1)[0];if(first&&first.sameTab){NET.isHost=true;NET.cfg=Object.assign({trk:selTrack,mode:'solo',bots:true},NET.lastCfg||NET.cfg);if(NET.cfg.mm)NET.mmEnd=Date.now()+8000;syncLobbyPresence();NET.ns.presence({host:NET.code,trk:NET.cfg.trk}).catch(()=>{});}}
   if(hosts.length>1&&NET.isHost){const keep=hosts.slice().sort((a,b)=>a.peer<b.peer?-1:1)[0];if(!keep.sameTab){NET.isHost=false;pushPresence({h:false,cfg:null,go:null});NET.ns.presence({host:null}).catch(()=>{});}}
 }
 function handlePeer(peer,pr){
@@ -3344,7 +3405,7 @@ function handlePeer(peer,pr){
 function onGo(go){
   NET.goId=String(go.id);
   if(!Array.isArray(go.roster)||!go.roster.length)return;
-  const roster=go.roster.slice(0,8).map(e=>({id:String(e.id||''),peer:e.peer?String(e.peer):null,bot:!!e.bot,nm:cleanName(e.nm),cc:COUNTRY_CODES.has(e.cc)?e.cc:'USA',ch:CHAR_IDS.includes(e.ch)?e.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===e.sk)?e.sk:'classic',gr:Array.isArray(e.gr)?e.gr.slice(0,2):[],gt:cleanTag(e.gt),tm:clamp(e.tm|0,0,2)}));
+  const roster=go.roster.slice(0,8).map(e=>({id:String(e.id||''),peer:e.peer?String(e.peer):null,bot:!!e.bot,nm:cleanName(e.nm),cc:COUNTRY_CODES.has(e.cc)?e.cc:'USA',ch:CHAR_IDS.includes(e.ch)?e.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===e.sk)?e.sk:'classic',gr:Array.isArray(e.gr)?e.gr.slice(0,2):[],gt:cleanTag(e.gt),tm:clamp(e.tm|0,0,2),uid:validUid(e.uid)?e.uid:null}));
   if(!roster.some(e=>e.peer===NET.myPeer)){$('lobbyHint').textContent='A race started without you. You will be in the next one.';return;}
   startRaceFromGo({id:go.id,seed:go.seed,trk:go.trk,mode:go.mode,fc:!!go.fc,laps:go.laps,lo:go.lo!==false,tn:go.tn,gb:!!go.gb,roster},true);
 }
@@ -3352,7 +3413,7 @@ function hostStart(){
   if(!NET.isHost||!NET.game)return;
   const fc=NET.cfg.mode==='fc',mode=fc?'solo':NET.cfg.mode;
   const ps=gamePeers().slice(0,8);
-  const roster=ps.map(p=>({id:'p:'+p.peer,peer:p.peer,nm:cleanName(p.presence.nm),cc:COUNTRY_CODES.has(p.presence.cc)?p.presence.cc:'USA',ch:CHAR_IDS.includes(p.presence.ch)?p.presence.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===p.presence.sk)?p.presence.sk:'classic',gr:Array.isArray(p.presence.gr)?p.presence.gr.slice(0,2):[],gt:cleanTag(p.presence.gt),gid:typeof p.presence.gid==='string'?p.presence.gid.slice(0,16):null,tm:clamp(p.presence.tm|0,0,2)}));
+  const roster=ps.map(p=>({id:'p:'+p.peer,peer:p.peer,nm:cleanName(p.presence.nm),cc:COUNTRY_CODES.has(p.presence.cc)?p.presence.cc:'USA',ch:CHAR_IDS.includes(p.presence.ch)?p.presence.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===p.presence.sk)?p.presence.sk:'classic',gr:Array.isArray(p.presence.gr)?p.presence.gr.slice(0,2):[],gt:cleanTag(p.presence.gt),gid:typeof p.presence.gid==='string'?p.presence.gid.slice(0,16):null,tm:clamp(p.presence.tm|0,0,2),uid:validUid(p.presence.uid)?p.presence.uid:null}));
   let tn=null;
   if(NET.cfg.gb&&isTeamMode(mode)){const nT=teamCount(mode);const cnt=new Map();roster.forEach(e=>{if(e.gid)cnt.set(e.gid,(cnt.get(e.gid)||0)+1);});
     const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,nT).map(x=>x[0]);tn=[];
@@ -3412,7 +3473,8 @@ function mockRoom(){
 // Presence tracks who is connected; each player's state travels as broadcasts, throttled to 10 per second.
 const SUPA={url:'https://hzzqnwzsasuwjafmsgqh.supabase.co',key:'sb_publishable_qGKTJMIxFDbPRyGFXHskOw_mIC8x1wY',
   lib:'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js'};
-function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
+const scriptLoads=new Map();
+function loadScript(src){if(!scriptLoads.has(src))scriptLoads.set(src,new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=e=>{scriptLoads.delete(src);no(e);};document.head.appendChild(s);}));return scriptLoads.get(src);}
 async function supaRoom(){
   if(!(window.supabase&&window.supabase.createClient))await loadScript(SUPA.lib);
   const sb=await getSb();
@@ -3483,6 +3545,8 @@ function setUser(u){
   const prev=AUTH.user;AUTH.user=u?{id:u.id,email:u.email||'',name:(u.user_metadata&&(u.user_metadata.full_name||u.user_metadata.name))||''}:null;renderAcct();
   if(AUTH.user&&(!prev||prev.id!==AUTH.user.id)){AUTH.sent=false;syncPull();glbSubmit();
     if(AUTH.pending){const f=AUTH.pending;AUTH.pending=null;closeAcct();setTimeout(f,0);}}
+  if(prev&&(!AUTH.user||prev.id!==AUTH.user.id))setTimeout(()=>{SOC.list=[];SOC.inbox=[];SOC.code=null;SOC.ok=null;SOC.seen=null;renderSocBadges();},0);
+  if(AUTH.user&&(!prev||prev.id!==AUTH.user.id))setTimeout(()=>socRefresh(),1200);
 }
 /** True if the player may go ahead. Otherwise ask them to sign in, and run fn once they have. */
 function requireAuth(why,fn){if(!AUTH.on||AUTH.user)return true;AUTH.pending=fn;openAcct(why);return false;}
@@ -3616,7 +3680,7 @@ function showResults(){
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
-  $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?'Back to lobby':'Race again';$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';
+  $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?(NET.mmRoom?'⚡ Find another race':'Back to lobby'):'Race again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';
   $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{$('results').hidden=false;$('againBtn').focus();});
 }
 function renderResults(){
@@ -4326,7 +4390,7 @@ function leaveChat(){try{if(chatNet.room&&chatNet.room.leave)chatNet.room.leave(
 let chatPushT=null;
 function pushChat(now){clearTimeout(chatPushT);chatPushT=setTimeout(()=>{if(!chatNet.api)return;const t=Date.now();
   OUTBOX=OUTBOX.filter(m=>t-m.ts<CHAT_TTL).slice(-CHAT_OUT);DMOUT.list=DMOUT.list.filter(m=>t-m.ts<DM_TTL).slice(-12);saveJSON('flagdash-dmout',DMOUT);
-  const card={v:1,pid:PID,nm:myName,cc:selCountry,gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,pk:myPub,rm:NET.game?NET.code:null,st:state,m:OUTBOX,d:DMOUT.list,ack:MYACK,
+  const card={v:1,uid:myUid(),pid:PID,nm:myName,cc:selCountry,gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,pk:myPub,rm:NET.game?NET.code:null,st:state,m:OUTBOX,d:DMOUT.list,ack:MYACK,
     an:chatNet.owner?ANNOUNCE.list.filter(a=>a.mine).slice(-5):undefined};
   chatNet.api.presence({chat:card}).catch(()=>{});},now?0:250);}
 const validPid=p=>typeof p==='string'&&/^p[a-z0-9]{8,16}$/.test(p);
@@ -4336,7 +4400,7 @@ async function chatIngest(peers){if(!chatOn())return;let changed=false,ackCh=fal
   for(const p of (peers||[])){if(p.sameTab||!p.presence||!p.presence.chat)continue;const c=p.presence.chat;if(!c||!validPid(c.pid)||c.pid===PID)continue;
     // bind each player id to the platform's id for them so nobody can pose as someone else
     if(p.by){if(IDMAP[c.pid]&&IDMAP[c.pid]!==p.by)continue;if(!IDMAP[c.pid]){IDMAP[c.pid]=p.by;saveJSON('flagdash-idmap',IDMAP);}}
-    const info={pid:c.pid,nm:cleanName(c.nm)||'Runner',cc:COUNTRY_CODES.has(c.cc)?c.cc:'USA',gt:cleanTag(c.gt),gid:typeof c.gid==='string'&&/^g[a-z0-9]{6,14}$/.test(c.gid)?c.gid:null,
+    const info={uid:validUid(c.uid)?c.uid:null,pid:c.pid,nm:cleanName(c.nm)||'Runner',cc:COUNTRY_CODES.has(c.cc)?c.cc:'USA',gt:cleanTag(c.gt),gid:typeof c.gid==='string'&&/^g[a-z0-9]{6,14}$/.test(c.gid)?c.gid:null,
       peer:p.peer,by:p.by||null,rm:typeof c.rm==='string'&&/^[A-Z]{4}$/.test(c.rm)?c.rm:null,st:typeof c.st==='string'?c.st.slice(0,12):'',pk:typeof c.pk==='string'&&c.pk.length<200?c.pk:null,at:now,
       owner:!!(OWNER_ID&&p.by&&p.by===OWNER_ID)||(LOCAL_TEST&&!!c.an)};
     ONLINE.set(c.pid,info);alive.add(c.pid);
@@ -4388,7 +4452,7 @@ function postAnnouncement(text){text=cleanText(text);if(!text||!chatNet.owner)re
   const a={id:'an:'+PID+':'+i,i,t:text,ts:Date.now(),nm:myName,mine:true};ANNOUNCE.list.push(a);saveJSON('flagdash-announce',ANNOUNCE);pushChat(true);renderChat();}
 
 /* ---------- friends, mute, block, report ---------- */
-function addFriend(pid){const o=ONLINE.get(pid)||{};if(FRIENDS[pid])return;FRIENDS[pid]={nm:o.nm||'Runner',cc:o.cc||'USA',gt:o.gt||'',pk:o.pk||null,added:Date.now()};saveFriends();sendDM(pid,'',  'fr');renderChat();}
+function addFriend(pid){const o=ONLINE.get(pid)||{};if(o.uid&&socOn())socAdd(o.uid,o.nm||'Runner').then(t=>chatNote(t));if(FRIENDS[pid])return;FRIENDS[pid]={nm:o.nm||'Runner',cc:o.cc||'USA',gt:o.gt||'',pk:o.pk||null,added:Date.now()};saveFriends();sendDM(pid,'',  'fr');renderChat();}
 function removeFriend(pid){delete FRIENDS[pid];saveFriends();renderChat();}
 function blockPlayer(pid){const o=ONLINE.get(pid)||FRIENDS[pid]||{};BLOCKED[pid]={nm:o.nm||'Runner'};saveBlocked();delete FRIENDS[pid];saveFriends();
   Object.keys(CH.hist).forEach(k=>{CH.hist[k]=CH.hist[k].filter(m=>m.from!==pid);});saveChat();renderChat();}
@@ -4494,6 +4558,189 @@ function chatSend(text,quick){const ch=chatView.ch;if(chatView.dm)return sendDM(
   const ok=sendPublic(ch,text,quick);if(ok){renderChat();if(ch.startsWith('r:')&&RACE&&RACE.online&&player)sendAct(player,{t:'qc',x:cleanText(text).slice(0,60)});}return Promise.resolve(ok);}
 
 /* =========================================================
+   FRIENDS + INBOX — kept in Supabase (supabase/social.sql), so friends and
+   messages follow the account, and messages wait for players who are offline.
+   Also: the runner list during online races, and "Find a Race" matchmaking.
+   ========================================================= */
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const validUid=u=>typeof u==='string'&&UUID_RE.test(u);
+const myUid=()=>AUTH.on&&AUTH.user?AUTH.user.id:null;
+const SOC={ok:null,code:null,list:[],inbox:[],tab:'friends',compose:null,msg:'',seen:null,busy:false};
+const socOn=()=>AUTH.on&&!!AUTH.user;
+const socOpen=()=>!$('social').hidden;
+async function socRpc(fn,args){const sb=await getSb();const {data,error}=await sb.rpc(fn,args||{});if(error)throw error;return data;}
+async function socHello(){if(!socOn())return null;try{SOC.code=await socRpc('fd_me',{p_nm:myName,p_cc:selCountry,p_friends_only:!!SET.dmFriends});}catch(e){SOC.code=null;}return SOC.code;}
+async function socRefresh(){
+  if(!socOn()||SOC.busy)return;SOC.busy=true;
+  try{
+    await socHello();if(!SOC.code)throw new Error('no card');
+    const sb=await getSb();
+    const [list,inb]=await Promise.all([socRpc('fd_friend_list'),sb.from('fd_inbox').select('id,from_id,from_nm,from_cc,kind,body,room,created,read').order('created',{ascending:false}).limit(100)]);
+    if(inb.error)throw inb.error;
+    SOC.list=Array.isArray(list)?list.filter(f=>validUid(f.uid)):[];SOC.inbox=Array.isArray(inb.data)?inb.data:[];SOC.ok=true;
+    // pop up anything new since the last check (not on the first load)
+    const ids=new Set(SOC.inbox.map(m=>m.id)),reqs=new Set(SOC.list.filter(f=>f.kind==='incoming').map(f=>f.uid));
+    if(SOC.seen){SOC.inbox.filter(m=>!m.read&&!SOC.seen.ids.has(m.id)).slice(0,2).forEach(m=>toast(m.kind==='invite'?`🏁 ${m.from_nm} invited you to a race`:`✉️ ${m.from_nm}`,m.kind==='msg'?filterText(m.body).slice(0,90):'',()=>openSocial('inbox')));
+      SOC.list.filter(f=>f.kind==='incoming'&&!SOC.seen.reqs.has(f.uid)).slice(0,2).forEach(f=>toast(`🤝 ${f.nm} wants to be friends`,'',()=>openSocial('friends')));}
+    SOC.seen={ids,reqs};
+  }catch(e){SOC.ok=false;}
+  SOC.busy=false;renderSocBadges();if(socOpen())renderSocial();if(!$('roster').hidden&&!ROSTER.compose)renderRoster();
+}
+const socUnread=()=>SOC.inbox.filter(m=>!m.read).length+SOC.list.filter(f=>f.kind==='incoming').length;
+function renderSocBadges(){const n=socOn()?socUnread():0;document.querySelectorAll('.soc-open').forEach(b=>b.dataset.badge=n?(n>9?'9+':String(n)):'');}
+const friendOf=uid=>SOC.list.find(f=>f.uid===uid)||null;
+// someone's live status: from chat presence if they are online, otherwise when their game last checked in
+function liveOf(uid){for(const o of ONLINE.values())if(o.uid===uid)return o;return null;}
+function statusText(f){const on=liveOf(f.uid);if(on)return on.rm?`In room ${on.rm}`:on.st==='race'||on.st==='countdown'?'Racing':'Online now';
+  const ago=(Date.now()-Date.parse(f.seen))/60000;if(!(ago>=0))return '';if(ago<2)return 'Online now';if(ago<60)return `Seen ${Math.round(ago)} min ago`;if(ago<48*60)return `Seen ${Math.round(ago/60)} h ago`;return `Seen ${Math.round(ago/1440)} days ago`;}
+const timeAgo=ts=>{const m=(Date.now()-Date.parse(ts))/60000;return m<1?'just now':m<60?`${Math.round(m)} min ago`:m<1440?`${Math.round(m/60)} h ago`:new Date(ts).toLocaleDateString();};
+
+async function socAdd(uid,nm){
+  if(!socOn()||!validUid(uid))return 'Sign in to add friends.';
+  try{let r=await socRpc('fd_friend_add',{p_to:uid});if(r==='no card'){await socHello();r=await socRpc('fd_friend_add',{p_to:uid});}
+    socRefresh();
+    return r==='sent'?`Friend request sent to ${nm}.`:r==='friends'?`You and ${nm} are now friends!`:r==='slow'?'Slow down a little, then try again.':r==='full'?'Your friend list is full (200).':r==='not found'?`${nm} has not opened Friends yet. Try again after their next race.`:'Could not add that friend.';}
+  catch(e){return 'Could not reach the server. Try again.';}}
+async function socSend(uid,kind,body,room){
+  if(!socOn())return {ok:false,text:'Sign in to send messages.'};
+  try{const a={p_to:uid,p_kind:kind,p_body:body||'',p_room:room||null};let r=await socRpc('fd_send',a);if(r==='no card'){await socHello();r=await socRpc('fd_send',a);}
+    return r==='sent'?{ok:true,text:'Sent!'}:r==='friends only'?{ok:false,text:'This player only takes messages from friends. Send a friend request first.'}:r==='slow'?{ok:false,text:'Slow down a little, then try again.'}:r==='not found'?{ok:false,text:'This player has not set up their inbox yet.'}:{ok:false,text:'Could not send that.'};}
+  catch(e){return {ok:false,text:'Could not reach the server. Try again.'};}}
+
+function openSocial(tab){
+  if(!requireAuth('Sign in to see your friends and inbox.',()=>openSocial(tab)))return;
+  if(tab)SOC.tab=tab;SOC.compose=null;SOC.msg='';$('social').hidden=false;renderSocial();socRefresh();}
+function closeSocial(){$('social').hidden=true;SOC.compose=null;}
+function mk(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function flagImg(cc){const im=mk('img');im.alt='';im.src=flagCanvas(COUNTRY_CODES.has(cc)?cc:'USA').url;return im;}
+function btn(text,cls,fn){const b=mk('button',cls,text);b.type='button';b.onclick=fn;return b;}
+function buildCompose(t,onClose){
+  const box=mk('div','compose');const h=mk('div','compose-h');h.append(flagImg(t.cc),mk('b',null,'Message to '+t.nm));box.appendChild(h);
+  const inp=mk('textarea');inp.maxLength=300;inp.rows=3;inp.placeholder='Write a message';inp.setAttribute('aria-label','Message');inp.addEventListener('keydown',e=>e.stopPropagation());
+  const chips=mk('div','compose-q');['GG!','Nice race!','Rematch?','Want to be friends?','Well played!','👋'].forEach(q=>chips.appendChild(btn(q,'',()=>{inp.value=(inp.value?inp.value+' ':'')+q;inp.focus();})));
+  const note=mk('p','compose-note');const row=mk('div','compose-row');
+  const send=btn('Send','primary',async()=>{const v=inp.value.replace(/\s+/g,' ').trim().slice(0,300);if(!v){inp.focus();return;}send.disabled=true;note.textContent='Sending…';
+    const r=await socSend(t.uid,'msg',v);note.textContent=r.text;send.disabled=false;if(r.ok){inp.value='';setTimeout(onClose,900);}});
+  row.append(btn('Cancel','ghost',onClose),send);box.append(inp,chips,note,row);setTimeout(()=>{if(!isTouch)inp.focus();},30);return box;}
+function renderSocial(){
+  if(!socOpen())return;const list=$('socList');list.innerHTML='';
+  const nIn=SOC.list.filter(f=>f.kind==='incoming').length,nUn=SOC.inbox.filter(m=>!m.read).length;
+  $('socTabs').querySelectorAll('button').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.tab===SOC.tab);const n=b.dataset.tab==='friends'?nIn:nUn;b.dataset.badge=n?(n>9?'9+':String(n)):'';});
+  $('socTitle').textContent=SOC.tab==='inbox'?'Inbox':'Friends';
+  const info=t=>list.appendChild(mk('p','muted cm-info',t));
+  if(!AUTH.on){info('Friends and the inbox work when you play on the game website.');return;}
+  if(SOC.compose){list.appendChild(buildCompose(SOC.compose,()=>{SOC.compose=null;renderSocial();}));return;}
+  if(SOC.ok===null){info('Loading…');return;}
+  if(SOC.ok===false){info('Friends and the inbox could not load. Check your connection and try again.');list.appendChild(btn('Try again','ghost',()=>{SOC.ok=null;renderSocial();socRefresh();}));return;}
+  if(SOC.msg)list.appendChild(mk('p','soc-msg',SOC.msg));
+  const say=t=>{SOC.msg=t;renderSocial();};
+  if(SOC.tab==='friends'){
+    const card=mk('div','soc-code');card.append(mk('small',null,'Your friend code'),mk('b',null,SOC.code||'……'));
+    card.appendChild(btn('Copy','ghost',e=>{const b=e.currentTarget;try{navigator.clipboard.writeText(SOC.code||'').then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1400);});}catch(x){}}));
+    card.appendChild(mk('p','muted','Friends add you with this code. You can also add anyone you race with from the 👥 runner list.'));list.appendChild(card);
+    const f=mk('form','soc-add');const inp=mk('input');inp.maxLength=6;inp.placeholder='FRIEND CODE';inp.setAttribute('aria-label','Friend code');inp.autocomplete='off';inp.addEventListener('keydown',e=>e.stopPropagation());
+    f.append(inp,mk('button','primary','Add friend'));f.onsubmit=async e=>{e.preventDefault();const code=inp.value.toUpperCase().replace(/[^A-Z2-9]/g,'');if(code.length!==6){say('Friend codes are 6 letters and numbers.');return;}
+      if(code===SOC.code){say('That is your own code.');return;}
+      try{const r=await socRpc('fd_find',{p_code:code});const p=Array.isArray(r)&&r[0];if(!p){say('No player has that code. Check it and try again.');return;}say(await socAdd(p.uid,p.nm));}catch(x){say('Could not reach the server. Try again.');}};
+    list.appendChild(f);
+    const inc=SOC.list.filter(x=>x.kind==='incoming'),fr=SOC.list.filter(x=>x.kind==='friend'),sent=SOC.list.filter(x=>x.kind==='sent');
+    if(inc.length){list.appendChild(mk('h3',null,`Friend requests (${inc.length})`));inc.forEach(x=>{const row=mk('div','soc-row');const mid=mk('div','soc-mid');mid.append(mk('span',null,x.nm),mk('small',null,'Wants to be friends'));
+      row.append(flagImg(x.cc),mid,btn('Accept','buy',async()=>{try{await socRpc('fd_friend_answer',{p_from:x.uid,p_yes:true});SOC.msg=`You and ${x.nm} are now friends!`;}catch(e){SOC.msg='Could not reach the server.';}socRefresh();}),
+        btn('Decline','ghost',async()=>{try{await socRpc('fd_friend_answer',{p_from:x.uid,p_yes:false});}catch(e){}socRefresh();}));list.appendChild(row);});}
+    list.appendChild(mk('h3',null,`Friends (${fr.length})`));
+    if(!fr.length)info('No friends yet. Share your code, or add players from the runner list during a race.');
+    fr.map(x=>({x,on:!!liveOf(x.uid)||(Date.now()-Date.parse(x.seen))<120000})).sort((a,b)=>(b.on-a.on)||a.x.nm.localeCompare(b.x.nm)).forEach(({x,on})=>{
+      const row=mk('div','soc-row');const dot=mk('i','dot'+(on?' on':''));const mid=mk('div','soc-mid');mid.append(mk('span',null,x.nm),mk('small',null,statusText(x)));
+      const live=liveOf(x.uid);row.append(dot,flagImg(x.cc),mid,btn('✉️','ghost',()=>{SOC.compose={uid:x.uid,nm:x.nm,cc:x.cc};renderSocial();}));row.lastChild.setAttribute('aria-label','Message '+x.nm);
+      if(NET.game&&NET.code)row.appendChild(btn('Invite','buy',async e=>{const b=e.currentTarget;b.disabled=true;const r=await socSend(x.uid,'invite','',NET.code);b.textContent=r.ok?'Invited':'Try again';if(!r.ok){b.disabled=false;say(r.text);}}));
+      else if(live&&live.rm)row.appendChild(btn('Join','buy',()=>{closeSocial();joinFromSocial(live.rm);}));
+      const rm=btn('✕','ghost soc-x',async()=>{if(!confirm(`Remove ${x.nm} from your friends?`))return;try{await socRpc('fd_friend_remove',{p_other:x.uid});}catch(e){}socRefresh();});rm.setAttribute('aria-label','Remove '+x.nm);row.appendChild(rm);
+      list.appendChild(row);});
+    if(sent.length){list.appendChild(mk('h3',null,'Waiting for an answer'));sent.forEach(x=>{const row=mk('div','soc-row');const mid=mk('div','soc-mid');mid.append(mk('span',null,x.nm),mk('small',null,'Request sent'));
+      row.append(flagImg(x.cc),mid,btn('Cancel','ghost',async()=>{try{await socRpc('fd_friend_remove',{p_other:x.uid});}catch(e){}socRefresh();}));list.appendChild(row);});}
+    return;}
+  // inbox
+  const L=SOC.inbox;if(!L.length)info('No messages yet. Messages from other players wait here, even when you are offline.');
+  L.forEach(m=>{const row=mk('div','inb'+(m.read?'':' new'));const h=mk('div','cm-head');h.append(flagImg(m.from_cc),mk('b',null,m.from_nm),mk('small',null,timeAgo(m.created)));row.appendChild(h);
+    const tx=mk('div','cm-t');if(m.kind==='invite'){tx.textContent=`Invited you to race in room ${m.room}.`;if(m.room&&!NET.game)tx.append(' ',btn('Join room '+m.room,'buy',()=>{closeSocial();joinFromSocial(m.room);}));}else tx.textContent=filterText(m.body);row.appendChild(tx);
+    const acts=mk('div','inb-acts');
+    if(validUid(m.from_id)){acts.appendChild(btn('Reply','ghost',()=>{SOC.compose={uid:m.from_id,nm:m.from_nm,cc:m.from_cc};renderSocial();}));
+      if(!friendOf(m.from_id))acts.appendChild(btn('Add friend','ghost',async()=>say(await socAdd(m.from_id,m.from_nm))));
+      acts.appendChild(btn('Block','ghost warn',async()=>{if(!confirm(`Block ${m.from_nm}? You will not get their messages or friend requests.`))return;try{await socRpc('fd_block',{p_other:m.from_id,p_on:true});SOC.msg=`${m.from_nm} is blocked.`;}catch(e){}socRefresh();}));}
+    acts.appendChild(btn('Delete','ghost',async()=>{SOC.inbox=SOC.inbox.filter(x=>x!==m);renderSocial();renderSocBadges();try{const sb=await getSb();await sb.from('fd_inbox').delete().eq('id',m.id);}catch(e){}}));
+    row.appendChild(acts);list.appendChild(row);});
+  const unread=L.filter(m=>!m.read).map(m=>m.id);
+  if(unread.length){L.forEach(m=>m.read=true);renderSocBadges();getSb().then(sb=>sb.from('fd_inbox').update({read:true}).in('id',unread)).catch(()=>{});
+    $('socTabs').querySelector('[data-tab="inbox"]').dataset.badge='';}
+}
+function joinFromSocial(code){if(RACE&&(state==='race'||state==='countdown'||state==='finished'))return;if(typeof plaza!=='undefined'&&plaza.active)leavePlaza();$('menu').hidden=false;state='menu';enterRoom(code,false);}
+$('socClose').onclick=closeSocial;
+$('social').addEventListener('click',e=>{if(e.target.id==='social')closeSocial();});
+$('socTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;SOC.tab=b.dataset.tab;SOC.compose=null;SOC.msg='';renderSocial();});
+document.querySelectorAll('.soc-open').forEach(b=>b.onclick=()=>openSocial(b.dataset.tab||null));
+setInterval(()=>{if(socOn()&&!document.hidden)socRefresh();},45000);
+
+/* ---------- runner list during online races (and on the results screen) ---------- */
+const ROSTER={compose:null,t:0};
+function openRoster(){if(!RACE||!runners.length)return;ROSTER.compose=null;$('roster').hidden=false;renderRoster();clearInterval(ROSTER.t);ROSTER.t=setInterval(()=>{if(!ROSTER.compose)renderRoster();},1000);if(socOn()&&SOC.ok!==true)socRefresh();}
+function closeRoster(){$('roster').hidden=true;ROSTER.compose=null;clearInterval(ROSTER.t);}
+function renderRoster(){
+  if(!RACE||!runners.length){closeRoster();return;}
+  const L=$('rosterList');L.innerHTML='';
+  if(ROSTER.compose){L.appendChild(buildCompose(ROSTER.compose,()=>{ROSTER.compose=null;renderRoster();}));return;}
+  const rs=runners.slice().sort((a,b)=>(a.place||9)-(b.place||9));let humans=0;
+  rs.forEach(r=>{const row=mk('div','ros-row'+(r.kind==='local'?' me':''));row.append(mk('b','ros-pl',String(r.place||'')),flagImg(r.flag&&r.flag.code||'USA'));
+    const mid=mk('div','soc-mid');mid.append(mk('span',null,(r.gt?`[${r.gt}] `:'')+(r.nm||(r.flag&&r.flag.name)||'Runner')),mk('small',null,r.kind==='local'?'You':r.kind==='bot'?'CPU runner':'Player'));row.appendChild(mid);
+    if(r.kind==='remote'){humans++;
+      if(validUid(r.uid)&&socOn()&&r.uid!==myUid()){const nm=r.nm||'Runner',cc=r.flag&&r.flag.code||'USA';
+        const m=btn('✉️','ghost',()=>{ROSTER.compose={uid:r.uid,nm,cc};renderRoster();});m.setAttribute('aria-label','Message '+nm);row.appendChild(m);
+        const f=friendOf(r.uid);if(f&&f.kind==='friend')row.appendChild(mk('small','ros-tag','Friend'));
+        else if(f&&f.kind==='sent')row.appendChild(mk('small','ros-tag','Requested'));
+        else{const a=btn(f?'Accept':'➕',f?'buy':'ghost',async e=>{const b=e.currentTarget;b.disabled=true;$('rosterNote').textContent=await socAdd(r.uid,nm);});a.setAttribute('aria-label','Add '+nm+' as a friend');row.appendChild(a);}}
+      else if(AUTH.on&&!socOn())row.appendChild(mk('small','ros-tag','Sign in to message'));}
+    L.appendChild(row);});
+  if(!humans)L.appendChild(mk('p','muted cm-info','Everyone else in this race is a CPU runner.'));
+}
+$('rosterBtn').onclick=()=>{if($('roster').hidden)openRoster();else closeRoster();};
+$('rosterClose').onclick=closeRoster;$('resRunners').onclick=openRoster;
+
+/* ---------- Find a Race: group up with players searching now, CPU runners fill the rest ---------- */
+const MM={on:false,t0:0,iv:0},MM_MAX=6,MM_WAIT=15;
+function findRace(){
+  if(!requireAuth('Sign in to race other players online.',findRace))return;
+  if(!NET.ns){setOnlineMsg('Could not reach the online server. Check your connection and reload.');return;}
+  if(NET.game){showLobby();return;}
+  initAudio();if(actx&&actx.state==='suspended')actx.resume();
+  MM.on=true;MM.t0=Date.now();$('mm').hidden=false;$('mmMsg').textContent='Looking for players online…';
+  NET.ns.presence({mm:{t:MM.t0}}).catch(()=>{});clearInterval(MM.iv);MM.iv=setInterval(mmTick,400);
+}
+function mmStop(){MM.on=false;clearInterval(MM.iv);$('mm').hidden=true;if(NET.ns)NET.ns.presence({mm:null}).catch(()=>{});}
+function mmTick(){
+  if(!MM.on)return;let peers=[];try{peers=NET.ns.peers();}catch(e){}
+  // a room that is filling up: join the fullest one
+  const open=peers.filter(p=>!p.sameTab&&p.presence&&p.presence.mmr&&/^[A-Z]{4}$/.test(p.presence.mmr.code||'')&&(p.presence.mmr.n|0)<MM_MAX&&(p.presence.mmr.left|0)>=2)
+    .sort((a,b)=>(b.presence.mmr.n|0)-(a.presence.mmr.n|0));
+  if(open.length){const code=open[0].presence.mmr.code;mmStop();enterRoom(code,false,{mm:true});return;}
+  // nobody filling a room yet: the first searcher opens one and the others join it
+  const searchers=peers.filter(p=>p.presence&&p.presence.mm),ms=Date.now()-MM.t0;
+  const lead=searchers.slice().sort((a,b)=>a.peer<b.peer?-1:1)[0];
+  $('mmMsg').textContent=searchers.length>1?`${searchers.length} players searching…`:'Looking for players online…';
+  if((ms>1500&&(!lead||lead.sameTab))||ms>6000){
+    // announce the new room in the same update that ends the search, so other searchers never see a gap
+    const code=genCode();MM.on=false;clearInterval(MM.iv);$('mm').hidden=true;
+    NET.ns.presence({mm:null,host:code,mmr:{code,n:1,left:MM_WAIT}}).catch(()=>{});enterRoom(code,true,{mm:true});}
+}
+$('mmBtn').onclick=findRace;$('mmCancel').onclick=mmStop;
+// The host of a Find a Race room keeps it open for players, then starts with CPU runners in the empty lanes.
+setInterval(()=>{
+  if(!NET.game||!NET.isHost||!NET.cfg.mm||state!=='lobby')return;
+  const n=gamePeers().length,left=Math.max(0,Math.ceil((NET.mmEnd-Date.now())/1000));
+  NET.cfg.left=left;syncLobbyPresence();
+  if(n>=MM_MAX||left<=0){NET.ns.presence({mmr:null}).catch(()=>{});hostStart();return;}
+  NET.ns.presence({host:NET.code,trk:NET.cfg.trk,mmr:{code:NET.code,n,left}}).catch(()=>{});renderLobby();
+},1000);
+
+/* =========================================================
    MENU + LOBBY UI
    ========================================================= */
 const flagGrid=$('flagGrid'),charGrid=$('charGrid'),trackGrid=$('trackGrid');
@@ -4567,6 +4814,7 @@ $('copyCode').onclick=()=>{const code=NET.code||'';const done=()=>{$('copyCode')
   try{navigator.clipboard.writeText(code).then(done,()=>selectCode());}catch(e){selectCode();}};
 function selectCode(){const r=document.createRange();r.selectNodeContents($('roomCode'));const s=getSelection();s.removeAllRanges();s.addRange(r);}
 function showLobby(){
+  closeRoster();
   pushChat();if(plaza.active)plaza.exit();locker.exit();$('menu').classList.remove('over-plaza');
   crowd.stop();music.play(MUS.menu,{fade:1.2});state='lobby';['menu','results','pause','hud','touch'].forEach(id=>$(id).hidden=true);$('lobby').hidden=false;
   if(RACE&&RACE.online){pushPresence({rid:null,s:null,fin:null,acts:[],bots:null});if(NET.isHost)pushPresence({go:null});}
@@ -4578,7 +4826,7 @@ function renderLobby(){
   $('roomCode').textContent=NET.code;
   const cs=$('connState');cs.classList.toggle('on',!!NET.conn);cs.lastChild.textContent=NET.conn?'Connected':'Connecting';
   const ps=gamePeers();const host=hostPeer();
-  const cfg=NET.isHost?NET.cfg:((host&&host.presence.cfg)||{});
+  const cfg=NET.isHost?NET.cfg:((host&&host.presence.cfg)||{});if(!NET.isHost&&host&&host.presence.cfg)NET.lastCfg=host.presence.cfg;
   const trk=themeById(cfg.trk).id,mode=normMode(cfg.mode),bots=cfg.bots!==false;
   const list=$('playerList');list.innerHTML='';
   ps.forEach(p=>{const pr=p.presence;const li=document.createElement('li');if(isTeamMode(mode))li.className='t'+clamp(pr.tm|0,0,teamCount(mode)-1);
@@ -4596,7 +4844,9 @@ function renderLobby(){
   $('botsToggle').checked=bots;$('botsToggle').disabled=!NET.isHost;$('loLobby').checked=cfg.lo!==false;$('loLobby').disabled=!NET.isHost;$('gbWrap').hidden=!isTeamMode(mode);$('gbToggle').checked=!!cfg.gb;$('gbToggle').disabled=!NET.isHost;
   $('lobbyStart').hidden=!NET.isHost;$('readyBtn').hidden=NET.isHost;$('readyBtn').textContent=NET.me.rdy?'Not ready':"I'm ready";
   const others=ps.filter(p=>!p.presence.h);const readyN=others.filter(p=>p.presence.rdy).length;
-  $('lobbyNote').textContent=NET.isHost?(ps.length<2?'Waiting for friends. Share the code above, or start now against CPU runners.':`${readyN} of ${others.length} ready.`):(host?`Waiting for ${cleanName(host.presence.nm)||'the host'} to start the race.`:'Looking for the host…');
+  if(cfg.mm){const left=clamp(cfg.left|0,0,99);$('lobbyNote').textContent=`Finding more runners… the race starts in ${left} s. CPU runners fill any empty lanes.`;$('lobbyStart').textContent='Start now';$('readyBtn').hidden=true;}
+  else{$('lobbyStart').textContent='Start race';
+  $('lobbyNote').textContent=NET.isHost?(ps.length<2?'Waiting for friends. Share the code above, or start now against CPU runners.':`${readyN} of ${others.length} ready.`):(host?`Waiting for ${cleanName(host.presence.nm)||'the host'} to start the race.`:'Looking for the host…');}
   if(TH&&TH.id!==trk&&state==='lobby'){buildWorld(themeById(trk));genCourse(7);}
 }
 $('startBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline();};
@@ -4612,7 +4862,7 @@ function startOffline(quick){
   if(quick){RACE.quick=true;$('trackLabel').textContent='Quick Race · '+TH.name;}
 }
 let quickLast=null;
-$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline(RACE&&RACE.quick);};
+$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online){if(NET.mmRoom){closeRoster();leaveRoom();findRace();}else showLobby();}else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline(RACE&&RACE.quick);};
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
@@ -4642,6 +4892,7 @@ function togglePause(){
   else if(canAct()||state==='countdown'){prevState=state;state='paused';$('pause').hidden=false;music.setPaused(true);input.left=input.right=false;$('resumeBtn').focus();}
 }
 function toMenu(desk){
+  closeRoster();
   if(typeof CEL!=='undefined'&&CEL.open){CEL.timers.forEach(clearTimeout);CEL.timers=[];CEL.open=false;CEL.done=null;$('celebrate').hidden=true;$('celConfetti').innerHTML='';}
   refreshHubBadges();crowd.stop();music.play(MUS.menu,{fade:1.2});GP=null;state='menu';['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('menu').hidden=false;
   clearRace();const th=themeById(selTrack);if(TH!==th)buildWorld(th);genCourse(7);refreshMenu(null);RACE=null;
@@ -5304,7 +5555,7 @@ const LAYOUT=(()=>{
   $('quickBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline(true);};
   $('deskSet').onclick=()=>openSettings();$('chalBtn').onclick=()=>openHub('tasks','challenges');$('deskAcct').onclick=()=>openAcct();$('acctClose').onclick=()=>closeAcct();$('setAcct').onclick=()=>{closeSettings();openAcct();};
   $('acct').addEventListener('click',e=>{if(e.target===$('acct'))closeAcct();});$('deskStore').onclick=()=>openStore();
-  $('deskWallet').onclick=()=>openStore();$('deskWallet').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openStore();}};$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
+  $('deskWallet').onclick=()=>openStore();$('deskWallet').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openStore();}};$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>openSocial('friends');
   const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
   $('pvLeft').onclick=()=>cycle(-1);$('pvRight').onclick=()=>cycle(1);
   const wal=()=>{$('d3Coins').textContent=$('wCoins').textContent;$('d3Gems').textContent=$('wGems').textContent;};
