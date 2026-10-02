@@ -643,6 +643,19 @@ tr.me td.pl{color:var(--gold)}
 @media (max-width:520px){.chat-card{width:100%;border-left:0}.chat-tabs button{font-size:12px}}
 #plazaHud{position:fixed;inset:0;pointer-events:none;z-index:4}
 .overlay{z-index:6}
+#acct{z-index:35}.acct-card{--mw:440px;max-width:440px}
+.acct-body{display:grid;gap:12px}.acct-body p{margin:0}
+.acct-why{font-weight:700;color:var(--gold);font-size:16px}
+.acct-who{font-weight:700;font-size:16px}
+.acct-google{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:12px;border:0;background:#fff;color:#1f1f1f;font-weight:700;font-size:16px}
+.acct-google .g-logo{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);color:#fff;font-weight:900;font-size:14px}
+.acct-or{text-align:center;color:var(--muted);font-size:13px}
+.acct-email{display:grid;gap:8px}.acct-email input{background:var(--night);border:1px solid var(--line);color:var(--chalk);border-radius:10px;padding:11px 12px;font:inherit;font-size:16px}
+.acct-email button{font-size:16px;padding:12px}
+.acct-sent{background:rgba(95,208,138,.12);border:1px solid var(--good);border-radius:10px;padding:10px 12px}
+.acct-msg{color:#ffb4a8;font-weight:600}
+.acct-row{display:flex;gap:8px;flex-wrap:wrap}.acct-danger{color:#ff9a8a}
+.d3-acct.in{border-color:var(--good);box-shadow:0 0 0 3px rgba(95,208,138,.35)}
 #menu.over-plaza{background:linear-gradient(90deg,rgba(10,13,38,.55),rgba(10,13,38,.15) 60%,rgba(10,13,38,0))}
 /* phones: keep panels inside the screen and clear of the Claude app's top bar */
 :root{--app-top:0px}
@@ -761,7 +774,7 @@ body:not(.touch) .pz-stick{opacity:.55}
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button></div>
+        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Flag Dash</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
@@ -1004,6 +1017,12 @@ body:not(.touch) .pz-stick{opacity:.55}
     <div id="howtoBody" class="hub-body" style="display:grid;gap:12px"></div>
   </div>
 </div>
+<div id="acct" class="overlay" hidden>
+  <div class="store-card acct-card" role="dialog" aria-label="Account">
+    <div class="store-head"><h2 id="acctTitle">Sign in</h2><button class="ghost" id="acctClose">Close</button></div>
+    <div id="acctBody" class="hub-body acct-body"></div>
+  </div>
+</div>
 <div id="settings" class="overlay" hidden>
   <div class="pause-card set-card" role="dialog" aria-label="Settings">
     <h2>Settings</h2>
@@ -1014,6 +1033,7 @@ body:not(.touch) .pz-stick{opacity:.55}
       <div class="set-row set-row2"><span>Chat</span><button class="set-tog" id="set_chat"></button></div>
       <div class="set-row set-row2"><span>Hide bad words</span><button class="set-tog" id="set_filter"></button></div>
       <div class="set-row set-row2"><span>Private messages from friends only</span><button class="set-tog" id="set_dmFriends"></button></div>
+      <div class="set-row set-row2"><span>Account <small class="muted" style="display:block;font-weight:400">Sign in, save progress</small></span><button class="set-tog" id="setAcct">Open</button></div>
       <div class="set-row set-row2"><span>Screen layout <small class="muted" style="display:block;font-weight:400">Move and resize buttons</small></span><button class="set-tog" id="setLayout">Edit</button></div>
       <p class="muted" id="setVoiceNote"></p>
       <button class="ghost" id="setTest">Test voice</button>
@@ -3213,6 +3233,7 @@ async function initNet(){
   if(ns){try{ns.onPeers(ch=>{renderOpenRooms();ingestPeers(ch&&ch.peers);if(typeof plaza!=='undefined')plaza.onPeers(ch&&ch.peers);},()=>{});}catch(e){}try{ingestPeers(ns.peers());}catch(e){}pushSocial();if(SET.chat)initChat();}
 }
 async function enterRoom(code,asHost){
+  if(!requireAuth('Sign in to play online with friends.',()=>enterRoom(code,asHost)))return;
   if(!NET.ns||NET.game)return;
   code=String(code||'').toUpperCase().replace(/[^A-Z]/g,'').slice(0,4);if(code.length!==4){setOnlineMsg('Room codes are 4 letters.');return;}
   setOnlineMsg('Joining room '+code+'…');
@@ -3334,7 +3355,7 @@ const SUPA={url:'https://hzzqnwzsasuwjafmsgqh.supabase.co',key:'sb_publishable_q
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s);});}
 async function supaRoom(){
   if(!(window.supabase&&window.supabase.createClient))await loadScript(SUPA.lib);
-  const sb=window.supabase.createClient(SUPA.url,SUPA.key,{auth:{persistSession:false},realtime:{params:{eventsPerSecond:40}}});
+  const sb=await getSb();
   const me='s'+Math.random().toString(36).slice(2,10);const rooms=new Map();
   function makeRoom(name){
     const peers=new Map();let mine={};const hs=new Set(),conns=new Set();let frozen=Object.freeze([]);let up=false,sendT=0,lastSend=0,beat=0;
@@ -3363,6 +3384,115 @@ async function supaRoom(){
   }
   const lobby=makeRoom('lobby');await lobby.ready;
   return Object.assign({},lobby.api,{join(name){const r=rooms.get(name)||makeRoom(name);return r.ready.then(()=>r.api,e=>{r.api.leave();throw e;});}});
+}
+
+/* =========================================================
+   ACCOUNTS — sign in with Google or an email link (Supabase Auth).
+   Free without an account: Quick Race, solo races, the plaza, Survival, Flag Challenge.
+   Signing in unlocks online play, worldwide leaderboards, guilds and chat, and saves
+   progress (coins, purchases, perks, settings, layout) to the account so it follows the player.
+   Inside Claude, where the page can't reach Supabase, nothing is locked.
+   ========================================================= */
+let SB=null;
+async function getSb(){
+  if(SB)return SB;if(!(window.supabase&&window.supabase.createClient))await loadScript(SUPA.lib);
+  SB=window.supabase.createClient(SUPA.url,SUPA.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'},realtime:{params:{eventsPerSecond:40}}});
+  return SB;}
+const AUTH={on:!window.claude,ready:false,user:null,pending:null,why:'',msg:'',sent:false};
+const SYNC={sig:'',timer:0,busy:false,at:0};
+const SYNC_SKIP=new Set(['flagdash-sync','flagdash-seen']);
+function localSave(){const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!SYNC_SKIP.has(k))d[k]=localStorage.getItem(k);}return d;}
+const syncMeta=()=>{try{return JSON.parse(localStorage.getItem('flagdash-sync')||'null');}catch(e){return null;}};
+function setSyncMeta(m){try{localStorage.setItem('flagdash-sync',JSON.stringify(m));}catch(e){}}
+async function initAuth(){
+  if(!AUTH.on){AUTH.ready=true;renderAcct();return;}
+  try{
+    const sb=await getSb();const hashErr=/error_description=([^&]+)/.exec(location.hash);
+    const {data}=await sb.auth.getSession();
+    if(/access_token|error_description|type=magiclink/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
+    if(hashErr)AUTH.msg=decodeURIComponent(hashErr[1].replace(/\+/g,' '));
+    AUTH.ready=true;setUser(data&&data.session?data.session.user:null);
+    sb.auth.onAuthStateChange((ev,s)=>setUser(s?s.user:null));
+  }catch(e){AUTH.on=false;AUTH.ready=true;renderAcct();}
+  try{const t=sessionStorage.getItem('flagdash-loaded');if(t){sessionStorage.removeItem('flagdash-loaded');feed('Loaded your saved progress from your account','good');}}catch(e){}
+  setInterval(syncPush,20000);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)syncPush();});
+}
+function setUser(u){
+  const prev=AUTH.user;AUTH.user=u?{id:u.id,email:u.email||'',name:(u.user_metadata&&(u.user_metadata.full_name||u.user_metadata.name))||''}:null;renderAcct();
+  if(AUTH.user&&(!prev||prev.id!==AUTH.user.id)){AUTH.sent=false;syncPull();glbSubmit();
+    if(AUTH.pending){const f=AUTH.pending;AUTH.pending=null;closeAcct();setTimeout(f,0);}}
+}
+/** True if the player may go ahead. Otherwise ask them to sign in, and run fn once they have. */
+function requireAuth(why,fn){if(!AUTH.on||AUTH.user)return true;AUTH.pending=fn;openAcct(why);return false;}
+const signedIn=()=>!AUTH.on||!!AUTH.user;
+// Bring the account's saved game to this device, or save this device's game to a new account.
+async function syncPull(){
+  if(!AUTH.user||SYNC.busy)return;SYNC.busy=true;
+  try{
+    const sb=await getSb(),uid=AUTH.user.id;
+    const {data,error}=await sb.from('fd_profiles').select('data,updated_at').eq('user_id',uid).maybeSingle();if(error)throw error;
+    const local=localSave(),lsig=hashStr(JSON.stringify(local)),meta=syncMeta();
+    if(!data){SYNC.busy=false;await syncPush(true);return;}
+    const at=Date.parse(data.updated_at)||0,cloud=data.data&&typeof data.data==='object'?data.data:{};
+    const fresh=!meta||meta.uid!==uid,newer=meta&&at>meta.at+2000&&meta.sig===lsig;
+    if(fresh||newer){
+      for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!SYNC_SKIP.has(k))localStorage.removeItem(k);}
+      for(const k in cloud)if(k.startsWith('flagdash-')&&!SYNC_SKIP.has(k)&&typeof cloud[k]==='string')localStorage.setItem(k,cloud[k]);
+      setSyncMeta({uid,at,sig:hashStr(JSON.stringify(localSave()))});try{sessionStorage.setItem('flagdash-loaded','1');}catch(e){}
+      location.reload();return;}
+    SYNC.busy=false;if(meta.sig!==lsig)await syncPush(true);
+  }catch(e){SYNC.busy=false;}
+}
+async function syncPush(force){
+  if(!AUTH.user||SYNC.busy)return;const d=localSave(),sig=JSON.stringify(d);if(!force&&sig===SYNC.sig)return;
+  SYNC.busy=true;
+  try{const sb=await getSb(),now=new Date().toISOString();
+    const {error}=await sb.from('fd_profiles').upsert({user_id:AUTH.user.id,data:d,updated_at:now});if(error)throw error;
+    SYNC.sig=sig;SYNC.at=Date.now();setSyncMeta({uid:AUTH.user.id,at:Date.parse(now),sig:hashStr(sig)});renderAcct();
+  }catch(e){}
+  SYNC.busy=false;
+}
+async function signInGoogle(){try{const sb=await getSb();const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname}});if(error)throw error;}catch(e){AUTH.msg='Google sign-in is not available right now. Try the email link.';renderAcct();}}
+async function signInEmail(email){
+  email=String(email||'').trim();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){AUTH.msg='Type a valid email address.';renderAcct();return;}
+  AUTH.msg='Sending…';renderAcct();
+  try{const sb=await getSb();const {error}=await sb.auth.signInWithOtp({email,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;
+    AUTH.sent=email;AUTH.msg='';}catch(e){AUTH.msg=(e&&e.message&&/rate|seconds/i.test(e.message))?'Please wait a minute before asking for another link.':'Could not send the email. Check the address and try again.';}
+  renderAcct();}
+async function signOut(){await syncPush(true);try{const sb=await getSb();await sb.auth.signOut();}catch(e){}try{localStorage.removeItem('flagdash-sync');}catch(e){}AUTH.user=null;SYNC.sig='';renderAcct();}
+async function deleteAccount(){
+  if(!confirm('Delete your Flag Dash account? Your saved progress in the account is removed for good. This device keeps its own copy.'))return;
+  try{const sb=await getSb();const {error}=await sb.rpc('fd_delete_me');if(error)throw error;await sb.auth.signOut();}catch(e){AUTH.msg='Could not delete the account. Try again later.';renderAcct();return;}
+  try{localStorage.removeItem('flagdash-sync');}catch(e){}AUTH.user=null;AUTH.msg='Your account was deleted.';renderAcct();}
+const maskEmail=e=>{const m=/^(.)(.*)(@.*)$/.exec(e||'');return m?m[1]+'•••'+m[3]:'';};
+function openAcct(why){AUTH.why=why||'';if(!AUTH.user)AUTH.msg='';$('acct').hidden=false;renderAcct();}
+function closeAcct(){$('acct').hidden=true;AUTH.pending=null;}
+function renderAcct(){
+  const b=$('deskAcct');if(b){b.classList.toggle('in',!!AUTH.user);b.title=AUTH.user?'Account: signed in':'Sign in';}
+  const box=$('acctBody');if(!box||$('acct').hidden)return;box.innerHTML='';
+  const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;box.appendChild(e);return e;};
+  $('acctTitle').textContent=AUTH.user?'Your account':'Sign in to Flag Dash';
+  if(!AUTH.on){el('p','muted','Accounts work in the full game at mrsevereh101-prog.github.io/Flag-Dash. Everything is unlocked here.');return;}
+  if(!AUTH.ready){el('p','muted','Loading…');return;}
+  if(AUTH.user){
+    el('p','acct-who',`Signed in as ${AUTH.user.email?maskEmail(AUTH.user.email):(AUTH.user.name||'a Google account')}`);
+    el('p','muted',SYNC.at?`✓ Your progress is saved to your account (last saved ${new Date(SYNC.at).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}). Sign in on any device to pick up where you left off.`:'✓ Your progress is saved to your account. Sign in on any device to pick up where you left off.');
+    el('p','muted small','Other players see your runner name, never your email.');
+    const row=el('div','acct-row');const so=document.createElement('button');so.className='ghost';so.textContent='Sign out';so.onclick=signOut;
+    const del=document.createElement('button');del.className='ghost acct-danger';del.textContent='Delete my account';del.onclick=deleteAccount;row.append(so,del);
+    if(AUTH.msg)el('p','acct-msg',AUTH.msg);return;}
+  if(AUTH.why)el('p','acct-why',AUTH.why);
+  el('p','muted','Free without an account: Quick Race, solo races, the plaza, Survival and Flag Challenge. Sign in to play online, climb the worldwide leaderboards, join guilds and chat, and keep your progress on every device.');
+  const g=el('button','acct-google');g.innerHTML='<span class="g-logo">G</span> Continue with Google';g.onclick=signInGoogle;
+  el('div','acct-or','or');
+  if(AUTH.sent){el('p','acct-sent',`📧 Check your email. We sent a sign-in link to ${AUTH.sent}. Open it on this device to sign in.`);
+    const again=el('button','ghost','Use a different email');again.onclick=()=>{AUTH.sent=false;renderAcct();};}
+  else{const f=document.createElement('form');f.className='acct-email';f.innerHTML='<input type="email" id="acctEmail" placeholder="you@example.com" autocomplete="email" aria-label="Email address" required><button class="primary" type="submit">Email me a link</button>';
+    f.onsubmit=e=>{e.preventDefault();signInEmail($('acctEmail').value);};box.appendChild(f);}
+  if(AUTH.msg)el('p','acct-msg',AUTH.msg);
+  const guest=el('button','ghost acct-guest','Keep playing as a guest');guest.onclick=closeAcct;
+  el('p','muted small','We only use your email to sign you in. Other players see your runner name, never your email. Progress you made as a guest is kept when you sign in for the first time.');
 }
 
 /* =========================================================
@@ -3873,7 +4003,7 @@ async function sbCall(path,body){
   if(!r.ok)throw new Error('supabase '+r.status);return r.json();}
 // Send my points; the server allows one save every 20 seconds, so later changes wait their turn.
 function glbSubmit(){
-  if(!GLB.enabled)return;clearTimeout(GLB.timer);
+  if(!GLB.enabled||!signedIn())return;  // only signed-in players are ranked worldwideclearTimeout(GLB.timer);
   const wait=GLB.lastSent+21000-Date.now();if(wait>0){GLB.timer=setTimeout(glbSubmit,wait);return;}
   rollPeriods();const c=socialCard();
   const rows=[{p:'d',k:MYPTS.d.k,pts:MYPTS.d.p|0,r:MYPTS.d.r|0},{p:'w',k:MYPTS.w.k,pts:MYPTS.w.p|0,r:MYPTS.w.r|0,gb:MYPTS.w.gb|0},{p:'s',k:MYPTS.s.k,pts:MYPTS.s.p|0,r:MYPTS.s.r|0},{p:'a',k:'all',pts:MYPTS.a.p|0,r:MYPTS.a.r|0}];
@@ -4058,7 +4188,9 @@ let hubOpen=null,hubTab=null;
 const HUB={tasks:{title:'Task Board',tabs:[['daily','Daily tasks'],['challenges','Challenges']],render:renderTasks},
   boards:{title:'Leaderboards',tabs:[['d','Today'],['w','This week'],['s','Season'],['a','All-time'],['guilds','Guilds']],render:renderBoards},
   guild:{title:'Guild Hall',tabs:null,render:renderGuild}};
-function openHub(sec,tab){const H=HUB[sec];if(!H)return;hubOpen=sec;hubTab=tab||(H.tabs?H.tabs[H.tabs==HUB.boards.tabs?1:0][0]:null);$('hub').hidden=false;renderHub();setTimeout(()=>$('hubClose').focus(),0);}
+function openHub(sec,tab){const H=HUB[sec];if(!H)return;
+  if((sec==='boards'||sec==='guild')&&!requireAuth(sec==='boards'?'Sign in to see the worldwide leaderboards and win their rewards.':'Sign in to create or join a guild.',()=>openHub(sec,tab)))return;
+  hubOpen=sec;hubTab=tab||(H.tabs?H.tabs[H.tabs==HUB.boards.tabs?1:0][0]:null);$('hub').hidden=false;renderHub();setTimeout(()=>$('hubClose').focus(),0);}
 function closeHub(){hubOpen=null;$('hub').hidden=true;if(typeof plaza!=='undefined'&&plaza.active){plaza.rebuildMe();plaza.refreshHud();}}
 async function renderHub(){if(!hubOpen)return;const H=HUB[hubOpen];$('hubTitle').textContent=H.title;
   const tabs=$('hubTabs');tabs.innerHTML='';tabs.hidden=!H.tabs;(H.tabs||[]).forEach(([id,nm])=>{const b=document.createElement('button');b.textContent=nm;b.setAttribute('aria-pressed',id===hubTab);b.onclick=()=>{hubTab=id;renderHub();};tabs.appendChild(b);});
@@ -4215,7 +4347,7 @@ function plazaBubble(peer,text){if(typeof plaza==='undefined'||!plaza.active)ret
 /* ---------- chat panel ---------- */
 const chatView={ch:'w',dm:null};
 const hubChatOpen=()=>!$('chat').hidden;
-function openChat(ch){if(!chatOn()){openSettings();return;}if(!chatNet.room&&NET.ns)initChat();$('chat').hidden=false;if(ch)setChatCh(ch);else renderChat();setTimeout(()=>{const i=$('chatInput');if(i&&!isTouch)i.focus();},50);}
+function openChat(ch){if(!requireAuth('Sign in to chat with other players.',()=>openChat(ch)))return;if(!chatOn()){openSettings();return;}if(!chatNet.room&&NET.ns)initChat();$('chat').hidden=false;if(ch)setChatCh(ch);else renderChat();setTimeout(()=>{const i=$('chatInput');if(i&&!isTouch)i.focus();},50);}
 function closeChat(){$('chat').hidden=true;closePop();}
 function setChatCh(ch){chatView.ch=ch;chatView.dm=ch.startsWith('d:')?ch.slice(2):null;delete CH.unread[ch];saveChat();refreshChatBadges();renderChat();}
 function chatNote(t){const n=$('chatNote');if(n){n.textContent=t;clearTimeout(n._t);n._t=setTimeout(()=>n.textContent='',3500);}}
@@ -4960,6 +5092,7 @@ refreshMenu(null);rebuildPreview('wave');
 applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
 if(wallet.perk===undefined){const f=BUFFS.find(b=>(wallet.buffs[b.id]|0)>0&&wallet.use[b.id]!==false);setPerk(f?f.id:null);}else setPerk(wallet.perk);
 goDesk(false);
+initAuth();
 initNet();
 glbSubmit();
 /* ---------- screen layout editor: drag HUD pieces anywhere, saved on this device ---------- */
@@ -5100,7 +5233,8 @@ const LAYOUT=(()=>{
   new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});syncCreate();
   $('d3Create').onclick=()=>$('createBtn').click();
   $('quickBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline(true);};
-  $('deskSet').onclick=()=>openSettings();$('deskStore').onclick=()=>openStore();
+  $('deskSet').onclick=()=>openSettings();$('deskAcct').onclick=()=>openAcct();$('acctClose').onclick=()=>closeAcct();$('setAcct').onclick=()=>{closeSettings();openAcct();};
+  $('acct').addEventListener('click',e=>{if(e.target===$('acct'))closeAcct();});$('deskStore').onclick=()=>openStore();
   $('deskWallet').onclick=()=>openStore();$('deskWallet').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openStore();}};$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
   const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
   $('pvLeft').onclick=()=>cycle(-1);$('pvRight').onclick=()=>cycle(1);
