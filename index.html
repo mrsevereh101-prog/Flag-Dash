@@ -330,6 +330,8 @@ input[type=text],input[type=search]{background:var(--night);border:1px solid var
 .char-name{font-family:var(--display);font-size:17px;line-height:1}
 .char-power{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:3px}
 .char-desc{font-size:13px;color:var(--muted);line-height:1.4;min-height:3.6em}
+.char-perk{font-size:12.5px;line-height:1.35;color:#cfe9c4}.char-perk b{color:var(--gold)}
+.d3-rname small{display:block;font-size:10px;font-weight:600;opacity:.85;letter-spacing:.02em}
 .stats{display:grid;gap:4px}
 .stat{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .stat i{display:block;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -1286,19 +1288,19 @@ function kitFrom(cv){
    RUNNERS, ITEMS, TRACKS
    ========================================================= */
 const CHARS=[
- {id:'samurai',name:'Samurai',power:'Slash',desc:'A sword wave sweeps the whole track and knocks every rival down.',speed:1.01,agility:1.0,charge:20,stun:1.5,kind:'knock',rgb:[1,0.35,0.3],
+ {id:'samurai',perk:{name:'Bushido',desc:'Gets back up 30% faster after any hit or fall.'},name:'Samurai',power:'Slash',desc:'A sword wave sweeps the whole track and knocks every rival down.',speed:1.01,agility:1.0,charge:20,stun:1.5,kind:'knock',rgb:[1,0.35,0.3],
   look:{skin:0xc9956b,b:1.12,ls:1.0,sc:1.0},
   svg:'<svg viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#9e1f1a"/><path d="M7 27C13 22 20 14 27 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M6 20c6 1 12-2 16-8" stroke="#ffb3a8" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M8 28l4-4" stroke="#f2b631" stroke-width="3" stroke-linecap="round"/></svg>'},
- {id:'warrior',name:'Warrior',power:'Lightning',desc:'Calls lightning down on every rival on the track. Charges fastest.',speed:1.01,agility:0.93,charge:18,stun:1.6,kind:'knock',rgb:[0.6,0.85,1],
+ {id:'warrior',perk:{name:'Unstoppable',desc:'Smashes straight through walls instead of crashing into them.'},name:'Warrior',power:'Lightning',desc:'Calls lightning down on every rival on the track. Charges fastest.',speed:1.01,agility:0.93,charge:18,stun:1.6,kind:'knock',rgb:[0.6,0.85,1],
   look:{skin:0x5a3a24,b:1.16,ls:1.04,sc:1.04},
   svg:'<svg viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#2c2f6b"/><path d="M19 4L9 19h7l-2 11 11-16h-7z" fill="#ffd24a"/></svg>'},
- {id:'archer',name:'Archer',power:'Wind',desc:'A gale blows every rival backwards and spins them around.',speed:1.02,agility:1.1,charge:20,stun:1.3,kind:'slip',rgb:[0.8,1,0.95],
+ {id:'archer',perk:{name:'Full Quiver',desc:'Starts every race already holding an item.'},name:'Archer',power:'Wind',desc:'A gale blows every rival backwards and spins them around.',speed:1.02,agility:1.1,charge:20,stun:1.3,kind:'slip',rgb:[0.8,1,0.95],
   look:{skin:0xe8b996,b:0.92,ls:1.04,sc:0.97},
   svg:'<svg viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#24533f"/><path d="M5 12h16a4 4 0 10-4-4M5 18h22a4 4 0 11-4 4M5 24h11" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round"/></svg>'},
- {id:'elf',name:'Elf',power:'Trees',desc:'Trees burst from the ground and trap every rival in place.',speed:1.03,agility:1.12,charge:22,stun:1.8,kind:'rooted',rgb:[0.55,1,0.45],
+ {id:'elf',perk:{name:'Light Feet',desc:'Never slips: bananas, oil and ice cannot trip an elf.'},name:'Elf',power:'Trees',desc:'Trees burst from the ground and trap every rival in place.',speed:1.03,agility:1.12,charge:22,stun:1.8,kind:'rooted',rgb:[0.55,1,0.45],
   look:{skin:0xf1d3bf,b:0.9,ls:1.1,sc:1.02},
   svg:'<svg viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#2f6b2a"/><path d="M17 4l-9 12h5l-6 8h20l-6-8h5z" fill="#9be07a"/><rect x="15" y="24" width="4" height="6" fill="#8a5a32"/></svg>'},
- {id:'dwarf',name:'Dwarf',power:'Earthquake',desc:'Shakes the whole course. Every rival falls over.',speed:0.965,agility:0.86,charge:18,stun:1.4,kind:'knock',rgb:[1,0.7,0.35],
+ {id:'dwarf',perk:{name:'Low Rider',desc:'Short enough to run under barricades without sliding, but still has to jump the hurdles.'},name:'Dwarf',power:'Earthquake',desc:'Shakes the whole course. Every rival falls over.',speed:0.965,agility:0.86,charge:18,stun:1.4,kind:'knock',rgb:[1,0.7,0.35],
   look:{skin:0xd99a7a,b:1.45,ls:0.72,sc:0.88},
   svg:'<svg viewBox="0 0 34 34"><rect width="34" height="34" rx="8" fill="#6b4323"/><path d="M4 22h26" stroke="#e8c79a" stroke-width="3" stroke-linecap="round"/><path d="M16 8l-3 6 4 3-3 5 5 4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 27h4M22 27h6" stroke="#e8c79a" stroke-width="2" stroke-linecap="round"/></svg>'},
 ];
@@ -2300,6 +2302,7 @@ function startRaceFromGo(go,online){
   const roster=go.roster.slice(0,8);
   roster.forEach((e,i)=>{const r=makeRunner(e,i,roster.length,online);runners.push(r);runnerMap.set(r.id,r);});
   player=runners.find(r=>r.kind==='local')||runners[0];
+  if(!go.sv)runners.forEach(r=>{if(r.owned&&r.char.id==='archer')giveItem(r);});  // perk: Full Quiver
   RACE.bots=runners.filter(r=>r.kind==='bot');
   // buffs bought in the store are used up here, one of each per race
   BUFFS.forEach(b=>{if(wallet.use[b.id]!==false&&(wallet.buffs[b.id]|0)>0){wallet.buffs[b.id]--;RACE.buffs.push(b.id);}});
@@ -2789,6 +2792,7 @@ function hit(o,dur,src,kind,why,quiet){
     return false;}
   if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
   dur*=1-((o.mods&&o.mods.stun)||0);
+  if(o.char&&o.char.id==='samurai')dur*=0.7;  // perk: Bushido
   o.stun=Math.max(o.stun,dur);o.grace=dur+1.2;o.stunKind=kind||'trip';o.speed*=0.35;o.slide=0;if(kind==='knock')o.vy=Math.max(o.vy,5.5);
   const p=wpos(o,2.1);burst(p.x,p.y,p.z,10,[1,0.9,0.3],{add:true,max:3,up:3,grav:4,size:0.22});
   if(o.kind==='local'){raceStat('hurt');if(!reduceMotion)shake=0.45;sfx.hit();feed(why||'You got hit','bad');}
@@ -3003,7 +3007,7 @@ function aiThink(r,dt){
   if(ai.t<=0){
     ai.t=0.18+Math.random()*0.22+(1-ai.skill)*0.3;let best=ai.lane,bestS=-1e9;
     for(let i=0;i<4;i++){const lx=LANES[i];let s=-Math.abs(lx-r.x)*0.35+(i===ai.lane?0.4:0)+Math.random()*0.3;
-      for(let j=r.oi;j<obstacles.length;j++){const o=obstacles[j];const dist=o.d-r.d;if(dist>look)break;if(dist<-0.2||Math.abs(o.x-lx)>1.7)continue;const w=o.type==='wall'?10:(3.2*(1.2-ai.skill)+0.7);s-=w*(1-Math.max(0,dist)/look*0.6);}
+      for(let j=r.oi;j<obstacles.length;j++){const o=obstacles[j];const dist=o.d-r.d;if(dist>look)break;if(dist<-0.2||Math.abs(o.x-lx)>1.7||(o.type==='bar'&&r.char.id==='dwarf'))continue;const w=o.type==='wall'?10:(3.2*(1.2-ai.skill)+0.7);s-=w*(1-Math.max(0,dist)/look*0.6);}
       for(const b of bananas){const dist=b.d-r.d;if(dist>0&&dist<look&&Math.abs(b.x-lx)<1.3)s-=4;}
       for(const t of traps){if(t.cd>0)continue;const dist=t.d-r.d;if(dist>0&&dist<look&&Math.abs(t.x-lx)<1.3)s-=3.5;}
       for(const f of fires){if(f.owner===r)continue;const dist=f.d-r.d;if(dist>-0.5&&dist<look&&Math.abs(f.x-lx)<1.2)s-=2.5;}
@@ -3016,7 +3020,7 @@ function aiThink(r,dt){
   }
   for(let j=r.oi;j<obstacles.length;j++){const o=obstacles[j];const dist=o.d-r.d;if(dist>r.speed*0.5+1)break;if(dist<0.5||ai.handled.has(o.id)||Math.abs(o.x-r.x)>o.w/2+0.35)continue;
     if(o.type==='hurdle'&&dist<r.speed*0.33+0.5){ai.handled.add(o.id);if(Math.random()<ai.skill)doJump(r);}
-    else if(o.type==='bar'&&dist<r.speed*0.42+0.5){ai.handled.add(o.id);if(Math.random()<ai.skill)doSlide(r);}}
+    else if(o.type==='bar'&&dist<r.speed*0.42+0.5){ai.handled.add(o.id);if(r.char.id!=='dwarf'&&Math.random()<ai.skill)doSlide(r);}}
   if(r.item){ai.itemT-=dt;if(ai.itemT<=0){const it=r.item;
     if(it==='rocket'){if(nearestAhead(r,90))useItem(r);else ai.itemT=0.5;}
     else if(it==='banana'||it==='mine'){if(runners.some(o=>o!==r&&!sameTeam(o,r)&&r.d-o.d>1&&r.d-o.d<15)||Math.random()<0.12)useItem(r);else ai.itemT=0.5;}
@@ -3046,7 +3050,7 @@ function stepRunner(r,dt){
   r.stun=Math.max(0,r.stun-dt);r.slide=Math.max(0,r.slide-dt);r.boost=Math.max(0,r.boost-dt);r.phase=Math.max(0,r.phase-dt);r.shield=Math.max(0,r.shield-dt);r.slow=Math.max(0,r.slow-dt);r.jumpBuf=Math.max(0,r.jumpBuf-dt);r.grace=Math.max(0,(r.grace||0)-dt);r.ram=Math.max(0,r.ram-dt);
   if(r.kind==='bot'&&!r.finished)aiThink(r,dt);
   // surface patch under the runner
-  let surf=null;if(r.y<0.1)for(const p of patches){if(r.d>=p.d&&r.d<=p.d+p.len&&Math.abs(r.x-p.x)<1.35){surf=p.kind;break;}}
+  let surf=null;if(r.y<0.1&&r.char.id!=='elf')for(const p of patches){if(r.d>=p.d&&r.d<=p.d+p.len&&Math.abs(r.x-p.x)<1.35){surf=p.kind;break;}}
   if(surf&&surf!==r.surf&&r.kind==='local'&&!(RACE.surfSeen||(RACE.surfSeen={}))[surf]&&(RACE.surfSeen[surf]=1))feed(surf==='oil'?'Oil slick! Steering is slippery':surf==='ice'?'Ice! Steering is slippery':surf==='sand'?'Deep sand slows you down':surf==='tar'?'Sticky tar!':'Splash! Puddle slows you down','');
   r.surf=surf;
   let tvx;
@@ -3078,10 +3082,12 @@ function stepRunner(r,dt){
   for(let i=bananas.length-1;i>=0;i--){const b=bananas[i];if((b.owner===r&&b.safe>0)||sameTeam(b.owner,r)&&b.owner!==r)continue;
     if(Math.abs(r.d-b.d)<0.8&&Math.abs(r.x-b.x)<0.8&&r.y<0.4&&r.phase<=0&&!r.leaping&&!r.finished){sendAct(r,{t:'banx',id:b.id});
       if(b.kind==='mine'){if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
+      else if(r.char.id==='elf'){if(r.kind==='local')feed('Light Feet: hopped over the banana','good');}
       else hit(r,1.1,b.owner===r?null:b.owner,'slip','Slipped on a banana');}}
   if(!r.finished&&!r.leaping&&r.phase<=0&&r.y<0.45)for(let i=0;i<traps.length;i++){const t=traps[i];if(t.cd>0||Math.abs(r.d-t.d)>0.85||Math.abs(r.x-t.x)>0.85)continue;
     const K=TRAP_KINDS[t.kind],nm=K.name[0].toUpperCase()+K.name.slice(1);sendAct(r,{t:'trap',i});
-    if(K.fx==='slow'){if(r.ghost<=0){r.slow=Math.max(r.slow,2.2);r.speed*=0.6;if(r.kind==='local')feed(`Stuck in the ${K.name}`,'bad');}}
+    if(K.fx==='slip'&&r.char.id==='elf'){if(r.kind==='local')feed(`Light Feet: no slipping on the ${K.name}`,'good');}
+    else if(K.fx==='slow'){if(r.ghost<=0){r.slow=Math.max(r.slow,2.2);r.speed*=0.6;if(r.kind==='local')feed(`Stuck in the ${K.name}`,'bad');}}
     else if(hit(r,K.fx==='knock'?1.6:K.fx==='slip'?1.1:1.0,null,K.fx,K.fx==='knock'?`${nm}! You got blown up`:K.fx==='slip'?`Slipped on the ${K.name}`:`Tripped by the ${K.name}`)&&K.fx==='knock'&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
   if(!r.finished&&!r.leaping&&r.y<0.5)for(const f of fires){if(f.owner===r||sameTeam(f.owner,r)||Math.abs(r.d-f.d)>0.8||Math.abs(r.x-f.x)>0.75)continue;
     if(hit(r,0.9,f.owner,'trip',`Burned by ${f.owner.nm}'s fire trail`)){const p=wpos(r,0.6);burst(p.x,p.y,p.z,16,[1,0.5,0.1],{add:true,max:5,up:3,grav:-1,size:0.3});}}
@@ -3099,10 +3105,11 @@ function collide(r,prevD){
     const o=obstacles[j];if(o.d>r.d+1)break;
     if(Math.abs(r.x-o.x)>o.w/2+0.3||r.phase>0||r.leaping)continue;
     if(r.ram>0){if(o.d<=r.d&&o.d>prevD-0.6&&r.lastSmash!==o){r.lastSmash=o;smashFx(o);if(r.kind==='local')sfx.smash();}continue;}
+    if(o.type==='wall'&&r.char.id==='warrior'){if(o.d<=r.d&&o.d>prevD-0.6&&r.lastSmash!==o){r.lastSmash=o;smashFx(o);r.speed*=0.85;if(r.kind==='local'){sfx.smash();feed('Unstoppable: smashed through','good');}}continue;}  // perk
     if(o.type==='wall'){const front=o.d-0.55;if(r.d>front&&prevD<=front+0.001&&r.y<2.4){r.d=front;if(r.lastWall!==o){r.lastWall=o;hit(r,0.6,null,'trip',`Ran into ${WALL_NAME[TH.wall]||'a wall'}`);}r.speed=Math.min(r.speed,2);}}
     else if(prevD<o.d&&r.d>=o.d){
       if(o.type==='hurdle'){if(r.y<0.75)hit(r,0.9,null,'trip','Clipped a hurdle. Jump with Space');else if(r.kind==='local')raceStat('clears');}
-      if(o.type==='bar'){if(r.slide<=0)hit(r,1.0,null,'knock','Hit the barrier. Slide with S');else if(r.kind==='local')raceStat('clears');}
+      if(o.type==='bar'){if(r.slide<=0&&r.char.id!=='dwarf')hit(r,1.0,null,'knock','Hit the barrier. Slide with S');else if(r.kind==='local')raceStat('clears');}
     }
   }
 }
@@ -4261,7 +4268,7 @@ COUNTRIES.slice().sort((a,b)=>a[0]==='HTI'?-1:b[0]==='HTI'?1:a[1].localeCompare(
 $('flagSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.hidden=!!q&&!b.dataset.name.includes(q)&&!b.dataset.code.toLowerCase().includes(q);});});
 const statPct=(v,lo,hi)=>Math.round(clamp((v-lo)/(hi-lo),0.08,1)*100);
 CHARS.forEach(ch=>{const b=document.createElement('button');b.className='char-btn';b.dataset.id=ch.id;
-  b.innerHTML=`<div class="char-top">${ch.svg}<div><div class="char-name">${ch.name}</div><div class="char-power">${ch.power}</div></div></div><div class="char-desc">${ch.desc}</div>
+  b.innerHTML=`<div class="char-top">${ch.svg}<div><div class="char-name">${ch.name}</div><div class="char-power">${ch.power}</div></div></div><div class="char-desc">${ch.desc}</div><div class="char-perk">⭐ <b>${ch.perk.name}</b> · ${ch.perk.desc}</div>
   <div class="stats"><div class="stat">Speed<i><b style="width:${statPct(ch.speed,0.96,1.04)}%"></b></i></div><div class="stat">Agility<i><b style="width:${statPct(ch.agility,0.8,1.18)}%"></b></i></div><div class="stat">Recharge<i><b style="width:${statPct(26-ch.charge,3,9)}%"></b></i></div></div>`;
   b.onclick=()=>{selChar=ch.id;store.set('flagdash-char',ch.id);refreshMenu('flex');syncLobbyPresence();};charGrid.appendChild(b);});
 function elevProfile(th){const h=heightFn(th),pts=[];let lo=1e9,hi=-1e9;for(let i=0;i<=60;i++){const v=h(i/60*TRACK);pts.push(v);lo=Math.min(lo,v);hi=Math.max(hi,v);}return {pts,lo,hi};}
@@ -4360,13 +4367,17 @@ function renderLobby(){
 $('startBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline();};
 $('svBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startSurvival();};
 $('fcBtn').onclick=()=>{if(plaza.active)leavePlaza();initAudio();if(actx&&actx.state==='suspended')actx.resume();startFlagChallenge();};
-function startOffline(){
+function startOffline(quick){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
   const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
   others.forEach((cc,i)=>roster.push({id:'b'+i,bot:true,cc,ch:pick(CHAR_IDS),tm:botTeam(selMode,i),sk:pick(BOT_SKINS)}));
-  GP=null;startRaceFromGo({id:'off'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:selMode,laps:selLaps,lo:loOn,roster:shuffle(roster)},false);
+  // Quick Race: a random track every match (your chosen track is kept for normal races)
+  const trk=quick?pick(THEMES.map(t=>t.id).filter(id=>THEMES.length<2||id!==quickLast)):selTrack;if(quick)quickLast=trk;
+  GP=null;startRaceFromGo({id:'off'+Date.now(),seed:Math.floor(Math.random()*1e9),trk,mode:quick?'solo':selMode,laps:quick?1:selLaps,lo:loOn,roster:shuffle(roster)},false);
+  if(quick){RACE.quick=true;$('trackLabel').textContent='Quick Race · '+TH.name;}
 }
-$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline();};
+let quickLast=null;
+$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online)showLobby();else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline(RACE&&RACE.quick);};
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
@@ -4720,7 +4731,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
     const n=dailyReady();$('pzTasks').textContent=n?`${n} reward${n>1?'s':''} ready at the Task Board`:'';},
   act(){const o=this.near;if(!o||this.blocked())return;sfx.pop();if(o.rival){leavePlaza();startRival(o.rival);return;}const id=o.s.id;
     if(id==='desk'||id==='online'){goDesk(id==='online');}
-    else if(id==='start'){initAudio();leavePlaza();startOffline();}
+    else if(id==='start'){initAudio();leavePlaza();startOffline(true);}
     else if(id==='gp'){initAudio();leavePlaza();startGP();}
     else if(id==='store')openStore();
     else openHub(id);}
@@ -4974,7 +4985,7 @@ const LAYOUT=(()=>{
   function syncCreate(){$('d3Create').disabled=$('onlineControls').hidden;}
   new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});syncCreate();
   $('d3Create').onclick=()=>$('createBtn').click();
-  $('quickBtn').onclick=()=>{const L=selLaps,Mo=selMode;selLaps=1;selMode='solo';try{$('startBtn').click();}finally{selLaps=L;selMode=Mo;}};
+  $('quickBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline(true);};
   $('deskSet').onclick=()=>openSettings();$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
   const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
   $('pvLeft').onclick=()=>cycle(-1);$('pvRight').onclick=()=>cycle(1);
@@ -5068,7 +5079,7 @@ setTimeout(()=>playLog('open'),1500);
   menu.addEventListener('pointermove',e=>{if(!d||e.pointerId!==d.id)return;pv.rotY=d.r+(e.clientX-d.x)*0.012;});
   const end=e=>{if(!d||e.pointerId!==d.id)return;pv.base=pv.rotY;pv.drag=null;d=null;};
   menu.addEventListener('pointerup',end);menu.addEventListener('pointercancel',end);
-  const nm=()=>{$('pvName').textContent=$('pkRunner').textContent||'';};new MutationObserver(nm).observe($('pkRunner'),{childList:true,characterData:true,subtree:true});nm();
+  const nm=()=>{const el=$('pvName'),ch=charById(selChar);el.textContent=$('pkRunner').textContent||'';if(ch&&ch.perk){const sm=document.createElement('small');sm.textContent='⭐ '+ch.perk.name;el.title=ch.perk.desc;el.appendChild(sm);}};new MutationObserver(nm).observe($('pkRunner'),{childList:true,characterData:true,subtree:true});nm();
   // a new runner starts facing forward
   const face=()=>{pv.base=null;pv.rotY=0;};$('pvLeft').addEventListener('click',face);$('pvRight').addEventListener('click',face);
 })();
