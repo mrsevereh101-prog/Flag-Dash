@@ -4410,7 +4410,7 @@ function toMenu(desk){
   if(typeof CEL!=='undefined'&&CEL.open){CEL.timers.forEach(clearTimeout);CEL.timers=[];CEL.open=false;CEL.done=null;$('celebrate').hidden=true;$('celConfetti').innerHTML='';}
   refreshHubBadges();crowd.stop();music.play(MUS.menu,{fade:1.2});GP=null;state='menu';['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('menu').hidden=false;
   clearRace();const th=themeById(selTrack);if(TH!==th)buildWorld(th);genCourse(7);refreshMenu(null);RACE=null;
-  enterPlaza();if(desk)goDesk(false);
+  if(desk)goDesk(false);else enterPlaza();
 }
 
 /* =========================================================
@@ -4738,7 +4738,8 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
 };
 function enterPlaza(){if(typeof pushChat==='function')pushChat();['menu','hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);closePicker();state='plaza';music.play(MUS.menu,{fade:1.2});crowd.stop();plaza.enter();$('plazaHud').hidden=false;plaza.refreshHud();}
 function leavePlaza(){plaza.exit();}
-function goDesk(online){if(!plaza.active)enterPlaza();state='menu';$('plazaHud').hidden=true;$('menu').hidden=false;$('menu').classList.add('over-plaza');refreshMenu(null);rebuildPreview('wave');if(online)setTimeout(()=>{const el=$('playPanel');if(el)el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});},60);}
+// The Race Desk has its own backdrop: a camera gliding down the Night Stadium (the plaza stays for walking around).
+function goDesk(online){if(plaza.active)plaza.exit();['hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);$('plazaHud').hidden=true;state='menu';music.play(MUS.menu,{fade:1.2});const th=themeById('stadium');if(TH!==th||TRACK!==LAP_LEN[1]){TRACK=LAP_LEN[1];buildWorld(th);genCourse(7);}$('menu').hidden=false;$('menu').classList.add('over-plaza');refreshMenu(null);rebuildPreview('wave');if(online)setTimeout(()=>{const el=$('playPanel');if(el)el.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'center'});},60);}
 window.addEventListener('keydown',e=>{if(state!=='plaza'||(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')))return;plaza.keys[e.code]=true;
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
   if(!e.repeat&&!plaza.blocked()){if(e.code==='KeyE'||e.code==='Enter'||e.code==='Space')plaza.act();if(/^Digit[1-4]$/.test(e.code))plaza.emote(EMOTES[+e.code.slice(5)-1]);}});
@@ -4842,7 +4843,7 @@ function tick(now){
 }
 
 window.addEventListener('resize',resize);resize();
-buildWorld(themeById(selTrack));genCourse(7);
+buildWorld(themeById('stadium'));genCourse(7);
 refreshMenu(null);rebuildPreview('wave');
 applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
 goDesk(false);
