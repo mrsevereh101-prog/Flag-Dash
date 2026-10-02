@@ -3402,7 +3402,7 @@ async function getSb(){
   if(SB)return SB;if(!(window.supabase&&window.supabase.createClient))await loadScript(SUPA.lib);
   SB=window.supabase.createClient(SUPA.url,SUPA.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'implicit'},realtime:{params:{eventsPerSecond:40}}});
   return SB;}
-const AUTH={on:!window.claude,ready:false,user:null,pending:null,why:'',msg:'',sent:false};
+const AUTH={on:!window.claude,ready:false,user:null,pending:null,why:'',msg:'',sent:false,google:null};
 const SYNC={sig:'',timer:0,busy:false,at:0};
 const SYNC_SKIP=new Set(['flagdash-sync','flagdash-seen']);
 function localSave(){const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!SYNC_SKIP.has(k))d[k]=localStorage.getItem(k);}return d;}
@@ -3415,6 +3415,7 @@ async function initAuth(){
     const {data}=await sb.auth.getSession();
     if(/access_token|error_description|type=magiclink/.test(location.hash))history.replaceState(null,'',location.pathname+location.search);
     if(hashErr)AUTH.msg=decodeURIComponent(hashErr[1].replace(/\+/g,' '));
+    fetch(SUPA.url+'/auth/v1/settings',{headers:{apikey:SUPA.key}}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.external){AUTH.google=!!j.external.google;renderAcct();}}).catch(()=>{});
     AUTH.ready=true;setUser(data&&data.session?data.session.user:null);
     sb.auth.onAuthStateChange((ev,s)=>setUser(s?s.user:null));
   }catch(e){AUTH.on=false;AUTH.ready=true;renderAcct();}
@@ -3488,8 +3489,8 @@ function renderAcct(){
     if(AUTH.msg)el('p','acct-msg',AUTH.msg);return;}
   if(AUTH.why)el('p','acct-why',AUTH.why);
   el('p','muted','Free without an account: Quick Race, solo races, the plaza, Survival and Flag Challenge. Sign in to play online, climb the worldwide leaderboards, join guilds and chat, and keep your progress on every device.');
-  const g=el('button','acct-google');g.innerHTML='<span class="g-logo">G</span> Continue with Google';g.onclick=signInGoogle;
-  el('div','acct-or','or');
+  if(AUTH.google!==false){const g=el('button','acct-google');g.innerHTML='<span class="g-logo">G</span> Continue with Google';g.onclick=signInGoogle;
+  el('div','acct-or','or');}
   if(AUTH.sent){el('p','acct-sent',`📧 Check your email. We sent a sign-in link to ${AUTH.sent}. Open it on this device to sign in.`);
     const again=el('button','ghost','Use a different email');again.onclick=()=>{AUTH.sent=false;renderAcct();};}
   else{const f=document.createElement('form');f.className='acct-email';f.innerHTML='<input type="email" id="acctEmail" placeholder="you@example.com" autocomplete="email" aria-label="Email address" required><button class="primary" type="submit">Email me a link</button>';
