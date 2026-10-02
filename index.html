@@ -236,9 +236,9 @@ body.layout-desk .lay-piece{outline-offset:1px}
 #celebrate.cosmic .cel-card{background:linear-gradient(180deg,rgba(40,70,190,.35),rgba(14,30,98,.45));border:1.5px solid rgba(170,190,255,.35);box-shadow:0 0 50px rgba(120,150,255,.25),inset 0 1px 0 rgba(255,255,255,.2)}
 #celebrate.cosmic .cel-step{position:relative}
 #celebrate.cosmic .cel-podium{align-items:flex-start;gap:6px;min-height:0;padding-top:6px}
-#celebrate.cosmic .cel-step.s3{order:0;margin-top:clamp(70px,22vw,120px)}
+#celebrate.cosmic .cel-step.s2{order:0;margin-top:clamp(70px,22vw,120px)}
 #celebrate.cosmic .cel-step.s1{order:1;flex-grow:1.35;position:relative;z-index:2}
-#celebrate.cosmic .cel-step.s2{order:2;margin-top:clamp(70px,22vw,120px)}
+#celebrate.cosmic .cel-step.s3{order:2;margin-top:clamp(70px,22vw,120px)}
 #celebrate.cosmic .cel-medal,#celebrate.cosmic .cel-block,#celebrate.cosmic .cel-step>img{display:none}
 .cel-plate{display:none}
 #celebrate.cosmic .cel-pw .cel-plate{display:grid;position:relative;width:100%;aspect-ratio:4/4.6;place-items:center;
@@ -1434,21 +1434,21 @@ const THEMES=[
   amp:5.5,slope:0,ph:1.9,patch:'sand',weather:'dust',hurdle:'log',bar:'beam',wall:'boulder',paint:'dirt',line:'#fff1dc',dash:true,edge:'fence',
   side:'canyon',ground:[0xc2653a,0x8c3a1c],dust:[0.85,0.62,0.4],card:['#f3a35c','#8c3a1c']},
  {id:'glacier',name:'Glacier Pass',blurb:'A long downhill on snow. Ice patches make steering slippery.',
-  sky:['#6d86b8','#c9d8ee','#eef3fa'],fog:0xdce6f2,near:45,far:220,hemi:[0xffffff,0x6a7fa0,1.0],sun:0.6,
+  sky:['#5d76a8','#b4c6e2','#dbe4f0'],fog:0xc4d0e0,near:45,far:220,hemi:[0xf2f6ff,0x5a6f90,0.7],sun:0.4,
   amp:4,slope:-0.007,ph:3.1,patch:'ice',weather:'snow',hurdle:'drift',bar:'icebeam',wall:'iceblock',paint:'snow',line:'#4a7fd0',dash:true,edge:'snowbank',
-  side:'glacier',ground:[0xf2f6fb,0xd4e0ee],dust:[0.95,0.97,1],card:['#dce9f7','#5b86c9']},
+  side:'glacier',ground:[0xdfe6f0,0xc0cee0],dust:[0.95,0.97,1],card:['#dce9f7','#5b86c9']},
  {id:'coast',name:'Palm Coast',blurb:'A seaside boardwalk at sunset. Puddles, fish crates and bunting.',
   sky:['#3a3f8f','#e0708a','#ffc27a'],fog:0xf0a58a,near:60,far:280,hemi:[0xffe4cc,0x3a5a70,1.0],sun:0.75,
   amp:1.4,slope:0,ph:4.2,patch:'water',weather:null,hurdle:'driftwood',bar:'bunting',wall:'crates',paint:'boards',line:'#fff3dd',dash:false,edge:'rope',
   side:'coast',ground:[0xe8c98f,0xd9b47a],dust:[0.9,0.8,0.6],card:['#ff9a6b','#1f6fa8']},
  {id:'giza',name:'Giza Pyramids',region:'Africa',blurb:'Race past the Great Pyramids and the Sphinx. Stone blocks and drifting sand.',
-  sky:['#3f7fc4','#9fcfee','#f6dcaa'],fog:0xf0d6a8,near:70,far:320,hemi:[0xfff4dc,0x8a6a3a,1.0],sun:0.85,
+  sky:['#3a74b8','#8cbfe2','#e8cc98'],fog:0xd8bc8c,near:70,far:320,hemi:[0xfff0d8,0x7a5a30,0.75],sun:0.55,
   amp:1.6,slope:0,ph:0.4,patch:'sand',weather:'dust',hurdle:'pots',bar:'beam',wall:'limestone',paint:'sandstone',line:'#fff6e0',dash:true,edge:'stone',
-  side:'dunes',ground:[0xe6c486,0xd2a868],dust:[0.9,0.78,0.55],card:['#f6dcaa','#c98a3a']},
+  side:'dunes',ground:[0xd2ac6c,0xbc9254],dust:[0.9,0.78,0.55],card:['#f6dcaa','#c98a3a']},
  {id:'sahara',name:'Sahara Dunes',region:'Africa',blurb:'Rolling dunes at sunset with camel caravans. Deep sand everywhere.',
-  sky:['#c8563a','#f3a060','#ffe0a8'],fog:0xf2c08a,near:60,far:300,hemi:[0xffe6c8,0x9a5a2a,1.0],sun:0.8,
+  sky:['#a8442e','#e08a50','#f2c088'],fog:0xd9a070,near:60,far:300,hemi:[0xffe2c0,0x8a4a22,0.7],sun:0.5,
   amp:4,slope:0,ph:2.2,patch:'sand',weather:'dust',hurdle:'dune',bar:'beam',wall:'boulder',paint:'sand',line:'#fff1dc',dash:true,edge:'rope',
-  side:'dunes',ground:[0xf0b870,0xd9974f],dust:[0.95,0.75,0.5],card:['#ffd08a','#d9742a']},
+  side:'dunes',ground:[0xd99a58,0xc07c3e],dust:[0.95,0.75,0.5],card:['#ffd08a','#d9742a']},
  {id:'grandcanyon',name:'Grand Canyon',region:'North America',blurb:'A cliff-edge run along the rim. A mile-deep gorge drops away on your left.',
   sky:['#2a6db8','#86c1ea','#f5e1c0'],fog:0xe2c9a8,near:80,far:360,hemi:[0xfff0d8,0x7a3f22,1.0],sun:0.85,
   amp:2.5,slope:0,ph:5.1,patch:'sand',weather:null,hurdle:'log',bar:'beam',wall:'boulder',paint:'dirt',line:'#fff1dc',dash:true,edge:'fence',
@@ -1458,7 +1458,7 @@ const THEMES=[
   amp:1.2,slope:0,ph:3.3,patch:'water',weather:'rain',hurdle:'log',bar:'vines',wall:'moss',paint:'mud',line:'#e8f0c8',dash:true,edge:'leaves',
   side:'jungle',ground:[0x2f6a2a,0x3f7f30],dust:[0.4,0.32,0.2],card:['#8fb89a','#1f5a26']},
  {id:'greatwall',name:'Great Wall',region:'Asia',blurb:'Up and down green hills in China, with the Great Wall snaking along the ridge.',
-  sky:['#5a88c8','#b8d4ee','#f2e6d0'],fog:0xd8e0e4,near:70,far:320,hemi:[0xfffaf0,0x4a5a3a,1.0],sun:0.8,
+  sky:['#5a88c8','#b8d4ee','#f2e6d0'],fog:0xc6d0d6,near:70,far:320,hemi:[0xfff6ea,0x4a5a3a,0.82],sun:0.6,
   amp:6,slope:0,ph:1.1,patch:null,weather:null,hurdle:'bamboo',bar:'gate',wall:'limestone',paint:'paving',line:'#f6ecd8',dash:false,edge:'stone',
   side:'hills',ground:[0x6a9a4a,0x587f3f],dust:[0.7,0.68,0.6],card:['#b8d4ee','#8a3a2a']},
  {id:'paris',name:'Paris Boulevard',region:'Europe',blurb:'Cobblestones at dusk, with the Eiffel Tower over the rooftops.',
@@ -1470,9 +1470,9 @@ const THEMES=[
   amp:0.8,slope:0,ph:4.4,patch:'sand',weather:'dust',hurdle:'log',bar:'beam',wall:'boulder',paint:'reddirt',line:'#fff1dc',dash:true,edge:'fence',
   side:'flat',ground:[0xc4552a,0xa8431e],dust:[0.8,0.4,0.25],card:['#f0a05a','#a8431e']},
  {id:'antarctica',name:'Antarctica',region:'Antarctica',blurb:'A flat ice shelf beside the frozen sea. Penguins cheer, icebergs drift past.',
-  sky:['#2a4a8a','#8ab0dc','#e8f2fb'],fog:0xd8e6f4,near:60,far:320,hemi:[0xffffff,0x6a7fa0,1.0],sun:0.7,
+  sky:['#2a4a8a','#7ea4d2','#d4e2f2'],fog:0xc2d2e6,near:60,far:320,hemi:[0xf2f6ff,0x5a6f90,0.72],sun:0.45,
   amp:1,slope:0,ph:0.8,patch:'ice',weather:'snow',hurdle:'drift',bar:'icebeam',wall:'iceblock',paint:'snow',line:'#4a7fd0',dash:true,edge:'snowbank',
-  side:'shelf',ground:[0xf4f8fc,0xdbe7f3],dust:[0.95,0.97,1],card:['#e8f2fb','#2a4a8a']},
+  side:'shelf',ground:[0xe0e8f2,0xc6d4e6],dust:[0.95,0.97,1],card:['#e8f2fb','#2a4a8a']},
 ];
 const WALL_NAME={bus:'a taxi',boulder:'a boulder',crates:'the crates',limestone:'a stone block',moss:'a mossy rock',iceblock:'an ice block'};
 // Turns: [centre (m), half-length (m), curvature (1/radius); + turns left, - turns right]. Heading never passes 90°, so no course doubles back on itself.
@@ -1615,7 +1615,7 @@ const TRACK_PAINT={
   tartan:(c,w,h)=>noiseFill(c,w,h,'#b9442e',26,[1,.6,.5]),
   asphalt:(c,w,h)=>{noiseFill(c,w,h,'#3b3d46',22,[1,1,1]);for(let i=0;i<300;i++){c.fillStyle=`rgba(255,255,255,${Math.random()*0.12})`;c.fillRect(Math.random()*w,Math.random()*h,2,2);}},
   dirt:(c,w,h)=>{noiseFill(c,w,h,'#b9804f',30,[1,.8,.6]);c.strokeStyle='rgba(90,50,20,.18)';for(let i=0;i<14;i++){c.lineWidth=1+Math.random()*3;c.beginPath();const x=Math.random()*w;c.moveTo(x,0);c.bezierCurveTo(x+rand(-20,20),h*0.3,x+rand(-20,20),h*0.6,x+rand(-10,10),h);c.stroke();}},
-  snow:(c,w,h)=>{noiseFill(c,w,h,'#eef4fb',14,[.8,.9,1]);c.strokeStyle='rgba(120,150,200,.2)';c.lineWidth=3;[w*0.3,w*0.36,w*0.7,w*0.76].forEach(x=>{c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();});},
+  snow:(c,w,h)=>{noiseFill(c,w,h,'#d6e0ec',14,[.8,.9,1]);c.strokeStyle='rgba(120,150,200,.2)';c.lineWidth=3;[w*0.3,w*0.36,w*0.7,w*0.76].forEach(x=>{c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke();});},
   wet:(c,w,h)=>{noiseFill(c,w,h,'#24232e',18,[1,1,1.1]);const cols=['rgba(255,79,163,','rgba(95,224,255,','rgba(255,210,74,'];for(let i=0;i<22;i++){const x=Math.random()*w,cl=pick(cols),g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,cl+'0)');g.addColorStop(0.5,cl+(0.05+Math.random()*0.1)+')');g.addColorStop(1,cl+'0)');c.fillStyle=g;c.fillRect(x,0,rand(3,10),h);}},
   boards:(c,w,h)=>{for(let y=0;y<h;y+=32){const v=Math.floor(rand(-14,14));R(c,0,y,w,32,`rgb(${184+v},${138+v},${90+v})`);c.fillStyle='rgba(60,35,15,.55)';c.fillRect(0,y,w,2);for(let i=0;i<6;i++){c.fillStyle='rgba(90,55,25,.2)';c.fillRect(Math.random()*w,y+4+Math.random()*24,rand(20,60),1);}c.fillStyle='rgba(50,30,10,.6)';c.fillRect(8,y+8,3,3);c.fillRect(w-12,y+8,3,3);}},
 };
