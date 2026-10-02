@@ -98,6 +98,8 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .d3-logo-ic{color:var(--d3-gold);margin-right:6px}
 .d3-wallet{display:flex;align-items:center;gap:8px;border:2px solid rgba(233,196,106,.7);border-radius:999px;padding:6px 10px;background:rgba(8,18,60,.55);color:#f6e3a8;font-weight:800;font-size:14px;white-space:nowrap}
 .d3-wallet .coin-ic{display:inline-block;vertical-align:-3px}
+#deskWallet{cursor:pointer}#deskWallet:hover{border-color:#f7e3a3}
+.d3-store-top{border-color:#f7e3a3;background:radial-gradient(circle at 50% 35%,#f8e19a,#c9973a);color:#3a2706;box-shadow:0 0 0 3px rgba(233,196,106,.25),inset 0 1px 0 rgba(255,255,255,.5)}
 .desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
 .desk3 .d3-name input{text-align:center;font-size:20px;font-weight:700;color:#f3ead0;border-radius:14px;padding:10px 14px;background:linear-gradient(180deg,rgba(44,76,180,.85),rgba(16,34,104,.9));border:2px solid rgba(233,196,106,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
 .d3-stage{position:relative;min-height:clamp(300px,52vh,480px)}
@@ -759,9 +761,9 @@ body:not(.touch) .pz-stick{opacity:.55}
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button></div>
+        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="Back to the plaza">←</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Flag Dash</div>
-        <div class="d3-wallet" aria-label="Wallet"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
+        <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
       <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"></label>
@@ -5098,7 +5100,8 @@ const LAYOUT=(()=>{
   new MutationObserver(syncCreate).observe($('onlineControls'),{attributes:true,attributeFilter:['hidden']});syncCreate();
   $('d3Create').onclick=()=>$('createBtn').click();
   $('quickBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline(true);};
-  $('deskSet').onclick=()=>openSettings();$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
+  $('deskSet').onclick=()=>openSettings();$('deskStore').onclick=()=>openStore();
+  $('deskWallet').onclick=()=>openStore();$('deskWallet').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openStore();}};$('d3Store').onclick=()=>openStore();$('d3Friends').onclick=()=>$('menuChatBtn').click();
   const cycle=dir=>{const i=CHAR_IDS.indexOf(selChar);selChar=CHAR_IDS[(i+dir+CHAR_IDS.length)%CHAR_IDS.length];store.set('flagdash-char',selChar);refreshMenu('flex');syncLobbyPresence();};
   $('pvLeft').onclick=()=>cycle(-1);$('pvRight').onclick=()=>cycle(1);
   const wal=()=>{$('d3Coins').textContent=$('wCoins').textContent;$('d3Gems').textContent=$('wGems').textContent;};
