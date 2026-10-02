@@ -215,6 +215,60 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .cel-confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:3}
 .cel-confetti i{position:absolute;top:-20px;width:9px;height:14px;border-radius:2px;animation:celFall linear forwards}
 @keyframes celFall{to{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot))}}
+/* ---------- top-3 finish: cosmic sky with metal plaques ---------- */
+.cel-sky{display:none;position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+#celebrate.cosmic{background:#0b1a5c}
+#celebrate.cosmic .cel-sky{display:block;background:
+  radial-gradient(ellipse 60% 30% at 8% 18%,rgba(200,120,255,.6),transparent 70%),
+  radial-gradient(ellipse 50% 26% at 92% 30%,rgba(120,190,255,.35),transparent 70%),
+  radial-gradient(ellipse 70% 30% at 15% 88%,rgba(255,150,210,.45),transparent 70%),
+  radial-gradient(ellipse 60% 28% at 90% 80%,rgba(110,230,220,.28),transparent 70%),
+  radial-gradient(ellipse at 50% 45%,#1d3a9c,#0b1a5c 75%)}
+.cel-sky::before{content:"";position:absolute;inset:0;opacity:.85;background-image:
+  radial-gradient(1px 1px at 12% 22%,#fff,transparent),radial-gradient(1px 1px at 33% 71%,#fff,transparent),radial-gradient(1.5px 1.5px at 58% 12%,#fff,transparent),
+  radial-gradient(1px 1px at 77% 54%,#fff,transparent),radial-gradient(1.5px 1.5px at 88% 9%,#fff,transparent),radial-gradient(1px 1px at 46% 92%,#fff,transparent),
+  radial-gradient(1px 1px at 6% 61%,#fff,transparent),radial-gradient(1px 1px at 66% 83%,#fff,transparent),radial-gradient(1.5px 1.5px at 24% 44%,#fff,transparent);
+  background-size:260px 260px;animation:skyTw 4s ease-in-out infinite alternate}
+@keyframes skyTw{to{opacity:.45}}
+.cel-sky i{position:absolute;width:70px;height:7px;border-radius:7px;filter:blur(2px);opacity:.75;mix-blend-mode:screen;
+  background:linear-gradient(90deg,transparent,#ff5f8a,#ffd36b,#7dff9b,#6bc8ff,#b48bff,transparent);animation:prism 3.2s ease-in-out infinite alternate}
+@keyframes prism{from{opacity:.25;transform:rotate(var(--r)) scaleX(.7)}to{opacity:.9;transform:rotate(var(--r)) scaleX(1.15)}}
+#celebrate.cosmic .cel-card{background:linear-gradient(180deg,rgba(40,70,190,.35),rgba(14,30,98,.45));border:1.5px solid rgba(170,190,255,.35);box-shadow:0 0 50px rgba(120,150,255,.25),inset 0 1px 0 rgba(255,255,255,.2)}
+#celebrate.cosmic .cel-step{position:relative}
+#celebrate.cosmic .cel-podium{align-items:flex-start;gap:6px;min-height:0;padding-top:6px}
+#celebrate.cosmic .cel-step.s3{order:0;margin-top:clamp(70px,22vw,120px)}
+#celebrate.cosmic .cel-step.s1{order:1;flex-grow:1.35;position:relative;z-index:2}
+#celebrate.cosmic .cel-step.s2{order:2;margin-top:clamp(70px,22vw,120px)}
+#celebrate.cosmic .cel-medal,#celebrate.cosmic .cel-block,#celebrate.cosmic .cel-step>img{display:none}
+.cel-plate{display:none}
+#celebrate.cosmic .cel-pw .cel-plate{display:grid;position:relative;width:100%;aspect-ratio:4/4.6;place-items:center;
+  clip-path:polygon(9% 0,91% 0,100% 7%,100% 93%,91% 100%,9% 100%,0 93%,0 7%);
+  background:var(--rim);filter:drop-shadow(0 8px 14px rgba(0,0,0,.45))}
+.cel-plate .face{position:absolute;inset:8%;display:grid;align-content:center;justify-items:center;gap:6%;
+  clip-path:polygon(5% 0,95% 0,100% 4%,100% 96%,95% 100%,5% 100%,0 96%,0 4%);
+  background:repeating-radial-gradient(circle at 50% 50%,rgba(255,255,255,.08) 0 1px,rgba(0,0,0,.05) 1px 2px),var(--face);
+  box-shadow:inset 0 2px 6px rgba(255,255,255,.6),inset 0 -4px 10px rgba(0,0,0,.35)}
+.cel-plate img{width:78%;aspect-ratio:3/2;object-fit:cover;border-radius:3px;box-shadow:0 0 0 2px rgba(0,0,0,.25),0 3px 8px rgba(0,0,0,.4)}
+.cel-plate b{font-family:var(--display);font-weight:400;font-size:clamp(20px,6vw,34px);line-height:1;color:var(--ink);text-shadow:0 1px 0 rgba(255,255,255,.55),0 -1px 0 rgba(0,0,0,.25)}
+.cel-step.s1 .cel-plate{--rim:conic-gradient(from 30deg,#fff4bf,#c18f22,#ffe58a,#9c6d12,#fff1b0,#b88420,#fff4bf);--face:conic-gradient(from 0deg,#f7dc7c,#c9982f,#f9e49a,#b9862a,#f7dc7c);--ink:#6b4a08}
+.cel-step.s2 .cel-plate{--rim:conic-gradient(from 30deg,#ffffff,#8d96a3,#eef1f5,#6f7884,#fafbfd,#8a929e,#ffffff);--face:conic-gradient(from 0deg,#e8ebef,#a4abb5,#f4f6f8,#949ba6,#e8ebef);--ink:#4a515c}
+.cel-step.s3 .cel-plate{--rim:conic-gradient(from 30deg,#f2b48a,#7a3e1c,#e09a6c,#5e2c12,#efae82,#86461f,#f2b48a);--face:conic-gradient(from 0deg,#d88a5a,#9a5128,#e6a172,#8a4520,#d88a5a);--ink:#4a200a}
+.cel-orbit{display:none}
+.cel-pw{display:none;position:relative;width:100%}
+#celebrate.cosmic .cel-pw{display:block}
+#celebrate.cosmic .cel-orbit{display:block;position:absolute;left:4%;right:-16%;top:8%;bottom:-2%;pointer-events:none;transform:rotate(-28deg)}
+.cel-orbit::before,.cel-orbit::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from var(--a,0deg),transparent 0 38%,rgba(255,240,200,.12) 50%,rgba(255,246,215,.75) 74%,#fff 80%,transparent 81% 100%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px),#000 calc(100% - 1px),transparent);mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px),#000 calc(100% - 1px),transparent);
+  filter:drop-shadow(0 0 5px #fff3c0);animation:orbit 3s linear infinite}
+.cel-orbit::after{inset:-7px;opacity:.8;
+  -webkit-mask:repeating-conic-gradient(#000 0 1.2deg,transparent 1.2deg 5deg),radial-gradient(farthest-side,transparent calc(100% - 12px),#000 calc(100% - 10px),transparent);-webkit-mask-composite:source-in;
+  mask:repeating-conic-gradient(#000 0 1.2deg,transparent 1.2deg 5deg) intersect,radial-gradient(farthest-side,transparent calc(100% - 12px),#000 calc(100% - 10px),transparent)}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes orbit{to{--a:360deg}}
+#celebrate.cosmic .cel-step.s1 .cel-nm{font-size:clamp(13px,3.8vw,17px)}
+#celebrate.cosmic .cel-step.s1 .cel-time{color:#fff}
+@media (prefers-reduced-motion:reduce){.cel-sky::before,.cel-sky i,.cel-orbit::before{animation:none}}
 @media (prefers-reduced-motion:reduce){.cel-step,.cel-gift{transition:none}.cel-title.win,.cel-step.s1.show,.cel-gift.show .gbox{animation:none}}
 
 /* ---------- Race Desk bottom sheet: ▲ pulls up the rest ---------- */
@@ -1080,6 +1134,7 @@ body:not(.touch) .pz-stick{opacity:.55}
 </div>
 
 <div id="celebrate" class="overlay" hidden>
+  <div class="cel-sky" aria-hidden="true"><i style="left:6%;top:30%;--r:-35deg"></i><i style="left:78%;top:22%;--r:40deg;animation-delay:-1s"></i><i style="left:12%;top:64%;--r:30deg;animation-delay:-2s"></i><i style="left:70%;top:58%;--r:-50deg;animation-delay:-.5s"></i><i style="left:42%;top:50%;--r:60deg;animation-delay:-1.6s"></i><i style="left:84%;top:80%;--r:-20deg;animation-delay:-2.4s"></i><i style="left:30%;top:86%;--r:15deg;animation-delay:-.8s"></i></div>
   <div class="cel-confetti" id="celConfetti" aria-hidden="true"></div>
   <div class="cel-card" role="dialog" aria-labelledby="celTitle" aria-live="polite">
     <div class="cel-eyebrow" id="celEyebrow">🏁 Race complete</div>
@@ -5265,12 +5320,13 @@ function celebrate(rows,place,rw,done){
   if(CEL.open){CEL.done=done;return;}
   CEL.open=true;CEL.done=done;CEL.timers.forEach(clearTimeout);CEL.timers=[];
   const ov=$('celebrate'),teams=RACE&&isTeamMode(RACE.mode);
+  ov.classList.toggle('cosmic',place>=1&&place<=3);
   const nm=r=>r.nm||(r.flag&&r.flag.name)||'Runner';
   $('celEyebrow').textContent=`🏁 Race complete · ${TH.name}`+(GP&&RACE&&RACE.gp?` · Grand Prix ${GP.round+1}/${GP.tracks.length}`:'');
   const t=$('celTitle');t.textContent='And the winner is…';t.classList.remove('win');
   [1,2,3].forEach(n=>{const el=$('celS'+n),x=rows[n-1];el.classList.remove('show','me');el.innerHTML='';if(!x)return;
     if(x.r.kind==='local')el.classList.add('me');
-    el.innerHTML=`<div class="cel-medal">${['🥇','🥈','🥉'][n-1]}</div><img alt="" src="${x.r.flag?x.r.flag.url:''}"><div class="cel-nm"></div><div class="cel-time">${x.est?'≈ ':''}${fmt(x.t)}</div><div class="cel-block">${n}</div>`;
+    const fu=x.r.flag?x.r.flag.url:'';el.innerHTML=`<div class="cel-medal">${['🥇','🥈','🥉'][n-1]}</div><img alt="" src="${fu}"><div class="cel-pw"><div class="cel-plate"><div class="face"><img alt="" src="${fu}"><b>${n}</b></div></div>${n<3?'<div class="cel-orbit"></div>':''}</div><div class="cel-nm"></div><div class="cel-time">${x.est?'≈ ':''}${fmt(x.t)}</div><div class="cel-block">${n}</div>`;
     el.querySelector('.cel-nm').textContent=nm(x.r)+(x.r.kind==='local'?' (you)':'');});
   const gifts=[];
   gifts.push({ic:'🎁',v:priceHTML(rw.coinsWon,'coin'),l:'Coins earned'});
