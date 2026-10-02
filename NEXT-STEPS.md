@@ -34,4 +34,20 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - [ ] Better hero graphics (more detailed models), when there's time
 - [x] Privacy policy: https://mrsevereh101-prog.github.io/Flag-Dash/privacy.html (contact mr.severeh65@gmail.com)
 - [ ] Custom email sender (SMTP, e.g. Resend) before a wide launch; Supabase's built-in sender only allows a few emails an hour
-- [ ] Decide on screen-layout editing: keep for everyone (option 1), owner-only, or a built-in default layout
+- [x] Screen layout: everyone edits their own (saved to their account when signed in)
+
+## Roadmap (list from Oct 2)
+Suggested order: free items first, then money, then reach.
+
+1. [ ] **Online**: rooms, lobby, races and Flag Challenge online already work. Next: quick matchmaking (join any open race), reconnecting after a drop, and testing with several phones at once.
+2. [ ] **Plaza**: neon plaza with day/night, rivals and top 15 flags is done. Next: decide what more to add (mini games, friends visible in the plaza, events).
+3. [ ] **Chat and inbox**: room chat exists. Next: an inbox for rewards, news and friend messages (needs a database table), plus friend requests.
+4. [ ] **Character graphics**: 5 heroes (samurai, warrior, archer, elf, dwarf) built from simple shapes. Next: more detailed models and animation.
+5. [ ] **More heroes**: each new hero needs a look, a perk and speech lines. Send ideas.
+6. [ ] **Skins**: a skins shop already exists. Next: more skins, rarity, and skins for each hero.
+7. [ ] **Voice**: heroes speak with the phone's built-in voice (English + Kreyòl). Next: your rewritten lines (HERO-SPEECH.md), then recorded voices.
+8. [ ] **Language**: the game text is English only. Next: a language picker (e.g. Kreyòl, French, Spanish) with every screen translated.
+9. [ ] **Store**: coins and diamonds store with perks and skins exists. Next: a new layout, daily deals, bundles.
+10. [ ] **Battle pass**: not started. Seasons with free and premium reward tracks, filled by racing and challenges.
+11. [ ] **Payment method + purchasing**: real money. Needs a Stripe account (yours), a small server step on Supabase to confirm payments, and a refund/terms page. App stores later take their own cut and use their own billing.
+12. [ ] **Website**: a home page for the game (trailer, screenshots, Play button, privacy, contact). Can live on GitHub Pages for free; a custom domain (about $12/year) is optional.
