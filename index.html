@@ -658,7 +658,7 @@ tr.me td.pl{color:var(--gold)}
 .acct-email button{font-size:16px;padding:12px}
 .acct-sent{background:rgba(95,208,138,.12);border:1px solid var(--good);border-radius:10px;padding:10px 12px}
 .acct-msg{color:#ffb4a8;font-weight:600}
-.acct-row{display:flex;gap:8px;flex-wrap:wrap}.acct-danger{color:#ff9a8a}
+.acct-row{display:flex;gap:8px;flex-wrap:wrap}.acct-privacy{color:#9fd3ff;font-size:13px;justify-self:start}.acct-danger{color:#ff9a8a}
 .d3-acct.in{border-color:var(--good);box-shadow:0 0 0 3px rgba(95,208,138,.35)}
 #menu.over-plaza{background:linear-gradient(90deg,rgba(10,13,38,.55),rgba(10,13,38,.15) 60%,rgba(10,13,38,0))}
 /* phones: keep panels inside the screen and clear of the Claude app's top bar */
@@ -1038,6 +1038,7 @@ body:not(.touch) .pz-stick{opacity:.55}
       <div class="set-row set-row2"><span>Hide bad words</span><button class="set-tog" id="set_filter"></button></div>
       <div class="set-row set-row2"><span>Private messages from friends only</span><button class="set-tog" id="set_dmFriends"></button></div>
       <div class="set-row set-row2"><span>Account <small class="muted" style="display:block;font-weight:400">Sign in, save progress</small></span><button class="set-tog" id="setAcct">Open</button></div>
+      <div class="set-row set-row2"><span>Privacy policy</span><a class="set-tog" href="privacy.html" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">View</a></div>
       <div class="set-row set-row2"><span>Screen layout <small class="muted" style="display:block;font-weight:400">Move and resize buttons</small></span><button class="set-tog" id="setLayout">Edit</button></div>
       <p class="muted" id="setVoiceNote"></p>
       <button class="ghost" id="setTest">Test voice</button>
@@ -3486,7 +3487,7 @@ function renderAcct(){
     el('p','muted small','Other players see your runner name, never your email.');
     const row=el('div','acct-row');const so=document.createElement('button');so.className='ghost';so.textContent='Sign out';so.onclick=signOut;
     const del=document.createElement('button');del.className='ghost acct-danger';del.textContent='Delete my account';del.onclick=deleteAccount;row.append(so,del);
-    if(AUTH.msg)el('p','acct-msg',AUTH.msg);return;}
+    if(AUTH.msg)el('p','acct-msg',AUTH.msg);privacyLink(box);return;}
   if(AUTH.why)el('p','acct-why',AUTH.why);
   el('p','muted','Free without an account: Quick Race, solo races, the plaza, Survival and Flag Challenge. Sign in to play online, climb the worldwide leaderboards, join guilds and chat, and keep your progress on every device.');
   if(AUTH.google!==false){const g=el('button','acct-google');g.innerHTML='<span class="g-logo">G</span> Continue with Google';g.onclick=signInGoogle;
@@ -3498,7 +3499,9 @@ function renderAcct(){
   if(AUTH.msg)el('p','acct-msg',AUTH.msg);
   const guest=el('button','ghost acct-guest','Keep playing as a guest');guest.onclick=closeAcct;
   el('p','muted small','We only use your email to sign you in. Other players see your runner name, never your email. Progress you made as a guest is kept when you sign in for the first time.');
+  privacyLink(box);
 }
+function privacyLink(box){const a=document.createElement('a');a.href='privacy.html';a.target='_blank';a.rel='noopener';a.className='acct-privacy';a.textContent='Privacy policy';box.appendChild(a);}
 
 /* =========================================================
    HUD

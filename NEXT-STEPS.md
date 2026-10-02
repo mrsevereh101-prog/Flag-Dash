@@ -19,8 +19,9 @@ Supabase project: hzzqnwzsasuwjafmsgqh
    - Redirect URLs: add `https://mrsevereh101-prog.github.io/Flag-Dash/**`
 3. [ ] Google Cloud (project "Flag Dash") > Google Auth Platform
    - [x] Consent screen (Branding) set up
+   - [ ] Branding: home page, privacy policy link, authorized domains (mrsevereh101-prog.github.io, hzzqnwzsasuwjafmsgqh.supabase.co), developer email, Save
    - [ ] Audience > Publish app (so anyone can sign in, not just test users)
-   - [ ] Clients > Create client > Web application
+   - [x] Clients > Create client > Web application (replace the secret shown in chat with a new one)
      - Authorized JavaScript origin: `https://mrsevereh101-prog.github.io`
      - Authorized redirect URI: `https://hzzqnwzsasuwjafmsgqh.supabase.co/auth/v1/callback`
      - Save the Client ID and Client secret (download the JSON)
@@ -31,6 +32,6 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
 - [ ] Better hero graphics (more detailed models), when there's time
-- [ ] Privacy policy page + link on the sign-in screen (needed now that emails are collected)
+- [x] Privacy policy: https://mrsevereh101-prog.github.io/Flag-Dash/privacy.html (contact mr.severeh65@gmail.com)
 - [ ] Custom email sender (SMTP, e.g. Resend) before a wide launch; Supabase's built-in sender only allows a few emails an hour
 - [ ] Decide on screen-layout editing: keep for everyone (option 1), owner-only, or a built-in default layout
