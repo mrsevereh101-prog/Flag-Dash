@@ -101,7 +101,13 @@ body.layout-desk .lay-piece{outline-offset:1px}
 #deskWallet{cursor:pointer}#deskWallet:hover{border-color:#f7e3a3}
 .d3-store-top{border-color:#f7e3a3;background:radial-gradient(circle at 50% 35%,#f8e19a,#c9973a);color:#3a2706;box-shadow:0 0 0 3px rgba(233,196,106,.25),inset 0 1px 0 rgba(255,255,255,.5)}
 .desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
-.lv-badge{display:flex;align-items:center;gap:8px;margin:6px auto 0;width:min(100%,280px);font-size:12px;color:#f6e3a8;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.lv-card{--mw:520px;max-width:min(100%,520px);margin:6vh auto 0}
+.lv-list{display:grid;gap:6px;max-height:60vh;overflow:auto}
+.lv-row{display:flex;gap:10px;align-items:center;background:var(--night-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+.lv-row b{width:42px;color:#f6e3a8;font-variant-numeric:tabular-nums}.lv-row i{width:22px;height:22px;border-radius:6px;flex:none;border:1px solid rgba(255,255,255,.3)}
+.lv-row.got{opacity:.6}.lv-row.next{border-color:var(--gold);box-shadow:0 0 0 1px rgba(233,196,106,.4)}
+.shop-card.locked{opacity:.75}.price.lvl{color:#f6e3a8}.tier.t-lvl{background:rgba(233,196,106,.2);color:#f6e3a8}
+.lv-badge{cursor:pointer;display:flex;align-items:center;gap:8px;margin:6px auto 0;width:min(100%,280px);font-size:12px;color:#f6e3a8;text-shadow:0 1px 0 rgba(0,0,0,.4)}
 .lv-badge b{font-weight:800;white-space:nowrap}.lv-badge small{font-size:11px;color:#cfd7f5;white-space:nowrap;font-variant-numeric:tabular-nums}
 .lv-bar{flex:1;height:8px;border-radius:5px;background:rgba(8,18,60,.75);border:1px solid rgba(233,196,106,.6);overflow:hidden}
 .lv-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f2b631,#ffe08a)}
@@ -1112,6 +1118,13 @@ body:not(.touch) .pz-stick{opacity:.55}
   </div>
 </div>
 <div id="toast" role="status"></div>
+<div id="lvPanel" class="overlay" hidden>
+  <div class="store-card lv-card" role="dialog" aria-labelledby="lvTitle">
+    <div class="store-head"><h2 id="lvTitle">⭐ Level rewards</h2><button class="ghost" id="lvClose">Close</button></div>
+    <p class="muted" id="lvNow"></p>
+    <div class="lv-list" id="lvList"></div>
+  </div>
+</div>
 <div id="social" hidden>
   <div class="chat-card" role="dialog" aria-labelledby="socTitle">
     <div class="chat-top"><h2 id="socTitle">Friends</h2><button class="ghost" id="socClose">Close</button></div>
@@ -2458,7 +2471,8 @@ function makeRunner(e,idx,n,online){
   r.mods=kind==='local'?myMods():skinMods(skin.id);
   if(RACE.lo&&owned)r.lo=kind==='local'?{atk:wallet.lo.atk,def:wallet.lo.def,usedA:false,usedD:false}:{atk:pick(BOT_LOADOUT.atk),def:pick(BOT_LOADOUT.def),usedA:false,usedD:false};
   const gear=kind==='local'?myGear():(Array.isArray(e.gr)?e.gr.filter(id=>attireById(id)):[]);
-  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(e.bot?(e.nm?nm:flag.code):(e.gt?'['+e.gt+'] ':'')+nm)});
+  if(kind==='local')r.lv=myLevel();else if(e.bot){let h=0;for(const c of String(e.id)+flag.code)h=(h*31+c.charCodeAt(0))>>>0;r.lv=1+h%12;}else r.lv=clamp(e.lv|0,0,999)||null;
+  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(r.lv?'Lv'+r.lv+' ':'')+(e.bot?(e.nm?nm:flag.code):(e.gt?'['+e.gt+'] ':'')+nm)});
   scene.add(r.m.root);
   return r;
 }
@@ -3350,7 +3364,7 @@ function placeModel(r,dt,now){
 const NET={ns:null,status:'checking',game:null,code:null,isHost:false,myPeer:null,seq:0,acts:[],lastSeq:new Map(),goId:null,cfg:{trk:'stadium',mode:'solo',bots:true},me:{rdy:false,tm:0},sendT:0,joinedAt:0,conn:false,seen:new Map(),resultsSig:''};
 const LOCAL_TEST=!(window.claude&&window.claude.use)&&(location.protocol==='file:'||/^(localhost|127\.0\.0\.1)$/.test(location.hostname));
 function pushPresence(patch){if(NET.game)NET.game.presence(patch).catch(()=>{});}
-function lobbyFields(){return {v:2,uid:myUid(),gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
+function lobbyFields(){return {v:2,uid:myUid(),lv:myLevel(),gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,rc:NET.code,nm:myName,cc:selCountry,ch:selChar,sk:mySkinId(),gr:myGear(),tm:NET.me.tm,rdy:NET.me.rdy,h:NET.isHost,cfg:NET.isHost?NET.cfg:null};}
 function syncLobbyPresence(){if(NET.game)pushPresence(lobbyFields());}
 const CODE_CHARS='ABCDEFGHJKLMNPQRSTUVWXYZ';
 const genCode=()=>Array.from({length:4},()=>CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)]).join('');
@@ -3423,7 +3437,7 @@ function handlePeer(peer,pr){
 function onGo(go){
   NET.goId=String(go.id);
   if(!Array.isArray(go.roster)||!go.roster.length)return;
-  const roster=go.roster.slice(0,8).map(e=>({id:String(e.id||''),peer:e.peer?String(e.peer):null,bot:!!e.bot,nm:cleanName(e.nm),cc:COUNTRY_CODES.has(e.cc)?e.cc:'USA',ch:CHAR_IDS.includes(e.ch)?e.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===e.sk)?e.sk:'classic',gr:Array.isArray(e.gr)?e.gr.slice(0,2):[],gt:cleanTag(e.gt),tm:clamp(e.tm|0,0,2),uid:validUid(e.uid)?e.uid:null}));
+  const roster=go.roster.slice(0,8).map(e=>({id:String(e.id||''),peer:e.peer?String(e.peer):null,bot:!!e.bot,nm:cleanName(e.nm),cc:COUNTRY_CODES.has(e.cc)?e.cc:'USA',ch:CHAR_IDS.includes(e.ch)?e.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===e.sk)?e.sk:'classic',gr:Array.isArray(e.gr)?e.gr.slice(0,2):[],gt:cleanTag(e.gt),tm:clamp(e.tm|0,0,2),uid:validUid(e.uid)?e.uid:null,lv:clamp(e.lv|0,0,999)}));
   if(!roster.some(e=>e.peer===NET.myPeer)){$('lobbyHint').textContent='A race started without you. You will be in the next one.';return;}
   startRaceFromGo({id:go.id,seed:go.seed,trk:go.trk,mode:go.mode,fc:!!go.fc,laps:go.laps,lo:go.lo!==false,tn:go.tn,gb:!!go.gb,roster},true);
 }
@@ -3431,7 +3445,7 @@ function hostStart(){
   if(!NET.isHost||!NET.game)return;
   const fc=NET.cfg.mode==='fc',mode=fc?'solo':NET.cfg.mode;
   const ps=gamePeers().slice(0,8);
-  const roster=ps.map(p=>({id:'p:'+p.peer,peer:p.peer,nm:cleanName(p.presence.nm),cc:COUNTRY_CODES.has(p.presence.cc)?p.presence.cc:'USA',ch:CHAR_IDS.includes(p.presence.ch)?p.presence.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===p.presence.sk)?p.presence.sk:'classic',gr:Array.isArray(p.presence.gr)?p.presence.gr.slice(0,2):[],gt:cleanTag(p.presence.gt),gid:typeof p.presence.gid==='string'?p.presence.gid.slice(0,16):null,tm:clamp(p.presence.tm|0,0,2),uid:validUid(p.presence.uid)?p.presence.uid:null}));
+  const roster=ps.map(p=>({id:'p:'+p.peer,peer:p.peer,nm:cleanName(p.presence.nm),cc:COUNTRY_CODES.has(p.presence.cc)?p.presence.cc:'USA',ch:CHAR_IDS.includes(p.presence.ch)?p.presence.ch:'samurai',sk:SKINS_SHOP.some(s=>s.id===p.presence.sk)?p.presence.sk:'classic',gr:Array.isArray(p.presence.gr)?p.presence.gr.slice(0,2):[],gt:cleanTag(p.presence.gt),gid:typeof p.presence.gid==='string'?p.presence.gid.slice(0,16):null,tm:clamp(p.presence.tm|0,0,2),uid:validUid(p.presence.uid)?p.presence.uid:null,lv:clamp(p.presence.lv|0,1,999)}));
   let tn=null;
   if(NET.cfg.gb&&isTeamMode(mode)){const nT=teamCount(mode);const cnt=new Map();roster.forEach(e=>{if(e.gid)cnt.set(e.gid,(cnt.get(e.gid)||0)+1);});
     const top=[...cnt.entries()].sort((a,b)=>b[1]-a[1]).slice(0,nT).map(x=>x[0]);tn=[];
@@ -3693,7 +3707,7 @@ function showResults(){
   if(!pb||player.time<pb){store.set(key,String(player.time));$('resPB').innerHTML=pb?`New personal best on ${TH.name}: <b>${fmt(player.time)}</b> (was ${fmt(pb)})`:`Personal best set on ${TH.name}: <b>${fmt(player.time)}</b>`;}
   else $('resPB').innerHTML=`Your time <b>${fmt(player.time)}</b> · Personal best on ${TH.name} ${fmt(pb)}`;
   const place=resultRows().findIndex(x=>x.r.kind==='local')+1,rw=grantRaceRewards(place);
-  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Level up! You reached level ${rw.lv.to} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}`:''}</div>`:''}`;
+  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Level up! You reached level ${rw.lv.to} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}${rw.lv.unlocked&&rw.lv.unlocked.length?'. Unlocked in the store: '+rw.lv.unlocked.join(', '):''}`:''}</div>`:''}`;
   {const notes=evaluateRace(place);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
@@ -3748,16 +3762,16 @@ const SKINS_SHOP=[
   {id:'gold',name:'Royal Gold',tier:'gem',cost:8,desc:'Solid gold, with a sparkling trail.',buff:{coin:0.15},tint:0xf2c14a,amt:0.65,emissive:0x3a2a00,trail:[1,0.85,0.3],sw:'linear-gradient(135deg,#fff1b0,#d89a1a)'},
   {id:'neon',name:'Neon',tier:'gem',cost:12,desc:'Glowing cyan with a light trail.',buff:{spd:0.03},tint:0x22e0ff,amt:0.5,emissive:0x0a4a5a,trail:[0.3,1,1],sw:'linear-gradient(135deg,#6ffcff,#ff4fa3)'},
   {id:'inferno',name:'Inferno',tier:'usd',usd:'$3.99',desc:'Molten armour and a trail of fire.',buff:{spd:0.03,chg:0.08},tint:0xff5a1a,amt:0.6,emissive:0x5a1400,trail:[1,0.45,0.1],sw:'linear-gradient(135deg,#ffd24a,#ff4a1a 55%,#5a0a00)'},
-  {id:'oni',hero:'samurai',name:'Oni Shogun',tier:'free',desc:'Black lacquer armour, blood-red cords and gold horns. Embers follow every step.',pal:[0x0c0a0c,0xa8141c,0xf0c24a],amt:0.82,emissive:0x3a0604,trail:[1,0.35,0.1],aura:[1,0.3,0.15],sw:'linear-gradient(135deg,#f0c24a,#a8141c 45%,#0c0a0c)'},
-  {id:'sakura',hero:'samurai',name:'Sakura Ronin',tier:'free',desc:'Pearl-white armour with cherry-blossom pink. Petals drift behind you.',pal:[0x6a5a66,0xf4f0f4,0xff8cc0],amt:0.8,emissive:0x2a0a1a,trail:[1,0.6,0.8],aura:[1,0.7,0.85],sw:'linear-gradient(135deg,#ffffff,#ffb3d6 55%,#ff5ca8)'},
-  {id:'stormlord',hero:'warrior',name:'Storm Lord',tier:'free',desc:'Midnight steel crackling with electric blue. Sparks trail your run.',pal:[0x0a1030,0x1e5aff,0xd8e8ff],amt:0.82,emissive:0x0a1a5a,trail:[0.5,0.8,1],aura:[0.6,0.85,1],sw:'linear-gradient(135deg,#d8e8ff,#1e5aff 50%,#0a1030)'},
-  {id:'titan',hero:'warrior',name:'Golden Titan',tier:'free',desc:'Polished bronze and blazing gold, like a statue come to life.',pal:[0x5a3410,0xd89a2a,0xfff2b8],amt:0.85,emissive:0x3a2200,trail:[1,0.85,0.35],aura:[1,0.9,0.4],sw:'linear-gradient(135deg,#fff2b8,#d89a2a 50%,#5a3410)'},
-  {id:'shadowranger',hero:'archer',name:'Shadow Ranger',tier:'free',desc:'Charcoal hood and forest leathers with a ghostly teal glow.',pal:[0x0e1210,0x234a32,0x4affd0],amt:0.82,emissive:0x04302a,trail:[0.3,1,0.85],aura:[0.35,1,0.85],sw:'linear-gradient(135deg,#4affd0,#234a32 50%,#0e1210)'},
-  {id:'phoenix',hero:'archer',name:'Phoenix Hunter',tier:'free',desc:'Crimson and flame orange with golden feathers. Leaves fire in the air.',pal:[0x5a0a0a,0xff5a14,0xffd24a],amt:0.84,emissive:0x5a1400,trail:[1,0.5,0.1],aura:[1,0.6,0.15],sw:'linear-gradient(135deg,#ffd24a,#ff5a14 50%,#5a0a0a)'},
-  {id:'moonblade',hero:'elf',name:'Moonblade',tier:'free',desc:'Midnight silks and silver, glowing soft lavender under the moon.',pal:[0x12102a,0x8a86c8,0xeef0ff],amt:0.8,emissive:0x1a1450,trail:[0.8,0.75,1],aura:[0.8,0.75,1],sw:'linear-gradient(135deg,#eef0ff,#8a86c8 50%,#12102a)'},
-  {id:'ancientoak',hero:'elf',name:'Ancient Oak',tier:'free',desc:'Living bark and moss with glowing green runes. Leaves swirl around you.',pal:[0x2e1c0e,0x3f7a2a,0x9cff5a],amt:0.82,emissive:0x163a08,trail:[0.6,1,0.35],aura:[0.6,1,0.4],sw:'linear-gradient(135deg,#9cff5a,#3f7a2a 50%,#2e1c0e)'},
-  {id:'forgeking',hero:'dwarf',name:'Forge King',tier:'free',desc:'Black iron plates glowing with molten orange seams and a gold crown trim.',pal:[0x161414,0x2e2a28,0xff7a1a],amt:0.85,emissive:0x5a1a00,trail:[1,0.45,0.1],aura:[1,0.5,0.15],sw:'linear-gradient(135deg,#ff7a1a,#2e2a28 50%,#161414)'},
-  {id:'frostgiant',hero:'dwarf',name:'Frost Giant',tier:'free',desc:'Glacier-blue steel and white fur. Snowflakes fall wherever you run.',pal:[0x1a2a40,0x7ac8f0,0xf4fbff],amt:0.82,emissive:0x0a2a4a,trail:[0.8,0.95,1],aura:[0.85,0.95,1],sw:'linear-gradient(135deg,#f4fbff,#7ac8f0 50%,#1a2a40)'},
+  {id:'oni',lvl:2,hero:'samurai',name:'Oni Shogun',tier:'free',desc:'Black lacquer armour, blood-red cords and gold horns. Embers follow every step.',pal:[0x0c0a0c,0xa8141c,0xf0c24a],amt:0.82,emissive:0x3a0604,trail:[1,0.35,0.1],aura:[1,0.3,0.15],sw:'linear-gradient(135deg,#f0c24a,#a8141c 45%,#0c0a0c)'},
+  {id:'sakura',lvl:8,hero:'samurai',name:'Sakura Ronin',tier:'free',desc:'Pearl-white armour with cherry-blossom pink. Petals drift behind you.',pal:[0x6a5a66,0xf4f0f4,0xff8cc0],amt:0.8,emissive:0x2a0a1a,trail:[1,0.6,0.8],aura:[1,0.7,0.85],sw:'linear-gradient(135deg,#ffffff,#ffb3d6 55%,#ff5ca8)'},
+  {id:'stormlord',lvl:3,hero:'warrior',name:'Storm Lord',tier:'free',desc:'Midnight steel crackling with electric blue. Sparks trail your run.',pal:[0x0a1030,0x1e5aff,0xd8e8ff],amt:0.82,emissive:0x0a1a5a,trail:[0.5,0.8,1],aura:[0.6,0.85,1],sw:'linear-gradient(135deg,#d8e8ff,#1e5aff 50%,#0a1030)'},
+  {id:'titan',lvl:10,hero:'warrior',name:'Golden Titan',tier:'free',desc:'Polished bronze and blazing gold, like a statue come to life.',pal:[0x5a3410,0xd89a2a,0xfff2b8],amt:0.85,emissive:0x3a2200,trail:[1,0.85,0.35],aura:[1,0.9,0.4],sw:'linear-gradient(135deg,#fff2b8,#d89a2a 50%,#5a3410)'},
+  {id:'shadowranger',lvl:4,hero:'archer',name:'Shadow Ranger',tier:'free',desc:'Charcoal hood and forest leathers with a ghostly teal glow.',pal:[0x0e1210,0x234a32,0x4affd0],amt:0.82,emissive:0x04302a,trail:[0.3,1,0.85],aura:[0.35,1,0.85],sw:'linear-gradient(135deg,#4affd0,#234a32 50%,#0e1210)'},
+  {id:'phoenix',lvl:12,hero:'archer',name:'Phoenix Hunter',tier:'free',desc:'Crimson and flame orange with golden feathers. Leaves fire in the air.',pal:[0x5a0a0a,0xff5a14,0xffd24a],amt:0.84,emissive:0x5a1400,trail:[1,0.5,0.1],aura:[1,0.6,0.15],sw:'linear-gradient(135deg,#ffd24a,#ff5a14 50%,#5a0a0a)'},
+  {id:'moonblade',lvl:5,hero:'elf',name:'Moonblade',tier:'free',desc:'Midnight silks and silver, glowing soft lavender under the moon.',pal:[0x12102a,0x8a86c8,0xeef0ff],amt:0.8,emissive:0x1a1450,trail:[0.8,0.75,1],aura:[0.8,0.75,1],sw:'linear-gradient(135deg,#eef0ff,#8a86c8 50%,#12102a)'},
+  {id:'ancientoak',lvl:14,hero:'elf',name:'Ancient Oak',tier:'free',desc:'Living bark and moss with glowing green runes. Leaves swirl around you.',pal:[0x2e1c0e,0x3f7a2a,0x9cff5a],amt:0.82,emissive:0x163a08,trail:[0.6,1,0.35],aura:[0.6,1,0.4],sw:'linear-gradient(135deg,#9cff5a,#3f7a2a 50%,#2e1c0e)'},
+  {id:'forgeking',lvl:6,hero:'dwarf',name:'Forge King',tier:'free',desc:'Black iron plates glowing with molten orange seams and a gold crown trim.',pal:[0x161414,0x2e2a28,0xff7a1a],amt:0.85,emissive:0x5a1a00,trail:[1,0.45,0.1],aura:[1,0.5,0.15],sw:'linear-gradient(135deg,#ff7a1a,#2e2a28 50%,#161414)'},
+  {id:'frostgiant',lvl:16,hero:'dwarf',name:'Frost Giant',tier:'free',desc:'Glacier-blue steel and white fur. Snowflakes fall wherever you run.',pal:[0x1a2a40,0x7ac8f0,0xf4fbff],amt:0.82,emissive:0x0a2a4a,trail:[0.8,0.95,1],aura:[0.85,0.95,1],sw:'linear-gradient(135deg,#f4fbff,#7ac8f0 50%,#1a2a40)'},
   {id:'celestial',name:'Celestial',tier:'usd',usd:'$4.99',desc:'Night-sky armour that leaves stars behind.',buff:{spd:0.03,stun:0.15},tint:0x3a3aa8,amt:0.6,emissive:0x1a1a5a,trail:[0.8,0.8,1],sw:'linear-gradient(135deg,#1a1a5a,#6a5ae8 55%,#fff3b0)'},
 ];
 // Attire lasts 7 days from purchase. Equipped pieces give their full buff; pieces you own but aren't wearing give 10%.
@@ -3834,7 +3848,9 @@ function spend(cost,cur){if(!canAfford(cost,cur))return false;if(cur==='gem')wal
 let storeTab='items';
 function openStore(){closePicker();$('store').hidden=false;renderStore();$('storeClose').focus();markFreeSeen();}
 // Red dot on the store buttons while there are free items the player hasn't looked at yet. Opening the store clears it.
-function freeIds(){return [...SKINS_SHOP,...ATTIRE,...LOADOUT].filter(i=>i.tier==='free'&&i.id!=='classic').map(i=>i.id);}
+const myLevel=()=>levelOf(loadJSON('flagdash-xp',{xp:0}).xp).L;
+const lvLocked=it=>!!(it&&it.lvl&&myLevel()<it.lvl&&!(wallet.skins||[]).includes(it.id));
+function freeIds(){return [...SKINS_SHOP,...ATTIRE,...LOADOUT].filter(i=>i.tier==='free'&&i.id!=='classic'&&!lvLocked(i)).map(i=>i.id);}
 function freeUnseen(){let seen=[];try{seen=JSON.parse(store.get('flagdash-freeseen')||'[]');}catch(e){}return freeIds().filter(id=>!seen.includes(id));}
 function renderStoreDot(){const on=freeUnseen().length>0;['deskStore','pzStore','d3Store','storeBtn'].forEach(id=>{const b=$(id);if(b){b.classList.toggle('has-dot',on);b.setAttribute('aria-label',on?'Store, free items waiting':'Store');}});}
 function markFreeSeen(){store.set('flagdash-freeseen',JSON.stringify(freeIds()));renderStoreDot();}
@@ -3842,7 +3858,7 @@ const STORE_NOTE={items:'Pick one attack and one defence before each race. Each 
   skins:'⚔️ Hero skins are free, two for each hero: equipping one switches you to that hero. Other skins work on every runner and are yours to keep; some give a bonus while you wear them.',
   attire:`Attire lasts ${ATTIRE_DAYS} days from purchase. Wear one piece per slot for its full bonus. Pieces you own but aren't wearing still give 10% of their bonus.`,
   buffs:'Each buff lasts one race.'};
-function priceTag(it){if(it.tier==='free')return '<span class="price">Free</span>';if(it.tier==='usd')return `<span class="price usd">${it.usd}</span>`;return priceHTML(it.cost,curOf(it));}
+function priceTag(it){if(lvLocked(it))return `<span class="price lvl">🔒 Level ${it.lvl}</span>`;if(it.tier==='free')return it.lvl?'<span class="price">Unlocked</span>':'<span class="price">Free</span>';if(it.tier==='usd')return `<span class="price usd">${it.usd}</span>`;return priceHTML(it.cost,curOf(it));}
 // Buy button for any store item; usd items stay locked because no payment provider is connected.
 function buyButton(btn,it,label,onBuy){
   if(it.tier==='usd'){btn.textContent='Coming soon';btn.disabled=true;btn.title='Real-money checkout is not connected yet';return;}
@@ -3851,7 +3867,7 @@ function buyButton(btn,it,label,onBuy){
   btn.onclick=()=>{if(!spend(it.cost,curOf(it)))return;onBuy();sfx.pick();renderStore();};
 }
 function shopCard(it,top,body,btnCls){const card=document.createElement('div');card.className='shop-card';
-  card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier t-${it.tier}">${TIERS.find(t=>t.id===it.tier).name}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
+  card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier t-${it.lvl?'lvl':it.tier}">${it.lvl?'Level '+it.lvl+' reward':TIERS.find(t=>t.id===it.tier).name}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
   card.querySelector('.shop-name').textContent=(it.icon?it.icon+' ':'')+it.name;card.querySelector('.shop-desc').textContent=it.desc;return card;}
 function renderStore(){
   pruneAttire();renderWallet();$('storeTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===storeTab));
@@ -3891,14 +3907,15 @@ $('perkStore').onclick=()=>openStore();
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&pickOpen&&state==='menu')closePicker();if(e.key==='Escape'&&!$('settings').hidden){closeSettings();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('hub').hidden){closeHub();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('chat').hidden){closeChat();e.stopImmediatePropagation();}},true);
 function equipSkin(s){if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
 function skinCard(s){
-  const owned=wallet.skins.includes(s.id)||s.tier==='free',eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
+  const locked=lvLocked(s),owned=wallet.skins.includes(s.id)||(s.tier==='free'&&!locked),eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
   const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
+  else if(locked){btn.textContent=`Reach level ${s.lvl}`;btn.disabled=true;card.classList.add('locked');}
   else if(owned||s.tier==='free'){btn.textContent='Equip';btn.onclick=()=>{if(!wallet.skins.includes(s.id))wallet.skins.push(s.id);equipSkin(s);saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
   else buyButton(btn,s,'Buy',()=>{wallet.skins.push(s.id);equipSkin(s);saveWallet();rebuildPreview('dance');syncLobbyPresence();});
   if(owned&&!s.hero)card.querySelector('.shop-row .price').outerHTML='<span class="owned">Owned</span>';
-  if(s.hero){const t=document.createElement('div');t.className='hero-tag';t.textContent='⚔️ '+charById(s.hero).name+' skin · free';card.querySelector('.shop-desc').before(t);const pr=card.querySelector('.shop-row .price');if(pr)pr.outerHTML='<span class="owned">Free</span>';card.classList.add('hero-skin');}
+  if(s.hero){const t=document.createElement('div');t.className='hero-tag';t.textContent='⚔️ '+charById(s.hero).name+' skin'+(s.lvl?(locked?` · unlocks at level ${s.lvl}`:' · unlocked'):' · free');card.querySelector('.shop-desc').before(t);const pr=card.querySelector('.shop-row .price');if(pr)pr.outerHTML=locked?`<span class="price lvl">🔒 Level ${s.lvl}</span>`:'<span class="owned">'+(s.lvl?'Unlocked':'Free')+'</span>';card.classList.add('hero-skin');}
   return card;
 }
 function itemCard(l){
@@ -4009,7 +4026,15 @@ function addXP(n){
   n=Math.max(0,Math.round(n||0));XPS=loadJSON('flagdash-xp',{xp:0});const from=levelOf(XPS.xp).L;XPS.xp=(XPS.xp|0)+n;saveJSON('flagdash-xp',XPS);const to=levelOf(XPS.xp).L;
   let c=0,g=0;for(let L=from+1;L<=to;L++){const r=levelReward(L);c+=r.c;g+=r.g;}
   if(c||g){wallet.coins+=c;wallet.gems+=g;saveWallet();}
-  renderLevel();return {xp:n,from,to,c,g};}
+  const unlocked=SKINS_SHOP.filter(it=>it.lvl&&it.lvl>from&&it.lvl<=to).map(it=>it.name);
+  renderLevel();if(unlocked.length&&typeof renderStoreDot==='function')renderStoreDot();return {xp:n,from,to,c,g,unlocked};}
+function openLevels(){const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);$('lvNow').textContent=`You are level ${l.L}: ${l.into} of ${l.need} XP to level ${l.L+1}. Earn XP by finishing races (more for higher places) and by hitting rivals (+10, or +15 with your power).`;
+  const box=$('lvList');box.innerHTML='';for(let L=2;L<=20;L++){const r=levelReward(L),sk=SKINS_SHOP.find(it=>it.lvl===L);const row=document.createElement('div');row.className='lv-row'+(l.L>=L?' got':'')+(l.L+1===L?' next':'');
+    const n=document.createElement('b');n.textContent=l.L>=L?'✓ '+L:String(L);const d=document.createElement('span');d.textContent=`${r.c} coins · ${r.g} diamond${r.g>1?'s':''}`+(sk?` · ${sk.name} skin (${charById(sk.hero).name})`:'');
+    if(sk){const sw=document.createElement('i');sw.style.background=sk.sw;row.append(n,sw,d);}else row.append(n,d);box.appendChild(row);}
+  $('lvPanel').hidden=false;}
+$('lvClose').onclick=()=>$('lvPanel').hidden=true;$('lvPanel').addEventListener('click',e=>{if(e.target.id==='lvPanel')$('lvPanel').hidden=true;});
+$('lvBadge').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openLevels();});
 function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);
   el.querySelector('b').textContent='Lv '+l.L;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=`${l.into}/${l.need} XP`;}
 // Called by hit() whenever a rival lands a hit. The victim's game takes the loot away;
@@ -4739,7 +4764,7 @@ function renderRoster(){
   if(ROSTER.compose){L.appendChild(buildCompose(ROSTER.compose,()=>{ROSTER.compose=null;renderRoster();}));return;}
   const rs=runners.slice().sort((a,b)=>(a.place||9)-(b.place||9));let humans=0;
   rs.forEach(r=>{const row=mk('div','ros-row'+(r.kind==='local'?' me':''));row.append(mk('b','ros-pl',String(r.place||'')),flagImg(r.flag&&r.flag.code||'USA'));
-    const mid=mk('div','soc-mid');mid.append(mk('span',null,(r.gt?`[${r.gt}] `:'')+(r.nm||(r.flag&&r.flag.name)||'Runner')),mk('small',null,r.kind==='local'?'You':r.kind==='bot'?'CPU runner':'Player'));row.appendChild(mid);
+    const mid=mk('div','soc-mid');mid.append(mk('span',null,(r.gt?`[${r.gt}] `:'')+(r.nm||(r.flag&&r.flag.name)||'Runner')),mk('small',null,(r.kind==='local'?'You':r.kind==='bot'?'CPU runner':'Player')+(r.lv?` · Lv ${r.lv}`:'')));row.appendChild(mid);
     if(r.kind==='remote'){humans++;
       if(validUid(r.uid)&&socOn()&&r.uid!==myUid()){const nm=r.nm||'Runner',cc=r.flag&&r.flag.code||'USA';
         const m=btn('✉️','ghost',()=>{ROSTER.compose={uid:r.uid,nm,cc};renderRoster();});m.setAttribute('aria-label','Message '+nm);row.appendChild(m);
@@ -4881,7 +4906,7 @@ function renderLobby(){
   ps.forEach(p=>{const pr=p.presence;const li=document.createElement('li');if(isTeamMode(mode))li.className='t'+clamp(pr.tm|0,0,teamCount(mode)-1);
     const im=document.createElement('img');im.alt='';im.src=flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').url;
     const mid=document.createElement('div');const n=document.createElement('div');n.className='pl-name';n.textContent=(cleanTag(pr.gt)?'['+cleanTag(pr.gt)+'] ':'')+(cleanName(pr.nm)||'Runner');
-    const sub=document.createElement('div');sub.className='pl-sub';sub.textContent=`${flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').name} · ${charById(pr.ch).name}`+(isTeamMode(mode)?` · ${TEAMS[clamp(pr.tm|0,0,teamCount(mode)-1)].name}`:'');mid.append(n,sub);
+    const sub=document.createElement('div');sub.className='pl-sub';sub.textContent=(pr.lv?`Lv ${clamp(pr.lv|0,1,999)} · `:'')+`${flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').name} · ${charById(pr.ch).name}`+(isTeamMode(mode)?` · ${TEAMS[clamp(pr.tm|0,0,teamCount(mode)-1)].name}`:'');mid.append(n,sub);
     const bd=document.createElement('div');bd.className='badges';const add=(t,c)=>{const s=document.createElement('span');s.className='badge '+c;s.textContent=t;bd.appendChild(s);};
     if(p.sameTab)add('You','you');if(pr.h)add('Host','host');else if(pr.rdy)add('Ready','ready');
     li.append(im,mid,bd);list.appendChild(li);});
@@ -5635,6 +5660,7 @@ function celebrate(rows,place,rw,done){
   if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
   if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
   if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`Level ${rw.lv.to}! +${rw.lv.c} coins`:'Experience'});
+  if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',v:rw.lv.unlocked[0],l:'New skin unlocked'});
   const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
   $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
   const win=rows[0]?rows[0].r:null,winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
