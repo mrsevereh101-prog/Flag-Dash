@@ -2322,7 +2322,19 @@ function renderPreview(dt,now){
   if(w!==pv.w||h!==pv.h){pv.w=w;pv.h=h;pv.r.setSize(w,h,false);pv.cam.aspect=w/h;pv.cam.updateProjectionMatrix();}
   pv.autoT-=dt;if(pv.autoT<=0&&!pv.runner.emote){pv.runner.emote={id:pick(EMOTES),t:1.8};pv.autoT=rand(4,7);}
   if(!pv.drag)pv.rotY+=((pv.base||0)+Math.sin(now/2600)*(pv.base==null?0.5:0.12)-pv.rotY)*Math.min(1,dt*0.8);
-  pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);pv.r.render(pv.scene,pv.cam);
+  pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);fitPreview(w,h,dt);pv.r.render(pv.scene,pv.cam);
+}
+// While a picker is open it covers part of the preview, so zoom out and slide the runner
+// into the space that is still visible, keeping the whole body (and flag) on screen.
+function fitPreview(w,h,dt){
+  let vx=0,vy=0,vw=1,vh=1;
+  if(pickOpen){const cr=pvCanvas.getBoundingClientRect(),pr=$('picker').getBoundingClientRect();
+    if(pr.top>cr.top+60&&pr.top<cr.bottom-10&&pr.left<=cr.left+10)vh=(pr.top-cr.top)/cr.height;
+    else if(pr.left>cr.left+60&&pr.left<cr.right-10)vw=(pr.left-cr.left)/cr.width;}
+  const dist=4.6,need=(pickOpen?2.9:0)/Math.max(0.2,vh),fov=pickOpen?Math.min(70,Math.max(30,2*Math.atan(need/2/dist)*180/Math.PI)):30;
+  const t=Math.min(1,dt*7);pv.fit=pv.fit||{fov:30,ox:0,oy:0};const F=pv.fit;
+  F.fov+=(fov-F.fov)*t;F.ox+=((0.5-vw/2)*w-F.ox)*t;F.oy+=((0.5-vh/2)*h+(pickOpen?-0.04*vh*h:0)-F.oy)*t;
+  pv.cam.fov=F.fov;if(Math.abs(F.ox)>0.5||Math.abs(F.oy)>0.5)pv.cam.setViewOffset(w,h,F.ox,F.oy,w,h);else pv.cam.clearViewOffset();pv.cam.updateProjectionMatrix();
 }
 
 /* =========================================================
