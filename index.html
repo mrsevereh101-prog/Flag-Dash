@@ -5571,7 +5571,7 @@ function celebrate(rows,place,rw,done){
   if(CEL.open){CEL.done=done;return;}
   CEL.open=true;CEL.done=done;CEL.timers.forEach(clearTimeout);CEL.timers=[];
   const ov=$('celebrate'),teams=RACE&&isTeamMode(RACE.mode);
-  ov.classList.toggle('cosmic',place>=1&&place<=3);
+  ov.classList.add('cosmic');
   const nm=r=>r.nm||(r.flag&&r.flag.name)||'Runner';
   $('celEyebrow').textContent=`🏁 Race complete · ${TH.name}`+(GP&&RACE&&RACE.gp?` · Grand Prix ${GP.round+1}/${GP.tracks.length}`:'');
   const t=$('celTitle');t.textContent='And the winner is…';t.classList.remove('win');
