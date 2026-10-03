@@ -101,6 +101,10 @@ body.layout-desk .lay-piece{outline-offset:1px}
 #deskWallet{cursor:pointer}#deskWallet:hover{border-color:#f7e3a3}
 .d3-store-top{border-color:#f7e3a3;background:radial-gradient(circle at 50% 35%,#f8e19a,#c9973a);color:#3a2706;box-shadow:0 0 0 3px rgba(233,196,106,.25),inset 0 1px 0 rgba(255,255,255,.5)}
 .desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
+.lv-badge{display:flex;align-items:center;gap:8px;margin:6px auto 0;width:min(100%,280px);font-size:12px;color:#f6e3a8;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+.lv-badge b{font-weight:800;white-space:nowrap}.lv-badge small{font-size:11px;color:#cfd7f5;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lv-bar{flex:1;height:8px;border-radius:5px;background:rgba(8,18,60,.75);border:1px solid rgba(233,196,106,.6);overflow:hidden}
+.lv-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f2b631,#ffe08a)}
 .desk3 .d3-name input{text-align:center;font-size:20px;font-weight:700;color:#f3ead0;border-radius:14px;padding:10px 14px;background:linear-gradient(180deg,rgba(44,76,180,.85),rgba(16,34,104,.9));border:2px solid rgba(233,196,106,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
 .d3-stage{position:relative;min-height:clamp(300px,52vh,480px)}
 .desk3 .preview-wrap{position:absolute;inset:0;margin:0;border:0;background:transparent}
@@ -882,7 +886,7 @@ body:not(.touch) .pz-stick{opacity:.55}
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
-      <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"></label>
+      <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"><span class="lv-badge" id="lvBadge" title="Your level. Earn XP by finishing races and hitting rivals."><b>Lv 1</b><span class="lv-bar"><i></i></span><small></small></span></label>
       <section class="d3-stage" id="playPanel" aria-label="Race Desk">
         <div class="preview-wrap"><canvas id="preview" aria-label="3D preview of your runner"></canvas>
           <button class="d3-arrow d3-l" id="pvLeft" aria-label="Previous runner">◀</button><span class="d3-rname" id="pvName" aria-live="polite"></span><button class="d3-arrow d3-r" id="pvRight" aria-label="Next runner">▶</button>
@@ -2592,7 +2596,7 @@ function showSurvivalResults(){
   else $('resPB').innerHTML=`Score <b>${score}</b> · Best on ${TH.name}: ${best}`;
   if(!RACE.rewarded){RACE.rewarded=true;
     const cm=(player.mods&&player.mods.coin)||0,base=RACE.coins+sv.wave*12+Math.floor(player.time/10)*3,extra=Math.round(base*cm),coinsWon=base+extra,gemsWon=RACE.gems+(sv.wave>=6?1:0)+(sv.wave>=12?1:0);
-    wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();RACE.reward={coinsWon,gemsWon,extra};}
+    wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();RACE.reward={coinsWon,gemsWon,extra,lv:addXP(10+sv.wave*5)};}
   const rw=RACE.reward;
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${sv.wave} wave${sv.wave>1?'s':''} reached, ${sv.dodged} zombies dodged${rw.extra?`, ${rw.extra} from coin bonuses`:''}${RACE.gems?', '+RACE.gems+' diamond'+(RACE.gems>1?'s':'')+' found':''})</span>`;
   $('againBtn').textContent='Survive again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';
@@ -2928,6 +2932,7 @@ function handleAct(src,a){
     case 'say':{if(typeof a.k==='string'&&SAY_KINDS.has(a.k))showSay(src,a.k,a.i|0);break;}
     case 'emo':{if(EMOTES.includes(a.e))src.emote={id:a.e,t:1.8};break;}
     case 'la':case 'ld':{if(RACE&&RACE.lo&&loById(a.k))handleLoadAct(src,a);break;}
+    case 'loot':{const by=runnerById(a.by);if(by===player&&src!==player)gainLoot(src,!!a.p,a.g?1:0);break;}
     case 'ouch':{const by=runnerById(a.by);if(by===player&&src!==player){if(a.res!=='blk')raceStat('hits');feed(a.res==='blk'?`${src.nm}'s shield blocked it`:a.res==='frz'?`You froze ${src.nm}`:`You hit ${src.nm}`,a.res==='blk'?'':'good');}break;}
   }
 }
@@ -2953,6 +2958,7 @@ function hit(o,dur,src,kind,why,quiet){
   const p=wpos(o,2.1);burst(p.x,p.y,p.z,10,[1,0.9,0.3],{add:true,max:3,up:3,grav:4,size:0.22});
   if(o.kind==='local'){raceStat('hurt');if(!reduceMotion)shake=0.45;sfx.hit();feed(why||'You got hit','bad');}
   if(!quiet)notifyAttacker(src,o,'hit');
+  lootHit(src,o,!!quiet);
   if(why==='Slipped on a banana'){speak(o,'banana');if(src&&src!==o)speak(src,'hit');}
   else if(src&&src!==o){if(!quiet)sayHit(src,o);else if(o===player||Math.random()<0.35)speak(o,'hurt',0.6);}
   return true;
@@ -3675,7 +3681,7 @@ function showResults(){
   if(!pb||player.time<pb){store.set(key,String(player.time));$('resPB').innerHTML=pb?`New personal best on ${TH.name}: <b>${fmt(player.time)}</b> (was ${fmt(pb)})`:`Personal best set on ${TH.name}: <b>${fmt(player.time)}</b>`;}
   else $('resPB').innerHTML=`Your time <b>${fmt(player.time)}</b> · Personal best on ${TH.name} ${fmt(pb)}`;
   const place=resultRows().findIndex(x=>x.r.kind==='local')+1,rw=grantRaceRewards(place);
-  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${RACE.gems?', '+RACE.gems+' diamond'+(RACE.gems>1?'s':'')+' found':''})</span>`;
+  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Level up! You reached level ${rw.lv.to} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}`:''}</div>`:''}`;
   {const notes=evaluateRace(place);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
@@ -3933,7 +3939,8 @@ function grantRaceRewards(place){
   if(RACE.rewarded)return RACE.reward;RACE.rewarded=true;
   const bonus=PLACE_COINS[place-1]||5,cm=(player&&player.mods.coin)||0,extra=Math.round((RACE.coins+bonus)*cm),coinsWon=RACE.coins+bonus+extra,gemsWon=RACE.gems+(place===1?1:0);
   wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();
-  return RACE.reward={coinsWon,gemsWon,bonus,place,extra};
+  const lv=addXP((XP_PLACE[place-1]||15)+(RACE.loot?RACE.loot.xp:0));
+  return RACE.reward={coinsWon,gemsWon,bonus,place,extra,lv,loot:RACE.loot||null};
 }
 let GP=null;
 function startGP(){
@@ -3979,6 +3986,36 @@ function seasonKey(d){d=d||new Date();return `${d.getFullYear()}-${pad2(d.getMon
 function hashStr(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 function loadJSON(k,def){try{const v=JSON.parse(store.get(k)||'null');return v&&typeof v==='object'?v:def;}catch(e){return def;}}
 const saveJSON=(k,v)=>store.set(k,JSON.stringify(v));
+
+/* ---------- XP, levels and loot: hitting rivals earns XP and steals coins (sometimes a diamond) ---------- */
+const XP_PLACE=[60,45,35,28,22,18,15,15],HIT_XP=10,POWER_XP=15,HIT_STEAL=3,POWER_STEAL=5,GEM_STEAL=0.15,LOOT_CAP=20;
+let XPS=loadJSON('flagdash-xp',{xp:0});
+const xpNeed=L=>100+40*(L-1);
+function levelOf(xp){let L=1,left=Math.max(0,xp|0);while(left>=xpNeed(L)){left-=xpNeed(L);L++;}return {L,into:left,need:xpNeed(L)};}
+const levelReward=L=>({c:Math.min(500,50*L),g:L%5===0?3:1});
+function addXP(n){
+  n=Math.max(0,Math.round(n||0));XPS=loadJSON('flagdash-xp',{xp:0});const from=levelOf(XPS.xp).L;XPS.xp=(XPS.xp|0)+n;saveJSON('flagdash-xp',XPS);const to=levelOf(XPS.xp).L;
+  let c=0,g=0;for(let L=from+1;L<=to;L++){const r=levelReward(L);c+=r.c;g+=r.g;}
+  if(c||g){wallet.coins+=c;wallet.gems+=g;saveWallet();}
+  renderLevel();return {xp:n,from,to,c,g};}
+function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);
+  el.querySelector('b').textContent='Lv '+l.L;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=`${l.into}/${l.need} XP`;}
+// Called by hit() whenever a rival lands a hit. The victim's game takes the loot away;
+// the attacker's game pays it out (online, through a 'loot' message).
+function lootHit(src,o,power){
+  if(!RACE||RACE.survival||!src||src===o||!runners.includes(src))return;
+  const steal=power?POWER_STEAL:HIT_STEAL,gem=power&&Math.random()<GEM_STEAL?1:0;
+  if(o===player){const lost=Math.min(steal,RACE.coins|0);if(lost)RACE.coins-=lost;const lg=gem&&(RACE.gems|0)>0;if(lg)RACE.gems--;
+    if(lost||lg)feed(`${src.nm} stole ${lost?lost+' coin'+(lost>1?'s':''):''}${lost&&lg?' and ':''}${lg?'a diamond':''} from you`,'bad');}
+  if(src===player)gainLoot(o,power,gem);
+  else if(RACE.online&&!src.owned)sendAct(o,{t:'loot',by:src.id,p:power?1:0,g:gem});
+}
+function gainLoot(o,power,gem){
+  const L=RACE.loot||(RACE.loot={n:0,xp:0,c:0,g:0});if(L.n>=LOOT_CAP)return;L.n++;
+  const xp=power?POWER_XP:HIT_XP,c=power?POWER_STEAL:HIT_STEAL;L.xp+=xp;L.c+=c;RACE.coins+=c;if(gem){L.g++;RACE.gems++;}
+  feed(`+${xp} XP · stole ${c} coins${gem?' and a 💎':''} from ${o.nm}`,'good');
+  try{const p=wpos(o,2.2);burst(p.x,p.y,p.z,14,[1,0.85,0.3],{add:true,max:3,up:4,grav:4,size:0.22});}catch(e){}
+}
 function giveReward(rw){if(!rw)return;wallet.coins+=rw.c|0;wallet.gems+=rw.g|0;saveWallet();}
 const rewardText=rw=>[rw.c?`${rw.c} coins`:'',rw.g?`${rw.g} diamond${rw.g>1?'s':''}`:''].filter(Boolean).join(' + ');
 const rewardHTML=rw=>(rw.c?priceHTML(rw.c,'coin'):'')+(rw.g?' '+priceHTML(rw.g,'gem'):'');
@@ -5407,7 +5444,7 @@ function tick(now){
 
 window.addEventListener('resize',resize);resize();
 buildWorld(themeById('stadium'));genCourse(7);
-refreshMenu(null);rebuildPreview('wave');
+refreshMenu(null);rebuildPreview('wave');renderLevel();
 applySettings();rollPeriods();refreshHubBadges();refreshChatBadges();
 if(wallet.perk===undefined){const f=BUFFS.find(b=>(wallet.buffs[b.id]|0)>0&&wallet.use[b.id]!==false);setPerk(f?f.id:null);}else setPerk(wallet.perk);
 goDesk(false);
@@ -5584,6 +5621,8 @@ function celebrate(rows,place,rw,done){
   if(rw.gemsWon)gifts.push({ic:'💎',v:'+'+rw.gemsWon,l:rw.gemsWon>1?'Diamonds':'Diamond'});
   gifts.push({ic:place===1?'🏆':place<=3?'🏅':'🎽',v:ord(place),l:place===1?'Winner!':'Your place'});
   if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
+  if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
+  if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`Level ${rw.lv.to}! +${rw.lv.c} coins`:'Experience'});
   const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
   $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
   const win=rows[0]?rows[0].r:null,winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
