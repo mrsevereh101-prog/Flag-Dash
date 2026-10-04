@@ -103,7 +103,7 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
 .lv-card{}
 #coach{position:fixed;left:50%;top:max(calc(env(safe-area-inset-top,0px) + 96px),30vh);transform:translateX(-50%);z-index:35;display:flex;gap:10px;align-items:center;max-width:min(92vw,520px);padding:10px 16px;border-radius:16px;background:rgba(10,18,60,.92);border:2px solid #f2b631;box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:16px;pointer-events:none;animation:coachIn .35s ease-out}
-#coach[hidden]{display:none!important}.coach-ic{font-size:26px;line-height:1}
+#coach[hidden]{display:none!important}.coach-ic{font-size:26px;line-height:1}#coachSub{display:block;font-size:13px;font-weight:600;color:#f6e3a8;margin-top:2px}#coachSub:empty{display:none}#coach.big{font-size:20px;padding:14px 20px}#coach.wait{border-color:#ffe08a;box-shadow:0 0 0 4px rgba(242,182,49,.35),0 8px 24px rgba(0,0,0,.45)}
 @keyframes coachIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
 #pointer{position:fixed;z-index:30;display:grid;justify-items:center;pointer-events:none}
 #pointer[hidden]{display:none!important}
@@ -1134,7 +1134,7 @@ body:not(.touch) .pz-stick{opacity:.55}
   </div>
 </div>
 <div id="toast" role="status"></div>
-<div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span id="coachTx"></span></div>
+<div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span><span id="coachTx"></span><small id="coachSub"></small></span></div>
 <div id="pointer" hidden><button class="pt-card" id="pointerBtn"><b id="pointerTx"></b><small id="pointerSub"></small></button><i class="pt-arrow" aria-hidden="true"></i></div>
 <div id="saveTip" role="dialog" aria-labelledby="saveTipTx" hidden><span class="st-ic">💾</span><div><b id="saveTipTx">To save your progress, please log in.</b><small>Your coins, skins and level are only on this device until you do.</small></div><div class="st-btns"><button class="primary" id="saveTipGo">Log in</button><button class="ghost" id="saveTipLater">Later</button></div></div>
 <div id="lvPanel" class="overlay" hidden>
@@ -5452,7 +5452,7 @@ function followCam(dt){
 }
 function frame(now){requestAnimationFrame(frame);tick(now);}
 function tick(now){
-  const dt=clamp((now-last)/1000,0,0.05);last=now;
+  const dt=ONB.hold&&(state==='countdown'||state==='race')?0:clamp((now-last)/1000,0,0.05);last=now;
   if(state==='plaza'||(state==='menu'&&plaza.active)){plaza.update(dt,now);if(state==='menu')renderPreview(dt,now);updateParticles(dt);renderer.render(scene,camera);return;}
   if(state==='menu'&&locker.active){locker.update(dt);updateParticles(dt);renderer.render(scene,camera);renderPreview(dt,now);return;}
   if(state==='menu'||state==='lobby'){
@@ -5719,39 +5719,72 @@ setTimeout(()=>playLog('open'),1500);
    wins a random skin when they finish, is pointed to it on the Race Desk,
    and is reminded to log in so their progress is saved.
    ========================================================= */
-const ONB={tips:new Set(),t:0,iv:0,x0:0};
+const ONB={tips:new Set(),t:0,iv:0,hold:false,wait:null,lane0:null};
+// Tutorial lines. Put a recording at voice/tut-<id>.mp3 and list the id in TUT_FILES to use it instead of the device voice.
+const TUT_FILES=new Set([]);
+const TUT_LINES={welcome:'Welcome to Flag Dash!',mustwin:'Runner, you must win this race!',go:"Let's GO!!",
+  lanes:'Swipe left or right to change lanes.',jump:'Hurdle ahead! Swipe UP to jump.',slide:'Barrier ahead! Swipe DOWN to slide.',
+  wall:'Wall ahead! Change lanes to run around it.',item:'You got an item! Tap the item button to use it.',power:'Your power is ready! Tap POWER to knock down every rival.',
+  loot:'Nice hit! Hitting rivals earns XP and steals their coins.',coins:'Coins buy skins and items in the Store. Grab them!',end:'Almost THERE!!!!'};
+const TUT_KEYS={lanes:'Press ◀ ▶ (or A / D) to change lanes.',jump:'Hurdle ahead! Press ▲ or Space to JUMP.',slide:'Barrier ahead! Press ▼ or S to SLIDE under it.',
+  item:'You got an item! Press Q to use it.',power:'Your power is ready! Press E to knock down every rival.'};
 function isFirstVisit(){
   if(store.get('flagdash-onboard'))return false;
   if((STATS.races|0)>0)return false;
   try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^sb-.*-auth-token$/.test(k))return false;}}catch(e){}
   if(/access_token|error_description/.test(location.hash)||/[?&](room|join|code)=/i.test(location.search))return false;
   return true;}
-function coach(ic,tx,ms){const c=$('coach');$('coachIc').textContent=ic;$('coachTx').textContent=tx;c.hidden=false;c.style.animation='none';void c.offsetWidth;c.style.animation='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},ms||4200);}
-function tip(id,ic,tx,ms){if(ONB.tips.has(id))return false;ONB.tips.add(id);coach(ic,tx,ms);return true;}
+let tutVoice=null;
+function tutSay(id,done){
+  const text=TUT_LINES[id].replace(/!+/g,'!').replace('GO','go').replace('THERE','there').replace('UP','up').replace('DOWN','down').replace('POWER','power');
+  const t0=performance.now(),minMs=1900;const fin=()=>{if(!done)return;const wait=minMs-(performance.now()-t0);if(wait>30){setTimeout(fin,wait);return;}const d=done;done=null;d();};
+  if(!SET.voice){setTimeout(fin,1400);return;}
+  if(TUT_FILES.has(id)){const a=new Audio(VOICE_DIR+'tut-'+id+'.mp3');a.volume=SET.voiceVol;a.onended=fin;a.onerror=()=>setTimeout(fin,900);a.play().catch(()=>setTimeout(fin,1400));setTimeout(fin,6000);return;}
+  try{const S=window.speechSynthesis;if(!S)throw 0;
+    if(!tutVoice){const L=S.getVoices().filter(v=>/^en/i.test(v.lang));tutVoice=L.find(v=>/female|samantha|victoria|zira|karen|moira|tessa|fiona|serena|aria|jenny|libby|sonia|google us english/i.test(v.name))||L[0]||null;}
+    S.cancel();const u=new SpeechSynthesisUtterance(text);if(tutVoice){u.voice=tutVoice;u.lang=tutVoice.lang;}else u.lang='en-US';
+    u.rate=1.04;u.pitch=1.12;u.volume=SET.voiceVol;u.onend=fin;u.onerror=fin;S.speak(u);setTimeout(fin,Math.max(1600,text.length*95));}
+  catch(e){setTimeout(fin,1400);}
+}
+function coach(ic,tx,ms,opt){opt=opt||{};const c=$('coach');$('coachIc').textContent=ic;$('coachTx').textContent=tx;$('coachSub').textContent=opt.sub||'';
+  c.classList.toggle('big',!!opt.big);c.classList.toggle('wait',!!opt.wait);c.hidden=false;c.style.animation='none';void c.offsetWidth;c.style.animation='';
+  clearTimeout(ONB.t);if(ms)ONB.t=setTimeout(()=>{c.hidden=true;},ms);}
+function tline(id,ic,opt){const kb=!isTouch;coach(ic,(kb&&TUT_KEYS[id])||TUT_LINES[id],opt&&opt.ms===0?0:((opt&&opt.ms)||4200),opt);tutSay(id,opt&&opt.done);}
+function tip(id,ic,opt){if(ONB.tips.has(id))return false;ONB.tips.add(id);tline(id,ic,opt);return true;}
+// Freeze the race on a step until the player does what it asks.
+function holdFor(id,ic,check){ONB.tips.add(id);ONB.hold=true;ONB.wait=check;tline(id,ic,{ms:0,wait:true,sub:'The race is paused until you do it'});}
+function release(){ONB.hold=false;ONB.wait=null;const c=$('coach');c.classList.remove('wait');$('coachSub').textContent='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},900);}
+addEventListener('keydown',e=>{if(ONB.hold&&['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code))ONB.keyLane=true;},true);
 function startTutorialRace(){
-  store.set('flagdash-onboard','race');selTrack='stadium';
-  const kb=!isTouch;
-  selMode='solo';selLaps=1;startOffline(false);if(!RACE)return;
+  store.set('flagdash-onboard','race');selTrack='stadium';selMode='solo';selLaps=1;
+  startOffline(false);if(!RACE)return;
   // first race: the flat Night Stadium, one lap, against slower and clumsier CPU runners
   RACE.tut=true;RACE.bots.forEach(b=>{b.ai.skill=rand(0.42,0.58);b.ai.pace=rand(0.86,0.92);});
   $('trackLabel').textContent='Your first race · '+TH.name;
-  ONB.tips.clear();ONB.x0=player.x;
-  coach('🏁','Welcome to Flag Dash! Race your flag to the finish line.',3800);
-  clearInterval(ONB.iv);ONB.iv=setInterval(()=>tutorTick(kb),250);
+  ONB.tips.clear();ONB.hold=true;   // the countdown waits for the intro
+  coach('🏁',TUT_LINES.welcome,0,{big:true,wait:true,sub:'Tap anywhere to start'});
+  const go=()=>{removeEventListener('pointerdown',go,true);removeEventListener('keydown',go,true);
+    try{initAudio();if(actx&&actx.state==='suspended')actx.resume();}catch(e){}
+    coach('🏁',TUT_LINES.welcome,0,{big:true});
+    tutSay('welcome',()=>{coach('🥇',TUT_LINES.mustwin,0,{big:true});
+      tutSay('mustwin',()=>{coach('🔥',TUT_LINES.go,1400,{big:true});tutSay('go');setTimeout(()=>{ONB.hold=false;},500);});});};
+  addEventListener('pointerdown',go,true);addEventListener('keydown',go,true);
+  clearInterval(ONB.iv);ONB.iv=setInterval(tutorTick,100);
 }
-function tutorTick(kb){
-  if(!RACE||!RACE.tut||!player){clearInterval(ONB.iv);return;}
+function tutorTick(){
+  if(!RACE||!RACE.tut||!player){clearInterval(ONB.iv);ONB.hold=false;return;}
   if(state!=='race')return;
-  const ahead=type=>obstacles.find(o=>o.type===type&&o.d>player.d+4&&o.d-player.d<26&&Math.abs(o.x-player.x)<1.6);
-  if(!ONB.tips.has('lanes')){if(raceTime>0.6)tip('lanes','↔️',kb?'Use ◀ ▶ arrow keys (or A / D) to change lanes.':'Swipe left or right to change lanes.',5200);return;}
-  if(ahead('hurdle')&&tip('jump','⬆️',kb?'Hurdle ahead! Press ▲ or Space to JUMP.':'Hurdle ahead! Swipe UP to jump.'))return;
-  if(ahead('bar')&&tip('slide','⬇️',kb?'Barrier ahead! Press ▼ or S to SLIDE under it.':'Barrier ahead! Swipe DOWN to slide under it.'))return;
-  if(ahead('wall')&&tip('wall','🧱','Wall ahead! Change lanes to run around it.'))return;
-  if(player.item&&tip('item','🎁',kb?`You got an item! Press Q to use it.`:'You got an item! Tap the item button to use it.'))return;
-  if(player.charge>=1&&tip('power','⚡',kb?'Your power is ready! Press E to knock down every rival.':'Your power is ready! Tap POWER to knock down every rival.'))return;
-  if(RACE.loot&&RACE.loot.n&&tip('loot','💥','Nice hit! Hitting rivals earns XP and steals their coins.'))return;
-  if(RACE.coins>=3&&tip('coins','🪙','Coins buy skins and items in the Store. Grab them!'))return;
-  if(player.d>TRACK*0.8&&tip('end','🏁','Almost there! Sprint to the finish!'))return;
+  if(ONB.hold){if(ONB.wait&&ONB.wait())release();return;}
+  const near=(type,max)=>obstacles.find(o=>o.type===type&&o.d>player.d+2&&o.d-player.d<max&&Math.abs(o.x-player.x)<1.4);
+  if(!ONB.tips.has('lanes')){if(raceTime>0.9){const x0=player.x,t0=touchLane;ONB.keyLane=false;holdFor('lanes','↔️',()=>ONB.keyLane||input.left||input.right||touchLane!==t0||Math.abs(player.x-x0)>0.5);}return;}
+  if(!ONB.tips.has('jump')&&near('hurdle',7.5)){holdFor('jump','⬆️',()=>player.jumpBuf>0||player.vy>0||player.y>0.05);return;}
+  if(!ONB.tips.has('slide')&&near('bar',7.5)&&player.char.id!=='dwarf'){holdFor('slide','⬇️',()=>player.slide>0);return;}
+  if(near('wall',24)&&tip('wall','🧱'))return;
+  if(player.item&&tip('item','🎁'))return;
+  if(player.charge>=1&&tip('power','⚡'))return;
+  if(RACE.loot&&RACE.loot.n&&tip('loot','💥'))return;
+  if(RACE.coins>=3&&tip('coins','🪙'))return;
+  if(player.d>TRACK*0.82&&tip('end','🏁'))return;
 }
 // The first finished race unlocks a random skin from the Store.
 function firstRaceSkin(){
