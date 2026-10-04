@@ -136,7 +136,7 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .lv-list{display:grid;gap:6px;max-height:60vh;overflow:auto}
 .lv-row{display:flex;gap:10px;align-items:center;background:var(--night-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
 .lv-row b{width:42px;color:#f6e3a8;font-variant-numeric:tabular-nums}.lv-row i{width:22px;height:22px;border-radius:6px;flex:none;border:1px solid rgba(255,255,255,.3)}
-.lv-row.got{opacity:.6}.lv-row.next{border-color:var(--gold);box-shadow:0 0 0 1px rgba(233,196,106,.4)}
+.lv-row.got{opacity:.6}.lv-tier{margin:10px 0 2px;font-size:15px;color:#ffd38a}.lv-tier.soon{color:var(--muted);font-style:italic}.lv-row b{width:auto;min-width:96px}.lv-row.next{border-color:var(--gold);box-shadow:0 0 0 1px rgba(233,196,106,.4)}
 .shop-card.locked{opacity:.75}.price.lvl{color:#f6e3a8}.tier.t-lvl{background:rgba(233,196,106,.2);color:#f6e3a8}
 .lv-badge{cursor:pointer;display:flex;align-items:center;gap:8px;margin:6px auto 0;width:min(100%,280px);font-size:12px;color:#f6e3a8;text-shadow:0 1px 0 rgba(0,0,0,.4)}
 .lv-badge b{font-weight:800;white-space:nowrap}.lv-badge em{font-style:normal;font-weight:800;white-space:nowrap;color:#ffd38a}.lv-badge small{font-size:11px;color:#cfd7f5;white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -1166,7 +1166,7 @@ body:not(.touch) .pz-stick{opacity:.55}
 <div id="saveTip" role="dialog" aria-labelledby="saveTipTx" hidden><span class="st-ic">💾</span><div><b id="saveTipTx">To save your progress, please log in.</b><small>Your coins, skins and level are only on this device until you do.</small></div><div class="st-btns"><button class="primary" id="saveTipGo">Log in</button><button class="ghost" id="saveTipLater">Later</button></div></div>
 <div id="lvPanel" class="overlay" hidden>
   <div class="store-card lv-card" role="dialog" aria-labelledby="lvTitle">
-    <div class="store-head"><h2 id="lvTitle">⭐ Level rewards</h2><button class="ghost" id="lvClose">Close</button></div>
+    <div class="store-head"><h2 id="lvTitle">⭐ Racer ranks</h2><button class="ghost" id="lvClose">Close</button></div>
     <p class="muted" id="lvNow"></p>
     <div class="lv-list" id="lvList"></div>
   </div>
@@ -2518,7 +2518,7 @@ function makeRunner(e,idx,n,online){
   if(RACE.lo&&owned)r.lo=kind==='local'?{atk:wallet.lo.atk,def:wallet.lo.def,usedA:false,usedD:false}:{atk:pick(BOT_LOADOUT.atk),def:pick(BOT_LOADOUT.def),usedA:false,usedD:false};
   const gear=kind==='local'?myGear():(Array.isArray(e.gr)?e.gr.filter(id=>attireById(id)):[]);
   if(kind==='local')r.lv=myLevel();else if(e.bot){let h=0;for(const c of String(e.id)+flag.code)h=(h*31+c.charCodeAt(0))>>>0;r.lv=1+h%12;}else r.lv=clamp(e.lv|0,0,999)||null;
-  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(r.lv?'Lv'+r.lv+' ':'')+(e.bot?(e.nm?nm:flag.code):(e.gt?'['+e.gt+'] ':'')+nm)});
+  r.m=buildModel(flag,ch.id,{lane:idx+1,team,skin,gear,tag:kind==='local'?null:(r.lv?rankName(r.lv)+' · ':'')+(e.bot?(e.nm?nm:flag.code):(e.gt?'['+e.gt+'] ':'')+nm)});
   scene.add(r.m.root);
   return r;
 }
@@ -3754,7 +3754,7 @@ function showResults(){
   if(!pb||player.time<pb){store.set(key,String(player.time));$('resPB').innerHTML=pb?`New personal best on ${TH.name}: <b>${fmt(player.time)}</b> (was ${fmt(pb)})`:`Personal best set on ${TH.name}: <b>${fmt(player.time)}</b>`;}
   else $('resPB').innerHTML=`Your time <b>${fmt(player.time)}</b> · Personal best on ${TH.name} ${fmt(pb)}`;
   const place=resultRows().findIndex(x=>x.r.kind==='local')+1,rw=grantRaceRewards(place);
-  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Level up! You reached level ${rw.lv.to} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}${rw.lv.unlocked&&rw.lv.unlocked.length?'. Unlocked in the store: '+rw.lv.unlocked.join(', '):''}`:''}</div>`:''}`;
+  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Rank up! You are now ${rankName(rw.lv.to)} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}${rw.lv.unlocked&&rw.lv.unlocked.length?'. Unlocked in the store: '+rw.lv.unlocked.join(', '):''}`:''}</div>`:''}`;
   {const notes=evaluateRace(place);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
@@ -3906,7 +3906,7 @@ const STORE_NOTE={items:'Pick one attack and one defence before each race. Each 
   skins:'⚔️ Hero skins are free, two for each hero: equipping one switches you to that hero. Other skins work on every runner and are yours to keep; some give a bonus while you wear them.',
   attire:`Attire lasts ${ATTIRE_DAYS} days from purchase. Wear one piece per slot for its full bonus. Pieces you own but aren't wearing still give 10% of their bonus.`,
   buffs:'Each buff lasts one race.'};
-function priceTag(it){if(lvLocked(it))return `<span class="price lvl">🔒 Level ${it.lvl}</span>`;if(it.tier==='free')return it.lvl?'<span class="price">Unlocked</span>':'<span class="price">Free</span>';if(it.tier==='usd')return `<span class="price usd">${it.usd}</span>`;return priceHTML(it.cost,curOf(it));}
+function priceTag(it){if(lvLocked(it))return `<span class="price lvl">🔒 ${rankName(it.lvl)}</span>`;if(it.tier==='free')return it.lvl?'<span class="price">Unlocked</span>':'<span class="price">Free</span>';if(it.tier==='usd')return `<span class="price usd">${it.usd}</span>`;return priceHTML(it.cost,curOf(it));}
 // Buy button for any store item; usd items stay locked because no payment provider is connected.
 function buyButton(btn,it,label,onBuy){
   if(it.tier==='usd'){btn.textContent='Coming soon';btn.disabled=true;btn.title='Real-money checkout is not connected yet';return;}
@@ -3960,11 +3960,11 @@ function skinCard(s){
   const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
-  else if(locked){btn.textContent=`Reach level ${s.lvl}`;btn.disabled=true;card.classList.add('locked');}
+  else if(locked){btn.textContent=`Reach ${rankName(s.lvl)}`;btn.disabled=true;card.classList.add('locked');}
   else if(owned||s.tier==='free'){btn.textContent='Equip';btn.onclick=()=>{if(!wallet.skins.includes(s.id))wallet.skins.push(s.id);equipSkin(s);saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
   else buyButton(btn,s,'Buy',()=>{wallet.skins.push(s.id);equipSkin(s);saveWallet();rebuildPreview('dance');syncLobbyPresence();});
   if(owned&&!s.hero)card.querySelector('.shop-row .price').outerHTML='<span class="owned">Owned</span>';
-  if(s.hero){const t=document.createElement('div');t.className='hero-tag';t.textContent='⚔️ '+charById(s.hero).name+' skin'+(s.lvl?(locked?` · unlocks at level ${s.lvl}`:' · unlocked'):' · free');card.querySelector('.shop-desc').before(t);const pr=card.querySelector('.shop-row .price');if(pr)pr.outerHTML=locked?`<span class="price lvl">🔒 Level ${s.lvl}</span>`:'<span class="owned">'+(s.lvl?'Unlocked':'Free')+'</span>';card.classList.add('hero-skin');}
+  if(s.hero){const t=document.createElement('div');t.className='hero-tag';t.textContent='⚔️ '+charById(s.hero).name+' skin'+(s.lvl?(locked?` · unlocks at ${rankName(s.lvl)}`:' · unlocked'):' · free');card.querySelector('.shop-desc').before(t);const pr=card.querySelector('.shop-row .price');if(pr)pr.outerHTML=locked?`<span class="price lvl">🔒 Level ${s.lvl}</span>`:'<span class="owned">'+(s.lvl?'Unlocked':'Free')+'</span>';card.classList.add('hero-skin');}
   return card;
 }
 function itemCard(l){
@@ -4070,19 +4070,28 @@ const saveJSON=(k,v)=>store.set(k,JSON.stringify(v));
 /* ---------- XP, levels and loot: hitting rivals earns XP and steals coins (sometimes a diamond) ---------- */
 const XP_PLACE=[60,45,35,28,22,18,15,15],HIT_XP=10,POWER_XP=15,HIT_STEAL=3,POWER_STEAL=5,GEM_STEAL=0.15,LOOT_CAP=20;
 let XPS=loadJSON('flagdash-xp',{xp:0});
+// Racer ranks: Track 1-3 up to Continent 1-7 (levels 1-35). Global and World Champs come later.
+const RANKS=[{n:'Track',k:3,ic:'🏁'},{n:'Street',k:3,ic:'🛣️'},{n:'City',k:3,ic:'🏙️'},{n:'County',k:3,ic:'🏘️'},{n:'State',k:3,ic:'🗺️'},{n:'Country',k:3,ic:'🚩'},{n:'Region',k:3,ic:'🧭'},{n:'Sea',k:7,ic:'🌊'},{n:'Continent',k:7,ic:'🌍'}];
+const RANKS_SOON=[{n:'Global',ic:'🌐'},{n:'World Champs',ic:'👑'}];
+const MAX_LV=RANKS.reduce((a,r)=>a+r.k,0);
+function rankOf(L){L=clamp(L|0,1,MAX_LV);let base=0;for(const r of RANKS){if(L<=base+r.k)return {n:r.n,ic:r.ic,step:L-base,first:L===base+1};base+=r.k;}}
+const rankName=L=>{const r=rankOf(L);return r.n+' '+r.step;};
 const xpNeed=L=>100+40*(L-1);
-function levelOf(xp){let L=1,left=Math.max(0,xp|0);while(left>=xpNeed(L)){left-=xpNeed(L);L++;}return {L,into:left,need:xpNeed(L)};}
-const levelReward=L=>({c:Math.min(500,50*L),g:L%5===0?3:1});
+function levelOf(xp){let L=1,left=Math.max(0,xp|0);while(L<MAX_LV&&left>=xpNeed(L)){left-=xpNeed(L);L++;}const need=xpNeed(L);return {L,into:Math.min(left,need),need,max:L>=MAX_LV};}
+// a new rank tier pays extra diamonds
+const levelReward=L=>({c:Math.min(500,50*L),g:rankOf(L).first?3:1});
 function addXP(n){
   n=Math.max(0,Math.round(n||0));XPS=loadJSON('flagdash-xp',{xp:0});const from=levelOf(XPS.xp).L;XPS.xp=(XPS.xp|0)+n;saveJSON('flagdash-xp',XPS);const to=levelOf(XPS.xp).L;
   let c=0,g=0;for(let L=from+1;L<=to;L++){const r=levelReward(L);c+=r.c;g+=r.g;}
   if(c||g){wallet.coins+=c;wallet.gems+=g;saveWallet();}
   const unlocked=SKINS_SHOP.filter(it=>it.lvl&&it.lvl>from&&it.lvl<=to).map(it=>it.name);
   renderLevel();if(unlocked.length&&typeof renderStoreDot==='function')renderStoreDot();return {xp:n,from,to,c,g,unlocked};}
-function openLevels(){const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);$('lvNow').textContent=`You are level ${l.L}: ${l.into} of ${l.need} XP to level ${l.L+1}. Earn XP by finishing races (more for higher places) and by hitting rivals (+10, or +15 with your power).`;
-  const box=$('lvList');box.innerHTML='';for(let L=2;L<=20;L++){const r=levelReward(L),sk=SKINS_SHOP.find(it=>it.lvl===L);const row=document.createElement('div');row.className='lv-row'+(l.L>=L?' got':'')+(l.L+1===L?' next':'');
-    const n=document.createElement('b');n.textContent=l.L>=L?'✓ '+L:String(L);const d=document.createElement('span');d.textContent=`${r.c} coins · ${r.g} diamond${r.g>1?'s':''}`+(sk?` · ${sk.name} skin (${charById(sk.hero).name})`:'');
+function openLevels(){const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);$('lvNow').textContent=(l.max?`You are ${rankName(l.L)}, the top rank for now. Global and World Champs are coming soon.`:`You are ${rankName(l.L)}: ${l.into} of ${l.need} XP to ${rankName(l.L+1)}.`)+` Earn XP by finishing races (more for higher places) and by hitting rivals (+10, or +15 with your power).`;
+  const box=$('lvList');box.innerHTML='';for(let L=1;L<=MAX_LV;L++){const rk=rankOf(L);if(rk.first){const h=document.createElement('h3');h.className='lv-tier';h.textContent=rk.ic+' '+rk.n+` (${rk.n==='Track'?'1':rk.step}–${RANKS.find(x=>x.n===rk.n).k})`;box.appendChild(h);}if(L===1)continue;
+    const r=levelReward(L),sk=SKINS_SHOP.find(it=>it.lvl===L);const row=document.createElement('div');row.className='lv-row'+(l.L>=L?' got':'')+(l.L+1===L?' next':'');
+    const n=document.createElement('b');n.textContent=(l.L>=L?'✓ ':'')+rk.n+' '+rk.step;const d=document.createElement('span');d.textContent=`${r.c} coins · ${r.g} diamond${r.g>1?'s':''}`+(sk?` · ${sk.name} skin (${charById(sk.hero).name})`:'');
     if(sk){const sw=document.createElement('i');sw.style.background=sk.sw;row.append(n,sw,d);}else row.append(n,d);box.appendChild(row);}
+  for(const t of RANKS_SOON){const h=document.createElement('h3');h.className='lv-tier soon';h.textContent=`${t.ic} ${t.n}: coming soon`;box.appendChild(h);}
   $('lvPanel').hidden=false;}
 $('lvClose').onclick=()=>$('lvPanel').hidden=true;$('lvPanel').addEventListener('click',e=>{if(e.target.id==='lvPanel')$('lvPanel').hidden=true;});
 $('lvBadge').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openLevels();});
@@ -4210,7 +4219,7 @@ function renderCollection(){
     if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');}
     else if(it.src==='win'){const [v,n]=it.win(STATS);sub.textContent=`${it.how} · ${Math.min(v,n)}/${n}`;const bar=document.createElement('i');bar.className='rc-bar';bar.innerHTML=`<i style="width:${Math.min(100,v/n*100)}%"></i>`;mid.append(nm,sub,bar);}
     else if(it.src==='buy'){sub.textContent=SLOT_NAME[it.slot];const b=document.createElement('button');b.className='buy';const ok=canAfford(it.cost,it.cur);b.innerHTML=priceHTML(it.cost,it.cur);b.disabled=!ok;b.title=ok?'Buy':'Not enough';
-      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Level up! You reached level ${g.lv.to}`,'good');};side.appendChild(b);}
+      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);}
     else{sub.textContent='Only a friend can send this ('+priceHTML(it.cost,it.cur).replace(/<[^>]+>/g,'')+(it.cur==='gem'?' diamonds':' coins')+')';}
     if(!mid.childNodes.length)mid.append(nm,sub);row.append(ic,mid,side);L.appendChild(row);});
 }
@@ -4229,7 +4238,7 @@ async function claimGift(m){const it=roomItem(m.body);if(!it)return;const g=gran
   SOC.inbox=SOC.inbox.filter(x=>x!==m);renderSocial();renderSocBadges();try{const sb=await getSb();await sb.from('fd_inbox').delete().eq('id',m.id);}catch(e){}}
 
 function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);
-  el.querySelector('b').textContent='Lv '+l.L;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=`${l.into}/${l.need} XP`;const st=el.querySelector('em');if(st&&typeof roomStrength==='function')st.textContent='💪 '+roomStrength();}
+  const rk=rankOf(l.L);el.querySelector('b').textContent=rk.ic+' '+rk.n+' '+rk.step;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=l.max?'Top rank':`${l.into}/${l.need} XP`;const st=el.querySelector('em');if(st&&typeof roomStrength==='function')st.textContent='💪 '+roomStrength();}
 // Called by hit() whenever a rival lands a hit. The victim's game takes the loot away;
 // the attacker's game pays it out (online, through a 'loot' message).
 function lootHit(src,o,power){
@@ -4968,7 +4977,7 @@ function renderRoster(){
   if(ROSTER.compose){L.appendChild(buildCompose(ROSTER.compose,()=>{ROSTER.compose=null;renderRoster();}));return;}
   const rs=runners.slice().sort((a,b)=>(a.place||9)-(b.place||9));let humans=0;
   rs.forEach(r=>{const row=mk('div','ros-row'+(r.kind==='local'?' me':''));row.append(mk('b','ros-pl',String(r.place||'')),flagImg(r.flag&&r.flag.code||'USA'));
-    const mid=mk('div','soc-mid');mid.append(mk('span',null,(r.gt?`[${r.gt}] `:'')+(r.nm||(r.flag&&r.flag.name)||'Runner')),mk('small',null,(r.kind==='local'?'You':r.kind==='bot'?'CPU runner':'Player')+(r.lv?` · Lv ${r.lv}`:'')));row.appendChild(mid);
+    const mid=mk('div','soc-mid');mid.append(mk('span',null,(r.gt?`[${r.gt}] `:'')+(r.nm||(r.flag&&r.flag.name)||'Runner')),mk('small',null,(r.kind==='local'?'You':r.kind==='bot'?'CPU runner':'Player')+(r.lv?` · ${rankName(r.lv)}`:'')));row.appendChild(mid);
     if(r.kind==='remote'){humans++;
       if(validUid(r.uid)&&socOn()&&r.uid!==myUid()){const nm=r.nm||'Runner',cc=r.flag&&r.flag.code||'USA';
         const m=btn('✉️','ghost',()=>{ROSTER.compose={uid:r.uid,nm,cc};renderRoster();});m.setAttribute('aria-label','Message '+nm);row.appendChild(m);
@@ -5110,7 +5119,7 @@ function renderLobby(){
   ps.forEach(p=>{const pr=p.presence;const li=document.createElement('li');if(isTeamMode(mode))li.className='t'+clamp(pr.tm|0,0,teamCount(mode)-1);
     const im=document.createElement('img');im.alt='';im.src=flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').url;
     const mid=document.createElement('div');const n=document.createElement('div');n.className='pl-name';n.textContent=(cleanTag(pr.gt)?'['+cleanTag(pr.gt)+'] ':'')+(cleanName(pr.nm)||'Runner');
-    const sub=document.createElement('div');sub.className='pl-sub';sub.textContent=(pr.lv?`Lv ${clamp(pr.lv|0,1,999)} · `:'')+`${flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').name} · ${charById(pr.ch).name}`+(isTeamMode(mode)?` · ${TEAMS[clamp(pr.tm|0,0,teamCount(mode)-1)].name}`:'');mid.append(n,sub);
+    const sub=document.createElement('div');sub.className='pl-sub';sub.textContent=(pr.lv?`${rankName(pr.lv)} · `:'')+`${flagCanvas(COUNTRY_CODES.has(pr.cc)?pr.cc:'USA').name} · ${charById(pr.ch).name}`+(isTeamMode(mode)?` · ${TEAMS[clamp(pr.tm|0,0,teamCount(mode)-1)].name}`:'');mid.append(n,sub);
     const bd=document.createElement('div');bd.className='badges';const add=(t,c)=>{const s=document.createElement('span');s.className='badge '+c;s.textContent=t;bd.appendChild(s);};
     if(p.sameTab)add('You','you');if(pr.h)add('Host','host');else if(pr.rdy)add('Ready','ready');
     li.append(im,mid,bd);list.appendChild(li);});
@@ -5881,7 +5890,7 @@ function celebrate(rows,place,rw,done){
   if(RACE&&RACE.roomNew&&RACE.roomNew.length)gifts.push({ic:RACE.roomNew[0].ic,v:RACE.roomNew[0].name,l:RACE.roomNew.length>1?`+${RACE.roomNew.length-1} more for your room`:'New for your room!'});
   if(rw.firstSkin)gifts.push({ic:'👕',v:rw.firstSkin.name,l:'New skin unlocked!'});
   if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
-  if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`Level ${rw.lv.to}! +${rw.lv.c} coins`:'Experience'});
+  if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`${rankName(rw.lv.to)}! +${rw.lv.c} coins`:'Experience'});
   if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',v:rw.lv.unlocked[0],l:'New skin unlocked'});
   const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
   $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
