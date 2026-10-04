@@ -33,12 +33,15 @@ create table if not exists public.fd_inbox (
   from_id uuid references auth.users(id) on delete set null,
   from_nm text not null,
   from_cc text not null,
-  kind    text not null check (kind in ('msg','invite')),
+  kind    text not null check (kind in ('msg','invite','gift')),
   body    text not null default '' check (char_length(body) <= 300),
   room    text check (room ~ '^[A-Z]{4}$'),
   created timestamptz not null default now(),
   read    boolean not null default false
 );
+-- gifts were added later: make sure tables made by an older version of this script allow them
+alter table public.fd_inbox drop constraint if exists fd_inbox_kind_check;
+alter table public.fd_inbox add constraint fd_inbox_kind_check check (kind in ('msg','invite','gift'));
 create index if not exists fd_inbox_to on public.fd_inbox(to_id, created desc);
 create index if not exists fd_inbox_from on public.fd_inbox(from_id, created desc);
 
@@ -174,7 +177,8 @@ begin
   return 'ok';
 end $$;
 
--- Send an inbox message. Limits: 300 characters, 5 per minute, 60 per hour.
+-- Send an inbox message, race invite or gift (the gift's item id goes in the body).
+-- Limits: 300 characters, 5 per minute, 60 per hour.
 create or replace function public.fd_send(p_to uuid, p_kind text, p_body text, p_room text default null)
 returns text language plpgsql security definer set search_path = public as $$
 declare me uuid := auth.uid(); card fd_people; them fd_people; b text;
@@ -185,10 +189,11 @@ begin
   if p_to is null or p_to = me then return 'not found'; end if;
   select * into them from fd_people where user_id = p_to;
   if not found then return 'not found'; end if;
-  if p_kind not in ('msg','invite') then return 'bad kind'; end if;
+  if p_kind not in ('msg','invite','gift') then return 'bad kind'; end if;
   b := left(btrim(regexp_replace(coalesce(p_body,''), '[[:cntrl:]]', ' ', 'g')), 300);
   if p_kind = 'msg' and b = '' then return 'empty'; end if;
   if p_kind = 'invite' and (p_room is null or p_room !~ '^[A-Z]{4}$') then return 'bad room'; end if;
+  if p_kind = 'gift' and b !~ '^g_[a-z]{2,20}$' then return 'bad gift'; end if;
   if (select count(*) from fd_inbox where from_id = me and created > now() - interval '1 minute') >= 5
      or (select count(*) from fd_inbox where from_id = me and created > now() - interval '1 hour') >= 60 then return 'slow'; end if;
   -- blocked, or they only take messages from friends: pretend it was sent
