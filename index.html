@@ -101,6 +101,22 @@ body.layout-desk .lay-piece{outline-offset:1px}
 #deskWallet{cursor:pointer}#deskWallet:hover{border-color:#f7e3a3}
 .d3-store-top{border-color:#f7e3a3;background:radial-gradient(circle at 50% 35%,#f8e19a,#c9973a);color:#3a2706;box-shadow:0 0 0 3px rgba(233,196,106,.25),inset 0 1px 0 rgba(255,255,255,.5)}
 .desk3 .d3-name{margin:0 auto;width:min(78%,360px);padding:0;border:0!important;background:transparent!important}
+.lv-card{}
+#coach{position:fixed;left:50%;top:max(calc(env(safe-area-inset-top,0px) + 96px),30vh);transform:translateX(-50%);z-index:35;display:flex;gap:10px;align-items:center;max-width:min(92vw,520px);padding:10px 16px;border-radius:16px;background:rgba(10,18,60,.92);border:2px solid #f2b631;box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:16px;pointer-events:none;animation:coachIn .35s ease-out}
+#coach[hidden]{display:none!important}.coach-ic{font-size:26px;line-height:1}
+@keyframes coachIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
+#pointer{position:fixed;z-index:30;display:grid;justify-items:center;pointer-events:none}
+#pointer[hidden]{display:none!important}
+.pt-card{pointer-events:auto;display:grid;gap:2px;text-align:center;max-width:240px;padding:9px 14px;border-radius:14px;background:#f2b631;color:#2a1d04;border:0;box-shadow:0 6px 18px rgba(0,0,0,.45);animation:ptBob 1.2s ease-in-out infinite}
+.pt-card b{font-size:14px}.pt-card small{font-size:12px;font-weight:600}
+.pt-arrow{width:0;height:0;border:10px solid transparent;order:-1;margin-bottom:-2px;border-bottom-color:#f2b631;animation:ptBob 1.2s ease-in-out infinite}
+@keyframes ptBob{50%{transform:translateY(5px)}}
+.has-new{position:relative;box-shadow:0 0 0 3px #f2b631,0 0 18px #f2b631!important}
+.shop-card.is-new{box-shadow:0 0 0 3px #f2b631,0 0 22px rgba(242,182,49,.55)}.shop-card.is-new .shop-name::after{content:' NEW';color:#f2b631;font-size:11px;font-weight:800;letter-spacing:.08em}
+#saveTip{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 104px);transform:translateX(-50%);z-index:29;width:min(92vw,460px);box-sizing:border-box;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;align-items:center;padding:12px 14px;border-radius:16px;background:rgba(10,18,60,.95);border:2px solid #f2b631;box-shadow:0 10px 26px rgba(0,0,0,.5);color:#fff}
+#saveTip[hidden]{display:none!important}.st-ic{font-size:28px}#saveTip b{display:block;font-size:15px}#saveTip small{color:#cfd7f5;font-size:12.5px}
+.st-btns{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end}.st-btns button{padding:8px 16px;border-radius:10px;font-weight:800}
+@media (prefers-reduced-motion:reduce){.pt-card,.pt-arrow,#coach{animation:none}}
 .lv-card{--mw:520px;max-width:min(100%,520px);margin:6vh auto 0}
 .lv-list{display:grid;gap:6px;max-height:60vh;overflow:auto}
 .lv-row{display:flex;gap:10px;align-items:center;background:var(--night-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
@@ -1118,6 +1134,9 @@ body:not(.touch) .pz-stick{opacity:.55}
   </div>
 </div>
 <div id="toast" role="status"></div>
+<div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span id="coachTx"></span></div>
+<div id="pointer" hidden><button class="pt-card" id="pointerBtn"><b id="pointerTx"></b><small id="pointerSub"></small></button><i class="pt-arrow" aria-hidden="true"></i></div>
+<div id="saveTip" role="dialog" aria-labelledby="saveTipTx" hidden><span class="st-ic">💾</span><div><b id="saveTipTx">To save your progress, please log in.</b><small>Your coins, skins and level are only on this device until you do.</small></div><div class="st-btns"><button class="primary" id="saveTipGo">Log in</button><button class="ghost" id="saveTipLater">Later</button></div></div>
 <div id="lvPanel" class="overlay" hidden>
   <div class="store-card lv-card" role="dialog" aria-labelledby="lvTitle">
     <div class="store-head"><h2 id="lvTitle">⭐ Level rewards</h2><button class="ghost" id="lvClose">Close</button></div>
@@ -3713,7 +3732,7 @@ function showResults(){
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
   $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?(NET.mmRoom?'⚡ Find another race':'Back to lobby'):'Race again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';
-  $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{$('results').hidden=false;$('againBtn').focus();});
+  $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{if(RACE&&RACE.tut){store.set('flagdash-onboard','done');clearInterval(ONB.iv);$('coach').hidden=true;toMenu('desk');setTimeout(onboardHome,400);return;}$('results').hidden=false;$('againBtn').focus();});
 }
 function renderResults(){
   if(RACE&&(RACE.survival||RACE.fc))return;
@@ -3905,10 +3924,11 @@ document.querySelectorAll('.pick-btn').forEach(b=>b.onclick=()=>{if(pickOpen===b
 $('pickDone').onclick=()=>closePicker();
 $('perkStore').onclick=()=>openStore();
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&pickOpen&&state==='menu')closePicker();if(e.key==='Escape'&&!$('settings').hidden){closeSettings();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('hub').hidden){closeHub();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('chat').hidden){closeChat();e.stopImmediatePropagation();}},true);
-function equipSkin(s){if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
+function equipSkin(s){if(store.get('flagdash-newskin')===s.id)store.set('flagdash-newskin','');if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
 function skinCard(s){
+  const isNew=store.get('flagdash-newskin')===s.id;
   const locked=lvLocked(s),owned=wallet.skins.includes(s.id)||(s.tier==='free'&&!locked),eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
-  const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');
+  const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
   else if(locked){btn.textContent=`Reach level ${s.lvl}`;btn.disabled=true;card.classList.add('locked');}
@@ -3969,7 +3989,8 @@ function grantRaceRewards(place){
   const bonus=PLACE_COINS[place-1]||5,cm=(player&&player.mods.coin)||0,extra=Math.round((RACE.coins+bonus)*cm),coinsWon=RACE.coins+bonus+extra,gemsWon=RACE.gems+(place===1?1:0);
   wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();
   const lv=addXP((XP_PLACE[place-1]||15)+(RACE.loot?RACE.loot.xp:0));
-  return RACE.reward={coinsWon,gemsWon,bonus,place,extra,lv,loot:RACE.loot||null};
+  const firstSkin=typeof firstRaceSkin==='function'?firstRaceSkin():null;
+  return RACE.reward={coinsWon,gemsWon,bonus,place,extra,lv,loot:RACE.loot||null,firstSkin};
 }
 let GP=null;
 function startGP(){
@@ -4941,7 +4962,7 @@ $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else i
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
 $('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
-$('loStore').onclick=()=>{storeTab='items';openStore();};$('loToggle').onchange=e=>{loOn=e.target.checked;store.set('flagdash-loadout',loOn?'on':'off');renderLoadout();};$('storeClose').onclick=()=>{$('store').hidden=true;renderWallet();renderLoadout();if(plaza.active){plaza.rebuildMe();plaza.refreshHud();plaza.send(true);}};
+$('loStore').onclick=()=>{storeTab='items';openStore();};$('loToggle').onchange=e=>{loOn=e.target.checked;store.set('flagdash-loadout',loOn?'on':'off');renderLoadout();};$('storeClose').onclick=()=>{$('store').hidden=true;if(store.get('flagdash-newskin')&&storeTab==='skins')store.set('flagdash-newskin','');renderWallet();renderLoadout();if(plaza.active){plaza.rebuildMe();plaza.refreshHud();plaza.send(true);}};
 $('storeTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;storeTab=b.dataset.tab;renderStore();});
 $('podMenu').onclick=()=>toMenu();$('podStore').onclick=()=>{toMenu();openStore();};
 $('plazaBtn').onclick=()=>enterPlaza();
@@ -5658,6 +5679,7 @@ function celebrate(rows,place,rw,done){
   if(rw.gemsWon)gifts.push({ic:'💎',v:'+'+rw.gemsWon,l:rw.gemsWon>1?'Diamonds':'Diamond'});
   gifts.push({ic:place===1?'🏆':place<=3?'🏅':'🎽',v:ord(place),l:place===1?'Winner!':'Your place'});
   if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
+  if(rw.firstSkin)gifts.push({ic:'👕',v:rw.firstSkin.name,l:'New skin unlocked!'});
   if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
   if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`Level ${rw.lv.to}! +${rw.lv.c} coins`:'Experience'});
   if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',v:rw.lv.unlocked[0],l:'New skin unlocked'});
@@ -5691,6 +5713,78 @@ function playLog(event){
   sbCall('rpc/fd_log_play',{p_pid:PID,p_event:event,p_mode:event==='race'?mode:null,p_track:event==='race'?track:null,p_device:device}).catch(()=>{});
 }
 setTimeout(()=>playLog('open'),1500);
+
+/* =========================================================
+   FIRST VISIT: a new player goes straight into an easy Quick Race with tips,
+   wins a random skin when they finish, is pointed to it on the Race Desk,
+   and is reminded to log in so their progress is saved.
+   ========================================================= */
+const ONB={tips:new Set(),t:0,iv:0,x0:0};
+function isFirstVisit(){
+  if(store.get('flagdash-onboard'))return false;
+  if((STATS.races|0)>0)return false;
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&/^sb-.*-auth-token$/.test(k))return false;}}catch(e){}
+  if(/access_token|error_description/.test(location.hash)||/[?&](room|join|code)=/i.test(location.search))return false;
+  return true;}
+function coach(ic,tx,ms){const c=$('coach');$('coachIc').textContent=ic;$('coachTx').textContent=tx;c.hidden=false;c.style.animation='none';void c.offsetWidth;c.style.animation='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},ms||4200);}
+function tip(id,ic,tx,ms){if(ONB.tips.has(id))return false;ONB.tips.add(id);coach(ic,tx,ms);return true;}
+function startTutorialRace(){
+  store.set('flagdash-onboard','race');selTrack='stadium';
+  const kb=!isTouch;
+  selMode='solo';selLaps=1;startOffline(false);if(!RACE)return;
+  // first race: the flat Night Stadium, one lap, against slower and clumsier CPU runners
+  RACE.tut=true;RACE.bots.forEach(b=>{b.ai.skill=rand(0.42,0.58);b.ai.pace=rand(0.86,0.92);});
+  $('trackLabel').textContent='Your first race · '+TH.name;
+  ONB.tips.clear();ONB.x0=player.x;
+  coach('🏁','Welcome to Flag Dash! Race your flag to the finish line.',3800);
+  clearInterval(ONB.iv);ONB.iv=setInterval(()=>tutorTick(kb),250);
+}
+function tutorTick(kb){
+  if(!RACE||!RACE.tut||!player){clearInterval(ONB.iv);return;}
+  if(state!=='race')return;
+  const ahead=type=>obstacles.find(o=>o.type===type&&o.d>player.d+4&&o.d-player.d<26&&Math.abs(o.x-player.x)<1.6);
+  if(!ONB.tips.has('lanes')){if(raceTime>0.6)tip('lanes','↔️',kb?'Use ◀ ▶ arrow keys (or A / D) to change lanes.':'Swipe left or right to change lanes.',5200);return;}
+  if(ahead('hurdle')&&tip('jump','⬆️',kb?'Hurdle ahead! Press ▲ or Space to JUMP.':'Hurdle ahead! Swipe UP to jump.'))return;
+  if(ahead('bar')&&tip('slide','⬇️',kb?'Barrier ahead! Press ▼ or S to SLIDE under it.':'Barrier ahead! Swipe DOWN to slide under it.'))return;
+  if(ahead('wall')&&tip('wall','🧱','Wall ahead! Change lanes to run around it.'))return;
+  if(player.item&&tip('item','🎁',kb?`You got an item! Press Q to use it.`:'You got an item! Tap the item button to use it.'))return;
+  if(player.charge>=1&&tip('power','⚡',kb?'Your power is ready! Press E to knock down every rival.':'Your power is ready! Tap POWER to knock down every rival.'))return;
+  if(RACE.loot&&RACE.loot.n&&tip('loot','💥','Nice hit! Hitting rivals earns XP and steals their coins.'))return;
+  if(RACE.coins>=3&&tip('coins','🪙','Coins buy skins and items in the Store. Grab them!'))return;
+  if(player.d>TRACK*0.8&&tip('end','🏁','Almost there! Sprint to the finish!'))return;
+}
+// The first finished race unlocks a random skin from the Store.
+function firstRaceSkin(){
+  if(store.get('flagdash-firstskin'))return null;
+  const pool=SKINS_SHOP.filter(s=>(s.tier==='coin'||s.tier==='gem')&&!s.hero&&!wallet.skins.includes(s.id));if(!pool.length)return null;
+  const sk=pool[Math.floor(Math.random()*pool.length)];wallet.skins.push(sk.id);saveWallet();
+  store.set('flagdash-firstskin',sk.id);store.set('flagdash-newskin',sk.id);return sk;}
+function newSkin(){const id=store.get('flagdash-newskin');return id?SKINS_SHOP.find(s=>s.id===id)||null:null;}
+// On the Race Desk: point at the Store until the new skin has been looked at, then the save tip.
+function onboardHome(){
+  const busy=!$('store').hidden||!$('acct').hidden||!$('hub').hidden||!$('settings').hidden||!$('social').hidden||!$('lvPanel').hidden||!!pickOpen;
+  if(state!=='menu'||!$('menu')||$('menu').hidden||busy){hidePointer();$('saveTip').hidden=true;return;}
+  const sk=newSkin(),btn=$('deskStore');
+  if(sk&&btn&&btn.offsetParent){btn.classList.add('has-new');showPointer(btn,`🎁 Your new skin: ${sk.name}`,'Tap the Store to wear it',()=>{storeTab='skins';openStore();});}
+  else hidePointer();
+  if(!sk)maybeSaveTip();
+}
+let ptTarget=null;
+function showPointer(el,tx,sub,fn){ptTarget=el;$('pointerTx').textContent=tx;$('pointerSub').textContent=sub;$('pointerBtn').onclick=fn;$('pointer').hidden=false;placePointer();}
+function hidePointer(){ptTarget=null;$('pointer').hidden=true;document.querySelectorAll('.has-new').forEach(b=>b.classList.remove('has-new'));}
+function placePointer(){if(!ptTarget||$('pointer').hidden)return;const r=ptTarget.getBoundingClientRect(),P=$('pointer'),w=P.offsetWidth||200;
+  const x=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));P.style.left=x+'px';P.style.top=(r.bottom+4)+'px';P.querySelector('.pt-arrow').style.transform=`translateX(${(r.left+r.width/2)-(x+w/2)}px)`;}
+addEventListener('resize',placePointer);setInterval(()=>{if(state==='menu')onboardHome();else hidePointer();placePointer();},700);
+function maybeSaveTip(){
+  const T=$('saveTip');if(!AUTH.on||AUTH.user||(STATS.races|0)<1){T.hidden=true;return;}
+  const later=+store.get('flagdash-savetip-later')||0;if(Date.now()-later<24*3600*1000||sessionStorage.getItem('fd-savetip-x')){T.hidden=true;return;}
+  T.hidden=state!=='menu'||!$('store').hidden||!$('acct').hidden;}
+$('saveTipGo').onclick=()=>{$('saveTip').hidden=true;try{sessionStorage.setItem('fd-savetip-x','1');}catch(e){}openAcct('To save your progress, please log in.');};
+$('saveTipLater').onclick=()=>{$('saveTip').hidden=true;store.set('flagdash-savetip-later',String(Date.now()));};
+// audio needs a tap; the first one anywhere switches sound on
+addEventListener('pointerdown',function once(){try{initAudio();if(actx&&actx.state==='suspended')actx.resume();}catch(e){}removeEventListener('pointerdown',once);},{once:true});
+if(isFirstVisit())setTimeout(startTutorialRace,700);
+
 
 /* ---------- Race Desk bottom tabs: Quick Race · Online · Challenges. Each opens its own panel; tap it again to close. ---------- */
 (()=>{const sh=$('d3Sheet'),hd=$('d3Handle'),T={quick:['tabQuick','paneQuick'],online:['tabOnline','paneOnline'],solo:['tabSolo','paneSolo']};
