@@ -2388,7 +2388,7 @@ function studioSetup(){
   panel(0xdfe8ff,2.2,4.5,3,-4,0.2,3,3);  // fill, right
   panel(0x9ab8ff,5,4,3.5,5,2,4,0.2);     // cool rim, behind right
   panel(0xffc27a,4,-4.5,3,4.5,0.2,4,2);  // warm rim, behind left
-  panel(0xffffff,2.5,0,6.9,0,5,0.2,5);   // ceiling
+  panel(0xffffff,1.1,0,6.9,0,5,0.2,5);   // ceiling
   const pm=new THREE.PMREMGenerator(R);pv.scene.environment=pm.fromScene(env,0.035).texture;pm.dispose();
   // lights: the hero faces the camera (-z)
   pv.scene.add(new THREE.HemisphereLight(0xdfe6ff,0x2a2040,0.18));
@@ -2416,7 +2416,7 @@ function studioize(m,skinHex){
       else if(map){rough=0.62;metal=0.08;}
       else if(hsl.s<0.13&&hsl.l>0.42&&hsl.l<0.8){rough=0.3;metal=0.9;}                       // steel and silver
       else if(hsl.h>0.085&&hsl.h<0.17&&hsl.s>0.45&&hsl.l>0.38&&hsl.l<0.78){rough=0.26;metal=1;}  // gold and brass
-      else if(hsl.l<0.14){rough=0.4;}                                                          // dark lacquer and leather
+      else if(hsl.l<0.14){rough=0.58;}                                                         // dark lacquer and leather
       const col=old.color.clone();if(!metal&&hsl.s>0.05)col.setHSL(hsl.h,Math.min(1,hsl.s*1.18),hsl.l);
       nw=new THREE.MeshStandardMaterial({color:col.convertSRGBToLinear(),map,roughness:rough,metalness:metal,envMapIntensity:metal?1.2:0.32,
         transparent:old.transparent,opacity:old.opacity,side:old.side,alphaTest:old.alphaTest||0,depthWrite:old.depthWrite});
