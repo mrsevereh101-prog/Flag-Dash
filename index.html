@@ -1703,8 +1703,8 @@ function wallRibbon(x,d0,d1,step,yb,yt,hfn,uScale){
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();return g;
 }
 const capCache={};
-function capGeo(r,len){const k=r.toFixed(3)+'_'+len.toFixed(3);if(capCache[k])return capCache[k];
-  const g=mergeGeos([{g:new THREE.CylinderGeometry(r,r,len,10,1,true)},{g:new THREE.SphereGeometry(r,10,6,0,TAU,0,Math.PI/2),m:mtx(0,len/2,0)},{g:new THREE.SphereGeometry(r,10,6,0,TAU,Math.PI/2,Math.PI/2),m:mtx(0,-len/2,0)}]);
+function capGeo(r,len,hq){const k=r.toFixed(3)+'_'+len.toFixed(3)+(hq?'h':'');if(capCache[k])return capCache[k];const sg=hq?28:10,sh=hq?12:6;
+  const g=mergeGeos([{g:new THREE.CylinderGeometry(r,r,len,sg,1,true)},{g:new THREE.SphereGeometry(r,sg,sh,0,TAU,0,Math.PI/2),m:mtx(0,len/2,0)},{g:new THREE.SphereGeometry(r,sg,sh,0,TAU,Math.PI/2,Math.PI/2),m:mtx(0,-len/2,0)}]);
   g.userData.shared=true;return capCache[k]=g;}
 function sharedGeo(key,make){if(capCache[key])return capCache[key];const g=make();g.userData.shared=true;return capCache[key]=g;}
 function disposeTree(o){o.traverse(n=>{if(n.geometry&&!n.geometry.userData.shared)n.geometry.dispose();const ms=n.material?(Array.isArray(n.material)?n.material:[n.material]):[];ms.forEach(m=>{if(m.userData&&m.userData.shared)return;if(m.map&&!m.map.__shared)m.map.dispose();m.dispose();});});}
@@ -2155,9 +2155,11 @@ function buildModel(flag,charId,opt){
   const M=(c,x)=>{const m=new THREE.MeshLambertMaterial(Object.assign({color:c},x||{}));body.push(m);return m;};
   const TX=(k,x)=>M(0xffffff,Object.assign({map:OUTFIT_TEX[k]()},x||{}));
   const add=(geo,mat,x,y,z,parent,rx,ry,rz)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);if(rx||ry||rz)m.rotation.set(rx||0,ry||0,rz||0);parent.add(m);return m;};
-  const Sph=(r,a,b2,c,d)=>new THREE.SphereGeometry(r,14,10,a,b2,c,d);
-  const Cyl=(r1,r2,h,open,ts,tl)=>new THREE.CylinderGeometry(r1,r2,h,16,1,!!open,ts,tl);
-  const Tor=(r,t,arc)=>new THREE.TorusGeometry(r,t,6,20,arc);
+  // hq: smoother shapes for the home-screen studio preview
+  const HQ=!!opt.hq,capG=(r,len)=>capGeo(r,len,HQ);
+  const Sph=(r,a,b2,c,d)=>new THREE.SphereGeometry(r,HQ?36:14,HQ?24:10,a,b2,c,d);
+  const Cyl=(r1,r2,h,open,ts,tl)=>new THREE.CylinderGeometry(r1,r2,h,HQ?40:16,1,!!open,ts,tl);
+  const Tor=(r,t,arc)=>new THREE.TorusGeometry(r,t,HQ?14:6,HQ?48:20,arc);
   const skin=M(lk.skin),sash=M(kA);
   const gold=()=>M(0xd8b04a),steel=()=>M(0x9aa0a8),wood=()=>M(0x8a5a32);
   const P=(()=>{switch(id){
@@ -2184,12 +2186,12 @@ function buildModel(flag,charId,opt){
   [-1,1].forEach(s=>add(sharedGeo(id==='dwarf'?'browB':'brow',()=>new THREE.BoxGeometry(id==='dwarf'?0.12:0.09,id==='dwarf'?0.04:0.018,0.025)),id==='dwarf'||id==='samurai'?P.hair:dark,s*0.085,0.33,-0.215,headP,0,0,s*(id==='samurai'?-0.25:-0.12)));
   const mouth=add(sharedGeo('mouth',()=>new THREE.BoxGeometry(0.1,0.022,0.02)),dark,0,0.12,-0.225,headP);
   add(sharedGeo('nose',()=>new THREE.SphereGeometry(0.035,8,6)),skin,0,0.2,-0.24,headP);
-  const arm=s=>{const sh=new THREE.Group();sh.position.set(s*0.3*b,0.5,0);torso.add(sh);add(Sph(0.1*b),P.upper,0,0,0,sh);add(capGeo(0.07*b,0.2),P.upper,0,-0.17,0,sh);
-    const elb=new THREE.Group();elb.position.y=-0.32;sh.add(elb);add(capGeo(0.064*b,0.18),P.fore,0,-0.14,0,elb);add(Sph(0.068),skin,0,-0.3,0,elb);
+  const arm=s=>{const sh=new THREE.Group();sh.position.set(s*0.3*b,0.5,0);torso.add(sh);add(Sph(0.1*b),P.upper,0,0,0,sh);add(capG(0.07*b,0.2),P.upper,0,-0.17,0,sh);
+    const elb=new THREE.Group();elb.position.y=-0.32;sh.add(elb);add(capG(0.064*b,0.18),P.fore,0,-0.14,0,elb);add(Sph(0.068),skin,0,-0.3,0,elb);
     const hand=new THREE.Group();hand.position.y=-0.3;elb.add(hand);return {sh,elb,hand};};
   const armL=arm(-1),armR=arm(1);
-  const leg=s=>{const hip=new THREE.Group();hip.position.set(s*0.12*b,-0.02,0);pelvis.add(hip);add(capGeo(P.thighR*b,0.28*ls),P.thigh,0,-0.22*ls,0,hip);
-    const knee=new THREE.Group();knee.position.y=-0.44*ls;hip.add(knee);add(capGeo((id==='warrior'?0.078:0.09)*b,0.3*ls),P.shin,0,-0.21*ls,0,knee);
+  const leg=s=>{const hip=new THREE.Group();hip.position.set(s*0.12*b,-0.02,0);pelvis.add(hip);add(capG(P.thighR*b,0.28*ls),P.thigh,0,-0.22*ls,0,hip);
+    const knee=new THREE.Group();knee.position.y=-0.44*ls;hip.add(knee);add(capG((id==='warrior'?0.078:0.09)*b,0.3*ls),P.shin,0,-0.21*ls,0,knee);
     const bs=P.bigShoes?1.35:1;add(Sph(1),P.shoe,0,-0.44*ls-0.02,-0.06,knee).scale.set(0.11*bs,0.065,0.2*bs);return {hip,knee};};
   const legL=leg(-1),legR=leg(1);
   const shieldDisk=(tex,r,rimMat)=>{const g=new THREE.Group();const side=M(0x5b3b25);add(new THREE.CylinderGeometry(r,r,0.05,24),[side,TX(tex),side],0,0,0,g);if(rimMat)add(Tor(r,0.025),rimMat,0,0.03,0,g,Math.PI/2);return g;};
@@ -2198,7 +2200,7 @@ function buildModel(flag,charId,opt){
     const sx=Rr*(1-Math.cos(Math.PI*0.425)),sy=Rr*Math.sin(Math.PI*0.425);add(Cyl(0.004,0.004,sy*2),M(0xeeeeee),sx,0,0,g);
     if(tips)[-1,1].forEach(s=>add(Sph(0.03),tips,sx,s*sy,0,g));return g;};
   const braid=(parent,a,bpt,n,mat,rings,rr)=>{rr=rr||0.045;for(let i=0;i<n;i++){const t=i/(n-1),x=lerp(a[0],bpt[0],t),y=lerp(a[1],bpt[1],t),z=lerp(a[2],bpt[2],t);add(Sph(rr*(1-t*0.35)),mat,x,y,z,parent);if(rings&&(i===2||i===n-2))add(Tor(0.045,0.014),rings,x,y,z,parent,Math.PI/2);}};
-  const longHair=(mat,len)=>{add(Sph(0.27,0,TAU,0,Math.PI*0.6),mat,0,0.22,0,headP,0.8,0,0);[-1,1].forEach(s=>add(capGeo(0.05,0.2),mat,s*0.205,0.12,-0.08,headP,0.12,0,s*0.1));add(new THREE.BoxGeometry(0.38,len,0.08),mat,0,0.27-len/2,0.2,headP);};
+  const longHair=(mat,len)=>{add(Sph(0.27,0,TAU,0,Math.PI*0.6),mat,0,0.22,0,headP,0.8,0,0);[-1,1].forEach(s=>add(capG(0.05,0.2),mat,s*0.205,0.12,-0.08,headP,0.12,0,s*0.1));add(new THREE.BoxGeometry(0.38,len,0.08),mat,0,0.27-len/2,0.2,headP);};
   if(id==='archer'||id==='elf'){const lip=new THREE.MeshBasicMaterial({color:0xb5485a});mouth.material=lip;mouth.scale.x=0.8;[-1,1].forEach(s=>add(sharedGeo('lash',()=>new THREE.BoxGeometry(0.07,0.016,0.02)),dark,s*0.095,0.3,-0.212,headP,0,0,s*-0.3));}
   if(id==='samurai'){
     const lam=TX('samLam',{side:DS});
@@ -2367,10 +2369,82 @@ pv.r.setPixelRatio(Math.min(window.devicePixelRatio||1,2));pv.r.setClearColor(0x
 pv.scene.add(new THREE.HemisphereLight(0xeef1ff,0x3a2a40,1.0));{const l=new THREE.DirectionalLight(0xffffff,0.8);l.position.set(-3,4,-5);pv.scene.add(l);}
 {const disc=new THREE.Mesh(new THREE.CircleGeometry(1.15,48),new THREE.MeshBasicMaterial({color:0x2a3378}));disc.rotation.x=-Math.PI/2;pv.scene.add(disc);const rim=new THREE.Mesh(new THREE.RingGeometry(1.15,1.22,48),new THREE.MeshBasicMaterial({color:0xf2b631}));rim.rotation.x=-Math.PI/2;rim.position.y=0.002;pv.scene.add(rim);}
 pv.cam.position.set(0,1.3,-4.5);pv.cam.lookAt(0,1.02,0);
+/* ---------- studio look for the home-screen hero (test: add ?studio=1 to the address) ----------
+   Real materials (metal, lacquer, cloth, skin), a reflection map, film-style tone mapping,
+   key + rim lights, soft floor shadows and smoother shapes. Races are not affected. */
+const STUDIO=/[?&]studio=1/.test(location.search);
+const studio={on:false,keepT:[]};
+function studioSetup(){
+  const R=pv.r;studio.on=true;
+  R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.0;
+  R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.physicallyCorrectLights=false;
+  pv.scene.children.filter(o=>o.isLight).forEach(o=>pv.scene.remove(o));
+  pv.scene.traverse(o=>{if(o.material&&o.material.color)o.material.color.convertSRGBToLinear();});
+  // reflection map: a small dark studio with soft light panels, blurred into an environment
+  const env=new THREE.Scene(),box=new THREE.BoxGeometry(1,1,1);
+  const room=new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:0x1a1d2e,side:THREE.BackSide}));room.scale.set(14,8,14);room.position.y=3;env.add(room);
+  const panel=(c,k,x,y,z,sx,sy,sz)=>{const m=new THREE.Mesh(box,new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(k)}));m.position.set(x,y,z);m.scale.set(sx,sy,sz);env.add(m);};
+  panel(0xfff0dc,7,-4,5,-5,3,3,0.2);     // key softbox, front left
+  panel(0xdfe8ff,2.2,4.5,3,-4,0.2,3,3);  // fill, right
+  panel(0x9ab8ff,5,4,3.5,5,2,4,0.2);     // cool rim, behind right
+  panel(0xffc27a,4,-4.5,3,4.5,0.2,4,2);  // warm rim, behind left
+  panel(0xffffff,2.5,0,6.9,0,5,0.2,5);   // ceiling
+  const pm=new THREE.PMREMGenerator(R);pv.scene.environment=pm.fromScene(env,0.035).texture;pm.dispose();
+  // lights: the hero faces the camera (-z)
+  pv.scene.add(new THREE.HemisphereLight(0xdfe6ff,0x2a2040,0.18));
+  const key=new THREE.DirectionalLight(0xfff1e0,2.5);key.position.set(-2.4,4.6,-3.6);key.castShadow=true;
+  key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-1.6,right:1.6,top:2.6,bottom:-0.4,near:1,far:12});key.shadow.bias=-0.0006;key.shadow.normalBias=0.02;pv.scene.add(key);
+  const rimA=new THREE.DirectionalLight(0x8fb4ff,2.4);rimA.position.set(2.6,2.6,3.4);pv.scene.add(rimA);
+  const rimB=new THREE.DirectionalLight(0xffbf6a,1.9);rimB.position.set(-2.8,2.2,3.0);pv.scene.add(rimB);
+  const fill=new THREE.DirectionalLight(0xb8c6ff,0.25);fill.position.set(3,1.4,-4);pv.scene.add(fill);
+  // soft shadow on the floor disc, plus a dark contact shadow under the feet
+  const catcher=new THREE.Mesh(new THREE.CircleGeometry(1.15,64),new THREE.ShadowMaterial({opacity:0.5}));catcher.rotation.x=-Math.PI/2;catcher.position.y=0.004;catcher.receiveShadow=true;pv.scene.add(catcher);
+  const ct=canvasTex(128,128,(c,w,h)=>{const g=c.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2);g.addColorStop(0,'rgba(0,0,0,.75)');g.addColorStop(0.45,'rgba(0,0,0,.35)');g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(0,0,w,h);});
+  const contact=new THREE.Mesh(new THREE.PlaneGeometry(1.25,0.95),new THREE.MeshBasicMaterial({map:ct,transparent:true,depthWrite:false}));contact.rotation.x=-Math.PI/2;contact.position.y=0.006;pv.scene.add(contact);
+}
+// Swap the model's flat materials for physically based ones, guessing the surface from its colour.
+function studioize(m,skinHex){
+  const swap=new Map(),aniso=Math.min(8,pv.r.capabilities.getMaxAnisotropy());
+  const conv=old=>{
+    if(swap.has(old))return swap.get(old);let nw;
+    const map=old.map?(()=>{const t=old.map.clone();t.encoding=THREE.sRGBEncoding;t.anisotropy=aniso;t.needsUpdate=true;return t;})():null;
+    if(old.isMeshBasicMaterial||old.isSpriteMaterial||old.isShadowMaterial){nw=old.clone();if(nw.color)nw.color.convertSRGBToLinear();if(map)nw.map=map;}
+    else{
+      const hsl={h:0,s:0,l:0};old.color.getHSL(hsl);const isSkin=old.color.getHex()===skinHex;
+      let rough=0.8,metal=0;
+      if(isSkin){rough=0.52;}
+      else if(map){rough=0.62;metal=0.08;}
+      else if(hsl.s<0.13&&hsl.l>0.42&&hsl.l<0.8){rough=0.3;metal=0.9;}                       // steel and silver
+      else if(hsl.h>0.085&&hsl.h<0.17&&hsl.s>0.45&&hsl.l>0.38&&hsl.l<0.78){rough=0.26;metal=1;}  // gold and brass
+      else if(hsl.l<0.14){rough=0.4;}                                                          // dark lacquer and leather
+      const col=old.color.clone();if(!metal&&hsl.s>0.05)col.setHSL(hsl.h,Math.min(1,hsl.s*1.18),hsl.l);
+      nw=new THREE.MeshStandardMaterial({color:col.convertSRGBToLinear(),map,roughness:rough,metalness:metal,envMapIntensity:metal?1.2:0.32,
+        transparent:old.transparent,opacity:old.opacity,side:old.side,alphaTest:old.alphaTest||0,depthWrite:old.depthWrite});
+      const be=old.userData&&old.userData.be;const em=be||(old.emissive&&old.emissive.getHex()?old.emissive:null);
+      if(em){nw.emissive=em.clone().convertSRGBToLinear();nw.emissiveIntensity=be?1.4:1;}
+    }
+    if(old.map&&!old.map.__shared)old.map.dispose();old.dispose();swap.set(old,nw);return nw;};
+  m.root.traverse(o=>{
+    if(o.isSprite||!o.material)return;
+    o.material=Array.isArray(o.material)?o.material.map(conv):conv(o.material);
+    if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+  m.body=m.body.map(mt=>swap.get(mt)||mt);
+  if(m.shadow)m.shadow.visible=false;
+}
+// Extra life for the studio idle: weight shifting, breathing and a relaxed knee.
+// Added just for the render and taken off again, so the normal pose code is untouched.
+function studioIdle(r,now,on){
+  const m=r.m,T=now/1000,w=(r.emote?0.35:1)*(on?1:-1),sh=Math.sin(T*0.55+r.anim),br=Math.sin(T*1.7);
+  m.pelvis.position.x+=0.03*sh*w;m.pelvis.rotation.z+=0.035*sh*w;m.torso.rotation.z-=0.045*sh*w;m.headP.rotation.z+=0.03*sh*w;
+  m.legL.knee.rotation.x-=0.12*Math.max(0,sh)*w;m.legR.knee.rotation.x-=0.12*Math.max(0,-sh)*w;
+  m.torso.rotation.x-=0.02*br*w;m.armL.sh.rotation.z-=0.03*br*w;m.armR.sh.rotation.z+=0.03*br*w;
+  const bs=1+0.012*br;m.torso.scale.set(on?bs:1,1,on?bs:1);
+}
+if(STUDIO)studioSetup();
 function fakeRunner(){return {speed:0,stun:0,slide:0,y:0,finished:false,slow:0,boost:0,anim:Math.random()*5,spin:0,emote:null,charge:0,phase:0,shield:0,pose:'idle',world:false};}
 function rebuildPreview(emote){
   if(pv.runner&&pv.runner.m){pv.scene.remove(pv.runner.m.root);disposeModel(pv.runner.m);}
-  const f=flagCanvas(selCountry);const r=fakeRunner();r.m=buildModel(f,selChar,{lane:7,skin:skinById(mySkinId()),gear:myGear()});pv.scene.add(r.m.root);pv.runner=r;
+  const f=flagCanvas(selCountry);const r=fakeRunner();r.m=buildModel(f,selChar,{lane:7,skin:skinById(mySkinId()),gear:myGear(),hq:studio.on});if(studio.on)studioize(r.m,charById(selChar).look.skin);pv.scene.add(r.m.root);pv.runner=r;
   if(emote)r.emote={id:emote,t:1.8};
 }
 pvCanvas.addEventListener('pointerdown',e=>{pv.drag={x:e.clientX,r:pv.rotY};try{pvCanvas.setPointerCapture(e.pointerId);}catch(_){} });
@@ -2381,7 +2455,7 @@ function renderPreview(dt,now){
   if(w!==pv.w||h!==pv.h){pv.w=w;pv.h=h;pv.r.setSize(w,h,false);pv.cam.aspect=w/h;pv.cam.updateProjectionMatrix();}
   pv.autoT-=dt;if(pv.autoT<=0&&!pv.runner.emote){pv.runner.emote={id:pick(EMOTES),t:1.8};pv.autoT=rand(4,7);}
   if(!pv.drag)pv.rotY+=((pv.base||0)+Math.sin(now/2600)*(pv.base==null?0.5:0.12)-pv.rotY)*Math.min(1,dt*0.8);
-  pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);fitPreview(w,h,dt);pv.r.render(pv.scene,pv.cam);
+  pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);fitPreview(w,h,dt);if(studio.on)studioIdle(pv.runner,now,true);pv.r.render(pv.scene,pv.cam);if(studio.on)studioIdle(pv.runner,now,false);
 }
 // While a picker is open it covers part of the preview, so zoom out and slide the runner
 // into the space that is still visible, keeping the whole body (and flag) on screen.
