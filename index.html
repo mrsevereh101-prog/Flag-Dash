@@ -1525,7 +1525,7 @@ const CHARS=[
 ];
 const CHAR_IDS=CHARS.map(c=>c.id);
 const charById=id=>CHARS.find(c=>c.id===id)||CHARS[0];
-const ITEMS={banana:{name:'Banana Peel',icon:'🍌'},rocket:{name:'Rocket',icon:'🚀'},freeze:{name:'Freeze Bomb',icon:'❄️'},turbo:{name:'Turbo Shoes',icon:'💨'},shield:{name:'Shield',icon:'🛡️'},mine:{name:'Land Mine',icon:'💣'},ghost:{name:'Ghost',icon:'👻'},fire:{name:'Fire Trail',icon:'🔥'}};
+const ITEMS={banana:{name:'Banana Peel',icon:'🍌'},rocket:{name:'Rocket',icon:'🚀'},freeze:{name:'Freeze Bomb',icon:'❄️'},turbo:{name:'Turbo Shoes',icon:'💨'},shield:{name:'Shield',icon:'🛡️'},mine:{name:'Land Mine',icon:'💣'},ghost:{name:'Ghost',icon:'👻'},fire:{name:'Fire Trail',icon:'🔥'},swap:{name:'Lead Swap',icon:'🔄'}};
 const EMOTES=['wave','flex','dance','point'];
 const TEAMS=[{name:'Gold',css:'var(--gold)',hex:0xf2b631,col:'#f2b631'},{name:'Blue',css:'var(--blue)',hex:0x4fa3ff,col:'#4fa3ff'},{name:'Green',css:'var(--good)',hex:0x5fd08a,col:'#5fd08a'}];
 // Race modes: solo, teams (3 v 3), trio (three teams of two, 2 v 2 v 2)
@@ -2623,11 +2623,13 @@ function startRaceFromGo(go,online){
   if(!go.sv)runners.forEach(r=>{if(r.owned&&r.char.id==='archer')giveItem(r);});  // perk: Full Quiver
   RACE.bots=runners.filter(r=>r.kind==='bot');
   // buffs bought in the store are used up here, one of each per race
-  BUFFS.forEach(b=>{if(wallet.use[b.id]!==false&&(wallet.buffs[b.id]|0)>0){wallet.buffs[b.id]--;RACE.buffs.push(b.id);}});
+  BUFFS.forEach(b=>{if(wallet.use[b.id]!==false&&(wallet.buffs[b.id]|0)>0){if(LAP_PERKS.includes(b.id)&&(RACE.laps<2||RACE.survival))return;wallet.buffs[b.id]--;RACE.buffs.push(b.id);}});
   if(RACE.buffs.length)saveWallet();
   if(RACE.buffs.includes('charge'))player.charge=1;
   if(RACE.buffs.includes('shield'))player.shield=999;
   RACE.magnet=RACE.buffs.includes('magnet');RACE.double=RACE.buffs.includes('double');
+  if(RACE.buffs.includes('nullify'))player.itemProof=true;
+  if(RACE.buffs.includes('swap'))player.item='swap';
   camL.init=true;crowdMood=0.3;moodPlace=0;
   raceTime=0;cd=online?4.2:3.2;cdShown=null;state='countdown';
   music.stop(0.6);music.sting(MUS.start);music.prep(TRACK_MUSIC[TH.id]||'race-to-the-finish');music.prep(MUS.final);RACE.finalMusic=false;shake=0;goT=0;camAng=Math.PI*0.85;
@@ -3065,7 +3067,7 @@ function handleAct(src,a){
     case 'rkt':{if(rockets.some(k=>k.id===a.id))break;const m=makeRocketMesh();scene.add(m);rockets.push({id:a.id,x:+a.x||src.x,d:+a.d||src.d,target:runnerById(a.tg),owner:src,life:4,mesh:m});if(runnerById(a.tg)===player&&src!==player)feed(`${src.nm} fired a rocket at you`,'bad');break;}
     case 'rktx':{const i=rockets.findIndex(k=>k.id===a.id);if(i>=0){const k=rockets[i];{const p=W(k.x,k.d,Hf(k.d)+1.2);explode(p.x,p.y,p.z);}scene.remove(k.mesh);rockets.splice(i,1);}break;}
     case 'frz':{ringFx(src.x,src.d,0x8fd8ff,20,0.7);{const p=wpos(src,1.2);burst(p.x,p.y,p.z,40,[0.7,0.9,1],{add:true,max:12,grav:2,size:0.3});}
-      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.ghost>0){ghostFx(o);continue;}if(o.shield>0){o.shield=0;notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);if(o.kind==='local')feed(`${src.nm} froze you`,'bad');sayHit(src,o);notifyAttacker(src,o,'frz');}
+      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.ghost>0){ghostFx(o);continue;}if(itemProof(o,'the freeze bomb'))continue;if(o.shield>0){o.shield=0;notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);if(o.kind==='local')feed(`${src.nm} froze you`,'bad');sayHit(src,o);notifyAttacker(src,o,'frz');}
       break;}
     case 'qk':{ringFx(src.x,src.d,0xe0654a,12,0.6);{const p=wpos(src,0.2);burst(p.x,p.y,p.z,50,TH.dust,{max:9,up:5,grav:10,size:0.45});}if(!reduceMotion&&player&&Math.abs(player.d-src.d)<25)shake=Math.max(shake,0.35);if(src.kind==='local')sfx.hit();
       for(const o of runners){if(!o.owned||o===src)continue;if(Math.abs(o.d-src.d)<12&&Math.abs(o.x-src.x)<12)hit(o,1.2,src,'knock',`${src.nm}'s quake knocked you down`);}break;}
@@ -3074,6 +3076,12 @@ function handleAct(src,a){
     case 'trap':{const t=traps[a.i|0];if(t&&t.cd<=0){t.cd=5;t.mesh.visible=false;const K=TRAP_KINDS[t.kind],p=W(t.x,t.d,Hf(t.d)+0.4);
       if(K.fx==='knock'){burst(p.x,p.y,p.z,26,[1,0.55,0.15],{add:true,max:7,grav:6});burst(p.x,p.y,p.z,14,[0.35,0.33,0.3],{max:4,grav:2});if(player&&Math.abs(prog(player)-prog(src))<30){sfx.smash();sfx.meteor();if(!reduceMotion)shake=Math.max(shake,src===player?0.6:0.2);}}
       else{const c=new THREE.Color(K.col);burst(p.x,p.y,p.z,16,[c.r,c.g,c.b],{max:4,up:2,grav:5,size:0.3});}}break;}
+    case 'swp':{const t=runnerById(a.tg);if(!t)break;
+      [src,t].forEach(o=>{const p=wpos(o,1.2);burst(p.x,p.y,p.z,26,[0.6,0.85,1],{add:true,max:8,up:2,grav:0,size:0.4});});
+      if(src.owned)placeRunner(src,a.td,a.tx,a.tl);if(t.owned)placeRunner(t,a.sd,a.sx,a.sl);
+      if(src.kind==='local'){sfx.power();feed(`🔄 Lead Swap! You swapped places with ${t.nm}`,'good');camL.init=true;}
+      else if(t.kind==='local'){feed(`🔄 ${src.nm} swapped places with you`,'bad');camL.init=true;}
+      computeRanks();break;}
     case 'pw':{const c={bolt:0xf2b631,hopper:0x5fd08a,phantom:0x9a7be0,turbo:0xffffff,shield:0x8fd8ff,ghost:0xc4b5ff,fire:0xff7a1a}[a.p]||0xffffff;ringFx(src.x,src.d,c,3,0.4);
       if(a.p==='ghost'){src.ghost=6;if(src.kind==='local')feed('Ghost: attacks pass through you for 6 s','good');}
       if(a.p==='fire'){src.fireT=5;src.fireLast=-99;if(src.kind==='local')feed('Fire trail lit for 5 s','good');}if(a.p==='hopper'){const p=wpos(src,0.1);burst(p.x,p.y,p.z,24,[0.5,1,0.6],{add:true,max:6,grav:3});}break;}
@@ -3104,6 +3112,9 @@ function notifyAttacker(src,o,res){
 function nextInLine(o,src){const fwd=prog(src)<=prog(o),po=prog(o);let best=null,bd=60;
   for(const c of runners){if(c===o||c===src||c.finished)continue;const dd=fwd?prog(c)-po:po-prog(c);if(dd>0&&dd<bd){bd=dd;best=c;}}return best;}
 function ghostFx(o){const p=wpos(o,1.2);burst(p.x,p.y,p.z,14,[0.8,0.75,1],{add:true,max:4,up:1,grav:0,size:0.3});}
+// Null Field perk: mystery-box items do nothing to this runner
+function itemProof(r,what){if(!r.itemProof)return false;if(r.kind==='local'&&!(r.npT>raceTime)){feed(`🧿 Null Field: ${what} did nothing`,'good');r.npT=raceTime+1.5;}
+  const p=wpos(r,1.1);burst(p.x,p.y,p.z,8,[0.75,0.5,1],{add:true,max:3,up:1,grav:0,size:0.28});return true;}
 function hit(o,dur,src,kind,why,quiet){
   if(!o.owned||o.finished||o.phase>0||o.leaping||o.grace>0)return false;
   if(src&&src!==o&&sameTeam(o,src))return false;
@@ -3140,7 +3151,14 @@ function useItem(r){
   else if(it==='shield'){r.shield=8;sendAct(r,{t:'pw',p:'shield'});}
   else if(it==='ghost'){sendAct(r,{t:'pw',p:'ghost'});}
   else if(it==='fire'){sendAct(r,{t:'pw',p:'fire'});}
+  else if(it==='swap'){
+    const lead=raceLeader(r);
+    if(r.lap>1){if(r.kind==='local')feed('Lead Swap only works in the first lap','');return;}
+    if(!lead||prog(lead)<=prog(r)){r.item='swap';if(r.kind==='local')feed('You are already in front. Save the swap','');return;}
+    sendAct(r,{t:'swp',tg:lead.id,sd:rnd2(r.d),sx:rnd2(r.x),sl:r.lap,td:rnd2(lead.d),tx:rnd2(lead.x),tl:lead.lap});}
 }
+// move a runner to a new spot on the track without tripping over everything in between
+function placeRunner(r,d,x,lap){r.d=clamp(+d||0,0,TRACK-0.5);r.x=clamp(+x||0,-HALF,HALF);r.vx=0;if(r.ai)r.ai.tx=r.x;if(r.kind==='local'&&touchLane!=null){let bi=0;LANES.forEach((l,i)=>{if(Math.abs(l-r.x)<Math.abs(LANES[bi]-r.x))bi=i;});touchLane=bi;}r.lap=clamp(lap|0,1,RACE?RACE.laps:1);r.oi=0;r.lastWall=null;r.lastPad=null;if(r.ai)r.ai.handled.clear();r.phase=Math.max(r.phase,0.6);r.grace=Math.max(r.grace||0,0.8);}
 function usePower(r){
   if(!r||r.charge<1||r.finished||r.stun>0||!canAct())return;
   r.charge=0;r.ai.chargedFor=0;if(r.kind==='local'){sfx.power();raceStat('powers');}
@@ -3402,7 +3420,8 @@ function stepRunner(r,dt){
   for(let i=0;i<boxes.length;i++){const b=boxes[i];if(b.hidden>0||r.item)continue;if(prevD<=b.d+0.6&&r.d>=b.d-0.6&&Math.abs(r.x-b.x)<1.1&&r.y<2.2){giveItem(r);sendAct(r,{t:'box',i});}}
   for(let i=bananas.length-1;i>=0;i--){const b=bananas[i];if((b.owner===r&&b.safe>0)||sameTeam(b.owner,r)&&b.owner!==r)continue;
     if(Math.abs(r.d-b.d)<0.8&&Math.abs(r.x-b.x)<0.8&&r.y<0.4&&r.phase<=0&&!r.leaping&&!r.finished){sendAct(r,{t:'banx',id:b.id});
-      if(b.kind==='mine'){if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
+      if(itemProof(r,b.kind==='mine'?'the land mine':'the banana')){}
+      else if(b.kind==='mine'){if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
       else if(r.char.id==='elf'){if(r.kind==='local')feed('Light Feet: hopped over the banana','good');}
       else hit(r,1.1,b.owner===r?null:b.owner,'slip','Slipped on a banana');}}
   if(!r.finished&&!r.leaping&&r.phase<=0&&r.y<0.45)for(let i=0;i<traps.length;i++){const t=traps[i];if(t.cd>0||Math.abs(r.d-t.d)>0.85||Math.abs(r.x-t.x)>0.85)continue;
@@ -3411,9 +3430,10 @@ function stepRunner(r,dt){
     else if(K.fx==='slow'){if(r.ghost<=0){r.slow=Math.max(r.slow,2.2);r.speed*=0.6;if(r.kind==='local')feed(`Stuck in the ${K.name}`,'bad');}}
     else if(hit(r,K.fx==='knock'?1.6:K.fx==='slip'?1.1:1.0,null,K.fx,K.fx==='knock'?`${nm}! You got blown up`:K.fx==='slip'?`Slipped on the ${K.name}`:`Tripped by the ${K.name}`)&&K.fx==='knock'&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
   if(!r.finished&&!r.leaping&&r.y<0.5)for(const f of fires){if(f.owner===r||sameTeam(f.owner,r)||Math.abs(r.d-f.d)>0.8||Math.abs(r.x-f.x)>0.75)continue;
+    if(itemProof(r,'the fire trail'))continue;
     if(hit(r,0.9,f.owner,'trip',`Burned by ${f.owner.nm}'s fire trail`)){const p=wpos(r,0.6);burst(p.x,p.y,p.z,16,[1,0.5,0.1],{add:true,max:5,up:3,grav:-1,size:0.3});}}
   for(let i=rockets.length-1;i>=0;i--){const k=rockets[i];if(k.owner===r||r.finished)continue;if(k.target&&k.target!==r)continue;
-    if(Math.abs(r.d-k.d)<1&&Math.abs(r.x-k.x)<0.9){sendAct(r,{t:'rktx',id:k.id});hit(r,1.4,k.owner,'knock',`Hit by ${k.owner.nm}'s rocket`);}}
+    if(Math.abs(r.d-k.d)<1&&Math.abs(r.x-k.x)<0.9){sendAct(r,{t:'rktx',id:k.id});if(!itemProof(r,'the rocket'))hit(r,1.4,k.owner,'knock',`Hit by ${k.owner.nm}'s rocket`);}}
   if(!r.finished)r.charge=Math.min(1,r.charge+dt/r.char.charge*(1+(r.mods.chg||0))*(r.kind==='bot'?0.75:1));
   if(r.y<0.35&&!r.finished){for(const p of pads){if(p===r.lastPad)continue;if(r.d>=p.d&&r.d<=p.d+p.len&&Math.abs(r.x-p.x)<1.3){r.lastPad=p;triggerPad(r,p);break;}}}
   if(r.lastPad&&r.d>r.lastPad.d+r.lastPad.len+1)r.lastPad=null;
@@ -3440,7 +3460,10 @@ function collectPickups(r){
   if(got){coinIM.instanceMatrix.needsUpdate=true;sfx.coin();}
   for(const g of gems){if(g.taken)continue;const dd=g.d-r.d;if(dd<-1.5||dd>1.3)continue;if(Math.abs(g.x-r.x)<1.1&&g.y>r.y-0.4&&g.y<top+0.2){g.taken=true;g.mesh.visible=false;RACE.gems++;sfx.gem();if(RACE.survival)svGem();const p=g.mesh.position;burst(p.x,p.y,p.z,16,[0.5,0.95,1],{add:true,max:3,up:2,grav:2,size:0.2});0;}}
 }
-function newLap(r){if(RACE.survival){camL.init=true;resetPickups();return;}flashScreen('#0b0e26');camL.init=true;showBanner('LAP '+r.lap+'/'+RACE.laps,r.lap===RACE.laps?'Final lap':'Keep going',[0.95,0.75,0.2]);resetPickups();sfx.beep(true);}
+function newLap(r){if(RACE.survival){camL.init=true;resetPickups();return;}
+  if(r.lap===2){
+    if(r.item==='swap'){r.item=null;feed('Lead Swap ran out at the end of the first lap','');}
+    if(RACE.buffs.includes('comeback')&&r.place>=4&&r.place<=6){r.boost=3;r.boostMul=1.5;sendAct(r,{t:'pw',p:'turbo'});feed(`🔥 Comeback Boost! Speed burst from ${ord(r.place)} place`,'good');}}flashScreen('#0b0e26');camL.init=true;showBanner('LAP '+r.lap+'/'+RACE.laps,r.lap===RACE.laps?'Final lap':'Keep going',[0.95,0.75,0.2]);resetPickups();sfx.beep(true);}
 function finish(r,time){
   r.finished=true;r.time=time;r.item=null;computeRanks();
   if(r.kind==='local'){state='finished';resultsT=3.2;music.stop(0.5);if(r.place===1){music.sting(MUS.win);music.play(MUS.results,{fade:2,delay:6});}else if(r.place<=3){music.play(MUS.results,{fade:1.5,delay:0.6});}else{music.sting(MUS.lose);music.play(MUS.menu,{fade:2.5,delay:3});}if(!musicOn)sfx.fanfare();if(r.place<=3)crowd.cheer(true);else crowd.disappoint();feed(`Finished ${ord(r.place)} in ${fmt(r.time)}`,'gold');const p=wpos(r,2);for(let i=0;i<60;i++)emit(PA,{x:p.x,y:p.y,z:p.z,vx:rand(-4,4),vy:rand(3,8),vz:rand(-4,4),life:1.4,size:0.2,c:pick([[1,0.8,0.2],[0.3,0.6,1],[1,0.3,0.3],[0.4,1,0.5]]),grav:7,drag:1});}
@@ -3957,7 +3980,12 @@ const BUFFS=[
   {id:'shield',name:'Iron Shield',tier:'coin',cost:180,desc:'Start with a shield that blocks the first hit.'},
   {id:'magnet',name:'Coin Magnet',tier:'coin',cost:250,desc:'Pull in coins from the lanes next to you.'},
   {id:'double',name:'Double Coins',tier:'gem',cost:3,desc:'Every coin you pick up counts twice.'},
+  {id:'nullify',name:'Null Field',tier:'gem',cost:4,desc:'Mystery-box items can\'t touch you: bananas, rockets, freeze bombs, land mines and fire trails do nothing to you all race.'},
+  {id:'comeback',name:'Comeback Boost',tier:'coin',cost:220,desc:'Races with 2 or more laps: finish the first lap in 4th, 5th or 6th and get a 3-second speed boost.'},
+  {id:'swap',name:'Lead Swap',tier:'gem',cost:5,desc:'Races with 2 or more laps: start with a 🔄 item. Use it during the first lap to swap places with the runner in 1st.'},
 ];
+// perks that only work in races with more than one lap (kept for the next race otherwise)
+const LAP_PERKS=['comeback','swap'];
 const curOf=it=>it.tier==='gem'?'gem':'coin';
 const PLACE_COINS=[60,40,30,20,15,10,10,10],GP_COINS=[300,150,80,40,30,20,20,20],GP_GEMS=[5,2,1];
 let selLaps=[1,2,3].includes(+store.get('flagdash-laps'))?+store.get('flagdash-laps'):1;
@@ -4085,7 +4113,7 @@ function attireCard(a){
   return card;
 }
 /* ---------- Perks: the buffs you buy. You take one into each race; it is used up when the race starts. ---------- */
-var BUFF_ICON={start:'🚀',charge:'⚡',shield:'🛡️',magnet:'🧲',double:'💰'};
+var BUFF_ICON={start:'🚀',charge:'⚡',shield:'🛡️',magnet:'🧲',double:'💰',nullify:'🧿',comeback:'🔥',swap:'🔄'};
 function curPerk(){const b=BUFFS.find(x=>x.id===wallet.perk);return b&&(wallet.buffs[b.id]|0)>0?b:null;}
 function setPerk(id){wallet.perk=id||null;BUFFS.forEach(b=>{wallet.use[b.id]=b.id===id;});saveWallet();renderPerk();if(typeof locker!=='undefined'&&locker.active)locker.refresh();}
 function renderPerk(){
