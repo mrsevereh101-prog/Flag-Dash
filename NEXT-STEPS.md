@@ -1,6 +1,6 @@
 # Race Your Flag (formerly Flag Dash): where we left off
 
-Game: https://mrsevereh101-prog.github.io/Flag-Dash/
+Game: https://mrsevereh101-prog.github.io/race-your-flag/
 Supabase project: hzzqnwzsasuwjafmsgqh
 
 ## Done
@@ -15,8 +15,8 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 ## To finish sign-in (accounts)
 1. [x] Run `supabase/accounts.sql` in the Supabase SQL editor (click "Run query" on the warning).
 2. [x] Supabase > Authentication > URL Configuration
-   - Site URL: `https://mrsevereh101-prog.github.io/Flag-Dash/`
-   - Redirect URLs: add `https://mrsevereh101-prog.github.io/Flag-Dash/**`
+   - Site URL: `https://mrsevereh101-prog.github.io/race-your-flag/`
+   - Redirect URLs: add `https://mrsevereh101-prog.github.io/race-your-flag/**`
 3. [ ] Google Cloud (project "Flag Dash") > Google Auth Platform
    - [x] Consent screen (Branding) set up
    - [x] Branding: home page, privacy policy link, authorized domains (mrsevereh101-prog.github.io, hzzqnwzsasuwjafmsgqh.supabase.co), developer email, Save
@@ -36,7 +36,7 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
 - [ ] Better hero graphics (more detailed models), when there's time
-- [x] Privacy policy: https://mrsevereh101-prog.github.io/Flag-Dash/privacy.html (contact mr.severeh65@gmail.com)
+- [x] Privacy policy: https://mrsevereh101-prog.github.io/race-your-flag/privacy.html (contact mr.severeh65@gmail.com)
 - [ ] Custom email sender (SMTP, e.g. Resend) before a wide launch; Supabase's built-in sender only allows a few emails an hour
 - [x] Screen layout: everyone edits their own (saved to their account when signed in)
 

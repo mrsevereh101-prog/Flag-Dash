@@ -3803,7 +3803,7 @@ function renderAcct(){
   const box=$('acctBody');if(!box||$('acct').hidden)return;box.innerHTML='';
   const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;box.appendChild(e);return e;};
   $('acctTitle').textContent=AUTH.user?'Your account':'Sign in to Race Your Flag';
-  if(!AUTH.on){el('p','muted','Accounts work in the full game at mrsevereh101-prog.github.io/Flag-Dash. Everything is unlocked here.');return;}
+  if(!AUTH.on){el('p','muted','Accounts work in the full game at mrsevereh101-prog.github.io/race-your-flag. Everything is unlocked here.');return;}
   if(!AUTH.ready){el('p','muted','Loading…');return;}
   if(AUTH.user){
     el('p','acct-who',`Signed in as ${AUTH.user.email?maskEmail(AUTH.user.email):(AUTH.user.name||'a Google account')}`);
