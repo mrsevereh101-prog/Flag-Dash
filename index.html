@@ -107,8 +107,8 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .rh-top,.rh-bottom{pointer-events:auto;display:flex;gap:10px;align-items:center;background:rgba(10,18,60,.82);border:2px solid rgba(233,196,106,.6);border-radius:16px;padding:8px 10px;color:#fff}
 .rh-title{flex:1;min-width:0;display:grid}.rh-title b{font-family:var(--display);font-weight:400;font-size:19px;color:#f6e3a8;white-space:nowrap}.rh-title small{color:#cfd7f5;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rh-str{display:flex;gap:4px;align-items:center;padding:4px 10px;border-radius:12px;background:rgba(242,182,49,.15)}.rh-str span{font-size:20px}.rh-str b{font-size:22px;color:#ffd38a}
-#roomBonus{display:block;text-align:center;color:#ffd38a;font-size:12.5px;font-weight:700}
-.rh-bottom{flex-direction:column;align-items:stretch}.rh-bottom p{margin:0;text-align:center;color:#cfd7f5;font-size:13px}.rh-btns{display:flex;gap:8px}.rh-btns button{flex:1;padding:11px;border-radius:12px;font-weight:800;font-size:15px}
+#roomBonus{display:block;color:#ffd38a;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#roomHud:not(.editing) #roomHint{display:none}
+.rh-bottom{flex-direction:column;align-items:stretch}.rh-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:rgba(0,0,0,.25);border-radius:12px;padding:3px}.rh-tabs button{border:0;background:none;color:#a9b8d8;font-weight:800;font-size:13.5px;letter-spacing:.04em;text-transform:uppercase;padding:9px 2px;border-radius:9px}.rh-tabs button.on{background:linear-gradient(#2a6fb0,#1a4a80);color:#fff;box-shadow:0 0 12px rgba(70,182,255,.55)}.rh-bottom p{margin:0;text-align:center;color:#cfd7f5;font-size:13px}.rh-btns{display:flex;gap:8px}.rh-btns button{flex:1;padding:8px;border-radius:11px;font-weight:800;font-size:14px}
 .rp-card{--mw:520px;max-width:min(100%,520px);margin:6vh auto 0}.rc-card{--mw:640px;max-width:min(100%,640px)}
 .rp-list{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;max-height:58vh;overflow:auto}
 #roomPick,#roomCol,#giftPick{z-index:30}.rp-card{grid-template-columns:minmax(0,1fr);box-sizing:border-box;width:100%}.rp-card .store-head{flex-wrap:wrap;gap:8px}.rc-tabs{overflow-x:auto;flex-wrap:nowrap;max-width:100%}.rc-tabs button{flex:none}.rp-foot{display:flex;gap:8px;justify-content:space-between;margin-top:10px}
@@ -1151,9 +1151,9 @@ body:not(.touch) .pz-stick{opacity:.55}
 <div id="toast" role="status"></div>
 <div id="roomHud" hidden>
   <div class="rh-top"><button class="d3-round" id="roomBack" aria-label="Back to the Race Desk">←</button>
-    <div class="rh-title"><b>🏠 My Room</b><small id="roomCount"></small></div>
+    <div class="rh-title"><b>🏠 My Room</b><small id="roomCount"></small><small id="roomBonus"></small></div>
     <div class="rh-str" title="Strength: every item on display adds to it"><span>💪</span><b id="roomStr">0</b></div></div>
-  <div class="rh-bottom"><small id="roomBonus"></small><p id="roomHint"></p><div class="rh-btns"><button class="ghost" id="roomColBtn">📖 Collection</button><button class="primary" id="roomEdit">✏️ Decorate</button></div></div>
+  <div class="rh-bottom"><p id="roomHint"></p><div class="rh-tabs" id="roomTabs"><button data-a="skins">Skins</button><button data-a="trophies">Trophies</button><button data-a="medals">Medals</button><button data-a="perks">Perks</button></div><div class="rh-btns"><button class="ghost" id="roomColBtn">📖 Collection</button><button class="primary" id="roomEdit">✏️ Decorate</button></div></div>
 </div>
 <div id="roomPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="rpTitle"><div class="store-head"><h2 id="rpTitle">Spot</h2><button class="ghost" id="rpClose">Close</button></div>
   <div class="rp-list" id="rpList"></div><div class="rp-foot"><button class="ghost" id="rpRemove">Put in storage</button><button class="ghost" id="rpMore">Get more items</button></div></div></div>
@@ -4254,11 +4254,20 @@ ROOM_ITEMS.filter(i=>i.cc).forEach(i=>{i.win=S=>[(S.winsBy&&S.winsBy[i.cc])|0,SI
 const ROOM_CATS=[['trophy','🏆 Trophies'],['medal','🏅 Medals'],['monument','🗽 Monuments'],['furniture','🛋️ Furniture'],['decor','🖼️ Wall decor'],['gift','🎁 Gifts']];
 const SLOT_NAME={shelf:'Trophy spot',wall:'Wall spot',floor:'Floor spot',pedestal:'Monument pedestal'};
 // spots in the room: on top of the lockers, on the wall, on the floor, and two big pedestals
+// The room is a round trophy hall centred on HALL_Z. hallPos(angle in degrees from the back, radius, along, up, toward the middle)
+const HALL_Z=-1,HALL_R=11,hallRot=a=>-a*Math.PI/180;
+function hallPos(deg,r,lx,ly,lz){const a=deg*Math.PI/180,sn=Math.sin(a),cs=Math.cos(a);return {x:sn*r+(lx||0)*cs-(lz||0)*sn,y:ly||0,z:HALL_Z-cs*r+(lx||0)*sn+(lz||0)*cs};}
+const HALL={cab:50,medal:0,skins:-42,perks:-63,console:-52};
 const ROOM_SLOTS=[
-  ...[0,1,2,3,4,5,6,7,8].map(i=>({id:'s'+i,type:'shelf',x:(i-4)*2.6,y:5.75,z:-5.7,sz:1.15})),
-  ...[[-13.3,5.4],[13.3,5.4],[-13.3,2.6],[13.3,2.6],[-8.2,6.9],[8.2,6.9]].map(([x,y],i)=>({id:'w'+i,type:'wall',x,y,z:-6.45,sz:1.6})),
-  ...[-9.5,-6.5,-3.5,3.5,6.5,9.5].map((x,i)=>({id:'f'+i,type:'floor',x,y:0.85,z:-1.3,sz:1.6})),
-  {id:'p0',type:'pedestal',x:-11.2,y:2.6,z:-1.6,sz:3.0},{id:'p1',type:'pedestal',x:11.2,y:2.6,z:-1.6,sz:3.0}];
+  // trophies: the glass cabinet on the right, three shelves of three
+  ...[0,1,2,3,4,5,6,7,8].map(i=>Object.assign({id:'s'+i,type:'shelf',sz:1.45},hallPos(HALL.cab,9.9,((i%3)-1)*2.15,1.78+Math.floor(i/3)*1.85,0.5))),
+  // medals: on the big screen at the back
+  // (the middle stays clear: the hero on the stand stands in front of it)
+  ...[[-3.25,5.1],[-1.75,5.1],[1.75,5.1],[3.25,5.1],[-2.5,3.35],[2.5,3.35]].map(([x,y],i)=>Object.assign({id:'w'+i,type:'wall',sz:1.4},hallPos(HALL.medal,10.3,x,y,0.25))),
+  // furniture: around the floor
+  ...[-96,-74,-30,30,74,96].map((d,i)=>Object.assign({id:'f'+i,type:'floor',sz:1.6},hallPos(d,d===-30||d===30?5.6:6.4,0,0.85,0))),
+  // monuments: two round pedestals either side of the medal steps
+  Object.assign({id:'p0',type:'pedestal',sz:3.0},hallPos(-24,7.6,0,2.6,0)),Object.assign({id:'p1',type:'pedestal',sz:3.0},hallPos(24,7.6,0,2.6,0))];
 let ROOM=loadJSON('flagdash-room',{own:{},place:{}});if(!ROOM.own)ROOM.own={};if(!ROOM.place)ROOM.place={};
 const saveRoom=()=>saveJSON('flagdash-room',ROOM);
 const ownsItem=id=>(ROOM.own[id]|0)>0;
@@ -4275,17 +4284,22 @@ function roomCheckWins(){const out=[];for(const it of ROOM_ITEMS){if(it.src!=='w
 
 /* ---------- the room view: look around, decorate, browse the collection ---------- */
 const RV={on:false,edit:false,cx:0,tx:0,drag:null,moved:0,slot:null,colTab:'trophy'};
+const ROOM_YAW=0.09; // RV.tx (-10.5..10.5) times this is how far the camera turns, in radians
+// camera turn needed to face each area of the hall
+const ROOM_AREAS={skins:-0.49,trophies:0.57,medals:0,perks:-0.74};
 function openRoom(){if(state!=='menu'||!locker.active)return;closePicker();RV.on=true;RV.edit=false;$('menu').hidden=true;$('roomHud').hidden=false;hidePointer&&hidePointer();$('saveTip').hidden=true;renderRoomHud();locker.refresh();}
 function closeRoom(){RV.on=false;RV.edit=false;$('roomHud').hidden=true;$('roomPick').hidden=true;$('roomCol').hidden=true;$('menu').hidden=false;locker.refresh();refreshMenu(null);}
 function renderRoomHud(){const n=Object.values(ROOM.place).filter(id=>ownsItem(id)).length;$('roomStr').textContent=roomStrength();$('roomCount').textContent=`${n} on display · ${Object.keys(ROOM.own).filter(ownsItem).length} owned`;
-  $('roomEdit').textContent=RV.edit?'✓ Done':'✏️ Decorate';$('roomHint').textContent=RV.edit?'Tap a glowing spot to place or change an item':'Drag to look around your room';
-  const b=roomBonus();$('roomBonus').textContent=`Strength bonus: +${(b.coin*100).toFixed(1).replace('.0','')}% coins · +${(b.chg*100).toFixed(1).replace('.0','')}% power recharge`;locker.refresh();}
+  $('roomHud').classList.toggle('editing',RV.edit);markRoomTab();$('roomEdit').textContent=RV.edit?'✓ Done':'✏️ Decorate';$('roomHint').textContent=RV.edit?'Tap a glowing spot to place or change an item':'Drag to look around your room';
+  const b=roomBonus();$('roomBonus').textContent=`Bonus: +${(b.coin*100).toFixed(1).replace('.0','')}% coins · +${(b.chg*100).toFixed(1).replace('.0','')}% power recharge`;locker.refresh();}
 $('roomEdit').onclick=()=>{RV.edit=!RV.edit;renderRoomHud();};
-$('roomBack').onclick=closeRoom;$('roomColBtn').onclick=()=>openCollection();
+$('roomBack').onclick=closeRoom;
+$('roomTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{RV.tx=ROOM_AREAS[b.dataset.a]/ROOM_YAW;sfx.pick();markRoomTab();});
+function markRoomTab(){const yaw=RV.tx*ROOM_YAW;let best=null,bd=9;for(const k in ROOM_AREAS){const d=Math.abs(ROOM_AREAS[k]-yaw);if(d<bd){bd=d;best=k;}}$('roomTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.a===best&&bd<0.12));}$('roomColBtn').onclick=()=>openCollection();
 // drag to pan, tap a spot (while decorating) to choose its item
 stage.addEventListener('pointerdown',e=>{if(!RV.on)return;RV.drag={x:e.clientX,cx:RV.tx};RV.moved=0;});
 stage.addEventListener('pointermove',e=>{if(!RV.on||!RV.drag)return;const dx=e.clientX-RV.drag.x;RV.moved=Math.max(RV.moved,Math.abs(dx));RV.tx=clamp(RV.drag.cx-dx*0.035,-10.5,10.5);});
-stage.addEventListener('pointerup',e=>{if(!RV.on)return;const tap=RV.drag&&RV.moved<8;RV.drag=null;if(tap&&RV.edit)pickSlotAt(e.clientX,e.clientY);});
+stage.addEventListener('pointerup',e=>{if(!RV.on)return;markRoomTab();const tap=RV.drag&&RV.moved<8;RV.drag=null;if(tap&&RV.edit)pickSlotAt(e.clientX,e.clientY);});
 const roomRay=new THREE.Raycaster();
 function pickSlotAt(x,y){const r=renderer.domElement.getBoundingClientRect();const v=new THREE.Vector2(((x-r.left)/r.width)*2-1,-((y-r.top)/r.height)*2+1);
   roomRay.setFromCamera(v,camera);const hits=roomRay.intersectObjects(locker.slotSprites||[],false);if(hits.length)openSlot(hits[0].object.userData.slot);}
@@ -5616,44 +5630,103 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     c.fillStyle='#fff';c.font='700 30px "Chakra Petch", sans-serif';c.fillText(top,w/2,38);c.fillStyle=col||'#e9c46a';c.font='600 22px "Chakra Petch", sans-serif';c.fillText(sub,w/2,74);});},
   build(){
     const g=this.group=new THREE.Group();g.visible=false;scene.add(g);
-    const navy=new THREE.MeshLambertMaterial({color:0x16224f}),steel=new THREE.MeshLambertMaterial({color:0x2b4590}),inner=new THREE.MeshLambertMaterial({color:0x26346e,emissive:0x0b1640}),
-      gold=new THREE.MeshBasicMaterial({color:0xe9c46a}),wood=new THREE.MeshLambertMaterial({color:0x8a5a32}),light=new THREE.MeshBasicMaterial({color:0xfff4d6});
-    // floor: rubber gym floor with a gold lane line
-    const fl=new THREE.Mesh(new THREE.PlaneGeometry(34,22),new THREE.MeshLambertMaterial({map:canvasTex(256,256,(c,w,h)=>{R(c,0,0,w,h,'#1b2340');for(let i=0;i<900;i++)R(c,Math.random()*w,Math.random()*h,2,2,Math.random()<0.5?'#232c52':'#151c36');R(c,0,124,w,8,'#e9c46a');},3,2)}));
-    fl.rotation.x=-Math.PI/2;fl.position.set(0,0,-1);g.add(fl);
-    const wall=(w,h,x,y,z,ry,m)=>{const o=new THREE.Mesh(new THREE.PlaneGeometry(w,h),m||navy);o.position.set(x,y,z);o.rotation.y=ry||0;g.add(o);return o;};
-    wall(34,9,0,4.5,-6.6);wall(22,9,-15,4.5,-1,Math.PI/2);wall(22,9,15,4.5,-1,-Math.PI/2);
-    const ceil=wall(34,22,0,8,-1);ceil.rotation.x=Math.PI/2;
-    // gold trim, ceiling light strips
-    [0.35,6.15].forEach(y=>{const t=new THREE.Mesh(new THREE.BoxGeometry(34,0.12,0.05),gold);t.position.set(0,y,-6.55);g.add(t);});
-    [-4,1].forEach(z=>{const l=new THREE.Mesh(new THREE.BoxGeometry(22,0.08,0.4),light);l.position.set(0,7.95,z);g.add(l);});
-    // banner above the lockers
-    const ban=new THREE.Mesh(new THREE.PlaneGeometry(10,1.2),new THREE.MeshBasicMaterial({map:canvasTex(1024,128,(c,w,h)=>{c.fillStyle='#0b1440';c.fillRect(0,0,w,h);c.strokeStyle='#e9c46a';c.lineWidth=6;c.strokeRect(4,4,w-8,h-8);
-      c.fillStyle='#e9c46a';c.font='64px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('⚑ FLAG DASH · LOCKER ROOM',w/2,h/2+4);})}));
-    ban.position.set(0,6.9,-6.5);g.add(ban);
-    // nation flag on the left wall, trophy shelf on the right
-    this.flagMat=new THREE.MeshLambertMaterial({side:THREE.DoubleSide});const fm=new THREE.Mesh(new THREE.PlaneGeometry(4.2,2.8),this.flagMat);fm.position.set(-14.9,4.6,-1.5);fm.rotation.y=Math.PI/2;g.add(fm);
-    // two monument pedestals at the front corners
-    ROOM_SLOTS.filter(sl=>sl.type==='pedestal').forEach(sl=>{const base=new THREE.Mesh(new THREE.BoxGeometry(2.4,1.1,2.4),new THREE.MeshLambertMaterial({color:0x2b3a78}));base.position.set(sl.x,0.55,sl.z);g.add(base);
-      const rim=new THREE.Mesh(new THREE.BoxGeometry(2.6,0.14,2.6),gold);rim.position.set(sl.x,1.12,sl.z);g.add(rim);});
+    const L=(c,x)=>new THREE.MeshLambertMaterial(Object.assign({color:c},x||{})),B=(c,x)=>new THREE.MeshBasicMaterial(Object.assign({color:c},x||{}));
+    const ORANGE=0xff8a2a,BLUE=0x46b6ff,O=new THREE.Vector3(0,0,HALL_Z);
+    const steel=L(0x3a4152),dark=L(0x1b1f2a),trim=L(0x59627a),neonO=B(ORANGE),neonB=B(BLUE),white=B(0xeaf4ff);
+    const halo=(c,o)=>B(c,{transparent:true,opacity:o||0.28,blending:THREE.AdditiveBlending,depthWrite:false});
+    const put=(o,deg,r,ly,lx,lz)=>{const p=hallPos(deg,r,lx,ly,lz);o.position.set(p.x,p.y,p.z);o.rotation.y=hallRot(deg);g.add(o);return o;};
+    const box=(w,h,d,m)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+    // floor: brushed steel plates with seams and soft light pooled in the middle
+    const floorTex=canvasTex(1024,1024,(c,w,h)=>{const cx=w/2,cy=h/2;const gr=c.createRadialGradient(cx,cy,40,cx,cy,w/2);gr.addColorStop(0,'#5a6070');gr.addColorStop(0.45,'#3a3f4c');gr.addColorStop(1,'#1d2029');c.fillStyle=gr;c.fillRect(0,0,w,h);
+      for(let k=0;k<5000;k++){c.fillStyle=`rgba(255,255,255,${Math.random()*0.03})`;c.fillRect(Math.random()*w,Math.random()*h,Math.random()*30,1);}
+      c.strokeStyle='rgba(10,12,18,.55)';c.lineWidth=3;[0.2,0.38,0.62,0.86].forEach(f=>{c.beginPath();c.arc(cx,cy,f*w/2,0,7);c.stroke();});
+      for(let a=0;a<12;a++){const t=a/12*Math.PI*2;c.beginPath();c.moveTo(cx+Math.cos(t)*0.2*w/2,cy+Math.sin(t)*0.2*w/2);c.lineTo(cx+Math.cos(t)*w/2,cy+Math.sin(t)*w/2);c.stroke();}});
+    const fl=new THREE.Mesh(new THREE.CircleGeometry(HALL_R,96),L(0xffffff,{map:floorTex}));fl.rotation.x=-Math.PI/2;fl.position.set(0,0,HALL_Z);g.add(fl);
+    // glowing floor rings: blue around the stand, orange further out (broken arcs like the reference)
+    const ring=(r0,r1,m,a0,al,y)=>{const o=new THREE.Mesh(new THREE.RingGeometry(r0,r1,128,1,a0||0,al||Math.PI*2),m);o.rotation.x=-Math.PI/2;o.position.set(0,y||0.012,HALL_Z);g.add(o);return o;};
+    ring(2.75,2.85,neonB);ring(2.6,3.0,halo(BLUE,0.18),0,0,0.011);
+    ring(5.0,5.07,neonO,0.25,2.2);ring(5.0,5.07,neonO,Math.PI+0.25,2.2);ring(4.85,5.22,halo(ORANGE,0.14),0,0,0.011);
+    ring(8.3,8.36,neonB,-0.6,1.7);ring(8.3,8.36,neonB,Math.PI-1.1,1.7);
+    // curved wall: brushed metal panels with seams
+    const wallTex=canvasTex(512,512,(c,w,h)=>{const gr=c.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#2a3040');gr.addColorStop(0.5,'#4a5264');gr.addColorStop(1,'#2a2f3c');c.fillStyle=gr;c.fillRect(0,0,w,h);
+      for(let k=0;k<1500;k++){c.fillStyle=`rgba(255,255,255,${Math.random()*0.035})`;c.fillRect(Math.random()*w,Math.random()*h,1,Math.random()*40);}
+      c.fillStyle='rgba(8,10,16,.6)';c.fillRect(0,0,4,h);c.fillRect(0,h*0.32,w,3);c.fillRect(0,h*0.74,w,3);c.fillStyle='rgba(255,255,255,.08)';c.fillRect(5,0,2,h);},12,1);
+    const wall=new THREE.Mesh(new THREE.CylinderGeometry(HALL_R,HALL_R,9.5,96,1,true),L(0xffffff,{map:wallTex,side:THREE.BackSide}));wall.position.set(0,4.75,HALL_Z);g.add(wall);
+    const ceil=new THREE.Mesh(new THREE.CircleGeometry(HALL_R,64),L(0x161a24,{side:THREE.DoubleSide}));ceil.rotation.x=Math.PI/2;ceil.position.set(0,9.5,HALL_Z);g.add(ceil);
+    // neon trim running round the wall
+    const trimRing=(y,m,t,hm)=>{const o=new THREE.Mesh(new THREE.TorusGeometry(HALL_R-0.06,t||0.045,6,160),m);o.rotation.x=Math.PI/2;o.position.set(0,y,HALL_Z);g.add(o);
+      if(hm){const h2=new THREE.Mesh(new THREE.TorusGeometry(HALL_R-0.1,0.16,6,160),hm);h2.rotation.x=Math.PI/2;h2.position.set(0,y,HALL_Z);g.add(h2);}};
+    trimRing(0.32,neonO,0.05,halo(ORANGE,0.2));trimRing(7.05,neonO,0.045,halo(ORANGE,0.18));trimRing(7.45,neonB,0.03);
+    const base=new THREE.Mesh(new THREE.CylinderGeometry(HALL_R-0.05,HALL_R-0.05,0.28,96,1,true),L(0x0f1218,{side:THREE.BackSide}));base.position.set(0,0.14,HALL_Z);g.add(base);
+    // ceiling light ring
+    const cr=new THREE.Mesh(new THREE.TorusGeometry(4.2,0.12,8,96),white);cr.rotation.x=Math.PI/2;cr.position.set(0,9.35,HALL_Z);g.add(cr);
+    const crh=new THREE.Mesh(new THREE.RingGeometry(3.4,5.0,96),halo(0x9fd4ff,0.22));crh.rotation.x=Math.PI/2;crh.position.set(0,9.3,HALL_Z);g.add(crh);
+    // sign at the top of the back wall
+    const sign=new THREE.Mesh(new THREE.PlaneGeometry(7.2,1.05),B(0xffffff,{transparent:true,map:canvasTex(1024,150,(c,w,h)=>{const m=36;c.beginPath();c.moveTo(m,4);c.lineTo(w-m,4);c.lineTo(w-4,h/2);c.lineTo(w-m,h-4);c.lineTo(m,h-4);c.lineTo(4,h/2);c.closePath();
+      const gr=c.createLinearGradient(0,0,0,h);gr.addColorStop(0,'#1c2436');gr.addColorStop(1,'#0c111c');c.fillStyle=gr;c.fill();c.shadowColor='#46b6ff';c.shadowBlur=18;c.strokeStyle='#46b6ff';c.lineWidth=6;c.stroke();c.shadowBlur=0;
+      c.fillStyle='#f4f8ff';c.font='800 70px "Chakra Petch", sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('TROPHIES & PERKS',w/2,h/2+3);})}));
+    put(sign,0,10.6,7.95);
+    // screens: dark glass with a neon frame and a title; their content is drawn in refresh()
+    const screen=(deg,r,y,w,h,col)=>{const fr=box(w+0.3,h+0.3,0.18,dark);put(fr,deg,r,y);const edge=new THREE.Mesh(new THREE.PlaneGeometry(w+0.16,h+0.16),B(col));put(edge,deg,r-0.1,y);
+      const glow=new THREE.Mesh(new THREE.PlaneGeometry(w+0.9,h+0.9),halo(col,0.12));put(glow,deg,r-0.08,y);
+      const sc=new THREE.Mesh(new THREE.PlaneGeometry(w,h),B(0xffffff));put(sc,deg,r-0.12,y);return sc;};
+    this.scrSkins=screen(HALL.skins,10.55,4.3,3.4,4.4,BLUE);this.scrPerks=screen(HALL.perks,10.55,4.3,3.4,4.4,BLUE);this.scrMedals=screen(HALL.medal,10.55,4.3,8.6,4.2,0x9aa6c0);
+    // steps in front of the medal screen, edged with orange light
+    [[9.55,0.42,9.2],[8.95,0.84,8.4]].forEach(([r,hh,w])=>{const st=box(w,hh,1.1,trim);put(st,HALL.medal,r,hh/2);const e=box(w,0.05,0.04,neonO);put(e,HALL.medal,r-0.56,hh-0.03);});
+    // console bench in front of the screens on the left
+    const con=box(5.2,1.0,1.3,steel);put(con,HALL.console,8.1,0.5);const top=box(5.0,0.08,1.0,neonB);put(top,HALL.console,8.1,1.04);const topH=box(5.4,0.04,1.3,halo(BLUE,0.25));put(topH,HALL.console,8.1,1.08);
+    // trophy cabinet: metal frame, lit back, three shelves with light strips and a glass front
+    const cab=new THREE.Group();put(cab,HALL.cab,10.05,0);
+    const cb=(w,h,d,m,x,y,z)=>{const o=box(w,h,d,m);o.position.set(x,y,z);cab.add(o);return o;};
+    cb(6.6,6.6,0.2,L(0x8a93a8,{emissive:0x1a2030}),0,3.6,-0.55);cb(6.9,0.5,1.4,steel,0,0.25,0);cb(6.9,0.3,1.4,steel,0,6.95,0);
+    [-3.35,3.35,-1.05,1.05].forEach(x=>cb(0.14,6.6,1.3,trim,x,3.6,0));
+    [1.05,2.9,4.75].forEach(y=>{cb(6.6,0.08,1.2,L(0xb8c2d6),0,y,0);cb(6.6,0.035,0.035,neonB,0,y+0.05,0.6);});
+    cb(6.4,0.06,0.5,white,0,6.78,0);const lightH=new THREE.Mesh(new THREE.PlaneGeometry(6.4,1.3),halo(0xdff0ff,0.25));lightH.position.set(0,6.4,0.1);cab.add(lightH);
+    const glass=new THREE.Mesh(new THREE.PlaneGeometry(6.6,6.4),new THREE.MeshPhongMaterial({color:0xcfe6ff,transparent:true,opacity:0.1,shininess:120,specular:0xffffff,depthWrite:false}));glass.position.set(0,3.6,0.66);cab.add(glass);
+    cb(6.9,0.04,0.04,neonO,0,0.51,0.71);
+    // character stand in the middle: stacked metal discs with glowing rings
+    const st=new THREE.Group();st.position.set(0,0,HALL_Z);g.add(st);
+    const disc=(r1,r2,h,y,m)=>{const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,64),m);o.position.y=y;st.add(o);return o;};
+    disc(2.35,2.5,0.3,0.15,dark);disc(2.1,2.25,0.28,0.44,steel);disc(1.75,1.9,0.24,0.7,trim);
+    const sr=(r,y,m,t)=>{const o=new THREE.Mesh(new THREE.TorusGeometry(r,t||0.035,8,96),m);o.rotation.x=Math.PI/2;o.position.y=y;st.add(o);};
+    sr(2.38,0.31,neonB,0.05);sr(2.14,0.59,neonB);sr(1.62,0.83,neonB,0.05);sr(1.2,0.83,neonO,0.025);
+    const sg=new THREE.Mesh(new THREE.CircleGeometry(1.7,64),halo(BLUE,0.22));sg.rotation.x=-Math.PI/2;sg.position.y=0.84;st.add(sg);
+    this.standTop=0.82;
+    // light beam rising from the stand
+    const beam=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.6,5,48,1,true),new THREE.MeshBasicMaterial({map:canvasTex(16,128,(c,w,h)=>{const gr=c.createLinearGradient(0,h,0,0);gr.addColorStop(0,'rgba(120,200,255,.35)');gr.addColorStop(1,'rgba(120,200,255,0)');c.fillStyle=gr;c.fillRect(0,0,w,h);}),
+      transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}));beam.position.y=3.3;st.add(beam);this.beam=beam;
+    // monument pedestals: round, like small stands
+    ROOM_SLOTS.filter(sl=>sl.type==='pedestal').forEach(sl=>{const pd=new THREE.Group();pd.position.set(sl.x,0,sl.z);g.add(pd);
+      const a=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.3,1.1,48),steel);a.position.y=0.55;pd.add(a);
+      const r=new THREE.Mesh(new THREE.TorusGeometry(1.16,0.04,8,64),neonO);r.rotation.x=Math.PI/2;r.position.y=1.1;pd.add(r);
+      const r2=new THREE.Mesh(new THREE.TorusGeometry(1.3,0.03,8,64),neonB);r2.rotation.x=Math.PI/2;r2.position.y=0.05;pd.add(r2);});
+    // the player's flag on the wall behind the camera's right shoulder
+    this.flagMat=new THREE.MeshLambertMaterial({side:THREE.DoubleSide});const fm=new THREE.Mesh(new THREE.PlaneGeometry(3.6,2.4),this.flagMat);put(fm,78,10.8,4.6);
+    // coloured lights so the metal picks up orange and blue
+    const pl=(c,i,d,x,y,z)=>{const l=new THREE.PointLight(c,i,d);l.position.set(x,y,z);g.add(l);};
+    pl(0x7fc4ff,1.1,14,0,7,HALL_Z);pl(0xff9a4a,0.8,12,-7,2,HALL_Z-4);pl(0xff9a4a,0.8,12,7,2,HALL_Z-4);
+    // embers floating up through the room
+    const N=110,pos=new Float32Array(N*3);this.embers={N,pos,v:[]};for(let k=0;k<N;k++){const a=Math.random()*Math.PI*2,r=2+Math.random()*8;pos[k*3]=Math.cos(a)*r;pos[k*3+1]=Math.random()*8;pos[k*3+2]=HALL_Z+Math.sin(a)*r;this.embers.v.push(0.15+Math.random()*0.35);}
+    const eg=new THREE.BufferGeometry();eg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    const em=new THREE.Points(eg,new THREE.PointsMaterial({size:0.09,color:0xff9a3a,map:canvasTex(32,32,(c,w,h)=>{const gr=c.createRadialGradient(16,16,0,16,16,16);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=gr;c.fillRect(0,0,w,h);}),
+      transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));g.add(em);this.emberPts=em;
     this.roomGroup=new THREE.Group();g.add(this.roomGroup);
-    // nine lockers along the back wall
-    this.slots=[];
-    for(let i=0;i<9;i++){const x=(i-4)*2.6,L=new THREE.Group();L.position.set(x,0,-6);g.add(L);
-      const body=new THREE.Mesh(new THREE.BoxGeometry(2.4,4.8,1.1),steel);body.position.set(0,2.6,0);L.add(body);
-      const hole=new THREE.Mesh(new THREE.BoxGeometry(2.0,4.3,0.2),inner);hole.position.set(0,2.6,0.46);L.add(hole);
-      const shelf=new THREE.Mesh(new THREE.BoxGeometry(2.0,0.08,0.5),new THREE.MeshLambertMaterial({color:0x8a97c4}));shelf.position.set(0,1.75,0.72);L.add(shelf);
-      const side=x>0?1:-1,piv=new THREE.Group();piv.position.set(side*1.2,2.6,0.56);piv.rotation.y=side*1.25;L.add(piv);  // doors open away from the middle
-      const door=new THREE.Mesh(new THREE.BoxGeometry(2.3,4.6,0.06),new THREE.MeshLambertMaterial({map:canvasTex(64,128,(c,w,h)=>{R(c,0,0,w,h,'#35529f');for(let k=0;k<6;k++)R(c,14,10+k*7,36,3,'#1c2c60');R(c,46,60,6,16,'#c9d1e4');})}));
-      door.position.set(-side*1.15,0,0);piv.add(door);
-      const num=new THREE.Sprite(new THREE.SpriteMaterial({map:canvasTex(64,32,(c,w,h)=>{R(c,0,0,w,h,'#e9c46a');c.fillStyle='#1a1405';c.font='bold 24px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(i+1).padStart(2,'0'),w/2,h/2+1);}),depthWrite:false}));
-      num.scale.set(0.5,0.25,1);num.position.set(0,4.75,0.6);L.add(num);
-      this.slots.push(L);}
-    // benches in front
-    [-5.5,5.5].forEach(x=>{const top=new THREE.Mesh(new THREE.BoxGeometry(6.5,0.22,1.1),wood);top.position.set(x,1.0,-3.0);g.add(top);
-      [-2.8,2.8].forEach(o=>{const leg=new THREE.Mesh(new THREE.BoxGeometry(0.2,1.0,0.9),new THREE.MeshLambertMaterial({color:0x2a2f45}));leg.position.set(x+o,0.5,-3.0);g.add(leg);});});
     this.built=true;
   },
+  // draw a screen: dark glass, title bar and a list of icons
+  drawScreen(mesh,title,rows,wide){
+    const W=wide?1024:512,H=wide?500:660;const t=canvasTex(W,H,(c,w,h)=>{const gr=c.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#141b2c');gr.addColorStop(1,'#070a12');c.fillStyle=gr;c.fillRect(0,0,w,h);
+      c.fillStyle='rgba(255,255,255,.05)';c.beginPath();c.moveTo(0,0);c.lineTo(w*0.55,0);c.lineTo(w*0.25,h);c.lineTo(0,h);c.fill();
+      c.fillStyle='rgba(70,182,255,.16)';c.fillRect(0,0,w,64);c.fillStyle='#cfe8ff';c.font='800 40px "Chakra Petch", sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(title,w/2,34);
+      c.textAlign='left';(rows||[]).slice(0,wide?0:6).forEach((r,i)=>{const y=110+i*92;c.font='54px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(r.ic,26,y);
+        c.fillStyle='#ffffff';c.font='700 30px "Chakra Petch", sans-serif';c.fillText(r.top.slice(0,20),104,y-14);c.fillStyle=r.col||'#8fb8e8';c.font='600 23px "Chakra Petch", sans-serif';c.fillText(r.sub.slice(0,28),104,y+20);});
+      if(!wide&&(!rows||!rows.length)){c.fillStyle='#6f7ea0';c.font='600 26px "Chakra Petch", sans-serif';c.textAlign='center';c.fillText('Nothing yet',w/2,h/2);c.fillText('Visit the store',w/2,h/2+36);}});
+    if(mesh.material.map)mesh.material.map.dispose();mesh.material.map=t;mesh.material.needsUpdate=true;},
+  // the hero on the stand (room view only)
+  showHero(on){
+    if(this.hero){this.group.remove(this.hero.m.root);disposeModel(this.hero.m);this.hero=null;}
+    if(!on||!this.built)return;const r=fakeRunner();r.m=buildModel(flagCanvas(selCountry),selChar,{lane:7,skin:skinById(mySkinId()),gear:myGear(),hq:true});
+    r.m.root.position.set(0,this.standTop,HALL_Z);r.m.root.rotation.y=Math.PI;r.m.root.scale.multiplyScalar(1.25);if(r.m.shadow)r.m.shadow.visible=false;this.group.add(r.m.root);this.hero=r;},
   // what to show in the lockers, most important first
   contents(){pruneAttire();const out=[],p=curPerk();
     if(p)out.push({ic:BUFF_ICON[p.id],top:p.name,sub:`EQUIPPED PERK ×${wallet.buffs[p.id]|0}`,col:'#5fd08a',on:true});
@@ -5663,12 +5736,10 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     wallet.skins.filter(id=>id!=='classic').forEach(id=>{const k=skinById(id);out.push({ic:'👕',top:k.name,sub:'Skin'});});
     return out.slice(0,9);},
   refresh(){
-    if(!this.built)return;if(this.items){this.items.forEach(o=>{o.parent.remove(o);if(o.material&&o.material.map)o.material.map.dispose();});}this.items=[];
-    const list=this.contents();
-    this.slots.forEach((L,i)=>{const it=list[i]||{ic:'🔒',top:'Empty',sub:'Visit the store',col:'#8f9bc4',empty:true};
-      const ic=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo(it.ic),transparent:true,depthWrite:false,opacity:it.empty?0.45:1}));ic.scale.set(1.3,1.3,1);ic.position.set(0,2.55,0.85);L.add(ic);this.items.push(ic);
-      const pl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plaque(it.top,it.sub,it.col),depthWrite:false}));pl.scale.set(1.9,0.71,1);pl.position.set(0,1.2,0.75);L.add(pl);this.items.push(pl);
-      if(it.on){const gl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo('✨'),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));gl.scale.set(2.4,2.4,1);gl.position.set(0,2.55,0.8);L.add(gl);this.items.push(gl);this.glow=gl;}});
+    if(!this.built)return;const list=this.contents();
+    this.drawScreen(this.scrPerks,'PERK TREE',list.filter(it=>it.sub!=='Skin'));
+    this.drawScreen(this.scrSkins,'SKINS',[{ic:'⭐',top:skinById(mySkinId()).name,sub:'Equipped',col:'#5fd08a'}].concat(wallet.skins.filter(id=>id!=='classic'&&id!==mySkinId()).map(id=>({ic:'👕',top:skinById(id).name,sub:'Owned'}))));
+    this.drawScreen(this.scrMedals,'MEDALS',null,true);
     const f=flagCanvas(selCountry);if(!f.tex){f.tex=new THREE.CanvasTexture(f.canvas);f.tex.__shared=true;}this.flagMat.map=f.tex;this.flagMat.needsUpdate=true;
     this.refreshRoom();
   },
@@ -5679,7 +5750,7 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     const edit=typeof RV!=='undefined'&&RV.edit;
     for(const sl of ROOM_SLOTS){const id=ROOM.place[sl.id],it=id&&ownsItem(id)?roomItem(id):null;
       if(it){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo(it.ic),transparent:true,depthWrite:false}));sp.scale.set(sl.sz,sl.sz,1);sp.position.set(sl.x,sl.y,sl.z+0.05);sp.userData.slot=sl;this.roomGroup.add(sp);this.slotSprites.push(sp);
-        if(sl.type==='pedestal'){const pl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plaque(it.name,`💪 ${it.pw}`,'#e9c46a'),depthWrite:false}));pl.scale.set(2.2,0.82,1);pl.position.set(sl.x,0.62,sl.z+1.25);this.roomGroup.add(pl);}
+        if(sl.type==='pedestal'){const pl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plaque(it.name,`💪 ${it.pw}`,'#e9c46a'),depthWrite:false}));pl.scale.set(2.2,0.82,1);const q=new THREE.Vector3(sl.x,0,sl.z),dir=new THREE.Vector3(0,0,7.5).sub(q).setY(0).normalize();pl.position.set(sl.x+dir.x*1.5,0.62,sl.z+dir.z*1.5);this.roomGroup.add(pl);}
         if(edit){const ring=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plusTex,transparent:true,depthWrite:false,opacity:0.35}));ring.scale.set(sl.sz*1.15,sl.sz*1.15,1);ring.position.set(sl.x,sl.y,sl.z);this.roomGroup.add(ring);}}
       else if(edit){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plusTex,transparent:true,depthWrite:false}));const k=Math.min(1.3,sl.sz);sp.scale.set(k,k,1);sp.position.set(sl.x,sl.y,sl.z+0.05);sp.userData.slot=sl;this.roomGroup.add(sp);this.slotSprites.push(sp);}}
   },
@@ -5687,16 +5758,20 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     if(!this.built)this.build();this.refresh();if(this.active)return;this.active=true;
     this.saved={bg:scene.background,fog:scene.fog,hc:hemi.color.getHex(),hg:hemi.groundColor.getHex(),hi:hemi.intensity,si:sun.intensity,far:camera.far};
     if(world)world.visible=false;courseGroup.visible=false;this.group.visible=true;
-    scene.background=new THREE.Color(0x0b1233);scene.fog=null;hemi.color.setHex(0xfff2dc);hemi.groundColor.setHex(0x26305c);hemi.intensity=1.0;sun.intensity=0.45;camera.far=120;camera.fov=58;camera.updateProjectionMatrix();
+    scene.background=new THREE.Color(0x06080e);scene.fog=null;hemi.color.setHex(0xd8e4ff);hemi.groundColor.setHex(0x2a2230);hemi.intensity=0.85;sun.intensity=0.55;camera.far=120;camera.fov=58;camera.updateProjectionMatrix();
   },
   exit(){
     if(!this.active)return;this.active=false;this.group.visible=false;if(world)world.visible=true;courseGroup.visible=true;
     const S=this.saved;if(S){scene.background=S.bg;scene.fog=S.fog;hemi.color.setHex(S.hc);hemi.groundColor.setHex(S.hg);hemi.intensity=S.hi;sun.intensity=S.si;camera.far=S.far;camera.updateProjectionMatrix();}
   },
   update(dt){this.t+=dt;if(world)world.visible=false;courseGroup.visible=false;
-    if(typeof RV!=='undefined'&&RV.on){RV.cx+=(RV.tx-RV.cx)*Math.min(1,dt*6);const nar=camera.aspect<0.8;camera.position.set(RV.cx,nar?4.2:3.8,nar?9.6:8.2);camera.lookAt(RV.cx*0.92,2.6,-6);const fv=nar?68:60;if(camera.fov!==fv){camera.fov=fv;camera.updateProjectionMatrix();}}
-    else{if(camera.fov!==58){camera.fov=58;camera.updateProjectionMatrix();}camera.position.set(Math.sin(this.t*0.12)*1.6,3.1+Math.sin(this.t*0.2)*0.15,7.5);camera.lookAt(Math.sin(this.t*0.12)*0.6,2.6,-6);}
-    if(this.glow){const k=1+Math.sin(this.t*3)*0.12;this.glow.scale.set(2.4*k,2.4*k,1);}}
+    if(typeof RV!=='undefined'&&RV.on){RV.cx+=(RV.tx-RV.cx)*Math.min(1,dt*6);const nar=camera.aspect<0.8,yaw=RV.cx*ROOM_YAW,cz=HALL_Z+(nar?6.6:5.5),cy=nar?4.9:4.6;
+      // stand in front of the hero and turn on the spot
+      camera.position.set(0,cy,cz);camera.lookAt(Math.sin(yaw)*14,nar?1.7:1.9,cz-Math.cos(yaw)*14);const fv=nar?66:58;if(camera.fov!==fv){camera.fov=fv;camera.updateProjectionMatrix();}
+      if(!this.hero)this.showHero(true);if(this.hero){const h=this.hero.m.root;h.lookAt(camera.position.x,h.position.y,camera.position.z);h.rotateY(Math.PI);poseRunner(this.hero,dt,performance.now());}}
+    else{if(this.hero)this.showHero(false);if(camera.fov!==58){camera.fov=58;camera.updateProjectionMatrix();}camera.position.set(Math.sin(this.t*0.12)*1.4,3.3+Math.sin(this.t*0.2)*0.15,8.4);camera.lookAt(Math.sin(this.t*0.12)*0.6,3.4,-9);}
+    if(this.embers){const P=this.embers.pos;for(let k=0;k<this.embers.N;k++){P[k*3+1]+=this.embers.v[k]*dt;P[k*3]+=Math.sin(this.t*0.7+k)*dt*0.08;if(P[k*3+1]>8.5)P[k*3+1]=0.2;}this.emberPts.geometry.attributes.position.needsUpdate=true;}
+    if(this.beam)this.beam.material.opacity=0.75+Math.sin(this.t*2)*0.25;}
 };
 function enterPlaza(){if(locker.active)locker.exit();if(typeof pushChat==='function')pushChat();['menu','hud','results','pause','touch','lobby','podium','store'].forEach(id=>$(id).hidden=true);closePicker();state='plaza';music.play(MUS.menu,{fade:1.2});crowd.stop();plaza.enter();$('plazaHud').hidden=false;plaza.refreshHud();}
 function leavePlaza(){plaza.exit();}
