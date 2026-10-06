@@ -1,4 +1,4 @@
-# Flag Dash: where we left off
+# Race Your Flag (formerly Flag Dash): where we left off
 
 Game: https://mrsevereh101-prog.github.io/Flag-Dash/
 Supabase project: hzzqnwzsasuwjafmsgqh

@@ -1,4 +1,4 @@
--- Flag Dash: friends and inbox.
+-- Race Your Flag: friends and inbox.
 -- Run this once in Supabase: SQL Editor -> New query -> paste everything -> Run.
 -- Safe to run again. Needs accounts.sql to have been run first.
 --

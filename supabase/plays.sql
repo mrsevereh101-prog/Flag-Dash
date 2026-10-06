@@ -1,4 +1,4 @@
--- Flag Dash: count who plays (anonymous).
+-- Race Your Flag: count who plays (anonymous).
 -- Run this once in Supabase: SQL Editor -> New query -> paste everything -> Run.
 -- Safe to run again.
 --

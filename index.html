@@ -118,8 +118,8 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .ri-pw{font-size:12px;font-weight:800;color:#ffd38a;white-space:nowrap}.rc-side{display:grid;gap:4px;justify-items:end}.rc-side .buy{padding:6px 10px;border-radius:9px;background:var(--gold);color:#1a1405;border:0;font-weight:800}
 .rc-tabs{flex-wrap:wrap}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
 #onbWel{z-index:60;display:grid;place-items:center}#onbWel[hidden]{display:none}
-.onb-card{width:min(92vw,420px);background:linear-gradient(#1a2466,#0e1440);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.onb-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#f6e3a8}.onb-card p{margin:0;color:#cfd7f5;line-height:1.45}.onb-ic{font-size:52px}
+.onb-card{width:min(100%,420px);box-sizing:border-box;background:linear-gradient(#1a2466,#0e1440);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.onb-slogan{color:#ffd38a!important;font-weight:700;font-style:italic}.onb-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#f6e3a8}.onb-card p{margin:0;color:#cfd7f5;line-height:1.45}.onb-ic{font-size:52px}
 .onb-card .primary{padding:14px;font-size:18px;border-radius:14px}.onb-card .ghost{padding:10px;border-radius:12px}
 #onbBar{position:fixed;z-index:45;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 10px);display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:999px;background:rgba(10,16,52,.95);border:2px solid var(--gold);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:94vw;white-space:nowrap}
 #onbBar[hidden],#tutSkip[hidden]{display:none}.onb-n{font-weight:800;color:#1a1405;background:var(--gold);border-radius:999px;padding:3px 9px;font-size:13px}#onbBar b{font-size:16px}
@@ -386,7 +386,7 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .hero-tag{font-size:11px;font-weight:800;letter-spacing:.04em;color:#f6e3a8;text-transform:uppercase}
 .shop-card.hero-skin .swatch{box-shadow:0 0 18px rgba(242,182,49,.35),inset 0 0 0 2px rgba(255,255,255,.25)}
 </style></head><body>
-<title>Flag Dash</title>
+<title>Race Your Flag</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@400;500;600;700&display=swap">
@@ -933,7 +933,7 @@ body:not(.touch) .pz-stick{opacity:.55}
     <div class="left-col">
       <div class="d3-top">
         <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
-        <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Flag Dash</div>
+        <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
@@ -1175,7 +1175,7 @@ body:not(.touch) .pz-stick{opacity:.55}
   <div class="seg rc-tabs" id="rcTabs" role="group" aria-label="Item type"></div><div class="rp-list" id="rcList"></div></div></div>
 <div id="giftPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="gfTitle"><div class="store-head"><h2 id="gfTitle">Send a gift</h2><button class="ghost" id="gfClose">Close</button></div>
   <p class="muted">Gifts go to your friend's inbox and decorate their room. You pay for the gift.</p><div class="rp-list" id="gfList"></div><p class="soc-msg" id="gfNote"></p></div></div>
-<div id="onbWel" class="overlay" hidden><div class="onb-card" role="dialog" aria-labelledby="onbH"><div class="onb-ic">🏁</div><h2 id="onbH">Welcome to Flag Dash!</h2><p>First, set up your racer: choose your flag, pick your runner and choose your perk. Then it's time for your first race.</p><button class="primary" id="onbStart">Let's go</button><button class="ghost" id="onbSkip1">Skip tutorial</button></div></div>
+<div id="onbWel" class="overlay" hidden><div class="onb-card" role="dialog" aria-labelledby="onbH"><div class="onb-ic">🏁</div><h2 id="onbH">Welcome to Race Your Flag!</h2><p class="onb-slogan">Prove you have the best flag in the world.</p><p>First, set up your racer: choose your flag, pick your runner and choose your perk. Then it's time for your first race.</p><button class="primary" id="onbStart">Let's go</button><button class="ghost" id="onbSkip1">Skip tutorial</button></div></div>
 <div id="onbBar" hidden><span class="onb-n" id="onbN">1/3</span><b id="onbTx"></b><button type="button" id="onbSkip">Skip</button></div>
 <button type="button" id="tutSkip" hidden>Skip tutorial ⏭</button>
 <div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span><span id="coachTx"></span><small id="coachSub"></small></span></div>
@@ -1760,13 +1760,13 @@ const TRACK_PAINT={
   boards:(c,w,h)=>{for(let y=0;y<h;y+=32){const v=Math.floor(rand(-14,14));R(c,0,y,w,32,`rgb(${184+v},${138+v},${90+v})`);c.fillStyle='rgba(60,35,15,.55)';c.fillRect(0,y,w,2);for(let i=0;i<6;i++){c.fillStyle='rgba(90,55,25,.2)';c.fillRect(Math.random()*w,y+4+Math.random()*24,rand(20,60),1);}c.fillStyle='rgba(50,30,10,.6)';c.fillRect(8,y+8,3,3);c.fillRect(w-12,y+8,3,3);}},
 };
 const EDGE_PAINT={
-  ads:(c,w,h)=>{const segs=[['#f2b631','FLAG DASH','#1a1405'],['#1c2a6b','1500 M','#fff'],['#c4472f','GO GO GO','#fff'],['#eef1f8','NATIONS','#141a44']];segs.forEach(([bg,t,fg],i)=>{R(c,i*128,0,128,h,bg);c.fillStyle=fg;c.font='26px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(t,i*128+64,h/2+2);});},
+  ads:(c,w,h)=>{const segs=[['#f2b631','RACE YOUR FLAG','#1a1405'],['#1c2a6b','1500 M','#fff'],['#c4472f','GO GO GO','#fff'],['#eef1f8','NATIONS','#141a44']];segs.forEach(([bg,t,fg],i)=>{R(c,i*128,0,128,h,bg);c.fillStyle=fg;c.font='26px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(t,i*128+64,h/2+2,120);});},
   jersey:(c,w,h)=>{noiseFill(c,w,h,'#9a9ca3',18,[1,1,1]);R(c,0,0,w,6,'#c9cbd2');for(let x=0;x<w;x+=64){R(c,x+4,12,24,9,'#d63b2f');R(c,x+36,12,24,9,'#f2f2f2');}},
   fence:(c,w,h)=>{c.clearRect(0,0,w,h);R(c,0,14,w,11,'#8a5a32');R(c,0,40,w,11,'#7a4e2a');for(let x=0;x<w;x+=64)R(c,x,0,10,h,'#6b4323');},
   snowbank:(c,w,h)=>{c.clearRect(0,0,w,h);c.fillStyle='#f7fbff';c.beginPath();c.moveTo(0,h);for(let x=0;x<=w;x+=16)c.lineTo(x,h*0.28+Math.sin(x*0.07)*6+Math.random()*4);c.lineTo(w,h);c.fill();c.fillStyle='rgba(150,180,220,.35)';c.fillRect(0,h*0.78,w,h*0.22);},
   rope:(c,w,h)=>{c.clearRect(0,0,w,h);for(let x=0;x<w;x+=128)R(c,x,4,8,h-4,'#7a5230');c.strokeStyle='#e8d6a8';c.lineWidth=4;c.beginPath();c.moveTo(0,12);for(let x=0;x<w;x+=128)c.quadraticCurveTo(x+64,30,x+128,12);c.stroke();const cols=['#00209f','#d21034','#f2b631','#2f9a57','#fff'];for(let x=6;x<w;x+=16){const y=12+Math.sin((x%128)/128*Math.PI)*14;P(c,[[x,y],[x+12,y],[x+6,y+16]],cols[(x/16|0)%cols.length]);}},
 };
-EDGE_PAINT.rails=(c,w,h)=>{c.clearRect(0,0,w,h);R(c,0,4,w,6,'#c3c7d2');R(c,0,48,w,5,'#a7abb6');for(let x=0;x<w;x+=14)R(c,x,4,3,50,'#9da1ab');for(let x=0;x<w;x+=128){R(c,x+30,16,68,26,'#f2b631');c.fillStyle='#140f22';c.font='13px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('FLAG DASH',x+64,30);}R(c,0,h-6,w,6,'#6d7180');};
+EDGE_PAINT.rails=(c,w,h)=>{c.clearRect(0,0,w,h);R(c,0,4,w,6,'#c3c7d2');R(c,0,48,w,5,'#a7abb6');for(let x=0;x<w;x+=14)R(c,x,4,3,50,'#9da1ab');for(let x=0;x<w;x+=128){R(c,x+30,16,68,26,'#f2b631');c.fillStyle='#140f22';c.font='13px Bungee, Impact, sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText('RACE YOUR FLAG',x+64,30);}R(c,0,h-6,w,6,'#6d7180');};
 EDGE_PAINT.stone=(c,w,h)=>{R(c,0,0,w,h,'#c9a46a');for(let y=0;y<h;y+=16)for(let x=(y/16%2)*16;x<w;x+=32){const v=Math.floor(rand(-16,16));R(c,x+1,y+1,30,14,`rgb(${214+v},${178+v},${120+v})`);}R(c,0,0,w,4,'#a8834a');};
 EDGE_PAINT.leaves=(c,w,h)=>{c.clearRect(0,0,w,h);for(let i=0;i<90;i++){c.fillStyle=pick(['#2f7a34','#3f9a44','#1f5a26','#5fbf5a']);c.beginPath();c.ellipse(Math.random()*w,h*0.35+Math.random()*h*0.65,rand(6,14),rand(4,8),rand(0,3),0,TAU);c.fill();}for(let x=0;x<w;x+=64)R(c,x,0,6,h,'#5a3a1e');R(c,0,10,w,4,'#6b4a26');};
 Object.assign(TRACK_PAINT,{
@@ -1909,7 +1909,7 @@ function buildStreets(D0,D1){
   const lampG=mergeGeos([{g:new THREE.CylinderGeometry(0.08,0.1,7,6),m:mtx(0,3.5,0),c:0x2a2d3a},{g:new THREE.BoxGeometry(1.6,0.1,0.1),m:mtx(-0.7,6.95,0),c:0x2a2d3a},{g:new THREE.BoxGeometry(0.6,0.2,0.34),m:mtx(-1.4,6.9,0),c:0xfff1c0}]);
   const li=[];for(let d=10;d<D1;d+=36)[-1,1].forEach(s=>li.push({m:pm(s*7.3,d,Hf(d)+0.18,0,s>0?0:Math.PI,0)}));world.add(instanced(lampG,new THREE.MeshBasicMaterial({vertexColors:true}),li));
   // banners and bunting strung across the street
-  const words=['STREET CIRCUIT','FLAG DASH','NIGHT RACE','GO GO GO'];
+  const words=['STREET CIRCUIT','RACE YOUR FLAG','NIGHT RACE','GO GO GO'];
   for(let d=70,i=0;d<TRACK-40;d+=130,i++){const t=textTex(words[i%words.length],512,48,{bg:i%2?'#ff4fa3':'#f2b631',color:'#140f22',font:'32px Bungee, Impact, sans-serif'});const b=new THREE.Mesh(new THREE.PlaneGeometry(20.4,1.9),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}));b.position.copy(W(0,d,Hf(d)+10));b.rotation.y=heading(d);world.add(b);}
   const bunt=canvasTex(512,48,(c,w,h)=>{c.clearRect(0,0,w,h);R(c,0,2,w,2,'#ddd');const cols=['#00209f','#d21034','#f2b631','#2fa05a','#f06aa8','#3fb5e0','#fff'];for(let i=0;i<32;i++)P(c,[[i*16,4],[i*16+14,4],[i*16+7,h-4]],cols[i%cols.length]);});
   const bm=new THREE.MeshBasicMaterial({map:bunt,transparent:true,alphaTest:0.4,side:THREE.DoubleSide});
@@ -3792,7 +3792,7 @@ async function signInEmail(email){
   renderAcct();}
 async function signOut(){await syncPush(true);try{const sb=await getSb();await sb.auth.signOut();}catch(e){}try{localStorage.removeItem('flagdash-sync');}catch(e){}AUTH.user=null;SYNC.sig='';renderAcct();}
 async function deleteAccount(){
-  if(!confirm('Delete your Flag Dash account? Your saved progress in the account is removed for good. This device keeps its own copy.'))return;
+  if(!confirm('Delete your Race Your Flag account? Your saved progress in the account is removed for good. This device keeps its own copy.'))return;
   try{const sb=await getSb();const {error}=await sb.rpc('fd_delete_me');if(error)throw error;await sb.auth.signOut();}catch(e){AUTH.msg='Could not delete the account. Try again later.';renderAcct();return;}
   try{localStorage.removeItem('flagdash-sync');}catch(e){}AUTH.user=null;AUTH.msg='Your account was deleted.';renderAcct();}
 const maskEmail=e=>{const m=/^(.)(.*)(@.*)$/.exec(e||'');return m?m[1]+'•••'+m[3]:'';};
@@ -3802,7 +3802,7 @@ function renderAcct(){
   const b=$('deskAcct');if(b){b.classList.toggle('in',!!AUTH.user);b.title=AUTH.user?'Account: signed in':'Sign in';}
   const box=$('acctBody');if(!box||$('acct').hidden)return;box.innerHTML='';
   const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;box.appendChild(e);return e;};
-  $('acctTitle').textContent=AUTH.user?'Your account':'Sign in to Flag Dash';
+  $('acctTitle').textContent=AUTH.user?'Your account':'Sign in to Race Your Flag';
   if(!AUTH.on){el('p','muted','Accounts work in the full game at mrsevereh101-prog.github.io/Flag-Dash. Everything is unlocked here.');return;}
   if(!AUTH.ready){el('p','muted','Loading…');return;}
   if(AUTH.user){
@@ -4217,7 +4217,7 @@ const XP_PLACE=[60,45,35,28,22,18,15,15],HIT_XP=10,POWER_XP=15,HIT_STEAL=3,POWER
 let XPS=loadJSON('flagdash-xp',{xp:0});
 // Racer ranks: Track 1-3 up to Continent 1-7 (levels 1-35). Global and World Champs come later.
 const RANKS=[{n:'Track',k:3,ic:'🏁'},{n:'Street',k:3,ic:'🛣️'},{n:'City',k:3,ic:'🏙️'},{n:'County',k:3,ic:'🏘️'},{n:'State',k:3,ic:'🗺️'},{n:'Country',k:3,ic:'🚩'},{n:'Region',k:3,ic:'🧭'},{n:'Sea',k:7,ic:'🌊'},{n:'Continent',k:7,ic:'🌍'}];
-const RANKS_SOON=[{n:'Global',ic:'🌐'},{n:'World Champs',ic:'👑'}];
+const RANKS_SOON=[{n:'Global',ic:'🌐'},{n:'World Champs · the best flag in the world',ic:'👑'}];
 const MAX_LV=RANKS.reduce((a,r)=>a+r.k,0);
 function rankOf(L){L=clamp(L|0,1,MAX_LV);let base=0;for(const r of RANKS){if(L<=base+r.k)return {n:r.n,ic:r.ic,step:L-base,first:L===base+1};base+=r.k;}}
 const rankName=L=>{const r=rankOf(L);return r.n+' '+r.step;};
@@ -4970,7 +4970,7 @@ function renderChat(soft){
       if(REPORTS.list.some(r=>!r.mine)){const h=document.createElement('h3');h.textContent='Reports from players';list.appendChild(h);REPORTS.list.filter(r=>!r.mine).slice().reverse().forEach(r=>info(`${new Date(r.ts).toLocaleString()} \u00b7 ${r.from} reported ${r.about}: ${r.why}`));}
       if(!OWNER_ID)info('Owner setup: tell Claude "lock my announcements" once, so players\u2019 games can trust that announcements come from you.');}
     const L=ANNOUNCE.list.slice().reverse();if(!L.length)info('No announcements yet.');
-    L.forEach(a=>{const row=document.createElement('div');row.className='cm an';const h=document.createElement('div');h.className='cm-head';const b=document.createElement('b');b.textContent='\ud83d\udce2 Flag Dash';const t=document.createElement('small');t.textContent=new Date(a.ts).toLocaleString();h.append(b,t);const x=document.createElement('div');x.className='cm-t';x.textContent=a.t;row.append(h,x);list.appendChild(row);});
+    L.forEach(a=>{const row=document.createElement('div');row.className='cm an';const h=document.createElement('div');h.className='cm-head';const b=document.createElement('b');b.textContent='\ud83d\udce2 Race Your Flag';const t=document.createElement('small');t.textContent=new Date(a.ts).toLocaleString();h.append(b,t);const x=document.createElement('div');x.className='cm-t';x.textContent=a.t;row.append(h,x);list.appendChild(row);});
     return;}
   if(ch==='d'){inputRow.hidden=true;$('chatQuick').hidden=true;
     const convs=Object.keys(CH.hist).filter(k=>k.startsWith('d:')).map(k=>({pid:k.slice(2),last:CH.hist[k].slice(-1)[0]})).filter(c=>c.last).sort((a,b)=>b.last.ts-a.last.ts);
@@ -6152,8 +6152,8 @@ setTimeout(()=>playLog('open'),1500);
    ========================================================= */
 const ONB={tips:new Set(),t:0,iv:0,hold:false,wait:null,lane0:null};
 // Tutorial lines. Put a recording at voice/tut-<id>.mp3 and list the id in TUT_FILES to use it instead of the device voice.
-const TUT_FILES=new Set(['welcome','mustwin','go','lanes','jump','slide','wall','item','power','loot','coins','end']);
-const TUT_LINES={flag:'Choose your flag.',runner:'Pick your runner.',perk:'Choose your perk.',welcome:'Welcome to Flag Dash!',mustwin:'Runner, you must win this race!',go:"Let's GO!!",
+const TUT_FILES=new Set(['mustwin','go','lanes','jump','slide','wall','item','power','loot','coins','end']);
+const TUT_LINES={flag:'Choose your flag.',runner:'Pick your runner.',perk:'Choose your perk.',welcome:'Welcome to Race Your Flag!',mustwin:'Runner, you must win this race!',go:"Let's GO!!",
   lanes:'Swipe left or right to change lanes.',jump:'Hurdle ahead! Swipe UP to jump.',slide:'Barrier ahead! Swipe DOWN to slide.',
   wall:'Wall ahead! Change lanes to run around it.',item:'You got an item! Tap the item button to use it.',power:'Your power is ready! Tap POWER to knock down every rival.',
   loot:'Nice hit! Hitting rivals earns XP and steals their coins.',coins:'Coins buy skins and items in the Store. Grab them!',end:'Almost THERE!!!!'};

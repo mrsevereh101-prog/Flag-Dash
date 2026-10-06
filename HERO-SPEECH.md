@@ -1,4 +1,4 @@
-# Flag Dash: hero speech lines
+# Race Your Flag: hero speech lines
 
 These are the lines heroes say in speech bubbles during races. The game also reads them aloud (Settings → Voices).
 Edit freely: change, add or remove lines, then send the file back and I will put it in the game.

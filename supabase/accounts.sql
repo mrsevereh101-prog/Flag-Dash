@@ -1,4 +1,4 @@
--- Flag Dash: player accounts (save progress to an account).
+-- Race Your Flag: player accounts (save progress to an account).
 -- Run this once in Supabase: SQL Editor -> New query -> paste everything -> Run.
 -- Safe to run again.
 --

@@ -1,4 +1,4 @@
-# Flag Dash sound effects
+# Race Your Flag sound effects
 
 The game makes its sounds with simple beeps for now. This list is for generating real ones (for example with ElevenLabs Sound Effects).
 

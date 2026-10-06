@@ -1,4 +1,4 @@
--- Flag Dash: worldwide leaderboard.
+-- Race Your Flag: worldwide leaderboard.
 -- Run this once in Supabase: SQL Editor -> New query -> paste everything -> Run.
 -- It is safe to run again; it only creates what is missing and replaces the functions.
 
