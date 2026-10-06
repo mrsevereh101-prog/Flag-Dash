@@ -1659,7 +1659,7 @@ function sideFn(th){
 /* =========================================================
    MENU STATE
    ========================================================= */
-let selCountry=store.get('flagdash-country')||'HTI';if(!COUNTRY_CODES.has(selCountry))selCountry='HTI';
+let selCountry=store.get('flagdash-country')||'USA';if(!COUNTRY_CODES.has(selCountry))selCountry='USA';
 let selChar=store.get('flagdash-char')||'samurai';if(!CHAR_IDS.includes(selChar))selChar='samurai';
 let selTrack=store.get('flagdash-track')||'stadium';if(!THEMES.some(t=>t.id===selTrack))selTrack='stadium';
 let selMode=normMode(store.get('flagdash-mode'));
@@ -5179,7 +5179,7 @@ setInterval(()=>{
    MENU + LOBBY UI
    ========================================================= */
 const flagGrid=$('flagGrid'),charGrid=$('charGrid'),trackGrid=$('trackGrid');
-COUNTRIES.slice().sort((a,b)=>a[0]==='HTI'?-1:b[0]==='HTI'?1:a[1].localeCompare(b[1])).forEach(([code,name])=>{const f=flagCanvas(code);const b=document.createElement('button');b.className='flag-btn';b.dataset.code=code;b.dataset.name=name.toLowerCase();
+COUNTRIES.slice().sort((a,b)=>{const top=['USA','HTI'],ia=top.indexOf(a[0]),ib=top.indexOf(b[0]);if(ia>=0||ib>=0)return (ia<0?9:ia)-(ib<0?9:ib);return a[1].localeCompare(b[1]);}).forEach(([code,name])=>{const f=flagCanvas(code);const b=document.createElement('button');b.className='flag-btn';b.dataset.code=code;b.dataset.name=name.toLowerCase();
   const im=document.createElement('img');im.alt='';im.src=f.url;const sp=document.createElement('span');sp.textContent=name;b.append(im,sp);
   b.onclick=()=>{selCountry=code;store.set('flagdash-country',code);refreshMenu('wave');syncLobbyPresence();};flagGrid.appendChild(b);});
 $('flagSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.hidden=!!q&&!b.dataset.name.includes(q)&&!b.dataset.code.toLowerCase().includes(q);});});
