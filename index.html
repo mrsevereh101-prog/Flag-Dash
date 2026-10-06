@@ -117,6 +117,14 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .ri-ic{font-size:30px;width:40px;text-align:center;flex:none}.ri-tx{flex:1;min-width:0;display:grid;gap:2px}.ri-tx b{font-size:14.5px}.ri-tx small{color:var(--muted);font-size:12px}
 .ri-pw{font-size:12px;font-weight:800;color:#ffd38a;white-space:nowrap}.rc-side{display:grid;gap:4px;justify-items:end}.rc-side .buy{padding:6px 10px;border-radius:9px;background:var(--gold);color:#1a1405;border:0;font-weight:800}
 .rc-tabs{flex-wrap:wrap}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
+#onbWel{z-index:60;display:grid;place-items:center}#onbWel[hidden]{display:none}
+.onb-card{width:min(92vw,420px);background:linear-gradient(#1a2466,#0e1440);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.onb-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#f6e3a8}.onb-card p{margin:0;color:#cfd7f5;line-height:1.45}.onb-ic{font-size:52px}
+.onb-card .primary{padding:14px;font-size:18px;border-radius:14px}.onb-card .ghost{padding:10px;border-radius:12px}
+#onbBar{position:fixed;z-index:45;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 10px);display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:999px;background:rgba(10,16,52,.95);border:2px solid var(--gold);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:94vw;white-space:nowrap}
+#onbBar[hidden],#tutSkip[hidden]{display:none}.onb-n{font-weight:800;color:#1a1405;background:var(--gold);border-radius:999px;padding:3px 9px;font-size:13px}#onbBar b{font-size:16px}
+#onbBar button,#tutSkip{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#dfe6ff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
+#tutSkip{position:fixed;z-index:36;left:10px;top:42%;background:rgba(10,16,52,.85)}
 #coach{position:fixed;left:50%;top:max(calc(env(safe-area-inset-top,0px) + 96px),30vh);transform:translateX(-50%);z-index:35;display:flex;gap:10px;align-items:center;max-width:min(92vw,520px);padding:10px 16px;border-radius:16px;background:rgba(10,18,60,.92);border:2px solid #f2b631;box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:16px;pointer-events:none;animation:coachIn .35s ease-out}
 #coach[hidden]{display:none!important}.coach-ic{font-size:26px;line-height:1}#coachSub{display:block;font-size:13px;font-weight:600;color:#f6e3a8;margin-top:2px}#coachSub:empty{display:none}#coach.big{font-size:20px;padding:14px 20px}#coach.wait{border-color:#ffe08a;box-shadow:0 0 0 4px rgba(242,182,49,.35),0 8px 24px rgba(0,0,0,.45)}
 @keyframes coachIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -1167,6 +1175,9 @@ body:not(.touch) .pz-stick{opacity:.55}
   <div class="seg rc-tabs" id="rcTabs" role="group" aria-label="Item type"></div><div class="rp-list" id="rcList"></div></div></div>
 <div id="giftPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="gfTitle"><div class="store-head"><h2 id="gfTitle">Send a gift</h2><button class="ghost" id="gfClose">Close</button></div>
   <p class="muted">Gifts go to your friend's inbox and decorate their room. You pay for the gift.</p><div class="rp-list" id="gfList"></div><p class="soc-msg" id="gfNote"></p></div></div>
+<div id="onbWel" class="overlay" hidden><div class="onb-card" role="dialog" aria-labelledby="onbH"><div class="onb-ic">🏁</div><h2 id="onbH">Welcome to Flag Dash!</h2><p>First, set up your racer: choose your flag, pick your runner and choose your perk. Then it's time for your first race.</p><button class="primary" id="onbStart">Let's go</button><button class="ghost" id="onbSkip1">Skip tutorial</button></div></div>
+<div id="onbBar" hidden><span class="onb-n" id="onbN">1/3</span><b id="onbTx"></b><button type="button" id="onbSkip">Skip</button></div>
+<button type="button" id="tutSkip" hidden>Skip tutorial ⏭</button>
 <div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span><span id="coachTx"></span><small id="coachSub"></small></span></div>
 <div id="pointer" hidden><button class="pt-card" id="pointerBtn"><b id="pointerTx"></b><small id="pointerSub"></small></button><i class="pt-arrow" aria-hidden="true"></i></div>
 <div id="saveTip" role="dialog" aria-labelledby="saveTipTx" hidden><span class="st-ic">💾</span><div><b id="saveTipTx">To save your progress, please log in.</b><small>Your coins, skins and level are only on this device until you do.</small></div><div class="st-btns"><button class="primary" id="saveTipGo">Log in</button><button class="ghost" id="saveTipLater">Later</button></div></div>
@@ -4080,7 +4091,7 @@ function openPicker(sec){
   if(matchMedia('(max-width:980px)').matches){const r=document.querySelector('.preview-wrap').getBoundingClientRect();menu.scrollBy({top:r.top-12,behavior:reduceMotion?'auto':'smooth'});}
   if(sec==='flag'&&!isTouch)setTimeout(()=>$('flagSearch').focus(),260);
 }
-function closePicker(){if(!pickOpen)return;pickOpen=null;const pk=$('picker');pk.classList.remove('open');pk.setAttribute('aria-hidden','true');$('menu').classList.remove('picking');document.querySelectorAll('.pick-btn').forEach(b=>b.setAttribute('aria-expanded','false'));}
+function closePicker(){if(!pickOpen)return;pickOpen=null;if(OS.on)setTimeout(onbNext,250);const pk=$('picker');pk.classList.remove('open');pk.setAttribute('aria-hidden','true');$('menu').classList.remove('picking');document.querySelectorAll('.pick-btn').forEach(b=>b.setAttribute('aria-expanded','false'));}
 document.querySelectorAll('.pick-btn').forEach(b=>b.onclick=()=>{if(pickOpen===b.dataset.pick)closePicker();else openPicker(b.dataset.pick);});
 $('pickDone').onclick=()=>closePicker();
 $('perkStore').onclick=()=>openStore();
@@ -6142,7 +6153,7 @@ setTimeout(()=>playLog('open'),1500);
 const ONB={tips:new Set(),t:0,iv:0,hold:false,wait:null,lane0:null};
 // Tutorial lines. Put a recording at voice/tut-<id>.mp3 and list the id in TUT_FILES to use it instead of the device voice.
 const TUT_FILES=new Set(['welcome','mustwin','go','lanes','jump','slide','wall','item','power','loot','coins','end']);
-const TUT_LINES={welcome:'Welcome to Flag Dash!',mustwin:'Runner, you must win this race!',go:"Let's GO!!",
+const TUT_LINES={flag:'Choose your flag.',runner:'Pick your runner.',perk:'Choose your perk.',welcome:'Welcome to Flag Dash!',mustwin:'Runner, you must win this race!',go:"Let's GO!!",
   lanes:'Swipe left or right to change lanes.',jump:'Hurdle ahead! Swipe UP to jump.',slide:'Barrier ahead! Swipe DOWN to slide.',
   wall:'Wall ahead! Change lanes to run around it.',item:'You got an item! Tap the item button to use it.',power:'Your power is ready! Tap POWER to knock down every rival.',
   loot:'Nice hit! Hitting rivals earns XP and steals their coins.',coins:'Coins buy skins and items in the Store. Grab them!',end:'Almost THERE!!!!'};
@@ -6175,6 +6186,21 @@ function tip(id,ic,opt){if(ONB.tips.has(id))return false;ONB.tips.add(id);tline(
 function holdFor(id,ic,check){ONB.tips.add(id);ONB.hold=true;ONB.wait=check;tline(id,ic,{ms:0,wait:true,sub:'The race is paused until you do it'});}
 function release(){ONB.hold=false;ONB.wait=null;const c=$('coach');c.classList.remove('wait');$('coachSub').textContent='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},900);}
 addEventListener('keydown',e=>{if(ONB.hold&&['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code))ONB.keyLane=true;},true);
+// Before the first race: welcome, then flag, runner and perk, one picker at a time. Skip is always there.
+var OS={on:false,i:-1};const ONB_STEPS=[['flag','Choose your flag'],['runner','Pick your runner'],['perk','Choose your perk']];
+function onboardSetup(){
+  // a free starter perk of each kind so there is something to choose
+  if(!BUFFS.some(b=>(wallet.buffs[b.id]|0)>0)){wallet.buffs.start=1;wallet.buffs.shield=1;saveWallet();setPerk('start');}
+  $('onbWel').hidden=false;}
+$('onbStart').onclick=()=>{try{initAudio();if(actx&&actx.state==='suspended')actx.resume();}catch(e){}
+  const b=$('onbStart');b.disabled=true;tutSay('welcome',()=>{b.disabled=false;$('onbWel').hidden=true;OS.on=true;OS.i=-1;onbNext();});};
+function onbNext(){if(!OS.on)return;OS.i++;
+  if(OS.i>=ONB_STEPS.length){OS.on=false;$('onbBar').hidden=true;startTutorialRace();return;}
+  const [sec,tx]=ONB_STEPS[OS.i];$('onbN').textContent=`${OS.i+1}/${ONB_STEPS.length}`;$('onbTx').textContent=tx;$('onbBar').hidden=false;
+  if(pickOpen){const o=OS.on;OS.on=false;closePicker();OS.on=o;}openPicker(sec);tutSay(sec);}
+function skipTutorial(){OS.on=false;$('onbWel').hidden=true;$('onbBar').hidden=true;$('tutSkip').hidden=true;closePicker();store.set('flagdash-onboard','done');
+  if(RACE&&RACE.tut){RACE.tut=false;ONB.hold=false;ONB.wait=null;clearInterval(ONB.iv);$('coach').hidden=true;}}
+$('onbSkip1').onclick=skipTutorial;$('onbSkip').onclick=skipTutorial;$('tutSkip').onclick=skipTutorial;
 function startTutorialRace(){
   store.set('flagdash-onboard','race');selTrack='stadium';selMode='solo';selLaps=1;
   startOffline(false);if(!RACE)return;
@@ -6182,17 +6208,13 @@ function startTutorialRace(){
   RACE.tut=true;RACE.bots.forEach(b=>{b.ai.skill=rand(0.42,0.58);b.ai.pace=rand(0.86,0.92);});
   $('trackLabel').textContent='Your first race · '+TH.name;
   ONB.tips.clear();ONB.hold=true;   // the countdown waits for the intro
-  coach('🏁',TUT_LINES.welcome,0,{big:true,wait:true,sub:'Tap anywhere to start'});
-  const go=()=>{removeEventListener('pointerdown',go,true);removeEventListener('keydown',go,true);
-    try{initAudio();if(actx&&actx.state==='suspended')actx.resume();}catch(e){}
-    coach('🏁',TUT_LINES.welcome,0,{big:true});
-    tutSay('welcome',()=>{coach('🥇',TUT_LINES.mustwin,0,{big:true});
-      tutSay('mustwin',()=>{coach('🔥',TUT_LINES.go,1400,{big:true});tutSay('go');setTimeout(()=>{ONB.hold=false;},500);});});};
-  addEventListener('pointerdown',go,true);addEventListener('keydown',go,true);
+  $('tutSkip').hidden=false;
+  setTimeout(()=>{coach('🥇',TUT_LINES.mustwin,0,{big:true});
+    tutSay('mustwin',()=>{coach('🔥',TUT_LINES.go,1400,{big:true});tutSay('go');setTimeout(()=>{ONB.hold=false;},500);});},500);
   clearInterval(ONB.iv);ONB.iv=setInterval(tutorTick,100);
 }
 function tutorTick(){
-  if(!RACE||!RACE.tut||!player){clearInterval(ONB.iv);ONB.hold=false;return;}
+  if(!RACE||!RACE.tut||!player||state==='results'||state==='menu'){clearInterval(ONB.iv);ONB.hold=false;$('tutSkip').hidden=true;return;}
   if(state!=='race')return;
   if(ONB.hold){if(ONB.wait&&ONB.wait())release();return;}
   const near=(type,max)=>obstacles.find(o=>o.type===type&&o.d>player.d+2&&o.d-player.d<max&&Math.abs(o.x-player.x)<1.4);
@@ -6236,7 +6258,7 @@ $('saveTipGo').onclick=()=>{$('saveTip').hidden=true;try{sessionStorage.setItem(
 $('saveTipLater').onclick=()=>{$('saveTip').hidden=true;store.set('flagdash-savetip-later',String(Date.now()));};
 // audio needs a tap; the first one anywhere switches sound on
 addEventListener('pointerdown',function once(){try{initAudio();if(actx&&actx.state==='suspended')actx.resume();}catch(e){}removeEventListener('pointerdown',once);},{once:true});
-if(isFirstVisit())setTimeout(startTutorialRace,700);
+if(isFirstVisit())setTimeout(onboardSetup,700);
 
 
 /* ---------- Race Desk bottom tabs: Quick Race · Online · Challenges. Each opens its own panel; tap it again to close. ---------- */
