@@ -23,6 +23,8 @@ create table if not exists public.fd_scores (
   updated_at timestamptz not null default now(),
   primary key (pid, period, pkey)
 );
+-- profile picture: which hero and skin to draw (added later, so older tables get the column too)
+alter table public.fd_scores add column if not exists av text check (av is null or av ~ '^[a-z]{2,12}\.[a-z0-9_]{2,24}$');
 create index if not exists fd_scores_board on public.fd_scores (period, pkey, pts desc);
 
 -- Anyone may read the boards. Nobody may write to the tables directly: saves go through fd_submit.
@@ -64,14 +66,15 @@ begin
     np  := least(greatest(coalesce((r->>'pts')::int, 0), coalesce(old.pts, 0)),   coalesce(old.pts, 0) + 120);
     nr  := least(greatest(coalesce((r->>'r')::int, 0),   coalesce(old.races, 0)), coalesce(old.races, 0) + 6);
     ngb := least(greatest(coalesce((r->>'gb')::int, 0),  coalesce(old.gb, 0)),    coalesce(old.gb, 0) + 30);
-    insert into public.fd_scores(pid, period, pkey, nm, cc, gid, gt, gn, gc, pts, races, gb, updated_at)
+    insert into public.fd_scores(pid, period, pkey, nm, cc, av, gid, gt, gn, gc, pts, races, gb, updated_at)
     values (p_pid, r->>'p', r->>'k',
             left(coalesce(nullif(p_card->>'nm',''), 'Runner'), 16),
             case when coalesce(p_card->>'cc','') ~ '^[A-Z]{3}$' then p_card->>'cc' else 'USA' end,
+            case when coalesce(p_card->>'av','') ~ '^[a-z]{2,12}\.[a-z0-9_]{2,24}$' then p_card->>'av' end,
             left(p_card->>'gid', 16), left(p_card->>'gt', 4), left(p_card->>'gn', 20), left(p_card->>'gc', 7),
             np, nr, ngb, now())
     on conflict (pid, period, pkey) do update
-      set nm = excluded.nm, cc = excluded.cc, gid = excluded.gid, gt = excluded.gt, gn = excluded.gn, gc = excluded.gc,
+      set nm = excluded.nm, cc = excluded.cc, av = excluded.av, gid = excluded.gid, gt = excluded.gt, gn = excluded.gn, gc = excluded.gc,
           pts = excluded.pts, races = excluded.races, gb = excluded.gb, updated_at = now();
   end loop;
   return 'ok';
