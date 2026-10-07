@@ -1,4 +1,4 @@
-<!doctype html><html class="cream"><head><script>try{if(localStorage.getItem("flagdash-theme")==="night")document.documentElement.classList.remove("cream");}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+<!doctype html><html class="cream sky"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("sky");}else if(t==="cream")c.remove("sky");}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
 #layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
 body.layout-edit #hud,body.layout-edit #touch{z-index:90}
 body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -1046,6 +1046,17 @@ html.cream .desk3 .d3-picks b{color:#3a2812!important}html.cream .desk3 .d3-pick
 html.cream .tp-x{color:#5a3d12!important;background:#eadcbb!important;border-color:#a87812!important}
 html.cream .d3-logo{color:#8a5d0c;text-shadow:0 1px 0 #fff}
 html.cream input[type=range]{accent-color:#c8921c}
+/* ===== Sky variant (test): the cream areas become sky blue, gold frames stay ===== */
+html.cream.sky{--night:#9cc9ec;--night-2:#cfe7fa;--panel:rgba(205,230,250,.97);--panel-solid:#cfe7fa;--line:#b8923e;--chalk:#0f2a4a;--muted:#3d5d80;
+  --cream:linear-gradient(180deg,#d7ecfc,#a9d2f2);--d3-navy:#d7ecfc;--d3-navy2:#a9d2f2}
+html.cream.sky .col-sq{background:radial-gradient(circle at 50% 30%,#e6f4ff,#a3cdee) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important}
+html.cream.sky .col-sq.locked{background:linear-gradient(#d5dde6,#b8c4d1) padding-box,linear-gradient(120deg,#c9d2dc,#8f9aa6,#d5dde6,#8f9aa6) border-box!important}
+html.cream.sky :is(.tile-pop,.col-info){background:#cfe7fa!important}html.cream.sky .col-info::after{background:#cfe7fa}
+html.cream.sky :is(button.ghost,.ghost),html.cream.sky .tp-x{background:#d7ecfc!important;color:#0f2a4a!important}
+html.cream.sky .overlay{background:linear-gradient(180deg,rgba(10,30,60,.4),rgba(10,30,60,.68))}
+html.cream.sky :is(.desk3 .d3-picks b,.d3-name input,.tile-lb,.lv-badge b,.lv-badge small,.rh-title b){color:#0f2a4a!important}
+html.cream.sky :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote){color:#3d5d80!important}html.cream.sky .d3-qinfo b{color:#7a4f06!important}
+html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.sky .stat i{background:#b9d6ee}
 @media (prefers-reduced-motion:reduce){html.cream *{animation-duration:0s!important}}
 </style>
 
@@ -5603,8 +5614,10 @@ $('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1)
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
-{const tb=$('set_theme'),show=()=>{tb.textContent=document.documentElement.classList.contains('cream')?'Cream gold':'Night blue';};show();
-  tb.onclick=()=>{const c=document.documentElement.classList.toggle('cream');store.set('flagdash-theme',c?'cream':'night');show();};}
+{const H=document.documentElement,tb=$('set_theme'),cur=()=>H.classList.contains('sky')?'sky':H.classList.contains('cream')?'cream':'night';
+  const show=()=>{tb.textContent={sky:'Sky gold',cream:'Cream gold',night:'Night blue'}[cur()];};show();
+  // themes cycle: Sky gold -> Cream gold -> Night blue
+  tb.onclick=()=>{const n={sky:'cream',cream:'night',night:'sky'}[cur()];H.classList.toggle('cream',n!=='night');H.classList.toggle('sky',n==='sky');store.set('flagdash-theme',n);show();};}
 $('avClose').onclick=()=>$('avPick').hidden=true;
 $('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
 $('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
