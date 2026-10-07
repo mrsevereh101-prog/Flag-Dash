@@ -124,7 +124,12 @@ body.layout-desk .lay-piece{outline-offset:1px}
 #onbBar{position:fixed;z-index:45;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 10px);display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:999px;background:rgba(10,16,52,.95);border:2px solid var(--gold);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.5);max-width:94vw;white-space:nowrap}
 #onbBar[hidden],#tutSkip[hidden]{display:none}.onb-n{font-weight:800;color:#1a1405;background:var(--gold);border-radius:999px;padding:3px 9px;font-size:13px}#onbBar b{font-size:16px}
 #onbBar button,#tutSkip{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#dfe6ff;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
-#tutSkip{position:fixed;z-index:36;left:10px;top:42%;background:rgba(10,16,52,.85)}
+#tutSkip{position:fixed;z-index:36;left:10px;top:42%;background:rgba(10,16,52,.7);padding:4px 10px;font-size:12px}
+#tutArrow{position:fixed;z-index:80;transform:translate(-50%,-100%);font-size:54px;line-height:1;color:var(--gold);text-shadow:0 0 14px rgba(242,182,49,.9),0 3px 0 #000;pointer-events:none;animation:tutBob .7s ease-in-out infinite alternate}#tutArrow[hidden]{display:none}
+@keyframes tutBob{to{transform:translate(-50%,calc(-100% - 16px))}}
+.tut-glow{box-shadow:0 0 0 3px var(--gold),0 0 22px rgba(242,182,49,.9)!important;animation:tutPulse .8s ease-in-out infinite alternate}@keyframes tutPulse{to{box-shadow:0 0 0 5px var(--gold),0 0 34px rgba(242,182,49,1)}}
+#coach.mini{padding:8px 16px;gap:8px;max-width:none;width:auto}#coach.mini .coach-ic{white-space:nowrap;font-size:44px;animation:tutNudge .6s ease-in-out infinite alternate}#coach.mini #coachTx{font-size:18px;font-weight:800;white-space:nowrap}#coach.mini #coachSub{display:none}
+@keyframes tutNudge{to{transform:scale(1.15)}}
 #coach{position:fixed;left:50%;top:max(calc(env(safe-area-inset-top,0px) + 96px),30vh);transform:translateX(-50%);z-index:35;display:flex;gap:10px;align-items:center;max-width:min(92vw,520px);padding:10px 16px;border-radius:16px;background:rgba(10,18,60,.92);border:2px solid #f2b631;box-shadow:0 8px 24px rgba(0,0,0,.45);color:#fff;font-weight:700;font-size:16px;pointer-events:none;animation:coachIn .35s ease-out}
 #coach[hidden]{display:none!important}.coach-ic{font-size:26px;line-height:1}#coachSub{display:block;font-size:13px;font-weight:600;color:#f6e3a8;margin-top:2px}#coachSub:empty{display:none}#coach.big{font-size:20px;padding:14px 20px}#coach.wait{border-color:#ffe08a;box-shadow:0 0 0 4px rgba(242,182,49,.35),0 8px 24px rgba(0,0,0,.45)}
 @keyframes coachIn{from{opacity:0;transform:translate(-50%,-10px)}to{opacity:1;transform:translate(-50%,0)}}
@@ -652,6 +657,7 @@ body.touch .hud-bottom{bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}/* --
 .team-score span{padding:4px 10px;border-radius:999px}
 .team-score .g{background:var(--gold);color:#1a1405} .team-score .b{background:var(--blue);color:#06182e}
 #feed{position:absolute;top:calc(env(safe-area-inset-top,0px) + 250px);right:16px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;max-width:min(360px,calc(100% - 32px))}
+.msg.hitchip{display:flex;align-items:center;gap:6px;padding:5px 9px}.hitchip img{width:30px;height:20px;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.35);object-fit:cover}.hc-ic{font-size:20px;line-height:1}.hitchip small{font-weight:800;font-size:13px;margin-left:2px}
 .msg{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:8px;padding:5px 10px;font-weight:600;font-size:13px;opacity:.9;transition:opacity .4s,transform .4s}
 .msg.bad{border-left-color:var(--tartan-2)} .msg.good{border-left-color:var(--good)} .msg.gold{border-left-color:var(--gold)}
 .msg.out{opacity:0;transform:translateX(12px)}
@@ -1177,7 +1183,7 @@ body:not(.touch) .pz-stick{opacity:.55}
   <p class="muted">Gifts go to your friend's inbox and decorate their room. You pay for the gift.</p><div class="rp-list" id="gfList"></div><p class="soc-msg" id="gfNote"></p></div></div>
 <div id="onbWel" class="overlay" hidden><div class="onb-card" role="dialog" aria-labelledby="onbH"><div class="onb-ic">🏁</div><h2 id="onbH">Welcome to Race Your Flag!</h2><p class="onb-slogan">Prove you have the best flag in the world.</p><p>First, set up your racer: choose your flag, pick your runner and choose your perk. Then it's time for your first race.</p><button class="primary" id="onbStart">Let's go</button><button class="ghost" id="onbSkip1">Skip tutorial</button></div></div>
 <div id="onbBar" hidden><span class="onb-n" id="onbN">1/3</span><b id="onbTx"></b><button type="button" id="onbSkip">Skip</button></div>
-<button type="button" id="tutSkip" hidden>Skip tutorial ⏭</button>
+<button type="button" id="tutSkip" hidden aria-label="Skip tutorial">Skip ⏭</button><div id="tutArrow" hidden aria-hidden="true">⬇</div>
 <div id="coach" role="status" aria-live="polite" hidden><span class="coach-ic" id="coachIc"></span><span><span id="coachTx"></span><small id="coachSub"></small></span></div>
 <div id="pointer" hidden><button class="pt-card" id="pointerBtn"><b id="pointerTx"></b><small id="pointerSub"></small></button><i class="pt-arrow" aria-hidden="true"></i></div>
 <div id="saveTip" role="dialog" aria-labelledby="saveTipTx" hidden><span class="st-ic">💾</span><div><b id="saveTipTx">To save your progress, please log in.</b><small>Your coins, skins and level are only on this device until you do.</small></div><div class="st-btns"><button class="primary" id="saveTipGo">Log in</button><button class="ghost" id="saveTipLater">Later</button></div></div>
@@ -3055,6 +3061,18 @@ voice.load();
    ACTIONS (local) + ACTS (shared with other players)
    ========================================================= */
 const feedSeen=new Map();let feedLast=0;
+// Who hit whom, as icons: attacker's flag, the weapon, the victim's flag (+ any loot)
+const flagURL=r=>{const f=r&&r.flag;if(!f)return '';return f.url||(f.url=f.canvas.toDataURL('image/png'));};
+const HIT_IC=[[/rocket/i,'🚀'],[/banana/i,'🍌'],[/mine/i,'💣'],[/fire/i,'🔥'],[/froze|freeze/i,'❄️'],[/lightning|zapp/i,'⚡'],[/slash|sword/i,'⚔️'],[/quake/i,'🌋'],[/wind|gale/i,'🌪️'],[/tree/i,'🌳'],[/dart/i,'🎯'],[/net\b/i,'🕸️'],[/meteor/i,'☄️'],[/shockwave/i,'💥'],[/vortex/i,'🌀'],[/passed through/i,'👻']];
+function hitIcon(why,src){for(const [re,ic] of HIT_IC)if(re.test(why||''))return ic;const p=src&&src.char&&src.char.id;return {samurai:'⚔️',warrior:'⚡',archer:'🌪️',elf:'🌳',dwarf:'🌋'}[p]||'💥';}
+function hitFeed(a,b,ic){
+  if(!a||!b||!RACE)return null;const mine=a===player,me=b===player;const f=$('feed');const e=document.createElement('div');e.className='msg hitchip'+(mine?' good':me?' bad':'');
+  const im=r=>{const i=document.createElement('img');i.src=flagURL(r);i.alt=r.nm||'';return i;};
+  const w=document.createElement('span');w.className='hc-ic';w.textContent=ic;e.append(im(a),w,im(b));
+  f.prepend(e);while(f.children.length>3)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),2000);setTimeout(()=>e.remove(),2400);
+  RACE.lastChip={a,b,e};return e;}
+// add the loot to the chip for that hit
+function chipLoot(a,b,txt){const L=RACE&&RACE.lastChip;if(L&&L.a===a&&L.b===b&&L.e.isConnected){const t=document.createElement('small');t.textContent=txt;L.e.appendChild(t);return true;}return false;}
 function feed(msg,kind){const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;/* no repeats */
   if(!kind&&now-feedLast<1500)return;/* minor info waits its turn */
   feedSeen.set(msg,now);feedLast=now;const f=$('feed');const e=document.createElement('div');e.className='msg '+(kind||'');e.textContent=msg;f.prepend(e);while(f.children.length>2)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),1600);setTimeout(()=>e.remove(),2000);}
@@ -3084,7 +3102,7 @@ function handleAct(src,a){
     case 'rkt':{if(rockets.some(k=>k.id===a.id))break;const m=makeRocketMesh();scene.add(m);rockets.push({id:a.id,x:+a.x||src.x,d:+a.d||src.d,target:runnerById(a.tg),owner:src,life:4,mesh:m});if(runnerById(a.tg)===player&&src!==player)feed(`${src.nm} fired a rocket at you`,'bad');break;}
     case 'rktx':{const i=rockets.findIndex(k=>k.id===a.id);if(i>=0){const k=rockets[i];{const p=W(k.x,k.d,Hf(k.d)+1.2);explode(p.x,p.y,p.z);}scene.remove(k.mesh);rockets.splice(i,1);}break;}
     case 'frz':{ringFx(src.x,src.d,0x8fd8ff,20,0.7);{const p=wpos(src,1.2);burst(p.x,p.y,p.z,40,[0.7,0.9,1],{add:true,max:12,grav:2,size:0.3});}
-      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.ghost>0){ghostFx(o);continue;}if(itemProof(o,'the freeze bomb'))continue;if(o.shield>0){o.shield=0;notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);if(o.kind==='local')feed(`${src.nm} froze you`,'bad');sayHit(src,o);notifyAttacker(src,o,'frz');}
+      for(const o of runners){if(!o.owned||o===src||o.finished||sameTeam(o,src)||Math.abs(o.d-src.d)>=20)continue;if(o.phase>0||o.leaping)continue;if(o.ghost>0){ghostFx(o);continue;}if(itemProof(o,'the freeze bomb'))continue;if(o.shield>0){o.shield=0;hitFeed(src,o,'🛡️');notifyAttacker(src,o,'blk');continue;}o.slow=Math.max(o.slow,2.6);hitFeed(src,o,'❄️');sayHit(src,o);notifyAttacker(src,o,'frz');}
       break;}
     case 'qk':{ringFx(src.x,src.d,0xe0654a,12,0.6);{const p=wpos(src,0.2);burst(p.x,p.y,p.z,50,TH.dust,{max:9,up:5,grav:10,size:0.45});}if(!reduceMotion&&player&&Math.abs(player.d-src.d)<25)shake=Math.max(shake,0.35);if(src.kind==='local')sfx.hit();
       for(const o of runners){if(!o.owned||o===src)continue;if(Math.abs(o.d-src.d)<12&&Math.abs(o.x-src.x)<12)hit(o,1.2,src,'knock',`${src.nm}'s quake knocked you down`);}break;}
@@ -3122,7 +3140,7 @@ function handleAct(src,a){
 }
 function notifyAttacker(src,o,res){
   if(!src||src===o)return;
-  if(src.kind==='local'){if(res!=='blk')raceStat('hits');feed(res==='blk'?`${o.nm}'s shield blocked it`:res==='frz'?`You froze ${o.nm}`:`You hit ${o.nm}`,res==='blk'?'':'good');}
+  if(src.kind==='local'){if(res!=='blk')raceStat('hits');if(!o.owned)hitFeed(src,o,res==='blk'?'🛡️':res==='frz'?'❄️':'💥');}
   else if(!src.owned&&RACE.online)sendAct(o,{t:'ouch',by:src.id,res});
   if(src.owned&&src.kind==='bot'&&res==='hit'&&Math.random()<0.35)sendAct(src,{t:'emo',e:pick(['point','dance','flex'])});
 }
@@ -3138,12 +3156,13 @@ function hit(o,dur,src,kind,why,quiet){
   if(o.ghost>0){ghostFx(o);if(src&&src!==o){const nx=nextInLine(o,src);if(o.kind==='local')feed(nx?`${src.nm}'s attack went through you and hit ${nx.nm}`:`${src.nm}'s attack went through you`,'good');
       if(nx){if(nx.owned)hit(nx,dur,src,kind,`${src.nm}'s attack passed through ${o.nm} and hit you`,quiet);else if(RACE&&RACE.online)sendAct(o,{t:'redir',to:nx.id,by:src.id,dur:Math.round(dur*100)/100,k:kind});}}
     return false;}
-  if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
+  if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(src&&src!==o)hitFeed(src,o,'🛡️');else if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
   dur*=1-((o.mods&&o.mods.stun)||0);
   if(o.char&&o.char.id==='samurai')dur*=0.7;  // perk: Bushido
   o.stun=Math.max(o.stun,dur);o.grace=dur+1.2;o.stunKind=kind||'trip';o.speed*=0.35;o.slide=0;if(kind==='knock')o.vy=Math.max(o.vy,5.5);
   const p=wpos(o,2.1);burst(p.x,p.y,p.z,10,[1,0.9,0.3],{add:true,max:3,up:3,grav:4,size:0.22});
-  if(o.kind==='local'){raceStat('hurt');if(!reduceMotion)shake=0.45;sfx.hit();feed(why||'You got hit','bad');}
+  if(o.kind==='local'){raceStat('hurt');if(!reduceMotion)shake=0.45;sfx.hit();if(!src||src===o)feed(why||'You got hit','bad');}
+  if(src&&src!==o)hitFeed(src,o,hitIcon(why,src));
   if(!quiet)notifyAttacker(src,o,'hit');
   lootHit(src,o,!!quiet);
   if(why==='Slipped on a banana'){speak(o,'banana');if(src&&src!==o)speak(src,'hit');}
@@ -4404,14 +4423,14 @@ function lootHit(src,o,power){
   if(!RACE||RACE.survival||!src||src===o||!runners.includes(src))return;
   const steal=power?POWER_STEAL:HIT_STEAL,gem=power&&Math.random()<GEM_STEAL?1:0;
   if(o===player){const lost=Math.min(steal,RACE.coins|0);if(lost)RACE.coins-=lost;const lg=gem&&(RACE.gems|0)>0;if(lg)RACE.gems--;
-    if(lost||lg)feed(`${src.nm} stole ${lost?lost+' coin'+(lost>1?'s':''):''}${lost&&lg?' and ':''}${lg?'a diamond':''} from you`,'bad');}
+    if(lost||lg){const t=(lost?`-${lost}🪙`:'')+(lg?' -1💎':'');if(!chipLoot(src,o,t))feed(t,'bad');}}
   if(src===player)gainLoot(o,power,gem);
   else if(RACE.online&&!src.owned)sendAct(o,{t:'loot',by:src.id,p:power?1:0,g:gem});
 }
 function gainLoot(o,power,gem){
   const L=RACE.loot||(RACE.loot={n:0,xp:0,c:0,g:0});if(L.n>=LOOT_CAP)return;L.n++;
   const xp=power?POWER_XP:HIT_XP,c=power?POWER_STEAL:HIT_STEAL;L.xp+=xp;L.c+=c;RACE.coins+=c;if(gem){L.g++;RACE.gems++;}
-  feed(`+${xp} XP · stole ${c} coins${gem?' and a 💎':''} from ${o.nm}`,'good');
+  {const t=`+${c}🪙`+(gem?' +1💎':'');if(!chipLoot(player,o,t))feed(t,'good');}
   try{const p=wpos(o,2.2);burst(p.x,p.y,p.z,14,[1,0.85,0.3],{add:true,max:3,up:4,grav:4,size:0.22});}catch(e){}
 }
 function giveReward(rw){if(!rw)return;wallet.coins+=rw.c|0;wallet.gems+=rw.g|0;saveWallet();}
@@ -6178,13 +6197,22 @@ function tutSay(id,done){
   catch(e){setTimeout(fin,1400);}
 }
 function coach(ic,tx,ms,opt){opt=opt||{};const c=$('coach');$('coachIc').textContent=ic;$('coachTx').textContent=tx;$('coachSub').textContent=opt.sub||'';
-  c.classList.toggle('big',!!opt.big);c.classList.toggle('wait',!!opt.wait);c.hidden=false;c.style.animation='none';void c.offsetWidth;c.style.animation='';
+  c.classList.toggle('big',!!opt.big);c.classList.toggle('mini',!!opt.mini);c.classList.toggle('wait',!!opt.wait);c.hidden=false;c.style.animation='none';void c.offsetWidth;c.style.animation='';
   clearTimeout(ONB.t);if(ms)ONB.t=setTimeout(()=>{c.hidden=true;},ms);}
-function tline(id,ic,opt){const kb=!isTouch;coach(ic,(kb&&TUT_KEYS[id])||TUT_LINES[id],opt&&opt.ms===0?0:((opt&&opt.ms)||4200),opt);tutSay(id,opt&&opt.done);}
-function tip(id,ic,opt){if(ONB.tips.has(id))return false;ONB.tips.add(id);tline(id,ic,opt);return true;}
+// In the race the tutorial shows only arrows and a word or two; the voice says the full line.
+const TUT_SHORT={lanes:['⬅️ ➡️','Swipe'],jump:['⬆️','Swipe up'],slide:['⬇️','Swipe down'],wall:['🧱','Change lanes'],item:['🎁','Tap'],power:['⚡','Tap GO'],loot:['💥','Hit = 🪙'],coins:['🪙','Grab coins'],end:['🏁','Almost there!']};
+const TUT_SHORT_KB={lanes:'A / D',jump:'Space',slide:'S',item:'Q',power:'E'};
+const TUT_POINT={item:'itemSlot',power:'powerSlot'};
+function pointAt(el){const A=$('tutArrow');clearPoint();if(!el||!el.offsetParent)return;const r=el.getBoundingClientRect();A.style.left=(r.left+r.width/2)+'px';A.style.top=(r.top-6)+'px';A.hidden=false;el.classList.add('tut-glow');}
+function clearPoint(){$('tutArrow').hidden=true;document.querySelectorAll('.tut-glow').forEach(b=>b.classList.remove('tut-glow'));}
+function tline(id,ic,opt){opt=opt||{};const sh=TUT_SHORT[id];
+  if(sh&&RACE&&RACE.tut){const ms=opt.ms===0?0:(opt.ms||3200);coach(sh[0],(!isTouch&&TUT_SHORT_KB[id])||sh[1],ms,{wait:opt.wait,mini:true});
+    const pt=TUT_POINT[id];if(pt)pointAt($(pt));else clearPoint();if(ms&&pt)setTimeout(clearPoint,ms);tutSay(id,opt.done);return;}
+  const kb=!isTouch;coach(ic,(kb&&TUT_KEYS[id])||TUT_LINES[id],opt.ms===0?0:(opt.ms||4200),opt);tutSay(id,opt.done);}
+function tip(id,ic,opt){if(ONB.tips.has(id))return false;if(performance.now()<(ONB.busy||0))return true;ONB.busy=performance.now()+3500;ONB.tips.add(id);tline(id,ic,opt);return true;}
 // Freeze the race on a step until the player does what it asks.
-function holdFor(id,ic,check){ONB.tips.add(id);ONB.hold=true;ONB.wait=check;tline(id,ic,{ms:0,wait:true,sub:'The race is paused until you do it'});}
-function release(){ONB.hold=false;ONB.wait=null;const c=$('coach');c.classList.remove('wait');$('coachSub').textContent='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},900);}
+function holdFor(id,ic,check){ONB.tips.add(id);ONB.hold=true;ONB.wait=check;tline(id,ic,{ms:0,wait:true});}
+function release(){clearPoint();ONB.hold=false;ONB.wait=null;const c=$('coach');c.classList.remove('wait');$('coachSub').textContent='';clearTimeout(ONB.t);ONB.t=setTimeout(()=>{c.hidden=true;},900);}
 addEventListener('keydown',e=>{if(ONB.hold&&['ArrowLeft','ArrowRight','KeyA','KeyD'].includes(e.code))ONB.keyLane=true;},true);
 // Before the first race: welcome, then flag, runner and perk, one picker at a time. Skip is always there.
 var OS={on:false,i:-1};const ONB_STEPS=[['flag','Choose your flag'],['runner','Pick your runner'],['perk','Choose your perk']];
@@ -6198,7 +6226,7 @@ function onbNext(){if(!OS.on)return;OS.i++;
   if(OS.i>=ONB_STEPS.length){OS.on=false;$('onbBar').hidden=true;startTutorialRace();return;}
   const [sec,tx]=ONB_STEPS[OS.i];$('onbN').textContent=`${OS.i+1}/${ONB_STEPS.length}`;$('onbTx').textContent=tx;$('onbBar').hidden=false;
   if(pickOpen){const o=OS.on;OS.on=false;closePicker();OS.on=o;}openPicker(sec);tutSay(sec);}
-function skipTutorial(){OS.on=false;$('onbWel').hidden=true;$('onbBar').hidden=true;$('tutSkip').hidden=true;closePicker();store.set('flagdash-onboard','done');
+function skipTutorial(){OS.on=false;$('onbWel').hidden=true;$('onbBar').hidden=true;$('tutSkip').hidden=true;clearPoint();closePicker();store.set('flagdash-onboard','done');
   if(RACE&&RACE.tut){RACE.tut=false;ONB.hold=false;ONB.wait=null;clearInterval(ONB.iv);$('coach').hidden=true;}}
 $('onbSkip1').onclick=skipTutorial;$('onbSkip').onclick=skipTutorial;$('tutSkip').onclick=skipTutorial;
 function startTutorialRace(){
@@ -6214,7 +6242,7 @@ function startTutorialRace(){
   clearInterval(ONB.iv);ONB.iv=setInterval(tutorTick,100);
 }
 function tutorTick(){
-  if(!RACE||!RACE.tut||!player||state==='results'||state==='menu'){clearInterval(ONB.iv);ONB.hold=false;$('tutSkip').hidden=true;return;}
+  if(!RACE||!RACE.tut||!player||state==='results'||state==='menu'){clearInterval(ONB.iv);ONB.hold=false;$('tutSkip').hidden=true;clearPoint();return;}
   if(state!=='race')return;
   if(ONB.hold){if(ONB.wait&&ONB.wait())release();return;}
   const near=(type,max)=>obstacles.find(o=>o.type===type&&o.d>player.d+2&&o.d-player.d<max&&Math.abs(o.x-player.x)<1.4);
