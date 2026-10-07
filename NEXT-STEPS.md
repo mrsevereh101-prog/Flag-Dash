@@ -37,6 +37,11 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - [ ] Optional: new public repo `Flag-Dash` so the old link forwards to the new one (ask Claude to add the redirect page)
 - [ ] Record in ElevenLabs: "Welcome to Race Your Flag!", "Choose your flag.", "Pick your runner.", "Choose your perk."
 
+## To turn on uploaded profile pictures
+1. [ ] Run `supabase/avatars.sql` in the Supabase SQL editor (creates the "avatars" storage bucket, upload rules and the report list).
+2. [ ] Run the updated `supabase/leaderboard.sql` (adds the picture columns).
+3. Checking reports: SQL editor -> `select * from fd_pic_report_list;` To remove a picture: Storage -> avatars -> the folder in the report -> delete the file.
+
 ## To turn on Friends & Inbox
 1. [ ] Run `supabase/social.sql` in the Supabase SQL editor (New query, paste everything, Run; click "Run query" if a warning shows).
 2. [ ] Test with a friend: both tap **Online > Find a Race**, then use the 👥 button during the race to add each other and send a message.

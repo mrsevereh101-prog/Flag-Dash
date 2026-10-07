@@ -896,6 +896,7 @@ img.av{border-radius:10px;background:radial-gradient(circle at 50% 35%,#4a6ad8,#
 .lb-mebar{position:sticky;bottom:-2px;z-index:2;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;background:linear-gradient(#ffd34a,#e8a818);color:#1a1405;font-weight:800;font-style:italic;box-shadow:0 -6px 18px rgba(0,0,0,.4)}
 .lb-mebar .me-av{width:38px;height:38px;cursor:pointer;border-color:#1a1405}.lb-mebar .fl{width:30px;height:20px;border-radius:3px}.lb-mebar .me-nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lb-mebar b{white-space:nowrap}
 .lb-row.me .av,.lb-pod.me .lbp-av{cursor:pointer}#hub .lb-row.g{grid-template-columns:28px 22px minmax(0,1fr) auto auto}
+#avMsg:empty{display:none}.av-up{display:flex;gap:8px;flex-wrap:wrap}.av-upbtn{display:inline-flex;align-items:center;padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}img.av.photo{background:#222}
 .av-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}.av-opt{background:var(--night-2);border:2px solid transparent;border-radius:12px;padding:4px}.av-opt.on{border-color:var(--gold)}.av-opt img.av{width:100%;height:auto;aspect-ratio:1}.av-opt.auto{font-size:12px;font-weight:700;color:#cfd7f5}
 @media (max-width:520px){#hub .lb-row{grid-template-columns:24px 26px 34px minmax(0,1fr) auto}.lb-pod{grid-template-columns:36px 54px minmax(0,1fr) 28px;gap:8px}.lbp-av{width:54px;height:54px}.lbp-nm{font-size:15px}.lbp-crown{font-size:22px}}.g-swatch{width:22px;height:22px;border-radius:6px}.small{font-size:12px}
 .hub-form{display:grid;gap:8px;background:var(--night-2);border:1px solid var(--line);border-radius:12px;padding:12px}.hub-form h3,.hub-body>h3{margin:4px 0 0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -1251,7 +1252,7 @@ img.av{border-radius:10px;background:radial-gradient(circle at 50% 35%,#4a6ad8,#
 <div id="mm" class="overlay" hidden>
   <div class="mm-card" role="dialog" aria-labelledby="mmTitle"><div class="mm-spin" aria-hidden="true">🌐</div><h2 id="mmTitle">Finding a race</h2><p class="muted" id="mmMsg"></p><button class="ghost" id="mmCancel">Cancel</button></div>
 </div>
-<div id="avPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="avTitle"><div class="store-head"><h2 id="avTitle">Profile picture</h2><button class="ghost" id="avClose">Close</button></div><p class="muted">Pick any hero in a skin you own. Everyone sees it on the leaderboards.</p><div class="av-grid" id="avList"></div></div></div>
+<div id="avPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="avTitle"><div class="store-head"><h2 id="avTitle">Profile picture</h2><button class="ghost" id="avClose">Close</button></div><div class="av-up"><label class="primary av-upbtn">📷 Upload a photo<input type="file" id="avFile" accept="image/*" hidden></label><button class="ghost" id="avRemove" hidden>Remove my photo</button></div><p class="muted small">Everyone can see your picture on the leaderboards. Use a picture you are allowed to share: no personal info, nothing rude. Players can report pictures, and reported ones get removed.</p><p class="soc-msg" id="avMsg"></p><p class="muted">Or pick any hero in a skin you own:</p><div class="av-grid" id="avList"></div></div></div>
 <div id="hub" class="overlay" hidden>
   <div class="store-card hub-card" role="dialog" aria-labelledby="hubTitle">
     <div class="store-head"><h2 id="hubTitle"></h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="hubClose">Close</button></div>
@@ -4652,7 +4653,7 @@ function glbSubmit(){
   const wait=GLB.lastSent+21000-Date.now();if(wait>0){GLB.timer=setTimeout(glbSubmit,wait);return;}
   rollPeriods();const c=socialCard();
   const rows=[{p:'d',k:MYPTS.d.k,pts:MYPTS.d.p|0,r:MYPTS.d.r|0},{p:'w',k:MYPTS.w.k,pts:MYPTS.w.p|0,r:MYPTS.w.r|0,gb:MYPTS.w.gb|0},{p:'s',k:MYPTS.s.k,pts:MYPTS.s.p|0,r:MYPTS.s.r|0},{p:'a',k:'all',pts:MYPTS.a.p|0,r:MYPTS.a.r|0}];
-  const card={nm:c.nm,cc:c.cc,av:myAvatar(),gid:c.gid,gt:c.gt,gn:c.gn,gc:c.gc,rows},sig=JSON.stringify(card);if(sig===GLB.sentSig)return;
+  const card={nm:c.nm,cc:c.cc,av:myAvatar(),pic:myPic(),gid:c.gid,gt:c.gt,gn:c.gn,gc:c.gc,rows},sig=JSON.stringify(card);if(sig===GLB.sentSig)return;
   GLB.lastSent=Date.now();
   sbCall('rpc/fd_submit',{p_pid:PID,p_secret:LB_SECRET,p_card:card}).then(res=>{GLB.on=true;if(res==='ok'){GLB.sentSig=sig;GLB.boards={};GLB.guilds={};}else if(res==='slow')GLB.timer=setTimeout(glbSubmit,21000);})
     .catch(()=>{GLB.on=false;GLB.timer=setTimeout(glbSubmit,60000);});
@@ -4661,7 +4662,9 @@ async function glbBoard(p,key){
   if(!GLB.enabled)return;const id=p+':'+key,c=GLB.boards[id];if(c&&Date.now()-c.at<30000)return;
   // the av column needs the updated leaderboard.sql; without it, ask again without pictures
   const q=c=>sbCall(`fd_scores?select=pid,nm,cc,gt,pts${c}&period=eq.${p}&pkey=eq.${encodeURIComponent(key)}&order=pts.desc&limit=100`);
-  try{const [rows,rk]=await Promise.all([GLB.noAv?q(''):q(',av').catch(()=>{GLB.noAv=true;return q('');}),sbCall('rpc/fd_rank',{p_period:p,p_key:key,p_pid:PID})]);
+  // newest columns first; older databases fall back (pictures need the updated leaderboard.sql)
+  const cols=[',av,pic',',av',''];const tryQ=async()=>{for(let i=GLB.colI|0;i<cols.length;i++){try{const r=await q(cols[i]);GLB.colI=i;return r;}catch(e){if(i===cols.length-1)throw e;}}};
+  try{const [rows,rk]=await Promise.all([tryQ(),sbCall('rpc/fd_rank',{p_period:p,p_key:key,p_pid:PID})]);
     GLB.boards[id]={at:Date.now(),rows,rank:rk&&rk[0]?+rk[0].rank:0,total:rk&&rk[0]?+rk[0].total:rows.length};GLB.on=true;}catch(e){GLB.on=false;}
 }
 async function glbNations(key){
@@ -4712,7 +4715,7 @@ function cpuRows(p,key){const rng=mulberry32(hashStr('cpu'+p+key));const scale={
 function buildBoard(p,key,final){
   const mine=p==='a'?MYPTS.a:MYPTS[p],myPts=mine&&(p==='a'||mine.k===key)?mine.p|0:0;
   const G=GLB.on&&GLB.boards[p+':'+(p==='a'?'all':key)];
-  if(G){const rows=G.rows.filter(r=>r.pid!==PID).map(r=>({pid:r.pid,av:validAv(r.av),nm:cleanName(r.nm)||'Runner',cc:COUNTRY_CODES.has(r.cc)?r.cc:'USA',gt:cleanTag(r.gt),pts:r.pts|0,live:true}));
+  if(G){const rows=G.rows.filter(r=>r.pid!==PID).map(r=>({pid:r.pid,av:validAv(r.av),pic:validPic(r.pic),nm:cleanName(r.nm)||'Runner',cc:COUNTRY_CODES.has(r.cc)?r.cc:'USA',gt:cleanTag(r.gt),pts:r.pts|0,live:true}));
     const me={pid:PID,nm:myName,cc:selCountry,me:true,gt:GUILD?GUILD.tag:'',pts:Math.max(myPts,(G.rows.find(r=>r.pid===PID)||{}).pts|0)};
     rows.push(me);rows.sort((a,b)=>b.pts-a.pts||(a.me?-1:b.me?1:0));rows.total=Math.max(G.total,rows.length);
     // outside the top 100: show my real worldwide rank
@@ -4720,7 +4723,7 @@ function buildBoard(p,key,final){
     return rows;}
   const rows=[];
   rows.push({pid:PID,nm:myName,cc:selCountry,me:true,gt:GUILD?GUILD.tag:'',pts:myPts});
-  Object.values(SEEN).forEach(c=>{const e=p==='a'?[null,c.a|0]:c[p];if(!e||(p!=='a'&&e[0]!==key))return;rows.push({pid:c.pid,av:c.av,nm:c.nm,cc:c.cc,gt:c.gt||'',pts:e[1]|0,live:true});});
+  Object.values(SEEN).forEach(c=>{const e=p==='a'?[null,c.a|0]:c[p];if(!e||(p!=='a'&&e[0]!==key))return;rows.push({pid:c.pid,av:c.av,pic:c.pic,nm:c.nm,cc:c.cc,gt:c.gt||'',pts:e[1]|0,live:true});});
   rows.push(...cpuRows(p,key));
   return rows.sort((a,b)=>b.pts-a.pts||(a.me?-1:b.me?1:0));
 }
@@ -4737,7 +4740,7 @@ function buildGuildBoard(key){
 
 /* ---------- sharing my card with players online now ---------- */
 function socialCard(){rollPeriods();const w=MYPTS.w;
-  return {v:1,pid:PID,nm:myName,cc:selCountry,ch:selChar,av:myAvatar(),gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,gn:GUILD?GUILD.name:null,gc:GUILD?GUILD.col:null,
+  return {v:1,pid:PID,nm:myName,cc:selCountry,ch:selChar,av:myAvatar(),pic:myPic(),gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null,gn:GUILD?GUILD.name:null,gc:GUILD?GUILD.col:null,
     d:[MYPTS.d.k,MYPTS.d.p|0],w:[w.k,w.p|0,w.r|0,w.gb|0],s:[MYPTS.s.k,MYPTS.s.p|0],a:MYPTS.a.p|0};}
 let socialT=null;
 function pushSocial(){clearTimeout(socialT);socialT=setTimeout(()=>{glbSubmit();if(NET.ns)NET.ns.presence({lb:socialCard()}).catch(()=>{});if(NET.game&&!NET.game.shared)pushPresence({gid:GUILD?GUILD.id:null,gt:GUILD?GUILD.tag:null});},400);}
@@ -4747,7 +4750,7 @@ const capPts=v=>clamp(Math.floor(Number(v)||0),0,1e6);
 function ingestPeers(peers){let ch=false;
   (peers||[]).forEach(p=>{if(p.sameTab||!p.presence||!p.presence.lb)return;const c=p.presence.lb;if(!c||typeof c!=='object'||typeof c.pid!=='string'||c.pid===PID||!/^p[a-z0-9]{8,16}$/.test(c.pid))return;
     const e=(a,n)=>Array.isArray(a)&&cleanKey(a[0])?[a[0],...a.slice(1,n).map(capPts)]:null;
-    SEEN[c.pid]={pid:c.pid,av:validAv(c.av),nm:cleanName(c.nm)||'Runner',cc:COUNTRY_CODES.has(c.cc)?c.cc:'USA',gid:typeof c.gid==='string'&&/^g[a-z0-9]{6,14}$/.test(c.gid)?c.gid:null,gt:cleanTag(c.gt),gn:cleanName(c.gn).slice(0,20),gc:GUILD_COLORS.includes(c.gc)?c.gc:null,
+    SEEN[c.pid]={pid:c.pid,av:validAv(c.av),pic:validPic(c.pic),nm:cleanName(c.nm)||'Runner',cc:COUNTRY_CODES.has(c.cc)?c.cc:'USA',gid:typeof c.gid==='string'&&/^g[a-z0-9]{6,14}$/.test(c.gid)?c.gid:null,gt:cleanTag(c.gt),gn:cleanName(c.gn).slice(0,20),gc:GUILD_COLORS.includes(c.gc)?c.gc:null,
       d:e(c.d,2),w:e(c.w,4),s:e(c.s,2),a:capPts(c.a),at:Date.now()};ch=true;});
   if(ch){const ids=Object.keys(SEEN).sort((a,b)=>SEEN[b].at-SEEN[a].at);ids.slice(200).forEach(id=>delete SEEN[id]);saveJSON('flagdash-seen',SEEN);if(hubOpen==='boards'||hubOpen==='guild')renderHub();}
 }
@@ -4788,12 +4791,45 @@ function renderPortrait(av,cc){
   m.root.rotation.y=0.32;AV.scene.add(m.root);m.root.updateMatrixWorld(true);const hp=new THREE.Vector3();m.headP.getWorldPosition(hp);
   const hy=hp.y+0.2*m.sc;AV.cam.position.set(0.12*m.sc,hy+0.05*m.sc,-1.75*m.sc);AV.cam.lookAt(0,hy-0.12*m.sc,0);
   AV.r.render(AV.scene,AV.cam);const url=AV.r.domElement.toDataURL('image/png');AV.scene.remove(m.root);disposeModel(m);return url;}
+/* ---------- uploaded profile pictures (signed-in players; see supabase/avatars.sql) ---------- */
+const validPic=p=>typeof p==='string'&&/^[0-9a-f-]{36}\/[0-9]{10,14}\.jpg$/.test(p)?p:null;
+function myPic(){const p=validPic(store.get('flagdash-pic'));return p&&AUTH.user&&p.startsWith(AUTH.user.id+'/')?p:null;}
+const picURL=p=>SUPA.url+'/storage/v1/object/public/avatars/'+p;
+const hiddenPics=()=>{try{return new Set(JSON.parse(store.get('flagdash-hidpics')||'[]'));}catch(e){return new Set();}};
+// the picture for a leaderboard row: their photo if they uploaded one (and you haven't reported it), else their hero portrait
+function rowAvatar(r,cls){const pic=r.me?myPic():r.pic,port=r.me?myAvatar():(r.av||cpuAvatar(r.nm));
+  if(pic&&!hiddenPics().has(pic)){const im=document.createElement('img');im.className='av photo '+(cls||'');im.alt='';im.src=picURL(pic);im.loading='lazy';
+    im.onerror=()=>{const p2=avatarImg(port,r.cc,cls);im.replaceWith(p2);};
+    if(r.me){im.onclick=openAvatarPicker;im.title='Change your profile picture';}else{im.title='Tap to report this picture';im.onclick=()=>reportPic(pic);}
+    return im;}
+  const im=avatarImg(port,r.cc,cls);if(r.me){im.onclick=openAvatarPicker;im.title='Change your profile picture';}return im;}
+async function reportPic(pic){
+  if(!confirm('Report this picture as not OK for the game? It will be hidden for you right away.'))return;
+  const h=hiddenPics();h.add(pic);store.set('flagdash-hidpics',JSON.stringify([...h].slice(-200)));renderHub();
+  try{if(AUTH.user){const sb=await getSb();await sb.from('fd_pic_reports').insert({pic,by_id:AUTH.user.id});}}catch(e){}
+  feed('Thanks. The picture is hidden and was reported.','good');}
+// shrink to a 160 x 160 JPEG (centre crop) before uploading
+function squareJpeg(file){return new Promise((res,rej)=>{const url=URL.createObjectURL(file);const img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=160;const g=c.getContext('2d');const sz=Math.min(img.width,img.height);
+    g.drawImage(img,(img.width-sz)/2,(img.height-sz)/2,sz,sz,0,0,160,160);URL.revokeObjectURL(url);
+    const tryQ=q=>c.toBlob(b=>{if(!b)return rej(new Error('blob'));if(b.size>60000&&q>0.4)tryQ(q-0.15);else res(b);},'image/jpeg',q);tryQ(0.82);};
+  img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('That file is not a picture.'));};img.src=url;});}
+async function uploadPic(file){
+  const msg=$('avMsg');msg.textContent='Uploading…';
+  try{const blob=await squareJpeg(file);const sb=await getSb();const uid=AUTH.user.id,path=`${uid}/${Date.now()}.jpg`;
+    const {error}=await sb.storage.from('avatars').upload(path,blob,{contentType:'image/jpeg',upsert:false,cacheControl:'31536000'});if(error)throw error;
+    const old=myPic();store.set('flagdash-pic',path);pushSocial();
+    if(old)sb.storage.from('avatars').remove([old]).catch(()=>{});
+    msg.textContent='Done! Your photo shows on the leaderboards.';$('avPick').hidden=true;renderHub();}
+  catch(e){msg.textContent=/bucket|not found|policy|row-level/i.test(String(e&&e.message))?'Photo uploads are not switched on yet (avatars.sql needs to be run in Supabase).':'Upload failed: '+((e&&e.message)||e);}}
+async function removePic(){const old=myPic();store.set('flagdash-pic','');pushSocial();if(old){try{const sb=await getSb();await sb.storage.from('avatars').remove([old]);}catch(e){}}$('avPick').hidden=true;renderHub();}
 // choose your profile picture: any hero, in the skins you own
 function openAvatarPicker(){
   const box=$('avList');box.innerHTML='';const cur=myAvatar();
   const add=av=>{const b=document.createElement('button');b.className='av-opt'+(av===cur?' on':'');b.setAttribute('aria-label',av);b.appendChild(avatarImg(av,selCountry));
-    b.onclick=()=>{store.set('flagdash-avatar',av);pushSocial();$('avPick').hidden=true;renderHub();};box.appendChild(b);};
-  const auto=document.createElement('button');auto.className='av-opt auto'+(!store.get('flagdash-avatar')?' on':'');auto.textContent='Auto: my runner';auto.onclick=()=>{store.set('flagdash-avatar','');pushSocial();$('avPick').hidden=true;renderHub();};box.appendChild(auto);
+    b.onclick=()=>{store.set('flagdash-avatar',av);if(myPic())store.set('flagdash-pic','');pushSocial();$('avPick').hidden=true;renderHub();};box.appendChild(b);};
+  $('avMsg').textContent='';$('avRemove').hidden=!myPic();
+  const auto=document.createElement('button');auto.className='av-opt auto'+(!store.get('flagdash-avatar')?' on':'');auto.textContent='Auto: my runner';auto.onclick=()=>{store.set('flagdash-avatar','');if(myPic())store.set('flagdash-pic','');pushSocial();$('avPick').hidden=true;renderHub();};box.appendChild(auto);
   CHAR_IDS.forEach(h=>{add(h+'.classic');SKINS_SHOP.forEach(k=>{if(k.id!=='classic'&&wallet.skins.includes(k.id)&&(!k.hero||k.hero===h))add(h+'.'+k.id);});});
   $('avPick').hidden=false;}
 function boardRow(i,r,extra){const row=document.createElement('div');row.className='lb-row'+(r.me?' me':'');
@@ -4801,12 +4837,12 @@ function boardRow(i,r,extra){const row=document.createElement('div');row.classNa
   const nm=document.createElement('span');nm.className='lb-nm';nm.textContent=(r.gt?`[${r.gt}] `:'')+r.nm+(r.me?' (you)':'');
   const tag=document.createElement('small');tag.className='lb-tag';tag.textContent=r.cpu?'CPU':r.live?'player':'';
   const pos=document.createElement('b');pos.className='lb-pos';pos.textContent=r.rank||i+1;const pt=document.createElement('b');pt.className='lb-pts';pt.textContent=extra||fmtPts(r.pts);
-  const av=avatarImg(r.me?myAvatar():(r.av||cpuAvatar(r.nm)),r.cc);if(r.me){av.onclick=openAvatarPicker;av.title='Change your profile picture';}
+  const av=rowAvatar(r);
   row.append(pos,im,av,nm,tag,pt);return row;}
 const fmtPts=n=>(n|0).toLocaleString('en-US')+' pts';
 function podiumCard(i,r){const c=document.createElement('div');c.className='lb-pod p'+(i+1)+(r.me?' me':'');
   const n=document.createElement('b');n.className='lbp-n';n.textContent=i+1;
-  const av=avatarImg(r.me?myAvatar():(r.av||cpuAvatar(r.nm)),r.cc,'lbp-av');if(r.me){av.onclick=openAvatarPicker;av.title='Change your profile picture';}
+  const av=rowAvatar(r,'lbp-av');
   const mid=document.createElement('div');mid.className='lbp-mid';const top=document.createElement('div');top.className='lbp-top';
   const fl=document.createElement('img');fl.className='fl';fl.alt='';fl.src=flagCanvas(r.cc).url;const nm=document.createElement('span');nm.className='lbp-nm';nm.textContent=(r.gt?`[${r.gt}] `:'')+r.nm+(r.me?' (you)':'');
   top.append(fl,nm);const pt=document.createElement('div');pt.className='lbp-pts';pt.textContent=fmtPts(r.pts);mid.append(top,pt);
@@ -4838,7 +4874,7 @@ async function renderBoards(box,tab){
   rows.slice(0,3).forEach((r,i)=>box.appendChild(podiumCard(i,r)));
   const list=document.createElement('div');list.className='lb-list';rows.slice(3,15).forEach((r,i)=>list.appendChild(boardRow(i+3,r)));if(list.children.length)box.appendChild(list);
   if(meI>=0){const r=rows[meI];const me=document.createElement('div');me.className='lb-mebar';
-    const a=avatarImg(myAvatar(),selCountry,'me-av');a.title='Change your profile picture';a.onclick=openAvatarPicker;
+    const a=rowAvatar({me:true,cc:selCountry},'me-av');
     const fl=document.createElement('img');fl.className='fl';fl.alt='';fl.src=flagCanvas(selCountry).url;
     const t=document.createElement('span');t.className='me-rk';t.textContent='Your rank: '+(r.rank||meI+1);const n=document.createElement('span');n.className='me-nm';n.textContent=r.nm;
     const pt=document.createElement('b');pt.textContent=fmtPts(r.pts);me.append(t,a,fl,n,pt);box.appendChild(me);}
@@ -5432,7 +5468,9 @@ $('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1)
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
-$('avClose').onclick=()=>$('avPick').hidden=true;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
+$('avClose').onclick=()=>$('avPick').hidden=true;
+$('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
+$('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
 $('loStore').onclick=()=>{storeTab='items';openStore();};$('loToggle').onchange=e=>{loOn=e.target.checked;store.set('flagdash-loadout',loOn?'on':'off');renderLoadout();};$('storeClose').onclick=()=>{$('store').hidden=true;if(store.get('flagdash-newskin')&&storeTab==='skins')store.set('flagdash-newskin','');renderWallet();renderLoadout();if(plaza.active){plaza.rebuildMe();plaza.refreshHud();plaza.send(true);}};
 $('storeTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;storeTab=b.dataset.tab;renderStore();});
 $('podMenu').onclick=()=>toMenu();$('podStore').onclick=()=>{toMenu();openStore();};
