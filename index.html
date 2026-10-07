@@ -121,7 +121,23 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .col-sq .col-ic{font-size:30px;line-height:1}.col-sq.locked{border-color:rgba(255,255,255,.12);background:#1a1f33}.col-sq.locked .col-ic,.col-sq.locked .col-fl{filter:grayscale(1) brightness(.6);opacity:.55}
 .col-sq.sel{outline:3px solid var(--gold);outline-offset:1px}.col-lock{position:absolute;right:2px;bottom:1px;font-size:13px}.col-on{position:absolute;right:4px;top:2px;font-size:12px;font-weight:900;color:#5fd08a}
 .col-fl{position:absolute;left:4px;bottom:4px;width:18px;height:12px;border-radius:2px}
-.col-grid{position:relative}.col-info{position:absolute;left:0;right:0;z-index:3;background:#1b2766;border:2px solid var(--gold);box-shadow:0 10px 28px rgba(0,0,0,.6)}
+.col-grid{position:relative}
+/* tiles look like little 3D buttons: light top edge, dark bottom edge, icons lifted with a shadow */
+.col-sq{background:linear-gradient(160deg,#3d5fd6,#1d2d80 55%,#131d58);box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 -4px 0 rgba(0,0,0,.35),0 4px 8px rgba(0,0,0,.45);overflow:hidden}
+.col-sq .col-ic{filter:drop-shadow(0 4px 3px rgba(0,0,0,.6)) drop-shadow(0 0 5px rgba(255,255,255,.18));transform:perspective(140px) rotateX(14deg) translateY(-1px)}
+.col-sq:active{transform:translateY(2px);box-shadow:inset 0 2px 0 rgba(255,255,255,.2),inset 0 -2px 0 rgba(0,0,0,.35),0 2px 4px rgba(0,0,0,.45)}
+.col-sq.on{border-color:var(--gold);box-shadow:inset 0 2px 0 rgba(255,255,255,.3),inset 0 -4px 0 rgba(0,0,0,.35),0 0 14px rgba(242,182,49,.65)}.col-sq.on .col-on{color:var(--gold)}
+.col-sq.locked{box-shadow:inset 0 2px 0 rgba(255,255,255,.06),inset 0 -4px 0 rgba(0,0,0,.4),0 3px 6px rgba(0,0,0,.4)}
+.tile .tile-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0;border-radius:0;background:radial-gradient(circle at 50% 35%,#4a6ad8,#1a2a6e)}
+.tile.locked .tile-img,.tile.locked .tile-art{filter:grayscale(1) brightness(.55);opacity:.6}
+.tile .tile-art{position:absolute;inset:0}.tile .tile-art .track-swatch{height:100%}.tile .tile-art svg{height:60%}
+.tile.has-lb .col-ic{margin-bottom:12px}
+.tile-lb{position:absolute;left:2px;right:2px;bottom:2px;font-size:9.5px;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px #000,0 0 3px #000;color:#fff;z-index:1}
+.tile-bd{position:absolute;top:2px;left:4px;font-size:11px;font-weight:900;color:#ffd38a;text-shadow:0 1px 2px #000;z-index:1}
+.tile.off{opacity:.55}.tile.is-new{animation:tutPulse .8s ease-in-out infinite alternate}
+.tile-pop{padding:10px 34px 10px 12px}.tile-pop .shop-card{background:none;border:0;padding:0;box-shadow:none}.tile-pop .tp-x{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-size:12px;padding:0}
+.ti-box{display:grid;gap:4px}.ti-box small{color:#cfd7f5;font-size:12.5px;line-height:1.35}.ti-btns{display:flex;gap:8px;margin-top:4px}.ti-btns button{padding:7px 12px;border-radius:9px;font-weight:800}
+#perkGrid,#charGrid,#trackGrid,#loAtk,#loDef{display:block}.col-info{position:absolute;left:0;right:0;z-index:3;background:#1b2766;border:2px solid var(--gold);box-shadow:0 10px 28px rgba(0,0,0,.6)}
 .col-info::after{content:"";position:absolute;left:calc(var(--ax,50%) - 9px);width:14px;height:14px;background:#1b2766;border:2px solid var(--gold);transform:rotate(45deg)}
 .col-info.up::after{bottom:-9px;border-top:0;border-left:0}.col-info.down::after{top:-9px;border-bottom:0;border-right:0}
 .col-buffs{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:5px}.col-buffs span{font-size:11.5px;font-weight:700;background:rgba(255,255,255,.08);border-radius:6px;padding:2px 6px;color:#ffd38a}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
@@ -438,7 +454,7 @@ input[type=text],input[type=search]{background:var(--night);border:1px solid var
 #flagSearch{width:220px;max-width:100%}
 .flag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;max-height:280px;overflow:auto;padding:2px 4px 2px 2px}
 .flag-btn{display:grid;gap:6px;justify-items:center;background:var(--night-2);border:2px solid transparent;border-radius:10px;padding:8px 6px;font-size:12.5px;line-height:1.2;text-align:center}
-.flag-btn img{width:60px;height:40px;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.15)}
+.flag-btn img{width:60px;height:40px;border-radius:3px;box-shadow:0 0 0 1px rgba(255,255,255,.15)}.flag-btn{background:linear-gradient(160deg,#2c418f,#18225a)!important;box-shadow:inset 0 2px 0 rgba(255,255,255,.2),inset 0 -3px 0 rgba(0,0,0,.35),0 3px 6px rgba(0,0,0,.35)}.flag-btn img{box-shadow:0 3px 5px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.2)!important;transform:perspective(160px) rotateX(10deg)}
 .flag-btn:hover,.char-btn:hover,.track-btn:hover{border-color:var(--line)}
 .flag-btn[aria-pressed="true"],.char-btn[aria-pressed="true"],.track-btn[aria-pressed="true"]{border-color:var(--gold);background:#231f3a}
 .char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
@@ -4134,6 +4150,37 @@ function buyButton(btn,it,label,onBuy){
   const ok=canAfford(it.cost,curOf(it));btn.textContent=ok?label:'Not enough';btn.disabled=!ok;
   btn.onclick=()=>{if(!spend(it.cost,curOf(it)))return;onBuy();sfx.pick();renderStore();};
 }
+/* ---------- Square tiles with a pop-up for details (store, pickers, room) ----------
+   TSEL remembers which tile's details are open in each menu, so a re-render keeps it open. */
+const TSEL={};
+function mkTile(o){const b=document.createElement('button');b.type='button';b.className='col-sq tile '+(o.cls||'');b.title=o.title||o.label||'';b.setAttribute('aria-label',(o.label||o.title||'')+(/locked/.test(o.cls||'')?' (locked)':''));
+  if(o.img){o.img.classList.add('tile-img');b.appendChild(o.img);}else if(o.html){const d=document.createElement('div');d.className='tile-art';d.innerHTML=o.html;b.appendChild(d);}
+  else{const ic=document.createElement('span');ic.className='col-ic';ic.textContent=o.icon||'';b.appendChild(ic);}
+  if(o.label){const l=document.createElement('span');l.className='tile-lb';l.textContent=o.label;b.appendChild(l);b.classList.add('has-lb');}
+  if(o.badge!=null&&o.badge!==''){const d=document.createElement('span');d.className='tile-bd';d.textContent=o.badge;b.appendChild(d);}
+  if(/locked/.test(o.cls||'')){const lk=document.createElement('span');lk.className='col-lock';lk.textContent='🔒';b.appendChild(lk);}
+  else if(/\bon\b/.test(o.cls||'')){const c=document.createElement('span');c.className='col-on';c.textContent='✓';b.appendChild(c);}
+  return b;}
+// Put tiles in a grid. Tapping a tile runs pick() (if any) and opens its details; tapping it again closes them.
+function tileGrid(menu,tiles,rerender){const g=document.createElement('div');g.className='col-grid tgrid';
+  tiles.forEach(t=>{t.el.dataset.key=t.key;if(TSEL[menu]===t.key)t.el.classList.add('sel');g.appendChild(t.el);
+    t.el.onclick=()=>{const open=TSEL[menu]===t.key;TSEL[menu]=open?null:t.key;if(!open&&t.pick)t.pick();if(rerender)rerender();};});
+  const t=tiles.find(x=>x.key===TSEL[menu]);if(t&&t.info)requestAnimationFrame(()=>tilePop(g,t.el,t.info(),()=>{TSEL[menu]=null;if(rerender)rerender();}));
+  return g;}
+function tilePop(grid,tile,content,close){if(!grid.isConnected)return;grid.querySelectorAll('.tile-pop').forEach(x=>x.remove());grid.style.paddingBottom='';
+  const pop=document.createElement('div');pop.className='col-info tile-pop';pop.appendChild(content);
+  const x=document.createElement('button');x.type='button';x.className='tp-x';x.textContent='✕';x.setAttribute('aria-label','Close');x.onclick=e=>{e.stopPropagation();close();};pop.appendChild(x);
+  grid.appendChild(pop);const h=pop.offsetHeight,top=tile.offsetTop-h-8;
+  if(top>=0){pop.style.top=top+'px';pop.classList.add('up');}else{const t=tile.offsetTop+tile.offsetHeight+8;pop.style.top=t+'px';pop.classList.add('down');grid.style.paddingBottom=Math.max(0,t+h+8-grid.offsetHeight)+'px';}
+  pop.style.setProperty('--ax',(tile.offsetLeft+tile.offsetWidth/2)+'px');pop.scrollIntoView({block:'nearest',behavior:'smooth'});}
+// simple details box: title line, text lines and optional buttons
+function tileInfo(title,lines,btns){const d=document.createElement('div');d.className='ti-box';const b=document.createElement('b');b.textContent=title;d.appendChild(b);
+  (lines||[]).forEach(l=>{if(l instanceof Element){d.appendChild(l);return;}const p=document.createElement('small');p.textContent=l;d.appendChild(p);});
+  if(btns&&btns.length){const r=document.createElement('div');r.className='ti-btns';btns.forEach(([t,fn,cls,dis])=>{const k=document.createElement('button');k.className=cls||'buy';k.textContent=t;k.disabled=!!dis;k.onclick=e=>{e.stopPropagation();fn();};r.appendChild(k);});d.appendChild(r);}
+  return d;}
+// the 3D portrait of a hero in a skin (rendered by the game, cached)
+const heroSkinFor=h=>(wallet.hs&&wallet.hs[h])||(skinById(wallet.skin).hero?'classic':wallet.skin);
+const heroTileImg=(h,sk)=>avatarImg(h+'.'+(sk||heroSkinFor(h)),selCountry);
 function shopCard(it,top,body,btnCls){const card=document.createElement('div');card.className='shop-card';
   card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier t-${it.lvl?'lvl':it.tier}">${it.lvl?rankName(it.lvl)+' reward':TIERS.find(t=>t.id===it.tier).name}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
   card.querySelector('.shop-name').textContent=(it.icon?it.icon+' ':'')+it.name;card.querySelector('.shop-desc').textContent=it.desc;return card;}
@@ -4145,13 +4192,19 @@ function renderStore(){
   const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS;
   TIERS.forEach(t=>{let its=list.filter(i=>i.tier===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
     const h=document.createElement('h3');h.className='tier-head t-'+t.id;h.textContent=t.name;grid.appendChild(h);
-    its.forEach(it=>grid.appendChild(storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it)));});
+    const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it);
+      const c=card();const cls=(c.classList.contains('on')?'on ':'')+(c.classList.contains('locked')?'locked ':'')+(c.querySelector('.owned')||c.classList.contains('on')?'own ':'')+(c.classList.contains('is-new')?'is-new':'');
+      let o;if(storeTab==='skins'){const hero=it.hero||selChar;o={img:heroTileImg(hero,it.id),label:it.name};}
+      else{o={icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
+      o.cls=cls;return {key:storeTab+':'+it.id,el:mkTile(o),info:()=>{const k=card();k.classList.add('in-pop');return k;}};});
+    const g=tileGrid('store',tiles,renderStore);grid.appendChild(g);});
 }
 function renderLoadout(){
   ['atk','def'].forEach(slot=>{const box=$(slot==='atk'?'loAtk':'loDef');box.innerHTML='';
-    LOADOUT.filter(l=>l.slot===slot).forEach(l=>{const owned=wallet.items.includes(l.id);const b=document.createElement('button');b.className='lo-chip';b.type='button';
-      b.textContent=`${l.icon} ${l.name}`;b.setAttribute('aria-pressed',wallet.lo[slot]===l.id);b.disabled=!owned||!loOn;b.title=owned?l.desc:'Buy this in the store';
-      b.onclick=()=>{wallet.lo[slot]=l.id;saveWallet();renderLoadout();};box.appendChild(b);});});
+    const tiles=LOADOUT.filter(l=>l.slot===slot).map(l=>{const owned=wallet.items.includes(l.id),on=wallet.lo[slot]===l.id;
+      return {key:l.id,el:mkTile({icon:l.icon,label:l.name,cls:(on?'on ':'')+(owned?'own':'locked')+(loOn?'':' off')}),pick:owned&&loOn?()=>{wallet.lo[slot]=l.id;saveWallet();}:null,
+        info:()=>tileInfo(l.name,[l.desc],owned?[]:[[`Get it in the store`,()=>{storeTab='items';openStore();}]])};});
+    box.appendChild(tileGrid('lo-'+slot,tiles,renderLoadout));});
   const A=loById(wallet.lo.atk),D=loById(wallet.lo.def);
   $('loDesc').textContent=loOn?`${A.name}: ${A.desc} ${D.name}: ${D.desc}`:'Loadout items are off. Nobody gets attack or defence items in your races.';
   $('loToggle').checked=loOn;
@@ -4216,15 +4269,11 @@ function renderPerk(){
   const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');if(ic)ic.textContent=p?BUFF_ICON[p.id]:'⭐';if(nm)nm.textContent=p?p.name:'No perk';
   const box=$('perkGrid');if(!box)return;box.innerHTML='';
   const hero=charById(selChar);const hp=$('perkHero');if(hp&&hero&&hero.perk)hp.textContent=`${hero.name}'s own perk, ⭐ ${hero.perk.name}, always works. Pick one more to bring along.`;
-  const card=(ic,title,desc,have,on,btnTxt,fn,dis)=>{const c=document.createElement('div');c.className='perk-card'+(on?' on':'')+(PERK_OPEN.has(title)?' open':'');
-    c.innerHTML=`<div class="perk-ic"></div><div class="perk-main"><b></b><small class="more"></small></div><div class="perk-side"><span class="perk-have"></span><button></button></div><span class="info-i" role="button" tabindex="0" aria-label="About this perk">i</span>`;
-    c.querySelector('.info-i').onclick=()=>{c.classList.toggle('open');if(c.classList.contains('open'))PERK_OPEN.add(title);else PERK_OPEN.delete(title);};
-    c.querySelector('.perk-ic').textContent=ic;c.querySelector('b').textContent=title;c.querySelector('small').textContent=desc;c.querySelector('.perk-have').textContent=have;
-    const bt=c.querySelector('button');bt.textContent=btnTxt;bt.className=on?'ghost':'buy';bt.disabled=!!dis;bt.onclick=fn;box.appendChild(c);};
-  card('🚫','No perk','Race with just your hero\'s own perk.','',!p,!p?'Equipped':'Equip',()=>setPerk(null),!p);
+  const tiles=[{key:'none',el:mkTile({icon:'🚫',label:'No perk',cls:!p?'on own':'own'}),pick:()=>setPerk(null),info:()=>tileInfo('No perk',['Race with just your hero\'s own perk.'])}];
   BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0,on=p&&p.id===b.id;
-    if(n>0)card(BUFF_ICON[b.id],b.name,b.desc,`×${n}`,on,on?'Equipped':'Equip',()=>setPerk(b.id),on);
-    else card(BUFF_ICON[b.id],b.name,b.desc,'×0',false,`Buy · ${b.cost} ${curOf(b)==='gem'?'💎':'🪙'}`,()=>openStore());});
+    tiles.push({key:b.id,el:mkTile({icon:BUFF_ICON[b.id],label:b.name,badge:n?'×'+n:'',cls:on?'on own':n?'own':'locked'}),pick:n?()=>setPerk(b.id):null,
+      info:()=>tileInfo(b.name,[b.desc,n?`You have ${n}. One is used up when the race starts.`:'You have none yet.'],n?[]:[[`Buy · ${b.cost} ${curOf(b)==='gem'?'💎':'🪙'}`,()=>{storeTab='perks';openStore();}]])});});
+  box.appendChild(tileGrid('perk',tiles,renderPerk));
 }
 const PERK_OPEN=new Set();
 function buffCard(b){
@@ -4430,12 +4479,14 @@ const roomRay=new THREE.Raycaster();
 function pickSlotAt(x,y){const r=renderer.domElement.getBoundingClientRect();const v=new THREE.Vector2(((x-r.left)/r.width)*2-1,-((y-r.top)/r.height)*2+1);
   roomRay.setFromCamera(v,camera);const hits=roomRay.intersectObjects(locker.slotSprites||[],false);if(hits.length)openSlot(hits[0].object.userData.slot);}
 function openSlot(slot){RV.slot=slot;const cur=ROOM.place[slot.id];$('rpTitle').textContent=SLOT_NAME[slot.type];
-  const fits=ROOM_ITEMS.filter(it=>it.slot===slot.type&&ownsItem(it.id));const box=$('rpList');box.innerHTML='';
+  const fits=ROOM_ITEMS.filter(it=>it.slot===slot.type&&ownsItem(it.id));const box=$('rpList');box.innerHTML='';TSEL.slot=null;
   if(!fits.length){const p=document.createElement('p');p.className='muted';p.textContent='You have nothing for this spot yet. Win trophies, buy furniture or get gifts from friends.';box.appendChild(p);}
-  fits.forEach(it=>{const where=Object.keys(ROOM.place).find(k=>ROOM.place[k]===it.id);const b=document.createElement('button');b.className='rp-item'+(cur===it.id?' on':'');
-    b.innerHTML=`<span class="ri-ic"></span><span class="ri-tx"><b></b><small></small></span><span class="ri-pw">💪 ${it.pw}</span>`;b.querySelector('.ri-ic').textContent=it.ic;b.querySelector('b').textContent=it.name;
-    b.querySelector('small').textContent=cur===it.id?'Here now':where?'On display elsewhere (moves here)':'In storage';
-    b.onclick=()=>{if(where)delete ROOM.place[where];ROOM.place[slot.id]=it.id;saveRoom();$('roomPick').hidden=true;sfx.pick();renderRoomHud();};box.appendChild(b);});
+  else{const tiles=fits.map(it=>{const where=Object.keys(ROOM.place).find(k=>ROOM.place[k]===it.id);
+      return {key:it.id,el:mkTile({icon:it.ic,label:it.name,cls:cur===it.id?'on own':'own',badge:'💪'+it.pw}),
+        info:()=>tileInfo(it.name,[cur===it.id?'Here now':where?'On display elsewhere (it moves here)':'In storage',`💪 +${it.pw} Strength`],cur===it.id?[]:[['Place here',()=>{if(where)delete ROOM.place[where];ROOM.place[slot.id]=it.id;saveRoom();$('roomPick').hidden=true;sfx.pick();renderRoomHud();}]])};});
+    box.appendChild(tileGrid('slot',tiles,null));
+    // tapping a tile opens its details (no re-render needed here)
+    box.querySelectorAll('.tile').forEach(el=>{const t=tiles.find(x=>x.key===el.dataset.key);el.onclick=()=>{const g=el.parentElement;const open=TSEL.slot===t.key;TSEL.slot=open?null:t.key;g.querySelectorAll('.tile').forEach(x=>x.classList.toggle('sel',x===el&&!open));g.querySelectorAll('.tile-pop').forEach(x=>x.remove());g.style.paddingBottom='';if(!open)tilePop(g,el,t.info(),()=>el.click());};});}
   $('rpRemove').hidden=!cur;$('roomPick').hidden=false;}
 $('rpRemove').onclick=()=>{if(RV.slot){delete ROOM.place[RV.slot.id];saveRoom();}$('roomPick').hidden=true;renderRoomHud();};
 $('rpClose').onclick=()=>$('roomPick').hidden=true;$('rpMore').onclick=()=>{$('roomPick').hidden=true;openCollection(RV.slot&&{shelf:'trophy',wall:'decor',floor:'furniture',pedestal:'monument'}[RV.slot.type]);};
@@ -4482,14 +4533,16 @@ function renderCollection(){
       const ax=sq.offsetLeft+sq.offsetWidth/2;row.style.setProperty('--ax',ax+'px');row.scrollIntoView({block:'nearest',behavior:'smooth'});});}
 }
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
-function openGift(friend){const box=$('gfList');box.innerHTML='';$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';
-  ROOM_ITEMS.filter(i=>i.src==='gift').forEach(it=>{const b=document.createElement('button');b.className='rp-item';const ok=canAfford(it.cost,it.cur);b.disabled=!ok;
-    b.innerHTML=`<span class="ri-ic"></span><span class="ri-tx"><b></b><small>💪 ${it.pw} for their room</small></span>${priceHTML(it.cost,it.cur)}`;b.querySelector('.ri-ic').textContent=it.ic;b.querySelector('b').textContent=it.name;
-    b.onclick=async()=>{if(!spend(it.cost,it.cur))return;box.querySelectorAll('button').forEach(x=>x.disabled=true);$('gfNote').textContent='Sending…';
-      const r=await socSend(friend.uid,'gift',it.id);if(r.ok){$('gfNote').textContent=`${it.ic} ${it.name} sent to ${friend.nm}!`;sfx.pick();setTimeout(()=>$('giftPick').hidden=true,1300);}
-      else{wallet[it.cur==='gem'?'gems':'coins']+=it.cost;saveWallet();$('gfNote').textContent=r.text+' You were not charged.';box.querySelectorAll('button').forEach(x=>x.disabled=false);}};
-    box.appendChild(b);});
-  $('giftPick').hidden=false;}
+function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
+  let busy=false;const draw=()=>{const box=$('gfList');box.innerHTML='';
+    const tiles=ROOM_ITEMS.filter(i=>i.src==='gift').map(it=>{const ok=canAfford(it.cost,it.cur);
+      return {key:it.id,el:mkTile({icon:it.ic,label:it.name,cls:ok?'own':'locked'}),
+        info:()=>{const pr=document.createElement('div');pr.innerHTML=priceHTML(it.cost,it.cur);
+          return tileInfo(it.name,[`💪 +${it.pw} Strength for their room`,pr],[[ok?'Send gift':'Not enough',async()=>{if(busy||!spend(it.cost,it.cur))return;busy=true;$('gfNote').textContent='Sending…';
+            const r=await socSend(friend.uid,'gift',it.id);busy=false;if(r.ok){$('gfNote').textContent=`${it.ic} ${it.name} sent to ${friend.nm}!`;sfx.pick();setTimeout(()=>$('giftPick').hidden=true,1300);}
+            else{wallet[it.cur==='gem'?'gems':'coins']+=it.cost;saveWallet();$('gfNote').textContent=r.text+' You were not charged.';}},'buy',!ok]]);}};});
+    box.appendChild(tileGrid('gift',tiles,draw));};
+  draw();$('giftPick').hidden=false;}
 $('gfClose').onclick=()=>$('giftPick').hidden=true;
 async function claimGift(m){const it=roomItem(m.body);if(!it)return;const g=grantItem(it.id,'gift');
   if(g&&!g.fresh){wallet.coins+=100;saveWallet();SOC.msg=`You already had a ${it.name}, so it turned into 100 coins.`;}else SOC.msg=`${it.ic} ${it.name} added to your room! (+${it.pw} Strength)`;
@@ -5380,21 +5433,24 @@ $('flagSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLow
 function infoTap(b,e){const onI=e&&e.target&&e.target.closest&&e.target.closest('.info-i');
   if(onI||b.getAttribute('aria-pressed')==='true'){b.classList.toggle('open');return true;}return false;}
 const statPct=(v,lo,hi)=>Math.round(clamp((v-lo)/(hi-lo),0.08,1)*100);
-CHARS.forEach(ch=>{const b=document.createElement('button');b.className='char-btn';b.dataset.id=ch.id;
-  b.innerHTML=`<div class="char-top">${ch.svg}<div class="char-nm"><div class="char-name">${ch.name}</div><div class="char-power">${ch.power}</div></div><span class="info-i" aria-label="More about ${ch.name}">i</span></div><div class="more"><div class="char-desc">${ch.desc}</div><div class="char-perk">⭐ <b>${ch.perk.name}</b> · ${ch.perk.desc}</div>
-  <div class="stats"><div class="stat">Speed<i><b style="width:${statPct(ch.speed,0.96,1.04)}%"></b></i></div><div class="stat">Agility<i><b style="width:${statPct(ch.agility,0.8,1.18)}%"></b></i></div><div class="stat">Recharge<i><b style="width:${statPct(26-ch.charge,3,9)}%"></b></i></div></div></div>`;
-  b.onclick=e=>{if(infoTap(b,e))return;selChar=ch.id;store.set('flagdash-char',ch.id);refreshMenu('flex');syncLobbyPresence();};charGrid.appendChild(b);});
+function renderCharTiles(){charGrid.innerHTML='';
+  const tiles=CHARS.map(ch=>({key:ch.id,el:mkTile({img:heroTileImg(ch.id),label:ch.name,cls:ch.id===selChar?'on own':'own'}),
+    pick:()=>{if(selChar!==ch.id){selChar=ch.id;store.set('flagdash-char',ch.id);refreshMenu('flex');syncLobbyPresence();}},
+    info:()=>{const st=document.createElement('div');st.className='stats';st.innerHTML=`<div class="stat">Speed<i><b style="width:${statPct(ch.speed,0.96,1.04)}%"></b></i></div><div class="stat">Agility<i><b style="width:${statPct(ch.agility,0.8,1.18)}%"></b></i></div><div class="stat">Recharge<i><b style="width:${statPct(26-ch.charge,3,9)}%"></b></i></div>`;
+      return tileInfo(`${ch.name} · ${ch.power}`,[ch.desc,`⭐ ${ch.perk.name}: ${ch.perk.desc}`,st]);}}));
+  charGrid.appendChild(tileGrid('runner',tiles,renderCharTiles));}
 function elevProfile(th){const h=heightFn(th),pts=[];let lo=1e9,hi=-1e9;for(let i=0;i<=60;i++){const v=h(i/60*TRACK);pts.push(v);lo=Math.min(lo,v);hi=Math.max(hi,v);}return {pts,lo,hi};}
 const PROF=THEMES.map(elevProfile);const gLo=Math.min(...PROF.map(p=>p.lo)),gHi=Math.max(...PROF.map(p=>p.hi));
-THEMES.forEach((th,ti)=>{const b=document.createElement('button');b.className='track-btn';b.dataset.id=th.id;const pr=PROF[ti];
-  const path=pr.pts.map((v,i)=>`${(i/60*200).toFixed(1)},${(40-(v-gLo)/(gHi-gLo)*30).toFixed(1)}`).join(' ');
-  b.innerHTML=`<div class="track-swatch" style="background:linear-gradient(180deg,${th.sky[1]},${th.sky[2]} 60%,${th.card[1]})"><svg viewBox="0 0 200 44" preserveAspectRatio="none"><polygon points="0,44 ${path} 200,44" fill="${th.card[1]}" opacity=".9"/><polyline points="${path}" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
-  <div class="track-info"><div class="track-top"><div class="track-name">${th.name}</div><span class="info-i" aria-label="More about ${th.name}">i</span></div><div class="more">${th.region?`<div class="track-region">${th.region}</div>`:''}<div class="track-blurb">${th.blurb}</div><div class="track-elev">${th.turns?th.turns.length+' turns':'No turns'} · Elevation range ${Math.round(pr.hi-pr.lo)} m${th.slope<0?' · downhill':''}</div></div></div>`;
-  b.onclick=e=>{if(infoTap(b,e))return;selTrack=th.id;store.set('flagdash-track',th.id);refreshMenu();if(TH!==th){buildWorld(th);genCourse(7);}};trackGrid.appendChild(b);});
+function renderTrackTiles(){trackGrid.innerHTML='';
+  const tiles=THEMES.map((th,ti)=>{const pr=PROF[ti];const path=pr.pts.map((v,i)=>`${(i/60*200).toFixed(1)},${(40-(v-gLo)/(gHi-gLo)*30).toFixed(1)}`).join(' ');
+    const art=`<div class="track-swatch" style="background:linear-gradient(180deg,${th.sky[1]},${th.sky[2]} 60%,${th.card[1]})"><svg viewBox="0 0 200 44" preserveAspectRatio="none"><polygon points="0,44 ${path} 200,44" fill="${th.card[1]}" opacity=".9"/><polyline points="${path}" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>`;
+    return {key:th.id,el:mkTile({html:art,label:th.name,cls:th.id===selTrack?'on own':'own'}),
+      pick:()=>{if(selTrack!==th.id){selTrack=th.id;store.set('flagdash-track',th.id);refreshMenu();if(TH!==th){buildWorld(th);genCourse(7);}}},
+      info:()=>tileInfo(th.name+(th.region?' · '+th.region:''),[th.blurb,`${th.turns?th.turns.length+' turns':'No turns'} · elevation range ${Math.round(pr.hi-pr.lo)} m${th.slope<0?' · downhill':''}`])};});
+  trackGrid.appendChild(tileGrid('track',tiles,renderTrackTiles));}
 function refreshMenu(emote){
   flagGrid.querySelectorAll('.flag-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.code===selCountry));
-  charGrid.querySelectorAll('.char-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===selChar));
-  trackGrid.querySelectorAll('.track-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===selTrack));
+  renderCharTiles();renderTrackTiles();
   {const tm=selMode==='teams'||selMode==='trio';$('modeSeg').querySelector('[data-mode="solo"]').setAttribute('aria-pressed',!tm);const tb=$('teamsBtn');tb.setAttribute('aria-pressed',tm);tb.textContent=tm?(selMode==='trio'?'Teams · 2v2v2 ▾':'Teams · 3v3 ▾'):'Teams ▾';
     $('teamSub').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tmode===selMode));}
   $('lapSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.laps===selLaps));$('lapHint').textContent=selLaps===1?'One lap of 1,500 m.':`${selLaps} laps of ${LAP_LEN[selLaps]} m (${(selLaps*LAP_LEN[selLaps]).toLocaleString()} m total).`;renderWallet();renderLoadout();
