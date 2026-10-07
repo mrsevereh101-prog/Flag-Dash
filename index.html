@@ -116,7 +116,11 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .rp-item.on{border-color:var(--gold)}.rp-item:disabled{opacity:.5}.rc-row.own{border-color:rgba(95,208,138,.6)}
 .ri-ic{font-size:30px;width:40px;text-align:center;flex:none}.ri-tx{flex:1;min-width:0;display:grid;gap:2px}.ri-tx b{font-size:14.5px}.ri-tx small{color:var(--muted);font-size:12px}
 .ri-pw{font-size:12px;font-weight:800;color:#ffd38a;white-space:nowrap}.rc-side{display:grid;gap:4px;justify-items:end}.rc-side .buy{padding:6px 10px;border-radius:9px;background:var(--gold);color:#1a1405;border:0;font-weight:800}
-.rc-tabs{flex-wrap:wrap}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
+.rc-tabs{flex-wrap:wrap}.col-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
+.col-sq{position:relative;aspect-ratio:1;border-radius:12px;border:2px solid rgba(95,208,138,.55);background:radial-gradient(circle at 50% 35%,#2f4aa8,#14205a);display:grid;place-items:center;padding:0;cursor:pointer}
+.col-sq .col-ic{font-size:30px;line-height:1}.col-sq.locked{border-color:rgba(255,255,255,.12);background:#1a1f33}.col-sq.locked .col-ic,.col-sq.locked .col-fl{filter:grayscale(1) brightness(.6);opacity:.55}
+.col-sq.sel{outline:3px solid var(--gold);outline-offset:1px}.col-lock{position:absolute;right:2px;bottom:1px;font-size:13px}.col-on{position:absolute;right:4px;top:2px;font-size:12px;font-weight:900;color:#5fd08a}
+.col-fl{position:absolute;left:4px;bottom:4px;width:18px;height:12px;border-radius:2px}.col-info{margin-top:6px}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
 #onbWel{z-index:60;display:grid;place-items:center}#onbWel[hidden]{display:none}
 .onb-card{width:min(100%,420px);box-sizing:border-box;background:linear-gradient(#1a2466,#0e1440);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
 .onb-slogan{color:#ffd38a!important;font-weight:700;font-style:italic}.onb-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#f6e3a8}.onb-card p{margin:0;color:#cfd7f5;line-height:1.45}.onb-ic{font-size:52px}
@@ -4401,7 +4405,7 @@ function roomCheckWins(){const out=[];for(const it of ROOM_ITEMS){if(it.src!=='w
   if(out.length)out.forEach(it=>feed(`New for your room: ${it.ic} ${it.name}`,'good'));return out;}
 
 /* ---------- the room view: look around, decorate, browse the collection ---------- */
-const RV={on:false,edit:false,cx:0,tx:0,drag:null,moved:0,slot:null,colTab:'trophy'};
+const RV={on:false,edit:false,cx:0,tx:0,drag:null,moved:0,slot:null,colTab:'all',colSel:null};
 const ROOM_YAW=0.09; // RV.tx (-10.5..10.5) times this is how far the camera turns, in radians
 // camera turn needed to face each area of the hall
 const ROOM_AREAS={skins:-0.49,trophies:0.57,medals:0,perks:-0.74};
@@ -4433,24 +4437,36 @@ $('rpRemove').onclick=()=>{if(RV.slot){delete ROOM.place[RV.slot.id];saveRoom();
 $('rpClose').onclick=()=>$('roomPick').hidden=true;$('rpMore').onclick=()=>{$('roomPick').hidden=true;openCollection(RV.slot&&{shelf:'trophy',wall:'decor',floor:'furniture',pedestal:'monument'}[RV.slot.type]);};
 function openCollection(tab){if(tab)RV.colTab=tab;$('roomCol').hidden=false;renderCollection();}
 $('rcClose').onclick=()=>{$('roomCol').hidden=true;renderRoomHud();};
+const COL_CATS=[['all','All']].concat(ROOM_CATS);
+// The collection: every collectible as a small square; ones you don't have yet are greyed out with a lock.
+// Tap a square for its details and how to get it.
 function renderCollection(){
-  const tabs=$('rcTabs');tabs.innerHTML='';ROOM_CATS.forEach(([id,nm])=>{const b=document.createElement('button');b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;renderCollection();};tabs.appendChild(b);});
+  if(!COL_CATS.some(c=>c[0]===RV.colTab))RV.colTab='all';
+  const tabs=$('rcTabs');tabs.innerHTML='';COL_CATS.forEach(([id,nm])=>{const b=document.createElement('button');b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;RV.colSel=null;renderCollection();};tabs.appendChild(b);});
   const L=$('rcList');L.innerHTML='';
-  const note={trophy:'Trophies are won by racing. They stand on top of your lockers.',medal:'Medals are won by racing. They hang on your wall.',
-    monument:`Monuments stand on the two big pedestals. A few countries have their own signature monument: win ${SIG_WINS} races with that flag to earn it.`,
-    furniture:'Furniture goes on your floor.',decor:'Decor hangs on your wall.',gift:'Gifts can only come from a friend. Send one from your Friends list.'}[RV.colTab];
-  const p=document.createElement('p');p.className='muted rc-note';p.textContent=note;L.appendChild(p);
-  let list=ROOM_ITEMS.filter(it=>it.cat===RV.colTab);
-  if(RV.colTab==='monument')list=list.slice().sort((a,b)=>(b.cc===selCountry)-(a.cc===selCountry)||(!!a.cc)-(!!b.cc));
-  list.forEach(it=>{const own=ownsItem(it.id),row=document.createElement('div');row.className='rc-row'+(own?' own':'');
+  let list=RV.colTab==='all'?ROOM_ITEMS.slice():ROOM_ITEMS.filter(it=>it.cat===RV.colTab);
+  list.sort((a,b)=>ownsItem(b.id)-ownsItem(a.id)||(b.cc===selCountry)-(a.cc===selCountry));
+  const got=list.filter(it=>ownsItem(it.id)).length;
+  const head=document.createElement('p');head.className='muted rc-note';head.textContent=`${got} of ${list.length} collected · tap a square for details`;L.appendChild(head);
+  const grid=document.createElement('div');grid.className='col-grid';
+  list.forEach(it=>{const own=ownsItem(it.id),b=document.createElement('button');b.type='button';b.className='col-sq'+(own?' own':' locked')+(RV.colSel===it.id?' sel':'');
+    b.setAttribute('aria-label',it.name+(own?'':' (locked)'));b.title=it.name;
+    const ic=document.createElement('span');ic.className='col-ic';ic.textContent=it.ic;b.appendChild(ic);
+    if(it.cc){const f=document.createElement('img');f.className='col-fl';f.alt='';f.src=flagCanvas(it.cc).url;b.appendChild(f);}
+    if(!own){const lk=document.createElement('span');lk.className='col-lock';lk.textContent='🔒';b.appendChild(lk);}
+    else if(Object.values(ROOM.place).includes(it.id)){const on=document.createElement('span');on.className='col-on';on.textContent='✓';b.appendChild(on);}
+    b.onclick=()=>{RV.colSel=RV.colSel===it.id?null:it.id;renderCollection();};grid.appendChild(b);});
+  L.appendChild(grid);
+  const it=RV.colSel&&ROOM_ITEMS.find(x=>x.id===RV.colSel);
+  if(it){const own=ownsItem(it.id),row=document.createElement('div');row.className='rc-row col-info'+(own?' own':'');
     const ic=document.createElement('span');ic.className='ri-ic';ic.textContent=it.ic;const mid=document.createElement('div');mid.className='ri-tx';const nm=document.createElement('b');nm.textContent=it.name+(it.cc?` · ${flagCanvas(it.cc).name}`:'');
     const sub=document.createElement('small');const side=document.createElement('div');side.className='rc-side';side.innerHTML=`<span class="ri-pw">💪 ${it.pw}</span>`;
-    if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');}
+    if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');mid.append(nm,sub);}
     else if(it.src==='win'){const [v,n]=it.win(STATS);sub.textContent=`${it.how} · ${Math.min(v,n)}/${n}`;const bar=document.createElement('i');bar.className='rc-bar';bar.innerHTML=`<i style="width:${Math.min(100,v/n*100)}%"></i>`;mid.append(nm,sub,bar);}
     else if(it.src==='buy'){sub.textContent=SLOT_NAME[it.slot];const b=document.createElement('button');b.className='buy';const ok=canAfford(it.cost,it.cur);b.innerHTML=priceHTML(it.cost,it.cur);b.disabled=!ok;b.title=ok?'Buy':'Not enough';
-      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);}
-    else{sub.textContent='Only a friend can send this ('+priceHTML(it.cost,it.cur).replace(/<[^>]+>/g,'')+(it.cur==='gem'?' diamonds':' coins')+')';}
-    if(!mid.childNodes.length)mid.append(nm,sub);row.append(ic,mid,side);L.appendChild(row);});
+      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);mid.append(nm,sub);}
+    else{sub.textContent='Only a friend can send this ('+priceHTML(it.cost,it.cur).replace(/<[^>]+>/g,'')+(it.cur==='gem'?' diamonds':' coins')+')';mid.append(nm,sub);}
+    row.append(ic,mid,side);L.appendChild(row);setTimeout(()=>row.scrollIntoView({block:'nearest',behavior:'smooth'}),30);}
 }
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){const box=$('gfList');box.innerHTML='';$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';
