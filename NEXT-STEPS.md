@@ -38,8 +38,8 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - [ ] Record in ElevenLabs: "Welcome to Race Your Flag!", "Choose your flag.", "Pick your runner.", "Choose your perk."
 
 ## To turn on uploaded profile pictures
-1. [ ] Run `supabase/avatars.sql` in the Supabase SQL editor (creates the "avatars" storage bucket, upload rules and the report list).
-2. [ ] Run the updated `supabase/leaderboard.sql` (adds the picture columns).
+1. [x] Run `supabase/avatars.sql` in the Supabase SQL editor (creates the "avatars" storage bucket, upload rules and the report list).
+2. [x] Run the updated `supabase/leaderboard.sql` (adds the picture columns).
 3. Checking reports: SQL editor -> `select * from fd_pic_report_list;` To remove a picture: Storage -> avatars -> the folder in the report -> delete the file.
 
 ## To turn on Friends & Inbox
