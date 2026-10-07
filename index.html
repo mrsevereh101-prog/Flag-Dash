@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+<!doctype html><html class="cream"><head><script>try{if(localStorage.getItem("flagdash-theme")==="night")document.documentElement.classList.remove("cream");}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
 #layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
 body.layout-edit #hud,body.layout-edit #touch{z-index:90}
 body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -999,6 +999,53 @@ img.av{border-radius:10px;background:radial-gradient(circle at 50% 35%,#4a6ad8,#
 #fcHud .fc-list img{width:18px;height:12px;border-radius:2px}
 @media (max-width:860px){#fcHud{top:calc(env(safe-area-inset-top,0px) + 150px + var(--app-top,0px))}#fcHud .fc-list{display:none}}
 </style>
+<style id="themeCream">
+/* ===== Cream & gold theme: ivory panels, dark brown text, every box framed in shining gold ===== */
+html.cream{--night:#f3e8d0;--night-2:#fffaf0;--panel:rgba(255,250,238,.97);--panel-solid:#fbf3e2;--line:#d8b766;--chalk:#3a2812;--muted:#7d6644;--gold:#d9a227;--good:#2f9a55;--tartan:#b8442c;--tartan-2:#c9553a;
+  --d3-gold:#b8861c;--d3-gold2:#8a6510;--d3-navy:#fff6e2;--d3-navy2:#f1e2bf;
+  --gframe:linear-gradient(120deg,#fff6c8 0%,#e8b730 18%,#a87812 32%,#ffe9a0 48%,#c8921c 62%,#fff3c0 76%,#b07f14 90%,#ffe9a0 100%);--cream:linear-gradient(180deg,#fffdf6,#f7ecd4)}
+@keyframes goldShine{0%{background-position:0 0,0% 50%}100%{background-position:0 0,200% 50%}}
+/* the gold frame: cream inside, moving gold gradient on the border */
+html.cream :is(.store-card,.col-info,.lb-row,.lb-pod,.lb-list,.lb-mebar,.rh-top,.rh-bottom,.hud-top,.slot,.msg,#coach,.onb-card,#onbBar,.panel,.perk-card,.rc-row,.rp-item,.hub-row,.pick-btn,.d3-round,.d3-wallet,.lv-badge,.picker,.seg,.wallet-hud,#minimap,.pz-card,.d3-rname,.hub-form,.lb-season,.d3-arrow,.chip-btn,.av-opt,#tutSkip){
+  border:2px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;color:var(--chalk)}
+html.cream .col-sq{border:2px solid transparent!important;background:radial-gradient(circle at 50% 30%,#fffef8,#f3e4bf) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.9),inset 0 -4px 0 rgba(150,105,20,.25),0 4px 8px rgba(110,80,20,.3)!important}
+html.cream .col-sq.locked{background:linear-gradient(#ece5d6,#ddd3bf) padding-box,linear-gradient(120deg,#d8d2c4,#a9a294,#e6e0d2,#a9a294) border-box!important;animation:none}
+html.cream .col-sq.on{box-shadow:inset 0 2px 0 #fff,0 0 0 2px #f3c74a,0 0 16px rgba(230,170,30,.75)!important}
+html.cream .col-sq.locked .col-ic,html.cream .col-sq.locked .tile-img,html.cream .col-sq.locked .tile-art{opacity:.45}
+html.cream .tile-lb{color:#3a2812;text-shadow:0 1px 0 #fff,0 0 3px #fff}html.cream .tile-bd{color:#8a5a00;text-shadow:0 1px 0 #fff}
+html.cream .col-on{color:#2f9a55}html.cream .col-sq.on .col-on{color:#b8861c}
+html.cream .col-info::after{background:#fffaf0;border-color:#d9a227}
+/* backgrounds behind panels */
+html.cream .overlay{background:linear-gradient(180deg,rgba(250,240,215,.55),rgba(240,225,190,.88))}
+html.cream body{background:var(--night)}
+/* buttons */
+html.cream :is(button.primary,.primary,.buy,.lb-rw summary){background:linear-gradient(180deg,#ffe08a,#e2a92a 55%,#b9821a)!important;color:#3a2600!important;border:1px solid #9c6d12!important;box-shadow:inset 0 1px 0 #fff6c8,0 3px 0 #8a5d0c}
+html.cream :is(button.ghost,.ghost){background:#fffaf0!important;color:#5a3d12!important;border:1.5px solid #d8b766!important}
+html.cream .seg button{color:#5a3d12}html.cream .seg button[aria-pressed="true"]{background:linear-gradient(180deg,#ffe08a,#e2a92a)!important;color:#3a2600!important}
+html.cream .rh-tabs{background:rgba(160,120,40,.12)}html.cream .rh-tabs button{color:#6a5030}html.cream .rh-tabs button.on{background:linear-gradient(180deg,#ffe08a,#e2a92a)!important;color:#3a2600;box-shadow:0 0 10px rgba(230,170,30,.6)}
+/* text that was white on navy */
+html.cream :is(.ti-box small,.rc-note,.rh-title small,#roomBonus,.lb-nm,.pod-nm,.lbp-nm,.lb-mebar,.hub-body p,.store-head h2,.d3-rname,.track-name,.char-name,.slot-name,.slot-label,.progress-labels,.progress-labels b,.place small,.clock,.place,#coachTx,.ri-tx b,.ri-tx small,.shop-desc,.shop-name,.lbp-pts,.lb-pts,.lb-pos,.lbp-n,.wallet-big b,.d3-wallet b,#hubTitle,h2,h3){color:var(--chalk)}
+html.cream :is(.muted,.ti-box small,.rc-note,.ri-tx small,.shop-desc){color:var(--muted)!important}
+html.cream .lbp-pts{background:rgba(160,120,40,.14)}html.cream .p1 .lbp-pts{color:#8a5a00}
+html.cream .place{text-shadow:2px 2px 0 #f0c868!important}
+html.cream .lb-pod.p1{box-shadow:0 0 18px rgba(230,170,30,.55)}
+html.cream .lb-row.me,html.cream .lb-mebar{background:linear-gradient(180deg,#ffe9a8,#f2c95a) padding-box,var(--gframe) border-box!important}
+html.cream .track-bar{background:repeating-linear-gradient(90deg,#d9a227 0 calc(10% - 1px),rgba(255,255,255,.75) calc(10% - 1px) 10%)}
+html.cream .msg.bad{border-left:2px solid transparent}html.cream .hitchip.bad{box-shadow:inset 4px 0 0 #c9553a}html.cream .hitchip.good{box-shadow:inset 4px 0 0 #2f9a55}
+html.cream .d3-round{color:#8a5d0c}html.cream .rh-str{background:rgba(230,170,30,.18)}html.cream .rh-str b{color:#8a5a00}html.cream .rh-title b{color:#6a4508}
+html.cream .lv-badge b,html.cream .lv-badge small{color:#5a3d12;text-shadow:none}
+html.cream .stat i{background:#e6d6b0}html.cream .meter span{color:var(--chalk)}
+/* home screen pieces, settings, pause and other cards */
+html.cream :is(.desk3 .d3-top,.desk3 .d3-picks,.desk3 .d3-card,.desk3 .d3-emotes,.d3-tabbar button,.d3-name input,.set-row,.pause-card,.set-tog,.lb-rw summary){border:2px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;color:var(--chalk)!important;box-shadow:0 4px 12px rgba(110,80,20,.22)!important}
+html.cream .d3-tabbar button.cur,html.cream .set-tog.on,html.cream .set-tog[aria-pressed="true"]{background:linear-gradient(180deg,#ffe08a,#e2a92a 55%,#c08a1a) padding-box,var(--gframe) border-box!important;color:#3a2600!important}
+html.cream .d3-name input{color:#4a320c!important}html.cream .d3-tabs button{color:#6a4508}
+html.cream .d3-emote-ic{border:2px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite}
+html.cream .tp-x{color:#5a3d12!important;background:#fffaf0!important;border-color:#d8b766!important}
+html.cream .d3-logo{color:#8a5d0c;text-shadow:0 1px 0 #fff}
+html.cream input[type=range]{accent-color:#c8921c}
+@media (prefers-reduced-motion:reduce){html.cream *{animation-duration:0s!important}}
+</style>
 
 <div id="stage"></div>
 
@@ -1300,6 +1347,7 @@ img.av{border-radius:10px;background:radial-gradient(circle at 50% 35%,#4a6ad8,#
   <div class="pause-card set-card" role="dialog" aria-label="Settings">
     <h2>Settings</h2>
     <div id="setBody" class="set-body">
+      <div class="set-row"><span>Theme</span><button class="set-tog" id="set_theme"></button><span></span></div>
       <div class="set-row"><span>Music</span><button class="set-tog" id="set_music"></button><input type="range" min="0" max="100" id="set_musicVol" aria-label="Music volume"></div>
       <div class="set-row"><span>Sound effects</span><button class="set-tog" id="set_sfx"></button><input type="range" min="0" max="100" id="set_sfxVol" aria-label="Sound effects volume"></div>
       <div class="set-row"><span>Voices</span><button class="set-tog" id="set_voice"></button><input type="range" min="0" max="100" id="set_voiceVol" aria-label="Voice volume"></div>
@@ -5553,6 +5601,8 @@ $('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1)
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
+{const tb=$('set_theme'),show=()=>{tb.textContent=document.documentElement.classList.contains('cream')?'Cream gold':'Night blue';};show();
+  tb.onclick=()=>{const c=document.documentElement.classList.toggle('cream');store.set('flagdash-theme',c?'cream':'night');show();};}
 $('avClose').onclick=()=>$('avPick').hidden=true;
 $('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
 $('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
