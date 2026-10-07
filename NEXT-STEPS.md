@@ -29,6 +29,14 @@ Supabase project: hzzqnwzsasuwjafmsgqh
    Keep the Client secret private (only in Supabase).
 5. [x] Test: open the game, tap the person button, try "Continue with Google" and the email link.
 
+## To finish the rename (Flag Dash -> Race Your Flag)
+- [x] GitHub repo renamed to `race-your-flag`; game links updated
+- [x] Supabase > Authentication > URL Configuration: new Site URL and Redirect URL
+- [ ] Test "Continue with Google" at https://mrsevereh101-prog.github.io/race-your-flag/
+- [ ] Google Cloud > Google Auth Platform > Branding (https://console.cloud.google.com/auth/branding): app name `Race Your Flag`, home page `https://mrsevereh101-prog.github.io/race-your-flag/`, privacy link `https://mrsevereh101-prog.github.io/race-your-flag/privacy.html`, Save
+- [ ] Optional: new public repo `Flag-Dash` so the old link forwards to the new one (ask Claude to add the redirect page)
+- [ ] Record in ElevenLabs: "Welcome to Race Your Flag!", "Choose your flag.", "Pick your runner.", "Choose your perk."
+
 ## To turn on Friends & Inbox
 1. [ ] Run `supabase/social.sql` in the Supabase SQL editor (New query, paste everything, Run; click "Run query" if a warning shows).
 2. [ ] Test with a friend: both tap **Online > Find a Race**, then use the 👥 button during the race to add each other and send a message.
