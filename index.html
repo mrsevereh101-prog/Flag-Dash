@@ -1001,27 +1001,28 @@ img.av{border-radius:10px;background:radial-gradient(circle at 50% 35%,#4a6ad8,#
 </style>
 <style id="themeCream">
 /* ===== Cream & gold theme: ivory panels, dark brown text, every box framed in shining gold ===== */
-html.cream{--night:#f3e8d0;--night-2:#fffaf0;--panel:rgba(255,250,238,.97);--panel-solid:#fbf3e2;--line:#d8b766;--chalk:#3a2812;--muted:#7d6644;--gold:#d9a227;--good:#2f9a55;--tartan:#b8442c;--tartan-2:#c9553a;
+html.cream{--night:#d9c7a0;--night-2:#e6d6b2;--panel:rgba(232,218,186,.97);--panel-solid:#e6d6b2;--line:#b8923e;--chalk:#2e1f0c;--muted:#6a5434;--gold:#d9a227;--good:#2f9a55;--tartan:#b8442c;--tartan-2:#c9553a;
   --d3-gold:#b8861c;--d3-gold2:#8a6510;--d3-navy:#fff6e2;--d3-navy2:#f1e2bf;
-  --gframe:linear-gradient(120deg,#fff6c8 0%,#e8b730 18%,#a87812 32%,#ffe9a0 48%,#c8921c 62%,#fff3c0 76%,#b07f14 90%,#ffe9a0 100%);--cream:linear-gradient(180deg,#fffdf6,#f7ecd4)}
+  --gframe:linear-gradient(120deg,#f3d98a 0%,#c8961e 18%,#8a5f0c 32%,#e9c25a 48%,#a87812 62%,#f0d27a 76%,#8f660f 90%,#e9c25a 100%);--cream:linear-gradient(180deg,#eadcbb,#d9c49a)}
+html.cream :is(.tile-pop,.col-info){background:#e6d6b2!important}
 @keyframes goldShine{0%{background-position:0 0,0% 50%}100%{background-position:0 0,200% 50%}}
 /* the gold frame: cream inside, moving gold gradient on the border */
 html.cream :is(.store-card,.col-info,.lb-row,.lb-pod,.lb-list,.lb-mebar,.rh-top,.rh-bottom,.hud-top,.slot,.msg,#coach,.onb-card,#onbBar,.panel,.perk-card,.rc-row,.rp-item,.hub-row,.pick-btn,.d3-round,.d3-wallet,.lv-badge,.picker,.seg,.wallet-hud,#minimap,.pz-card,.d3-rname,.hub-form,.lb-season,.d3-arrow,.chip-btn,.av-opt,#tutSkip){
   border:2px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;color:var(--chalk)}
-html.cream .col-sq{border:2px solid transparent!important;background:radial-gradient(circle at 50% 30%,#fffef8,#f3e4bf) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;
+html.cream .col-sq{border:2px solid transparent!important;background:radial-gradient(circle at 50% 30%,#f2e7cc,#d8c294) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite;
   box-shadow:inset 0 2px 0 rgba(255,255,255,.9),inset 0 -4px 0 rgba(150,105,20,.25),0 4px 8px rgba(110,80,20,.3)!important}
 html.cream .col-sq.locked{background:linear-gradient(#ece5d6,#ddd3bf) padding-box,linear-gradient(120deg,#d8d2c4,#a9a294,#e6e0d2,#a9a294) border-box!important;animation:none}
 html.cream .col-sq.on{box-shadow:inset 0 2px 0 #fff,0 0 0 2px #f3c74a,0 0 16px rgba(230,170,30,.75)!important}
 html.cream .col-sq.locked .col-ic,html.cream .col-sq.locked .tile-img,html.cream .col-sq.locked .tile-art{opacity:.45}
 html.cream .tile-lb{color:#3a2812;text-shadow:0 1px 0 #fff,0 0 3px #fff}html.cream .tile-bd{color:#8a5a00;text-shadow:0 1px 0 #fff}
 html.cream .col-on{color:#2f9a55}html.cream .col-sq.on .col-on{color:#b8861c}
-html.cream .col-info::after{background:#fffaf0;border-color:#d9a227}
+html.cream .col-info::after{background:#e6d6b2;border-color:#a87812}
 /* backgrounds behind panels */
-html.cream .overlay{background:linear-gradient(180deg,rgba(250,240,215,.55),rgba(240,225,190,.88))}
+html.cream .overlay{background:linear-gradient(180deg,rgba(40,28,10,.45),rgba(40,28,10,.72))}
 html.cream body{background:var(--night)}
 /* buttons */
-html.cream :is(button.primary,.primary,.buy,.lb-rw summary){background:linear-gradient(180deg,#ffe08a,#e2a92a 55%,#b9821a)!important;color:#3a2600!important;border:1px solid #9c6d12!important;box-shadow:inset 0 1px 0 #fff6c8,0 3px 0 #8a5d0c}
-html.cream :is(button.ghost,.ghost){background:#fffaf0!important;color:#5a3d12!important;border:1.5px solid #d8b766!important}
+html.cream :is(button.primary,.primary,.buy,.lb-rw summary){background:linear-gradient(180deg,#f0cd6a,#cf9620 55%,#a8740f)!important;color:#3a2600!important;border:1px solid #9c6d12!important;box-shadow:inset 0 1px 0 #fff6c8,0 3px 0 #8a5d0c}
+html.cream :is(button.ghost,.ghost){background:#eadcbb!important;color:#5a3d12!important;border:1.5px solid #d8b766!important}
 html.cream .seg button{color:#5a3d12}html.cream .seg button[aria-pressed="true"]{background:linear-gradient(180deg,#ffe08a,#e2a92a)!important;color:#3a2600!important}
 html.cream .rh-tabs{background:rgba(160,120,40,.12)}html.cream .rh-tabs button{color:#6a5030}html.cream .rh-tabs button.on{background:linear-gradient(180deg,#ffe08a,#e2a92a)!important;color:#3a2600;box-shadow:0 0 10px rgba(230,170,30,.6)}
 /* text that was white on navy */
@@ -1030,7 +1031,7 @@ html.cream :is(.muted,.ti-box small,.rc-note,.ri-tx small,.shop-desc){color:var(
 html.cream .lbp-pts{background:rgba(160,120,40,.14)}html.cream .p1 .lbp-pts{color:#8a5a00}
 html.cream .place{text-shadow:2px 2px 0 #f0c868!important}
 html.cream .lb-pod.p1{box-shadow:0 0 18px rgba(230,170,30,.55)}
-html.cream .lb-row.me,html.cream .lb-mebar{background:linear-gradient(180deg,#ffe9a8,#f2c95a) padding-box,var(--gframe) border-box!important}
+html.cream .lb-row.me,html.cream .lb-mebar{background:linear-gradient(180deg,#efd27e,#d9ae48) padding-box,var(--gframe) border-box!important}
 html.cream .track-bar{background:repeating-linear-gradient(90deg,#d9a227 0 calc(10% - 1px),rgba(255,255,255,.75) calc(10% - 1px) 10%)}
 html.cream .msg.bad{border-left:2px solid transparent}html.cream .hitchip.bad{box-shadow:inset 4px 0 0 #c9553a}html.cream .hitchip.good{box-shadow:inset 4px 0 0 #2f9a55}
 html.cream .d3-round{color:#8a5d0c}html.cream .rh-str{background:rgba(230,170,30,.18)}html.cream .rh-str b{color:#8a5a00}html.cream .rh-title b{color:#6a4508}
@@ -1041,7 +1042,8 @@ html.cream :is(.desk3 .d3-top,.desk3 .d3-picks,.desk3 .d3-card,.desk3 .d3-emotes
 html.cream .d3-tabbar button.cur,html.cream .set-tog.on,html.cream .set-tog[aria-pressed="true"]{background:linear-gradient(180deg,#ffe08a,#e2a92a 55%,#c08a1a) padding-box,var(--gframe) border-box!important;color:#3a2600!important}
 html.cream .d3-name input{color:#4a320c!important}html.cream .d3-tabs button{color:#6a4508}
 html.cream .d3-emote-ic{border:2px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%,200% 100%!important;animation:goldShine 6s linear infinite}
-html.cream .tp-x{color:#5a3d12!important;background:#fffaf0!important;border-color:#d8b766!important}
+html.cream .desk3 .d3-picks b{color:#3a2812!important}html.cream .desk3 .d3-picks span{color:#6a5434!important}html.cream .d3-qinfo b{color:#7a4f06!important}html.cream .d3-qinfo small,html.cream .d3-qnote{color:#5a4428!important}
+html.cream .tp-x{color:#5a3d12!important;background:#eadcbb!important;border-color:#a87812!important}
 html.cream .d3-logo{color:#8a5d0c;text-shadow:0 1px 0 #fff}
 html.cream input[type=range]{accent-color:#c8921c}
 @media (prefers-reduced-motion:reduce){html.cream *{animation-duration:0s!important}}
@@ -1053,7 +1055,7 @@ html.cream input[type=range]{accent-color:#c8921c}
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards">📊</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
+        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards">🏟️</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
@@ -1075,7 +1077,7 @@ html.cream input[type=range]{accent-color:#c8921c}
       <div class="pick-row d3-picks">
         <button class="pick-btn" data-pick="flag" aria-expanded="false"><img id="sumFlag" alt=""><b id="pkFlag"></b><span class="sr-only">Flag</span></button>
         <button class="pick-btn" data-pick="runner" aria-expanded="false"><i aria-hidden="true">🏃</i><b id="pkRunner"></b><span class="sr-only">Runner</span></button>
-        <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true">🏟️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
+        <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true">🛣️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
         <button class="pick-btn" data-pick="loadout" aria-expanded="false"><i aria-hidden="true" id="pkLoadIc">🎯</i><b id="pkLoadTxt"></b><b id="pkLoadout" hidden></b><span class="sr-only">Loadout</span></button>
         <button class="pick-btn" data-pick="perk" aria-expanded="false"><i aria-hidden="true" id="pkPerkIc">⭐</i><b id="pkPerk"></b><span class="sr-only">Perk</span></button>
       </div>
