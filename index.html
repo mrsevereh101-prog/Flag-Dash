@@ -3073,7 +3073,13 @@ function hitFeed(a,b,ic){
   RACE.lastChip={a,b,e};return e;}
 // add the loot to the chip for that hit
 function chipLoot(a,b,txt){const L=RACE&&RACE.lastChip;if(L&&L.a===a&&L.b===b&&L.e.isConnected){const t=document.createElement('small');t.textContent=txt;L.e.appendChild(t);return true;}return false;}
-function feed(msg,kind){const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;/* no repeats */
+const FEED_IC=[[/lead swap ran out/i,'🔄⌛'],[/lead swap/i,'🔄'],[/null field/i,'🧿'],[/comeback/i,'🔥⚡'],[/light feet/i,'🧝✨'],[/banana/i,'🍌'],[/land mine|blown up/i,'💣'],[/hurdle/i,'🚧'],[/barrier/i,'⛔'],[/ran into|wall/i,'🧱'],
+  [/oil/i,'🛢️'],[/\bice\b/i,'🧊'],[/sand/i,'🏜️'],[/tar\b/i,'⚫'],[/puddle|splash/i,'💧'],[/shield/i,'🛡️'],[/froze/i,'❄️'],[/burn|fire/i,'🔥'],[/tripped|trap/i,'🪤'],[/no rival ahead|leading/i,'🎯❌'],[/first lap/i,'1️⃣'],[/already in front/i,'🥇']];
+function iconChip(ic,kind){const f=$('feed');const e=document.createElement('div');e.className='msg hitchip '+(kind||'');
+  if(player){const i=document.createElement('img');i.src=flagURL(player);i.alt='';e.appendChild(i);}const w=document.createElement('span');w.className='hc-ic';w.textContent=ic;e.appendChild(w);
+  f.prepend(e);while(f.children.length>3)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),1800);setTimeout(()=>e.remove(),2200);}
+function feed(msg,kind){
+  if((state==='race'||state==='countdown')&&RACE&&!RACE.survival){const hit=FEED_IC.find(([re])=>re.test(msg));if(hit){const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;feedSeen.set(msg,now);iconChip(hit[1],kind);return;}}const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;/* no repeats */
   if(!kind&&now-feedLast<1500)return;/* minor info waits its turn */
   feedSeen.set(msg,now);feedLast=now;const f=$('feed');const e=document.createElement('div');e.className='msg '+(kind||'');e.textContent=msg;f.prepend(e);while(f.children.length>2)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),1600);setTimeout(()=>e.remove(),2000);}
 const ord=n=>n+(['th','st','nd','rd'][(n%100>10&&n%100<14)?0:(n%10<4?n%10:0)]||'th');
@@ -5961,7 +5967,9 @@ initNet();
 glbSubmit();
 /* ---------- screen layout editor: drag HUD pieces anywhere, saved on this device ---------- */
 const LAYOUT=(()=>{
-  const KEY='flagdash-layout';
+  // phones and computers keep separate layouts (moves made on a phone don't scatter the computer's buttons)
+  const WIDE=matchMedia('(min-width:900px) and (pointer:fine)').matches;
+  const KEY=WIDE?'flagdash-layout-wide':'flagdash-layout';
   // [key, selector, label, screen]
   const PIECES=[
     ['place','.hud-top .place','Race position','race'],['wallet','.wallet-hud','Coins & diamonds','race'],
@@ -5986,7 +5994,7 @@ const LAYOUT=(()=>{
   let editing=false,scope='race',sel=null,drag=null,saved=null;
   (async()=>{try{if(!(window.claude&&window.claude.use))return;
     const [db,u]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);if(!db||!u)return;
-    const uid=await u.id();if(!uid)return;const ref=db.doc('data/users/'+uid+'/layout');
+    const uid=await u.id();if(!uid)return;const ref=db.doc('data/users/'+uid+(WIDE?'/layout-wide':'/layout'));
     const snap=await ref.get();cloud=ref;
     if(snap.exists){const d=snap.data()||{};if(!drag&&!editing){data=JSON.parse(JSON.stringify(d.pieces||{}));if(migrate(data))pushCloud();
         try{localStorage.setItem(KEY,JSON.stringify(data));if(d.straight)localStorage.setItem(KEY+'-straight','1');}catch(e){}applyAll();}}
