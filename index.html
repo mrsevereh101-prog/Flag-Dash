@@ -120,7 +120,11 @@ body.layout-desk .lay-piece{outline-offset:1px}
 .col-sq{position:relative;aspect-ratio:1;border-radius:12px;border:2px solid rgba(95,208,138,.55);background:radial-gradient(circle at 50% 35%,#2f4aa8,#14205a);display:grid;place-items:center;padding:0;cursor:pointer}
 .col-sq .col-ic{font-size:30px;line-height:1}.col-sq.locked{border-color:rgba(255,255,255,.12);background:#1a1f33}.col-sq.locked .col-ic,.col-sq.locked .col-fl{filter:grayscale(1) brightness(.6);opacity:.55}
 .col-sq.sel{outline:3px solid var(--gold);outline-offset:1px}.col-lock{position:absolute;right:2px;bottom:1px;font-size:13px}.col-on{position:absolute;right:4px;top:2px;font-size:12px;font-weight:900;color:#5fd08a}
-.col-fl{position:absolute;left:4px;bottom:4px;width:18px;height:12px;border-radius:2px}.col-info{margin-top:6px}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
+.col-fl{position:absolute;left:4px;bottom:4px;width:18px;height:12px;border-radius:2px}
+.col-grid{position:relative}.col-info{position:absolute;left:0;right:0;z-index:3;background:#1b2766;border:2px solid var(--gold);box-shadow:0 10px 28px rgba(0,0,0,.6)}
+.col-info::after{content:"";position:absolute;left:calc(var(--ax,50%) - 9px);width:14px;height:14px;background:#1b2766;border:2px solid var(--gold);transform:rotate(45deg)}
+.col-info.up::after{bottom:-9px;border-top:0;border-left:0}.col-info.down::after{top:-9px;border-bottom:0;border-right:0}
+.col-buffs{display:flex;flex-wrap:wrap;gap:4px 6px;margin-top:5px}.col-buffs span{font-size:11.5px;font-weight:700;background:rgba(255,255,255,.08);border-radius:6px;padding:2px 6px;color:#ffd38a}.rc-note{margin:0 0 4px;font-size:13px}.rc-bar{display:block;height:6px;border-radius:4px;background:rgba(8,18,60,.8);overflow:hidden}.rc-bar i{display:block;height:100%;background:linear-gradient(90deg,#f2b631,#ffe08a)}
 #onbWel{z-index:60;display:grid;place-items:center}#onbWel[hidden]{display:none}
 .onb-card{width:min(100%,420px);box-sizing:border-box;background:linear-gradient(#1a2466,#0e1440);border:2px solid var(--gold);border-radius:20px;padding:24px 20px;text-align:center;display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
 .onb-slogan{color:#ffd38a!important;font-weight:700;font-style:italic}.onb-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#f6e3a8}.onb-card p{margin:0;color:#cfd7f5;line-height:1.45}.onb-ic{font-size:52px}
@@ -4460,13 +4464,22 @@ function renderCollection(){
   const it=RV.colSel&&ROOM_ITEMS.find(x=>x.id===RV.colSel);
   if(it){const own=ownsItem(it.id),row=document.createElement('div');row.className='rc-row col-info'+(own?' own':'');
     const ic=document.createElement('span');ic.className='ri-ic';ic.textContent=it.ic;const mid=document.createElement('div');mid.className='ri-tx';const nm=document.createElement('b');nm.textContent=it.name+(it.cc?` · ${flagCanvas(it.cc).name}`:'');
-    const sub=document.createElement('small');const side=document.createElement('div');side.className='rc-side';side.innerHTML=`<span class="ri-pw">💪 ${it.pw}</span>`;
+    const sub=document.createElement('small');const side=document.createElement('div');side.className='rc-side';
     if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');mid.append(nm,sub);}
     else if(it.src==='win'){const [v,n]=it.win(STATS);sub.textContent=`${it.how} · ${Math.min(v,n)}/${n}`;const bar=document.createElement('i');bar.className='rc-bar';bar.innerHTML=`<i style="width:${Math.min(100,v/n*100)}%"></i>`;mid.append(nm,sub,bar);}
     else if(it.src==='buy'){sub.textContent=SLOT_NAME[it.slot];const b=document.createElement('button');b.className='buy';const ok=canAfford(it.cost,it.cur);b.innerHTML=priceHTML(it.cost,it.cur);b.disabled=!ok;b.title=ok?'Buy':'Not enough';
       b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);mid.append(nm,sub);}
     else{sub.textContent='Only a friend can send this ('+priceHTML(it.cost,it.cur).replace(/<[^>]+>/g,'')+(it.cur==='gem'?' diamonds':' coins')+')';mid.append(nm,sub);}
-    row.append(ic,mid,side);L.appendChild(row);setTimeout(()=>row.scrollIntoView({block:'nearest',behavior:'smooth'}),30);}
+    // what the item adds: Strength and the bonuses it gives, plus XP the first time you get it
+    const bf=document.createElement('div');bf.className='col-buffs';
+    bf.innerHTML=`<span>💪 +${it.pw} Strength</span><span>🪙 +${+(it.pw/10).toFixed(1)}% coins</span><span>⚡ +${+(it.pw/20).toFixed(2)}% power recharge</span>${own?'':`<span>⭐ +${it.pw*5} XP</span>`}`;
+    mid.appendChild(bf);row.append(ic,mid,side);
+    row.onclick=e=>{if(e.target.closest('button'))return;RV.colSel=null;renderCollection();};row.title='Tap to close';
+    // show it as a pop-up right above the square you tapped (below it on the first row)
+    const sq=grid.querySelector('.col-sq.sel');grid.appendChild(row);
+    requestAnimationFrame(()=>{if(!sq)return;const h=row.offsetHeight,top=sq.offsetTop-h-8;
+      if(top>=0){row.style.top=top+'px';row.classList.add('up');}else{const t=sq.offsetTop+sq.offsetHeight+8;row.style.top=t+'px';row.classList.add('down');grid.style.paddingBottom=Math.max(0,t+h+8-grid.offsetHeight)+'px';}
+      const ax=sq.offsetLeft+sq.offsetWidth/2;row.style.setProperty('--ax',ax+'px');row.scrollIntoView({block:'nearest',behavior:'smooth'});});}
 }
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){const box=$('gfList');box.innerHTML='';$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';
