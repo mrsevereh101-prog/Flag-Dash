@@ -414,7 +414,43 @@ body.layout-desk .lay-piece{outline-offset:1px}
 
 .hero-tag{font-size:11px;font-weight:800;letter-spacing:.04em;color:#f6e3a8;text-transform:uppercase}
 .shop-card.hero-skin .swatch{box-shadow:0 0 18px rgba(242,182,49,.35),inset 0 0 0 2px rgba(255,255,255,.25)}
-</style></head><body>
+</style><style id="icoStyle">
+/* 3D icons */
+.ico{display:block;width:1.3em;height:1.3em;object-fit:contain;pointer-events:none;-webkit-user-drag:none;user-select:none}
+.col-sq .col-art{width:64%;height:64%;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+.tile.has-lb .col-art{margin-bottom:12px}
+.col-sq.locked .col-art{filter:grayscale(1) brightness(.8);opacity:.55}
+.coin-ic{background:url(img/icons/coin.webp) center/contain no-repeat!important;box-shadow:none!important;border-radius:0!important;width:18px!important;height:18px!important;vertical-align:-4px}
+.gem-ic{background:url(img/icons/gem.webp) center/contain no-repeat!important;border-radius:0!important;width:17px!important;height:17px!important;transform:none;margin:0 2px;vertical-align:-3px}
+.d3-round .ico{width:82%;height:82%}
+.d3-emote-ic .ico{width:80%;height:80%}
+.d3-tabbar i .ico{width:32px;height:32px;margin:0 auto}
+.pick-btn i .ico{width:1.5em;height:1.5em}
+.slot-icon .ico{width:88%;height:88%}
+.ri-ic .ico{width:38px;height:38px;margin:0 auto}
+.cg-ic .ico{width:42px;height:42px}
+.cel-gift .gbox .ico{width:42px;height:42px;margin:0 auto}
+.hc-ic .ico{width:26px;height:26px}
+.ch-pops span .ico{width:36px;height:36px}
+.tier-head .rar-ico{width:22px;height:22px}
+.d3-qic .ico{width:46px;height:46px}
+#roomColBtn .ico,#roomEdit .ico,#menuChatBtn .ico,#menuGuildBtn .ico{display:inline-block;width:22px;height:22px;vertical-align:-5px}
+.lv-badge b .rk-ico{display:inline-block;width:20px;height:20px;vertical-align:-5px;margin-right:3px}
+.lv-tier .rk-ico{display:inline-block;width:28px;height:28px;vertical-align:-8px;margin-right:6px}
+.lv-row .lv-sk{width:30px;height:30px;flex:none}
+html.cream.adv .lv-shield{background:url(img/icons/lv_shield.webp) center/contain no-repeat!important;clip-path:none!important;color:#fff;text-shadow:0 1px 2px rgba(80,50,0,.8)}
+#results .board-head.has-trk::after{content:'';width:96px;height:96px;bottom:-14px;background:var(--trk-img) center/contain no-repeat}
+.rh-title b .ico{display:inline-block;width:26px;height:26px;vertical-align:-5px}
+.rh-str span .ico{width:26px;height:26px}
+#rcTitle .ico{display:inline-block;width:30px;height:30px;vertical-align:-7px}
+#rcTabs .tab-ico{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin-right:4px}
+.lv-badge em .st-ico{display:inline-block;width:15px;height:15px;vertical-align:-3px}
+.shop-name .sn-ico{display:inline-block;width:30px;height:30px;vertical-align:-8px;margin-right:6px}
+.sk-big{display:grid;place-items:center;height:124px}.sk-big .ico{width:124px;height:124px;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.tgroup button .ico{width:66%;height:66%;margin:auto}
+#storeGrid>.tgrid{grid-column:1/-1}
+</style>
+</head><body>
 <title>Race Your Flag</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1206,9 +1242,9 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><span class="lv-shield" id="lvShield" title="Your level">1</span><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards">🏟️</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
+        <div class="desk-top"><span class="lv-shield" id="lvShield" title="Your level">1</span><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room"><img class="ico" src="img/icons/menu_room.webp" alt=""></button><button class="d3-round" id="deskSet" aria-label="Settings"><img class="ico" src="img/icons/menu_settings.webp" alt=""></button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store"><img class="ico" src="img/icons/menu_store.webp" alt=""></button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards"><img class="ico" src="img/icons/menu_boards.webp" alt=""></button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox"><img class="ico" src="img/icons/menu_inbox.webp" alt=""></button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
-        <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
+        <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem"><span class="gem-ic"></span> <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
       <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"><span class="lv-badge" id="lvBadge" title="Your level. Earn XP by finishing races and hitting rivals."><b>Lv 1</b><span class="lv-bar"><i></i></span><small></small><em title="Strength from your room"></em></span></label>
@@ -1217,7 +1253,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
           <button class="d3-arrow d3-l" id="pvLeft" aria-label="Previous runner">◀</button><span class="d3-rname" id="pvName" aria-live="polite"></span><button class="d3-arrow d3-r" id="pvRight" aria-label="Next runner">▶</button>
           <button class="d3-round d3-edit" id="deskEdit" aria-label="Edit Race Desk layout">✏️</button>
         </div>
-        <div class="emote-row d3-emotes" aria-label="Emotes"><button class="d3-emote-ic" id="emoteToggle" aria-expanded="false" aria-label="Emotes">🙌</button>
+        <div class="emote-row d3-emotes" aria-label="Emotes"><button class="d3-emote-ic" id="emoteToggle" aria-expanded="false" aria-label="Emotes"><img class="ico" src="img/icons/emotes.webp" alt=""></button>
           <button class="chip-btn" data-emote="wave">Wave</button><button class="chip-btn" data-emote="flex">Flex</button><button class="chip-btn" data-emote="dance">Dance</button><button class="chip-btn" data-emote="point">Point</button>
         </div>
       </section>
@@ -1228,7 +1264,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
       <div class="pick-row d3-picks">
         <button class="pick-btn" data-pick="flag" aria-expanded="false"><img id="sumFlag" alt=""><b id="pkFlag"></b><span class="sr-only">Flag</span></button>
         <button class="pick-btn" data-pick="runner" aria-expanded="false"><i aria-hidden="true">🏃</i><b id="pkRunner"></b><span class="sr-only">Runner</span></button>
-        <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true">🛣️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
+        <button class="pick-btn" data-pick="track" aria-expanded="false"><i aria-hidden="true" id="pkTrackIc">🛣️</i><b id="pkTrack"></b><span class="sr-only">Track</span></button>
         <button class="pick-btn" data-pick="loadout" aria-expanded="false"><i aria-hidden="true" id="pkLoadIc">🎯</i><b id="pkLoadTxt"></b><b id="pkLoadout" hidden></b><span class="sr-only">Loadout</span></button>
         <button class="pick-btn" data-pick="perk" aria-expanded="false"><i aria-hidden="true" id="pkPerkIc">⭐</i><b id="pkPerk"></b><span class="sr-only">Perk</span></button>
       </div>
@@ -1239,7 +1275,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
         </div>
         <div id="playChoices">
           <div class="d3-pane quick-pane" id="paneQuick" role="tabpanel" aria-labelledby="tabQuick">
-            <div class="d3-qinfo"><span class="d3-qic">🏁</span><div><b>Quick Race</b><small>1 lap · solo · 5 CPU rivals · <span id="qTrack"></span></small></div></div>
+            <div class="d3-qinfo"><span class="d3-qic"><img class="ico" src="img/icons/tab_quick.webp" alt=""></span><div><b>Quick Race</b><small>1 lap · solo · 5 CPU rivals · <span id="qTrack"></span></small></div></div>
             <p class="muted d3-qnote">Jump straight in with your flag, runner and track. Your saved race settings stay the same.</p>
             <div class="cpu-go"><button class="primary d3-gold" id="quickBtn">🏁 Go!</button></div>
           </div>
@@ -1249,7 +1285,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
               <div class="open-rooms" id="openRooms"></div>
             </div>
             <p class="muted d3-status" id="onlineStatus">Connecting…</p>
-            <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Friends &amp; Inbox</b><small>Friend list, requests and messages</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store">🛒</button></div>
+            <div class="d3-friends"><button class="d3-friends-btn" id="d3Friends"><span class="d3-fr-ic">👥<i></i></span><span><b>Friends &amp; Inbox</b><small>Friend list, requests and messages</small></span></button><button class="d3-round d3-cart" id="d3Store" aria-label="Store"><img class="ico" src="img/icons/menu_store.webp" alt=""></button></div>
             <button class="primary d3-gold" id="mmBtn">⚡ Find a Race</button><p class="muted d3-mmnote">Race players who are online now. CPU runners fill any empty lanes.</p>
             <button class="ghost" id="d3Create">🔑 Create a private room</button>
           </div>
@@ -1270,16 +1306,16 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
       </section>
       </div>
       <nav class="d3-tabbar" role="tablist" aria-label="Race options">
-        <button role="tab" id="tabQuick" data-tab="quick" aria-controls="paneQuick"><i>🏁</i><span>Quick Race</span></button>
-        <button role="tab" id="tabOnline" data-tab="online" aria-controls="paneOnline"><i>🌐</i><span>Online</span></button>
-        <button role="tab" id="tabSolo" data-tab="solo" aria-controls="paneSolo"><i>🏆</i><span>Challenges</span></button>
+        <button role="tab" id="tabQuick" data-tab="quick" aria-controls="paneQuick"><i><img class="ico" src="img/icons/tab_quick.webp" alt=""></i><span>Quick Race</span></button>
+        <button role="tab" id="tabOnline" data-tab="online" aria-controls="paneOnline"><i><img class="ico" src="img/icons/tab_online.webp" alt=""></i><span>Online</span></button>
+        <button role="tab" id="tabSolo" data-tab="solo" aria-controls="paneSolo"><i><img class="ico" src="img/icons/tab_challenges.webp" alt=""></i><span>Challenges</span></button>
       </nav>
       </div>
       <section class="panel wallet-panel" aria-label="Wallet" hidden>
         <div class="wallet-big"><span class="coin-ic"></span><b id="wCoins">0</b><span class="gem-ic"></span><b id="wGems">0</b></div>
         <p class="muted" id="wBuffs"></p>
         <button class="ghost" id="storeBtn">Open store</button>
-        <div class="hub-btns"><button class="ghost badge-btn" id="menuTasksBtn">Task Board</button><button class="ghost badge-btn" id="menuBoardsBtn">Leaderboards</button><button class="ghost" id="menuGuildBtn">Guild</button><button class="ghost chat-open badge-btn" id="menuChatBtn">💬 Chat</button></div>
+        <div class="hub-btns"><button class="ghost badge-btn" id="menuTasksBtn">Task Board</button><button class="ghost badge-btn" id="menuBoardsBtn">Leaderboards</button><button class="ghost" id="menuGuildBtn"><img class="ico" src="img/icons/guild.webp" alt=""> Guild</button><button class="ghost chat-open badge-btn" id="menuChatBtn"><img class="ico" src="img/icons/chat.webp" alt=""> Chat</button></div>
         <button class="ghost" id="menuSetBtn">⚙ Settings: music, sounds, voices</button>
       </section>
       
@@ -1329,7 +1365,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
         <div class="char-grid" id="charGrid"></div>
       </section>
       <section class="panel" data-sec="track">
-        <div class="panel-head"><div><h2>Pick your track</h2></div><span class="muted">Profiles show each course's elevation</span></div>
+        <div class="panel-head"><div><h2>Pick your track</h2></div><span class="muted">Tap a track for its details</span></div>
         <div class="track-grid" id="trackGrid"></div>
       </section>
       <section class="panel" data-sec="perk">
@@ -1411,7 +1447,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 <div id="flash"></div>
 
 <div id="touch" hidden>
-  <div class="tgroup"><button data-act="emote" aria-label="Emote">🙌</button></div>
+  <div class="tgroup"><button data-act="emote" aria-label="Emote"><img class="ico" src="img/icons/emotes.webp" alt=""></button></div>
   <div class="swipe-hint" id="swipeHint">Swipe ◀ ▶ to change lanes · ▲ to jump · ▼ to slide</div>
 </div>
 
@@ -1439,13 +1475,13 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 <div id="toast" role="status"></div>
 <div id="roomHud" hidden>
   <div class="rh-top"><button class="d3-round" id="roomBack" aria-label="Back to the Race Desk">←</button>
-    <div class="rh-title"><b>🏠 My Room</b><small id="roomCount"></small><small id="roomBonus"></small></div>
-    <div class="rh-str" title="Strength: every item on display adds to it"><span>💪</span><b id="roomStr">0</b></div></div>
-  <div class="rh-bottom"><p id="roomHint"></p><div class="rh-tabs" id="roomTabs"><button data-a="skins">Skins</button><button data-a="trophies">Trophies</button><button data-a="medals">Medals</button><button data-a="perks">Perks</button></div><div class="rh-btns"><button class="ghost" id="roomColBtn">📖 Collection</button><button class="primary" id="roomEdit">✏️ Decorate</button></div></div>
+    <div class="rh-title"><b><img class="ico" src="img/icons/menu_room.webp" alt=""> My Room</b><small id="roomCount"></small><small id="roomBonus"></small></div>
+    <div class="rh-str" title="Strength: every item on display adds to it"><span><img class="ico" src="img/icons/strength.webp" alt=""></span><b id="roomStr">0</b></div></div>
+  <div class="rh-bottom"><p id="roomHint"></p><div class="rh-tabs" id="roomTabs"><button data-a="skins">Skins</button><button data-a="trophies">Trophies</button><button data-a="medals">Medals</button><button data-a="perks">Perks</button></div><div class="rh-btns"><button class="ghost" id="roomColBtn"><img class="ico" src="img/icons/collection.webp" alt=""> Collection</button><button class="primary" id="roomEdit"><img class="ico" src="img/icons/decorate.webp" alt=""> Decorate</button></div></div>
 </div>
 <div id="roomPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="rpTitle"><div class="store-head"><h2 id="rpTitle">Spot</h2><button class="ghost" id="rpClose">Close</button></div>
   <div class="rp-list" id="rpList"></div><div class="rp-foot"><button class="ghost" id="rpRemove">Put in storage</button><button class="ghost" id="rpMore">Get more items</button></div></div></div>
-<div id="roomCol" class="overlay" hidden><div class="store-card rp-card rc-card" role="dialog" aria-labelledby="rcTitle"><div class="store-head"><h2 id="rcTitle">📖 Room collection</h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="rcClose">Close</button></div>
+<div id="roomCol" class="overlay" hidden><div class="store-card rp-card rc-card" role="dialog" aria-labelledby="rcTitle"><div class="store-head"><h2 id="rcTitle"><img class="ico" src="img/icons/collection.webp" alt=""> Room collection</h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="rcClose">Close</button></div>
   <div class="seg rc-tabs" id="rcTabs" role="group" aria-label="Item type"></div><div class="rp-list" id="rcList"></div></div></div>
 <div id="giftPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="gfTitle"><div class="store-head"><h2 id="gfTitle">Send a gift</h2><button class="ghost" id="gfClose">Close</button></div>
   <p class="muted">Gifts go to your friend's inbox and decorate their room. You pay for the gift.</p><div class="rp-list" id="gfList"></div><p class="soc-msg" id="gfNote"></p></div></div>
@@ -1819,6 +1855,20 @@ const CHARS=[
 const CHAR_IDS=CHARS.map(c=>c.id);
 const charById=id=>CHARS.find(c=>c.id===id)||CHARS[0];
 const ITEMS={banana:{name:'Banana Peel',icon:'🍌'},rocket:{name:'Rocket',icon:'🚀'},freeze:{name:'Freeze Bomb',icon:'❄️'},turbo:{name:'Turbo Shoes',icon:'💨'},shield:{name:'Shield',icon:'🛡️'},mine:{name:'Land Mine',icon:'💣'},ghost:{name:'Ghost',icon:'👻'},fire:{name:'Fire Trail',icon:'🔥'},swap:{name:'Lead Swap',icon:'🔄'}};
+/* ---------- 3D icons: pictures in img/icons/<name>.webp take the place of the emoji ---------- */
+const ICO=new Set('att_amulet att_band att_battery att_cape att_clover att_crown att_halo att_jetpack att_shades att_wings box chat coin collection cup_bronze cup_diamond cup_gold cup_silver d_banner d_clock d_map d_neon d_poster decorate emotes f_arcade f_chair f_couch f_guitar f_plant f_radio f_tv f_weights fc_crown g_bouquet g_box g_friend g_heart g_teddy gem gp_points gp_trophy guild item_banana item_fire item_freeze item_ghost item_mine item_rocket item_shield item_turbo lo_aegis lo_bubble lo_dart lo_escape lo_meteor lo_net lo_ram lo_shock lo_titan lo_vortex luck luck_golden luck_jackpot lv_shield m_hits m_marathon m_online m_podium m_survivor menu_boards menu_inbox menu_room menu_settings menu_store mon_BRA mon_EGY mon_FRA mon_GBR mon_HTI mon_IND mon_ITA mon_JPN mon_MEX mon_USA mon_fountain mon_giant mon_hall perk_charge perk_comeback perk_double perk_magnet perk_nullify perk_shield perk_start power_lightning power_quake power_slash power_trees power_wind rank_champs rank_city rank_continent rank_country rank_county rank_global rank_region rank_sea rank_state rank_street rank_track rar_com rar_epic rar_leg rar_myth rar_rare skin_ancientoak skin_celestial skin_classic skin_continentchamp skin_crimson skin_dunewalker skin_forgeking skin_frost skin_frostgiant skin_gold skin_inferno skin_jungle skin_krakenlord skin_moonblade skin_mountainking skin_neon skin_oni skin_phoenix skin_rookie skin_sakura skin_shadow skin_shadowranger skin_sirenqueen skin_skyemperor skin_stormlord skin_stormtide skin_tidecaller skin_titan skin_warlord skin_worldtree stopwatch strength swap tab_challenges tab_online tab_quick task trk_amazon trk_antarctica trk_canyon trk_city trk_coast trk_giza trk_glacier trk_grandcanyon trk_greatwall trk_outback trk_paris trk_sahara trk_stadium trk_streets xp'.split(' '));
+const ICO_KIND={item:k=>k==='swap'?'swap':'item_'+k,lo:k=>'lo_'+k,perk:k=>k==='swap'||k==='luck'?k:'perk_'+k,att:k=>'att_'+k,skin:k=>'skin_'+k,room:k=>k,trk:k=>'trk_'+k,rar:k=>'rar_'+k,
+  rank:n=>/^world/i.test(n)?'rank_champs':'rank_'+String(n).toLowerCase(),power:h=>({samurai:'power_slash',warrior:'power_lightning',archer:'power_wind',elf:'power_trees',dwarf:'power_quake'})[h]};
+const icoOf=(kind,id)=>{const a=id==null?'':ICO_KIND[kind](id);return a&&ICO.has(a)?a:'';};
+const icoSrc=a=>'img/icons/'+a+'.webp';
+const icoHTML=(a,cls)=>a?`<img class="ico${cls?' '+cls:''}" src="${icoSrc(a)}" alt="" draggable="false">`:'';
+function icoEl(a,cls){const i=document.createElement('img');i.className='ico'+(cls?' '+cls:'');i.src=icoSrc(a);i.alt='';i.draggable=false;return i;}
+const ICO_IMG={};const icoImg=a=>ICO_IMG[a]||(ICO_IMG[a]=Object.assign(new Image(),{src:icoSrc(a)}));
+// show a picture in an icon box, or the emoji when there is no picture
+function setIco(el,a,emoji){if(!el)return;if(a){if(el.dataset.ico!==a){el.dataset.ico=a;el.textContent='';el.appendChild(icoEl(a));}}else{delete el.dataset.ico;el.textContent=emoji||'';}}
+// pictures for the emoji used in the race feed
+const HIT_ICO={'🚀':'item_rocket','🍌':'item_banana','💣':'item_mine','🔥':'item_fire','❄️':'item_freeze','⚡':'power_lightning','⚔️':'power_slash','🌋':'power_quake','🌪️':'power_wind','🌳':'power_trees','🎯':'lo_dart','🕸️':'lo_net','☄️':'lo_meteor','💥':'lo_shock','🌀':'lo_vortex','👻':'item_ghost','🛡️':'item_shield','🔄':'swap','🧿':'perk_nullify'};
+const hitIco=ic=>HIT_ICO[ic]&&ICO.has(HIT_ICO[ic])?HIT_ICO[ic]:'';
 const EMOTES=['wave','flex','dance','point'];
 const TEAMS=[{name:'Gold',css:'var(--gold)',hex:0xf2b631,col:'#f2b631'},{name:'Blue',css:'var(--blue)',hex:0x4fa3ff,col:'#4fa3ff'},{name:'Green',css:'var(--good)',hex:0x5fd08a,col:'#5fd08a'}];
 // Race modes: solo, teams (3 v 3), trio (three teams of two, 2 v 2 v 2)
@@ -3342,7 +3392,7 @@ function hitIcon(why,src){for(const [re,ic] of HIT_IC)if(re.test(why||''))return
 function hitFeed(a,b,ic){
   if(!a||!b||!RACE)return null;const mine=a===player,me=b===player;const f=$('feed');const e=document.createElement('div');e.className='msg hitchip'+(mine?' good':me?' bad':'');
   const im=r=>{const i=document.createElement('img');i.src=flagURL(r);i.alt=r.nm||'';return i;};
-  const w=document.createElement('span');w.className='hc-ic';w.textContent=ic;e.append(im(a),w,im(b));
+  const w=document.createElement('span');w.className='hc-ic';setIco(w,hitIco(ic),ic);e.append(im(a),w,im(b));
   f.prepend(e);while(f.children.length>3)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),2000);setTimeout(()=>e.remove(),2400);
   RACE.lastChip={a,b,e};return e;}
 // add the loot to the chip for that hit
@@ -3350,7 +3400,7 @@ function chipLoot(a,b,txt){const L=RACE&&RACE.lastChip;if(L&&L.a===a&&L.b===b&&L
 const FEED_IC=[[/lead swap ran out/i,'🔄⌛'],[/lead swap/i,'🔄'],[/null field/i,'🧿'],[/comeback/i,'🔥⚡'],[/light feet/i,'🧝✨'],[/banana/i,'🍌'],[/land mine|blown up/i,'💣'],[/hurdle/i,'🚧'],[/barrier/i,'⛔'],[/ran into|wall/i,'🧱'],
   [/oil/i,'🛢️'],[/\bice\b/i,'🧊'],[/sand/i,'🏜️'],[/tar\b/i,'⚫'],[/puddle|splash/i,'💧'],[/shield/i,'🛡️'],[/froze/i,'❄️'],[/burn|fire/i,'🔥'],[/tripped|trap/i,'🪤'],[/no rival ahead|leading/i,'🎯❌'],[/first lap/i,'1️⃣'],[/already in front/i,'🥇']];
 function iconChip(ic,kind){const f=$('feed');const e=document.createElement('div');e.className='msg hitchip '+(kind||'');
-  if(player){const i=document.createElement('img');i.src=flagURL(player);i.alt='';e.appendChild(i);}const w=document.createElement('span');w.className='hc-ic';w.textContent=ic;e.appendChild(w);
+  if(player){const i=document.createElement('img');i.src=flagURL(player);i.alt='';e.appendChild(i);}const w=document.createElement('span');w.className='hc-ic';setIco(w,hitIco(ic),ic);e.appendChild(w);
   f.prepend(e);while(f.children.length>3)f.lastChild.remove();setTimeout(()=>e.classList.add('out'),1800);setTimeout(()=>e.remove(),2200);}
 function feed(msg,kind){
   if((state==='race'||state==='countdown')&&RACE&&!RACE.survival){const hit=FEED_IC.find(([re])=>re.test(msg));if(hit){const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;feedSeen.set(msg,now);iconChip(hit[1],kind);return;}}const now=performance.now();if(now-(feedSeen.get(msg)||-1e9)<4000)return;/* no repeats */
@@ -4159,8 +4209,8 @@ function updateHUD(){
   runners.forEach(r=>{r.marker.style.left=(clamp(prog(r)/totalLen(),0,1)*100).toFixed(2)+'%';});
   if(isTeamMode(RACE.mode)){const ord2=runners.slice().sort((a,b)=>a.place-b.place);const tp=teamPoints(ord2);setT('tsG',teamName(0)+' '+tp[0]);setT('tsB',teamName(1)+' '+tp[1]);if(tp.length>2)setT('tsR',teamName(2)+' '+tp[2]);}
   const it=player.item;
-  const L=player.lo;if(L){const lk=L.atk+L.usedA+L.def+L.usedD;if(hudCache.lo!==lk){hudCache.lo=lk;const A=loById(L.atk),D=loById(L.def);$('atkIcon').textContent=A.icon;$('atkName').textContent=L.usedA?'Used':A.name;$('atkSlot').classList.toggle('used',L.usedA);$('defIcon').textContent=D.icon;$('defName').textContent=L.usedD?'Used':D.name;$('defSlot').classList.toggle('used',L.usedD);}}
-  if(hudCache.item!==it){hudCache.item=it;$('itemIcon').textContent=it?ITEMS[it].icon:'';$('itemName').textContent=it?ITEMS[it].name:'Empty';$('itemSlot').classList.toggle('full',!!it);}
+  const L=player.lo;if(L){const lk=L.atk+L.usedA+L.def+L.usedD;if(hudCache.lo!==lk){hudCache.lo=lk;const A=loById(L.atk),D=loById(L.def);setIco($('atkIcon'),icoOf('lo',A.id),A.icon);$('atkName').textContent=L.usedA?'Used':A.name;$('atkSlot').classList.toggle('used',L.usedA);setIco($('defIcon'),icoOf('lo',D.id),D.icon);$('defName').textContent=L.usedD?'Used':D.name;$('defSlot').classList.toggle('used',L.usedD);}}
+  if(hudCache.item!==it){hudCache.item=it;setIco($('itemIcon'),it?icoOf('item',it):'',it?ITEMS[it].icon:'');$('itemName').textContent=it?ITEMS[it].name:'Empty';$('itemSlot').classList.toggle('full',!!it);}
   drawMinimap();
   const p=Math.floor(player.charge*100);
   if(hudCache.pow!==p){hudCache.pow=p;$('meter').style.setProperty('--p',p);$('meterPct').textContent=p>=100?'GO':p+'%';$('powerSlot').classList.toggle('ready',p>=100);}
@@ -4371,7 +4421,7 @@ function buyButton(btn,it,label,onBuy){
    TSEL remembers which tile's details are open in each menu, so a re-render keeps it open. */
 const TSEL={};
 function mkTile(o){const b=document.createElement('button');b.type='button';b.className='col-sq tile '+(o.cls||'');b.title=o.title||o.label||'';b.setAttribute('aria-label',(o.label||o.title||'')+(/locked/.test(o.cls||'')?' (locked)':''));
-  if(o.img){o.img.classList.add('tile-img');b.appendChild(o.img);}else if(o.html){const d=document.createElement('div');d.className='tile-art';d.innerHTML=o.html;b.appendChild(d);}
+  if(o.ico){b.appendChild(icoEl(o.ico,'col-art'));}else if(o.img){o.img.classList.add('tile-img');b.appendChild(o.img);}else if(o.html){const d=document.createElement('div');d.className='tile-art';d.innerHTML=o.html;b.appendChild(d);}
   else{const ic=document.createElement('span');ic.className='col-ic';ic.textContent=o.icon||'';b.appendChild(ic);}
   if(o.label){const l=document.createElement('span');l.className='tile-lb';l.textContent=o.label;b.appendChild(l);b.classList.add('has-lb');}
   if(o.badge!=null&&o.badge!==''){const d=document.createElement('span');d.className='tile-bd';d.textContent=o.badge;b.appendChild(d);}
@@ -4402,7 +4452,7 @@ const heroTileImg=(h,sk)=>avatarImg(h+'.'+(sk||heroSkinFor(h)),selCountry);
 const skin3D=s=>`<div class="sk3d"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`;
 function shopCard(it,top,body,btnCls){const card=document.createElement('div');card.className='shop-card';
   card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier rb-${rarityOf(it)}">${rarName(it)}${it.lvl?' · '+rankName(it.lvl):''}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
-  card.querySelector('.shop-name').textContent=(it.icon?it.icon+' ':'')+it.name;card.querySelector('.shop-desc').textContent=it.desc;return card;}
+  {const sn=card.querySelector('.shop-name'),a=LOADOUT.includes(it)?icoOf('lo',it.id):ATTIRE.includes(it)?icoOf('att',it.id):(BUFFS.includes(it)||it===LUCK)?icoOf('perk',it.id):'';sn.textContent=(a||!it.icon?'':it.icon+' ')+it.name;if(a)sn.prepend(icoEl(a,'sn-ico'));}card.querySelector('.shop-desc').textContent=it.desc;return card;}
 function renderStore(){
   pruneAttire();renderWallet();$('storeTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===storeTab));
   $('storeNote').textContent=STORE_NOTE[storeTab];
@@ -4411,11 +4461,11 @@ function renderStore(){
   if(storeTab==='owned'){renderOwned(grid);return;}
   const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS.concat([LUCK]);
   RARITY.forEach(t=>{let its=list.filter(i=>rarityOf(i)===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
-    const h=document.createElement('h3');h.className='tier-head rh-'+t.id;h.textContent=t.name;grid.appendChild(h);
+    const h=document.createElement('h3');h.className='tier-head rh-'+t.id;h.textContent=t.name;{const ra=icoOf('rar',t.id);if(ra)h.prepend(icoEl(ra,'rar-ico'));}grid.appendChild(h);
     const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):it.id==='luck'?luckCard(it):buffCard(it);
       const c=card();const cls=(c.classList.contains('on')?'on ':'')+(c.classList.contains('locked')?'locked ':'')+(c.querySelector('.owned')||c.classList.contains('on')?'own ':'')+(c.classList.contains('is-new')?'is-new':'');
-      let o;if(storeTab==='skins'){o=it.hero?{img:heroTileImg(it.hero,it.id),label:it.name}:{html:skin3D(it),label:it.name};}
-      else{o={icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
+      let o;if(storeTab==='skins'){const sa=icoOf('skin',it.id);o=sa?{ico:sa,label:it.name}:it.hero?{img:heroTileImg(it.hero,it.id),label:it.name}:{html:skin3D(it),label:it.name};}
+      else{o={ico:icoOf(storeTab==='items'?'lo':storeTab==='attire'?'att':'perk',it.id),icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
       o.cls=cls+' r-'+rarityOf(it);return {key:storeTab+':'+it.id,el:mkTile(o),info:()=>{const k=card();k.classList.add('in-pop');return k;}};});
     const g=tileGrid('store',tiles,renderStore);grid.appendChild(g);});
 }
@@ -4425,15 +4475,15 @@ function renderOwned(grid){
     grid.appendChild(tileGrid('store',its.map(it=>{const c=card(it);return {key:'own:'+key+':'+it.id,el:mkTile(Object.assign(tile(it),{cls:(c.classList.contains('on')?'on ':'')+'own r-'+rarityOf(it)})),info:()=>{const k=card(it);k.classList.add('in-pop');
       if(key==='skin'&&k.classList.contains('on')&&it.id!=='classic'){const u=document.createElement('button');u.className='ghost';u.textContent='Unequip';u.onclick=()=>{if(it.hero&&wallet.hs)delete wallet.hs[it.hero];else wallet.skin='classic';saveWallet();renderStore();rebuildPreview();syncLobbyPresence();};k.querySelector('.shop-row').appendChild(u);}
       return k;}};}),renderStore));};
-  sec('Skins',SKINS_SHOP.filter(k=>(wallet.skins.includes(k.id)||k.tier==='free')&&!lvLocked(k)),k=>k.hero?{img:heroTileImg(k.hero,k.id),label:k.name}:{html:skin3D(k),label:k.name},skinCard,'skin');
-  sec('Items',LOADOUT.filter(l=>wallet.items.includes(l.id)),l=>({icon:l.icon,label:l.name}),itemCard,'item');
-  sec('Attire',ATTIRE.filter(a=>attireActive(a.id)),a=>({icon:a.icon,label:a.name}),attireCard,'att');
-  sec('Buffs',BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0).concat(luckActive()?[LUCK]:[]),b=>b.id==='luck'?{icon:'🍀',label:b.name}:{icon:BUFF_ICON[b.id],label:b.name,badge:'×'+(wallet.buffs[b.id]|0)},b=>b.id==='luck'?luckCard(b):buffCard(b),'buff');
+  sec('Skins',SKINS_SHOP.filter(k=>(wallet.skins.includes(k.id)||k.tier==='free')&&!lvLocked(k)),k=>icoOf('skin',k.id)?{ico:icoOf('skin',k.id),label:k.name}:k.hero?{img:heroTileImg(k.hero,k.id),label:k.name}:{html:skin3D(k),label:k.name},skinCard,'skin');
+  sec('Items',LOADOUT.filter(l=>wallet.items.includes(l.id)),l=>({ico:icoOf('lo',l.id),icon:l.icon,label:l.name}),itemCard,'item');
+  sec('Attire',ATTIRE.filter(a=>attireActive(a.id)),a=>({ico:icoOf('att',a.id),icon:a.icon,label:a.name}),attireCard,'att');
+  sec('Buffs',BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0).concat(luckActive()?[LUCK]:[]),b=>b.id==='luck'?{ico:icoOf('perk','luck'),icon:'🍀',label:b.name}:{ico:icoOf('perk',b.id),icon:BUFF_ICON[b.id],label:b.name,badge:'×'+(wallet.buffs[b.id]|0)},b=>b.id==='luck'?luckCard(b):buffCard(b),'buff');
   if(!grid.children.length){const p=document.createElement('p');p.className='muted';p.textContent='Nothing yet. Win races to earn coins, then come back!';grid.appendChild(p);}}
 function renderLoadout(){
   ['atk','def'].forEach(slot=>{const box=$(slot==='atk'?'loAtk':'loDef');box.innerHTML='';
     const tiles=LOADOUT.filter(l=>l.slot===slot).map(l=>{const owned=wallet.items.includes(l.id),on=wallet.lo[slot]===l.id;
-      return {key:l.id,el:mkTile({icon:l.icon,label:l.name,cls:(on?'on ':'')+(owned?'own':'locked')+(loOn?'':' off')}),pick:owned&&loOn?()=>{wallet.lo[slot]=l.id;saveWallet();}:null,
+      return {key:l.id,el:mkTile({ico:icoOf('lo',l.id),icon:l.icon,label:l.name,cls:(on?'on ':'')+(owned?'own':'locked')+(loOn?'':' off')}),pick:owned&&loOn?()=>{wallet.lo[slot]=l.id;saveWallet();}:null,
         info:()=>tileInfo(l.name,[l.desc],owned?[]:[[`Get it in the store`,()=>{storeTab='items';openStore();}]])};});
     box.appendChild(tileGrid('lo-'+slot,tiles,renderLoadout));});
   const A=loById(wallet.lo.atk),D=loById(wallet.lo.def);
@@ -4462,7 +4512,7 @@ function equipSkin(s){if(store.get('flagdash-newskin')===s.id)store.set('flagdas
 function skinCard(s){
   const isNew=store.get('flagdash-newskin')===s.id;
   const locked=lvLocked(s),owned=wallet.skins.includes(s.id)||(s.tier==='free'&&!locked),eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
-  const card=shopCard(s,s.hero?'':`<div class="sk3d big"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
+  const card=shopCard(s,icoOf('skin',s.id)?`<div class="sk-big">${icoHTML(icoOf('skin',s.id))}</div>`:s.hero?'':`<div class="sk3d big"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
   else if(locked){btn.textContent=`Reach ${rankName(s.lvl)}`;btn.disabled=true;card.classList.add('locked');}
@@ -4497,14 +4547,14 @@ var BUFF_ICON={start:'🚀',charge:'⚡',shield:'🛡️',magnet:'🧲',double:'
 function curPerk(){const b=BUFFS.find(x=>x.id===wallet.perk);return b&&(wallet.buffs[b.id]|0)>0?b:null;}
 function setPerk(id){wallet.perk=id||null;BUFFS.forEach(b=>{wallet.use[b.id]=b.id===id;});saveWallet();renderPerk();if(typeof locker!=='undefined'&&locker.active)locker.refresh();}
 function renderPerk(){
-  const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');if(ic)ic.textContent=p?BUFF_ICON[p.id]:'⭐';if(nm)nm.textContent=p?p.name:'No perk';if(luckActive()){if(ic)ic.textContent='🍀';if(nm)nm.textContent='Lucky Clover';}
+  const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');setIco(ic,p?icoOf('perk',p.id):'',p?BUFF_ICON[p.id]:'⭐');if(nm)nm.textContent=p?p.name:'No perk';if(luckActive()){setIco(ic,icoOf('perk','luck'),'🍀');if(nm)nm.textContent='Lucky Clover';}
   const box=$('perkGrid');if(!box)return;box.innerHTML='';
   const hero=charById(selChar);const hp=$('perkHero');if(hp&&hero&&hero.perk)hp.textContent=`${hero.name}'s own perk, ⭐ ${hero.perk.name}, always works. Pick one more to bring along.`;
-  const tiles=[];{const on=luckActive();tiles.push({key:'luck',el:mkTile({icon:'🍀',label:'Lucky Clover',badge:on?luckLeft().split(' ')[0]:'',cls:(on?'on own':'locked')+' r-myth'}),
+  const tiles=[];{const on=luckActive();tiles.push({key:'luck',el:mkTile({ico:icoOf('perk','luck'),icon:'🍀',label:'Lucky Clover',badge:on?luckLeft().split(' ')[0]:'',cls:(on?'on own':'locked')+' r-myth'}),
     info:()=>tileInfo('🍀 Lucky Clover · Mythical',[on?`Active · ${luckLeft()}. It replaces your perk every race (your perk is not used up).`:LUCK.desc],on?[]:[['Get it · $2.99',()=>{storeTab='buffs';openStore();}]])});}
   tiles.push({key:'none',el:mkTile({icon:'🚫',label:'No perk',cls:!p?'on own':'own'}),pick:()=>setPerk(null),info:()=>tileInfo('No perk',['Race with just your hero\'s own perk.'])});
   BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0,on=p&&p.id===b.id;
-    tiles.push({key:b.id,el:mkTile({icon:BUFF_ICON[b.id],label:b.name,badge:n?'×'+n:'',cls:on?'on own':n?'own':'locked'}),pick:n?()=>setPerk(b.id):null,
+    tiles.push({key:b.id,el:mkTile({ico:icoOf('perk',b.id),icon:BUFF_ICON[b.id],label:b.name,badge:n?'×'+n:'',cls:on?'on own':n?'own':'locked'}),pick:n?()=>setPerk(b.id):null,
       info:()=>tileInfo(b.name,[b.desc,n?`You have ${n}. One is used up when the race starts.`:'You have none yet.'],n?[]:[[`Buy · ${b.cost} ${curOf(b)==='gem'?'💎':'🪙'}`,()=>{storeTab='perks';openStore();}]])});});
   box.appendChild(tileGrid('perk',tiles,renderPerk));
 }
@@ -4566,26 +4616,29 @@ function renderGPBox(){
 const CHEST_IC=[[/xp|rank/i,'⭐'],[/daily|task/i,'✅'],[/leaderboard/i,'🏟️'],[/room|trophy|medal|monument/i,'🏆'],[/skin|unlock/i,'👕'],[/hit|stole/i,'💥'],[/grand prix/i,'📈'],[/best/i,'⏱️']];
 // header picture for the results: the track's colours plus a mascot for the place
 const TRACK_ART={stadium:'🏟️',streets:'🏁',city:'🏙️',canyon:'🏜️',glacier:'🏔️',coast:'🌴',giza:'🐪',sahara:'🐫',grandcanyon:'🦅',amazon:'🦜',greatwall:'🏯',paris:'🗼',outback:'🦘',antarctica:'🐧'};
-function resArt(){const h=document.querySelector('#results .board-head');if(!h||!TH)return;h.style.setProperty('--sky1',TH.sky?TH.sky[1]:'#9fd3f5');h.style.setProperty('--sky2',TH.card?TH.card[1]:'#e8d8a8');h.dataset.art=TRACK_ART[TH.id]||'🏁';}
+function resArt(){const h=document.querySelector('#results .board-head');if(!h||!TH)return;h.style.setProperty('--sky1',TH.sky?TH.sky[1]:'#9fd3f5');h.style.setProperty('--sky2',TH.card?TH.card[1]:'#e8d8a8');h.dataset.art=TRACK_ART[TH.id]||'🏁';const ta=icoOf('trk',TH.id);h.classList.toggle('has-trk',!!ta);if(ta)h.style.setProperty('--trk-img',`url(${icoSrc(ta)})`);}
 const CHEST_KIND={'🪙':'gold','💎':'silver','⭐':'gold'};
+const CHEST_ICO=[[/xp|rank/i,'xp'],[/daily|task/i,'task'],[/leaderboard/i,'menu_boards'],[/grand prix/i,'gp_points'],[/best/i,'stopwatch'],[/hit|stole/i,'lo_shock'],[/room|trophy|medal|monument/i,'cup_gold']];
+function noteIco(n){const sk=/skin|unlock/i.test(n)&&SKINS_SHOP.find(k=>n.includes(k.name));if(sk)return icoOf('skin',sk.id);const ri=ROOM_ITEMS.find(i=>n.includes(i.name));if(ri)return icoOf('room',ri.id);
+  const m=CHEST_ICO.find(([re])=>re.test(n));return ICO.has(m?m[1]:'g_box')?(m?m[1]:'g_box'):'';}
 function chestifyRewards(coins,gems){const box=$('resRewards');
   const notes=[...box.querySelectorAll('.res-note')].map(d=>d.textContent);box.innerHTML='';
-  const items=[{ic:'🪙',big:'+'+(coins|0),t:'Coins'}];if(gems)items.push({ic:'💎',big:'+'+gems,t:gems>1?'Diamonds':'Diamond'});
+  const items=[{ic:'🪙',ico:'coin',big:'+'+(coins|0),t:'Coins'}];if(gems)items.push({ic:'💎',ico:'gem',big:'+'+gems,t:gems>1?'Diamonds':'Diamond'});
   notes.forEach(n=>{const tx=n.replace(/^[^\w+]+/u,''),x=tx.match(/^\+([\d,]+)\s*XP\b\s*(?:·\s*)?(.*)$/i),q=!x&&tx.match(/^\+([\d,]+)\s+(.+)$/);
-    items.push({ic:(CHEST_IC.find(([re])=>re.test(n))||[0,'🎁'])[1],big:x?'+'+x[1]+' XP':q?'+'+q[1]:'',t:x?(x[2]||'Experience'):q?q[2].charAt(0).toUpperCase()+q[2].slice(1):tx});});
+    items.push({ic:(CHEST_IC.find(([re])=>re.test(n))||[0,'🎁'])[1],ico:noteIco(n),big:x?'+'+x[1]+' XP':q?'+'+q[1]:'',t:x?(x[2]||'Experience'):q?q[2].charAt(0).toUpperCase()+q[2].slice(1):tx});});
   // one big chest: tap it and every reward flies out, then the Congratulations card lists them
   const wrap=document.createElement('div');wrap.className='chest-one';
   const c=document.createElement('button');c.type='button';c.className='chest big';c.setAttribute('aria-label','Open your rewards');
   c.innerHTML='<span class="ch-glow"></span><img class="ch-img" alt="" src="img/chest-closed.png">';
   const pops=document.createElement('div');pops.className='ch-pops';
-  items.forEach((it,k)=>{const sp=document.createElement('span');sp.textContent=it.ic;const n=items.length,a=(n===1?0:(k/(n-1)-.5))*120;sp.style.setProperty('--a',a+'deg');sp.style.setProperty('--d',(k*90)+'ms');pops.appendChild(sp);});
+  items.forEach((it,k)=>{const sp=document.createElement('span');if(it.ico)sp.appendChild(icoEl(it.ico));else sp.textContent=it.ic;const n=items.length,a=(n===1?0:(k/(n-1)-.5))*120;sp.style.setProperty('--a',a+'deg');sp.style.setProperty('--d',(k*90)+'ms');pops.appendChild(sp);});
   const hint=document.createElement('div');hint.className='ch-hint';hint.textContent=`🎁 ${items.length} reward${items.length>1?'s':''} · tap to open`;
   c.appendChild(pops);
   c.onclick=()=>{if(!c.classList.contains('open')){openChest(c);sfx.fanfare();hint.textContent='Tap to see your rewards again';setTimeout(()=>congrats(items),1400);}else congrats(items);};
   wrap.append(c,hint);box.appendChild(wrap);}
 function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open.png';c.classList.add('open');}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
-  items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';i.textContent=it.ic;const tx=document.createElement('div');
+  items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';setIco(i,it.ico,it.ic);const tx=document.createElement('div');
     const b=document.createElement('b');b.textContent=it.big||'';const sm=document.createElement('small');sm.textContent=it.t;if(it.big)tx.appendChild(b);tx.appendChild(sm);d.append(i,tx);L.appendChild(d);});
   ov.hidden=false;try{confetti(60);}catch(e){}}
 function showPodium(){
@@ -4634,11 +4687,11 @@ function addXP(n){
   const unlocked=SKINS_SHOP.filter(it=>it.lvl&&it.lvl>from&&it.lvl<=to).map(it=>it.name);
   renderLevel();if(unlocked.length&&typeof renderStoreDot==='function')renderStoreDot();return {xp:n,from,to,c,g,unlocked};}
 function openLevels(){const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);$('lvNow').textContent=(l.max?`You are ${rankName(l.L)}, the top rank for now. Global and World Champs are coming soon.`:`You are ${rankName(l.L)}: ${l.into} of ${l.need} XP to ${rankName(l.L+1)}.`)+` Earn XP by finishing races (more for higher places) and by hitting rivals (+10, or +15 with your power).`;
-  const box=$('lvList');box.innerHTML='';for(let L=1;L<=MAX_LV;L++){const rk=rankOf(L);if(rk.first){const h=document.createElement('h3');h.className='lv-tier';h.textContent=rk.ic+' '+rk.n+` (${rk.n==='Track'?'1':rk.step}–${RANKS.find(x=>x.n===rk.n).k})`;box.appendChild(h);}if(L===1)continue;
+  const box=$('lvList');box.innerHTML='';for(let L=1;L<=MAX_LV;L++){const rk=rankOf(L);if(rk.first){const h=document.createElement('h3');h.className='lv-tier';h.textContent=rk.n+` (${rk.n==='Track'?'1':rk.step}–${RANKS.find(x=>x.n===rk.n).k})`;{const ra=icoOf('rank',rk.n);h.prepend(ra?icoEl(ra,'rk-ico'):rk.ic+' ');}box.appendChild(h);}if(L===1)continue;
     const r=levelReward(L),sk=SKINS_SHOP.find(it=>it.lvl===L);const row=document.createElement('div');row.className='lv-row'+(l.L>=L?' got':'')+(l.L+1===L?' next':'');
     const n=document.createElement('b');n.textContent=(l.L>=L?'✓ ':'')+rk.n+' '+rk.step;const d=document.createElement('span');d.textContent=`${r.c} coins · ${r.g} diamond${r.g>1?'s':''}`+(sk?` · ${sk.name} skin (${charById(sk.hero).name})`:'');
-    if(sk){const sw=document.createElement('i');sw.style.background=sk.sw;row.append(n,sw,d);}else row.append(n,d);box.appendChild(row);}
-  for(const t of RANKS_SOON){const h=document.createElement('h3');h.className='lv-tier soon';h.textContent=`${t.ic} ${t.n}: coming soon`;box.appendChild(h);}
+    if(sk){const sa=icoOf('skin',sk.id);const sw=sa?icoEl(sa,'lv-sk'):document.createElement('i');if(!sa)sw.style.background=sk.sw;row.append(n,sw,d);}else row.append(n,d);box.appendChild(row);}
+  for(const t of RANKS_SOON){const h=document.createElement('h3');h.className='lv-tier soon';h.textContent=`${t.n}: coming soon`;{const ra=icoOf('rank',t.n);h.prepend(ra?icoEl(ra,'rk-ico'):t.ic+' ');}box.appendChild(h);}
   $('lvPanel').hidden=false;}
 $('lvClose').onclick=()=>$('lvPanel').hidden=true;$('lvPanel').addEventListener('click',e=>{if(e.target.id==='lvPanel')$('lvPanel').hidden=true;});
 $('lvBadge').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openLevels();});
@@ -4740,7 +4793,7 @@ const ROOM_AREAS={skins:-0.49,trophies:0.57,medals:0,perks:-0.74};
 function openRoom(){if(state!=='menu'||!locker.active)return;closePicker();RV.on=true;RV.edit=false;$('menu').hidden=true;$('roomHud').hidden=false;hidePointer&&hidePointer();$('saveTip').hidden=true;renderRoomHud();locker.refresh();}
 function closeRoom(){RV.on=false;RV.edit=false;$('roomHud').hidden=true;$('roomPick').hidden=true;$('roomCol').hidden=true;$('menu').hidden=false;locker.refresh();refreshMenu(null);}
 function renderRoomHud(){const n=Object.values(ROOM.place).filter(id=>ownsItem(id)).length;$('roomStr').textContent=roomStrength();$('roomCount').textContent=`${n} on display · ${Object.keys(ROOM.own).filter(ownsItem).length} owned`;
-  $('roomHud').classList.toggle('editing',RV.edit);markRoomTab();$('roomEdit').textContent=RV.edit?'✓ Done':'✏️ Decorate';$('roomHint').textContent=RV.edit?'Tap a glowing spot to place or change an item':'Drag to look around your room';
+  $('roomHud').classList.toggle('editing',RV.edit);markRoomTab();$('roomEdit').innerHTML=RV.edit?'✓ Done':icoHTML('decorate')+' Decorate';$('roomHint').textContent=RV.edit?'Tap a glowing spot to place or change an item':'Drag to look around your room';
   const b=roomBonus();$('roomBonus').textContent=`Bonus: +${(b.coin*100).toFixed(1).replace('.0','')}% coins · +${(b.chg*100).toFixed(1).replace('.0','')}% power recharge`;locker.refresh();}
 $('roomEdit').onclick=()=>{RV.edit=!RV.edit;renderRoomHud();};
 $('roomBack').onclick=closeRoom;
@@ -4757,7 +4810,7 @@ function openSlot(slot){RV.slot=slot;const cur=ROOM.place[slot.id];$('rpTitle').
   const fits=ROOM_ITEMS.filter(it=>it.slot===slot.type&&ownsItem(it.id));const box=$('rpList');box.innerHTML='';TSEL.slot=null;
   if(!fits.length){const p=document.createElement('p');p.className='muted';p.textContent='You have nothing for this spot yet. Win trophies, buy furniture or get gifts from friends.';box.appendChild(p);}
   else{const tiles=fits.map(it=>{const where=Object.keys(ROOM.place).find(k=>ROOM.place[k]===it.id);
-      return {key:it.id,el:mkTile({icon:it.ic,label:it.name,cls:cur===it.id?'on own':'own',badge:'💪'+it.pw}),
+      return {key:it.id,el:mkTile({ico:icoOf('room',it.id),icon:it.ic,label:it.name,cls:cur===it.id?'on own':'own',badge:'💪'+it.pw}),
         info:()=>tileInfo(it.name,[cur===it.id?'Here now':where?'On display elsewhere (it moves here)':'In storage',`💪 +${it.pw} Strength`],cur===it.id?[]:[['Place here',()=>{if(where)delete ROOM.place[where];ROOM.place[slot.id]=it.id;saveRoom();$('roomPick').hidden=true;sfx.pick();renderRoomHud();}]])};});
     box.appendChild(tileGrid('slot',tiles,null));
     // tapping a tile opens its details (no re-render needed here)
@@ -4772,7 +4825,7 @@ const COL_CATS=[['all','All']].concat(ROOM_CATS);
 // Tap a square for its details and how to get it.
 function renderCollection(){
   if(!COL_CATS.some(c=>c[0]===RV.colTab))RV.colTab='all';
-  const tabs=$('rcTabs');tabs.innerHTML='';COL_CATS.forEach(([id,nm])=>{const b=document.createElement('button');b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;RV.colSel=null;renderCollection();};tabs.appendChild(b);});
+  const tabs=$('rcTabs');tabs.innerHTML='';COL_CATS.forEach(([id,nm])=>{const b=document.createElement('button');const ca=icoOf('room',{trophy:'cup_gold',medal:'m_podium',monument:'mon_hall',furniture:'f_couch',decor:'d_poster',gift:'g_box'}[id]);if(ca){b.textContent=nm.replace(/^\S+\s+/,'');b.prepend(icoEl(ca,'tab-ico'));}else b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;RV.colSel=null;renderCollection();};tabs.appendChild(b);});
   const L=$('rcList');L.innerHTML='';
   let list=RV.colTab==='all'?ROOM_ITEMS.slice():ROOM_ITEMS.filter(it=>it.cat===RV.colTab);
   list.sort((a,b)=>ownsItem(b.id)-ownsItem(a.id)||(b.cc===selCountry)-(a.cc===selCountry));
@@ -4781,7 +4834,7 @@ function renderCollection(){
   const grid=document.createElement('div');grid.className='col-grid';
   list.forEach(it=>{const own=ownsItem(it.id),b=document.createElement('button');b.type='button';b.className='col-sq'+(own?' own':' locked')+(RV.colSel===it.id?' sel':'');
     b.setAttribute('aria-label',it.name+(own?'':' (locked)'));b.title=it.name;
-    const ic=document.createElement('span');ic.className='col-ic';ic.textContent=it.ic;b.appendChild(ic);
+    const ra=icoOf('room',it.id);if(ra)b.appendChild(icoEl(ra,'col-art'));else{const ic=document.createElement('span');ic.className='col-ic';ic.textContent=it.ic;b.appendChild(ic);}
     if(it.cc){const f=document.createElement('img');f.className='col-fl';f.alt='';f.src=flagCanvas(it.cc).url;b.appendChild(f);}
     if(!own){const lk=document.createElement('span');lk.className='col-lock';lk.textContent='🔒';b.appendChild(lk);}
     else if(Object.values(ROOM.place).includes(it.id)){const on=document.createElement('span');on.className='col-on';on.textContent='✓';b.appendChild(on);}
@@ -4789,7 +4842,7 @@ function renderCollection(){
   L.appendChild(grid);
   const it=RV.colSel&&ROOM_ITEMS.find(x=>x.id===RV.colSel);
   if(it){const own=ownsItem(it.id),row=document.createElement('div');row.className='rc-row col-info'+(own?' own':'');
-    const ic=document.createElement('span');ic.className='ri-ic';ic.textContent=it.ic;const mid=document.createElement('div');mid.className='ri-tx';const nm=document.createElement('b');nm.textContent=it.name+(it.cc?` · ${flagCanvas(it.cc).name}`:'');
+    const ic=document.createElement('span');ic.className='ri-ic';setIco(ic,icoOf('room',it.id),it.ic);const mid=document.createElement('div');mid.className='ri-tx';const nm=document.createElement('b');nm.textContent=it.name+(it.cc?` · ${flagCanvas(it.cc).name}`:'');
     const sub=document.createElement('small');const side=document.createElement('div');side.className='rc-side';
     if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');mid.append(nm,sub);}
     else if(it.src==='win'){const [v,n]=it.win(STATS);sub.textContent=`${it.how} · ${Math.min(v,n)}/${n}`;const bar=document.createElement('i');bar.className='rc-bar';bar.innerHTML=`<i style="width:${Math.min(100,v/n*100)}%"></i>`;mid.append(nm,sub,bar);}
@@ -4811,7 +4864,7 @@ function renderCollection(){
 function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
   let busy=false;const draw=()=>{const box=$('gfList');box.innerHTML='';
     const tiles=ROOM_ITEMS.filter(i=>i.src==='gift').map(it=>{const ok=canAfford(it.cost,it.cur);
-      return {key:it.id,el:mkTile({icon:it.ic,label:it.name,cls:ok?'own':'locked'}),
+      return {key:it.id,el:mkTile({ico:icoOf('room',it.id),icon:it.ic,label:it.name,cls:ok?'own':'locked'}),
         info:()=>{const pr=document.createElement('div');pr.innerHTML=priceHTML(it.cost,it.cur);
           return tileInfo(it.name,[`💪 +${it.pw} Strength for their room`,pr],[[ok?'Send gift':'Not enough',async()=>{if(busy||!spend(it.cost,it.cur))return;busy=true;$('gfNote').textContent='Sending…';
             const r=await socSend(friend.uid,'gift',it.id);busy=false;if(r.ok){$('gfNote').textContent=`${it.ic} ${it.name} sent to ${friend.nm}!`;sfx.pick();setTimeout(()=>$('giftPick').hidden=true,1300);}
@@ -4824,7 +4877,7 @@ async function claimGift(m){const it=roomItem(m.body);if(!it)return;const g=gran
   SOC.inbox=SOC.inbox.filter(x=>x!==m);renderSocial();renderSocBadges();try{const sb=await getSb();await sb.from('fd_inbox').delete().eq('id',m.id);}catch(e){}}
 
 function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);const sh=$('lvShield');if(sh)sh.textContent=l.L;
-  const rk=rankOf(l.L);el.querySelector('b').textContent=rk.ic+' '+rk.n+' '+rk.step;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=l.max?'Top rank':`${l.into}/${l.need} XP`;const st=el.querySelector('em');if(st&&typeof roomStrength==='function')st.textContent='💪 '+roomStrength();}
+  const rk=rankOf(l.L);{const bb=el.querySelector('b');bb.textContent=rk.n+' '+rk.step;const ra=icoOf('rank',rk.n);bb.prepend(ra?icoEl(ra,'rk-ico'):rk.ic+' ');}el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=l.max?'Top rank':`${l.into}/${l.need} XP`;const st=el.querySelector('em');if(st&&typeof roomStrength==='function'){st.textContent=' '+roomStrength();if(ICO.has('strength'))st.prepend(icoEl('strength','st-ico'));else st.textContent='💪'+st.textContent;}}
 // Called by hit() whenever a rival lands a hit. The victim's game takes the loot away;
 // the attacker's game pays it out (online, through a 'loot' message).
 function lootHit(src,o,power){
@@ -5719,7 +5772,7 @@ const PROF=THEMES.map(elevProfile);const gLo=Math.min(...PROF.map(p=>p.lo)),gHi=
 function renderTrackTiles(){trackGrid.innerHTML='';
   const tiles=THEMES.map((th,ti)=>{const pr=PROF[ti];const path=pr.pts.map((v,i)=>`${(i/60*200).toFixed(1)},${(40-(v-gLo)/(gHi-gLo)*30).toFixed(1)}`).join(' ');
     const art=`<div class="track-swatch" style="background:linear-gradient(180deg,${th.sky[1]},${th.sky[2]} 60%,${th.card[1]})"><svg viewBox="0 0 200 44" preserveAspectRatio="none"><polygon points="0,44 ${path} 200,44" fill="${th.card[1]}" opacity=".9"/><polyline points="${path}" fill="none" stroke="#fff" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>`;
-    return {key:th.id,el:mkTile({html:art,label:th.name,cls:th.id===selTrack?'on own':'own'}),
+    return {key:th.id,el:mkTile({ico:icoOf('trk',th.id),html:art,label:th.name,cls:th.id===selTrack?'on own':'own'}),
       pick:()=>{if(selTrack!==th.id){selTrack=th.id;store.set('flagdash-track',th.id);refreshMenu();if(TH!==th){buildWorld(th);genCourse(7);}}},
       info:()=>tileInfo(th.name+(th.region?' · '+th.region:''),[th.blurb,`${th.turns?th.turns.length+' turns':'No turns'} · elevation range ${Math.round(pr.hi-pr.lo)} m${th.slope<0?' · downhill':''}`])};});
   trackGrid.appendChild(tileGrid('track',tiles,renderTrackTiles));}
@@ -5731,7 +5784,7 @@ function refreshMenu(emote){
   $('lapSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.laps===selLaps));$('lapHint').textContent=selLaps===1?'One lap of 1,500 m.':`${selLaps} laps of ${LAP_LEN[selLaps]} m (${(selLaps*LAP_LEN[selLaps]).toLocaleString()} m total).`;renderWallet();renderLoadout();
   const f=flagCanvas(selCountry),ch=charById(selChar);
   $('sumFlag').src=f.url;$('sumCountry').textContent=f.name;$('sumChar').textContent=`${ch.name} · ${ch.power}`;
-  $('pkFlag').textContent=f.name;$('pkRunner').textContent=ch.name;$('pkTrack').textContent=themeById(selTrack).name;
+  $('pkFlag').textContent=f.name;$('pkRunner').textContent=ch.name;$('pkTrack').textContent=themeById(selTrack).name;setIco($('pkTrackIc'),icoOf('trk',selTrack),'🛣️');
   const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;document.querySelectorAll('.cpu-go').forEach(e=>e.hidden=inRoom);$('returnCode').textContent=NET.code||'';
   if(emote!==undefined)rebuildPreview(emote);
 }
@@ -6196,6 +6249,7 @@ const plaza={active:false,built:false,group:null,me:null,pos:new THREE.Vector3(M
    your perks first (the equipped one glows), then loadout items, attire and skins.
    ========================================================= */
 const locker={active:false,built:false,group:null,items:null,t:0,
+  icoTex(a){if(!a)return null;const c=this.icoCache||(this.icoCache={});if(!c[a]){const t=new THREE.TextureLoader().load(icoSrc(a));t.encoding=THREE.sRGBEncoding;t.anisotropy=MAXANISO;t.__keep=true;c[a]=t;}return c[a];},
   emo(ic){return canvasTex(128,128,(c,w,h)=>{c.textAlign='center';c.textBaseline='middle';c.font='92px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(ic,w/2,h/2+6);});},
   plaque(top,sub,col){return canvasTex(256,96,(c,w,h)=>{c.fillStyle='rgba(10,16,44,.94)';c.fillRect(0,0,w,h);R(c,0,0,w,6,col||'#e9c46a');c.textAlign='center';c.textBaseline='middle';
     c.fillStyle='#fff';c.font='700 30px "Chakra Petch", sans-serif';c.fillText(top,w/2,38);c.fillStyle=col||'#e9c46a';c.font='600 22px "Chakra Petch", sans-serif';c.fillText(sub,w/2,74);});},
@@ -6289,10 +6343,13 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     const W=wide?1024:512,H=wide?500:660;const t=canvasTex(W,H,(c,w,h)=>{const gr=c.createLinearGradient(0,0,w,h);gr.addColorStop(0,'#141b2c');gr.addColorStop(1,'#070a12');c.fillStyle=gr;c.fillRect(0,0,w,h);
       c.fillStyle='rgba(255,255,255,.05)';c.beginPath();c.moveTo(0,0);c.lineTo(w*0.55,0);c.lineTo(w*0.25,h);c.lineTo(0,h);c.fill();
       c.fillStyle='rgba(70,182,255,.16)';c.fillRect(0,0,w,64);c.fillStyle='#cfe8ff';c.font='800 40px "Chakra Petch", sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(title,w/2,34);
-      c.textAlign='left';(rows||[]).slice(0,wide?0:6).forEach((r,i)=>{const y=110+i*92;c.font='54px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(r.ic,26,y);
+      c.textAlign='left';(rows||[]).slice(0,wide?0:6).forEach((r,i)=>{const y=110+i*92;const im=r.ico&&icoImg(r.ico);if(im&&im.complete&&im.naturalWidth)c.drawImage(im,14,y-42,84,84);else{c.font='54px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';c.fillText(r.ic,26,y);}
         c.fillStyle='#ffffff';c.font='700 30px "Chakra Petch", sans-serif';c.fillText(r.top.slice(0,20),104,y-14);c.fillStyle=r.col||'#8fb8e8';c.font='600 23px "Chakra Petch", sans-serif';c.fillText(r.sub.slice(0,28),104,y+20);});
       if(!wide&&(!rows||!rows.length)){c.fillStyle='#6f7ea0';c.font='600 26px "Chakra Petch", sans-serif';c.textAlign='center';c.fillText('Nothing yet',w/2,h/2);c.fillText('Visit the store',w/2,h/2+36);}});
-    if(mesh.material.map)mesh.material.map.dispose();mesh.material.map=t;mesh.material.needsUpdate=true;},
+    if(mesh.material.map)mesh.material.map.dispose();mesh.material.map=t;mesh.material.needsUpdate=true;
+    // pictures still loading: draw the screen again once they arrive
+    const wait=(rows||[]).filter(r=>r.ico).map(r=>icoImg(r.ico)).filter(im=>!im.complete);
+    if(wait.length&&!mesh.__icoWait){mesh.__icoWait=true;Promise.all(wait.map(im=>new Promise(res=>{im.addEventListener('load',res,{once:true});im.addEventListener('error',res,{once:true});}))).then(()=>{mesh.__icoWait=false;this.drawScreen(mesh,title,rows,wide);});}},
   // the hero on the stand (room view only)
   showHero(on){
     if(this.hero){this.group.remove(this.hero.m.root);disposeModel(this.hero.m);this.hero=null;}
@@ -6300,16 +6357,16 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     r.m.root.position.set(0,this.standTop,HALL_Z);r.m.root.rotation.y=Math.PI;r.m.root.scale.multiplyScalar(1.25);if(r.m.shadow)r.m.shadow.visible=false;this.group.add(r.m.root);this.hero=r;},
   // what to show in the lockers, most important first
   contents(){pruneAttire();const out=[],p=curPerk();
-    if(p)out.push({ic:BUFF_ICON[p.id],top:p.name,sub:`EQUIPPED PERK ×${wallet.buffs[p.id]|0}`,col:'#5fd08a',on:true});
-    BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0;if(n>0&&(!p||p.id!==b.id))out.push({ic:BUFF_ICON[b.id],top:b.name,sub:`Perk ×${n}`});});
-    const A=loById(wallet.lo.atk),D=loById(wallet.lo.def);if(A)out.push({ic:A.icon,top:A.name,sub:'Attack'});if(D)out.push({ic:D.icon,top:D.name,sub:'Defence'});
-    Object.keys(wallet.attire).forEach(id=>{const a=attireById(id);if(a)out.push({ic:a.icon,top:a.name,sub:Object.values(wallet.equip).includes(id)?'Wearing':'Attire'});});
-    wallet.skins.filter(id=>id!=='classic').forEach(id=>{const k=skinById(id);out.push({ic:'👕',top:k.name,sub:'Skin'});});
+    if(p)out.push({ic:BUFF_ICON[p.id],ico:icoOf('perk',p.id),top:p.name,sub:`EQUIPPED PERK ×${wallet.buffs[p.id]|0}`,col:'#5fd08a',on:true});
+    BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0;if(n>0&&(!p||p.id!==b.id))out.push({ic:BUFF_ICON[b.id],ico:icoOf('perk',b.id),top:b.name,sub:`Perk ×${n}`});});
+    const A=loById(wallet.lo.atk),D=loById(wallet.lo.def);if(A)out.push({ic:A.icon,ico:icoOf('lo',A.id),top:A.name,sub:'Attack'});if(D)out.push({ic:D.icon,ico:icoOf('lo',D.id),top:D.name,sub:'Defence'});
+    Object.keys(wallet.attire).forEach(id=>{const a=attireById(id);if(a)out.push({ic:a.icon,ico:icoOf('att',a.id),top:a.name,sub:Object.values(wallet.equip).includes(id)?'Wearing':'Attire'});});
+    wallet.skins.filter(id=>id!=='classic').forEach(id=>{const k=skinById(id);out.push({ic:'👕',ico:icoOf('skin',id),top:k.name,sub:'Skin'});});
     return out.slice(0,9);},
   refresh(){
     if(!this.built)return;const list=this.contents();
     this.drawScreen(this.scrPerks,'PERK TREE',list.filter(it=>it.sub!=='Skin'));
-    this.drawScreen(this.scrSkins,'SKINS',[{ic:'⭐',top:skinById(mySkinId()).name,sub:'Equipped',col:'#5fd08a'}].concat(wallet.skins.filter(id=>id!=='classic'&&id!==mySkinId()).map(id=>({ic:'👕',top:skinById(id).name,sub:'Owned'}))));
+    this.drawScreen(this.scrSkins,'SKINS',[{ic:'⭐',ico:icoOf('skin',mySkinId()),top:skinById(mySkinId()).name,sub:'Equipped',col:'#5fd08a'}].concat(wallet.skins.filter(id=>id!=='classic'&&id!==mySkinId()).map(id=>({ic:'👕',ico:icoOf('skin',id),top:skinById(id).name,sub:'Owned'}))));
     this.drawScreen(this.scrMedals,'MEDALS',null,true);
     const f=flagCanvas(selCountry);if(!f.tex){f.tex=new THREE.CanvasTexture(f.canvas);f.tex.__shared=true;}this.flagMat.map=f.tex;this.flagMat.needsUpdate=true;
     this.refreshRoom();
@@ -6320,7 +6377,7 @@ const locker={active:false,built:false,group:null,items:null,t:0,
     if(!this.plusTex){this.plusTex=canvasTex(128,128,(c,w,h)=>{c.fillStyle='rgba(242,182,49,.22)';c.beginPath();c.arc(w/2,h/2,58,0,7);c.fill();c.strokeStyle='#f2b631';c.lineWidth=6;c.setLineDash([12,9]);c.stroke();c.setLineDash([]);c.fillStyle='#ffe08a';c.fillRect(w/2-5,h/2-26,10,52);c.fillRect(w/2-26,h/2-5,52,10);});this.plusTex.__keep=true;}
     const edit=typeof RV!=='undefined'&&RV.edit;
     for(const sl of ROOM_SLOTS){const id=ROOM.place[sl.id],it=id&&ownsItem(id)?roomItem(id):null;
-      if(it){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:this.emo(it.ic),transparent:true,depthWrite:false}));sp.scale.set(sl.sz,sl.sz,1);sp.position.set(sl.x,sl.y,sl.z+0.05);sp.userData.slot=sl;this.roomGroup.add(sp);this.slotSprites.push(sp);
+      if(it){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:this.icoTex(icoOf('room',it.id))||this.emo(it.ic),transparent:true,depthWrite:false,toneMapped:false}));sp.scale.set(sl.sz,sl.sz,1);sp.position.set(sl.x,sl.y,sl.z+0.05);sp.userData.slot=sl;this.roomGroup.add(sp);this.slotSprites.push(sp);
         if(sl.type==='pedestal'){const pl=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plaque(it.name,`💪 ${it.pw}`,'#e9c46a'),depthWrite:false}));pl.scale.set(2.2,0.82,1);const q=new THREE.Vector3(sl.x,0,sl.z),dir=new THREE.Vector3(0,0,7.5).sub(q).setY(0).normalize();pl.position.set(sl.x+dir.x*1.5,0.62,sl.z+dir.z*1.5);this.roomGroup.add(pl);}
         if(edit){const ring=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plusTex,transparent:true,depthWrite:false,opacity:0.35}));ring.scale.set(sl.sz*1.15,sl.sz*1.15,1);ring.position.set(sl.x,sl.y,sl.z);this.roomGroup.add(ring);}}
       else if(edit){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:this.plusTex,transparent:true,depthWrite:false}));const k=Math.min(1.3,sl.sz);sp.scale.set(k,k,1);sp.position.set(sl.x,sl.y,sl.z+0.05);sp.userData.slot=sl;this.roomGroup.add(sp);this.slotSprites.push(sp);}}
@@ -6608,7 +6665,7 @@ const LAYOUT=(()=>{
   const wal=()=>{$('d3Coins').textContent=$('wCoins').textContent;$('d3Gems').textContent=$('wGems').textContent;};
   ['wCoins','wGems'].forEach(id=>new MutationObserver(wal).observe($(id),{childList:true,characterData:true,subtree:true}));wal();
   const ld=()=>{const t=($('pkLoadout').textContent||'').trim();const m=t.match(/^(\p{Extended_Pictographic}\uFE0F?)\s*/u);
-    $('pkLoadIc').textContent=m?m[1]:'🎒';$('pkLoadTxt').textContent=(m?t.slice(m[0].length):t).split('·')[0].trim();};
+    setIco($('pkLoadIc'),loOn?icoOf('lo',wallet.lo.atk):'',m?m[1]:'🎒');$('pkLoadTxt').textContent=(m?t.slice(m[0].length):t).split('·')[0].trim();};
   new MutationObserver(ld).observe($('pkLoadout'),{childList:true,characterData:true,subtree:true});ld();
 })();
 
@@ -6627,16 +6684,16 @@ function celebrate(rows,place,rw,done){
     const fu=x.r.flag?x.r.flag.url:'';el.innerHTML=`<div class="cel-medal">${['🥇','🥈','🥉'][n-1]}</div><img alt="" src="${fu}"><div class="cel-pw"><div class="cel-plate"><div class="face"><img alt="" src="${fu}"><b>${n}</b></div></div>${n<3?'<div class="cel-orbit"></div>':''}</div><div class="cel-nm"></div><div class="cel-time">${x.est?'≈ ':''}${fmt(x.t)}</div><div class="cel-block">${n}</div>`;
     el.querySelector('.cel-nm').textContent=nm(x.r)+(x.r.kind==='local'?' (you)':'');});
   const gifts=[];
-  gifts.push({ic:'🎁',v:priceHTML(rw.coinsWon,'coin'),l:'Coins earned'});
-  if(rw.gemsWon)gifts.push({ic:'💎',v:'+'+rw.gemsWon,l:rw.gemsWon>1?'Diamonds':'Diamond'});
-  gifts.push({ic:place===1?'🏆':place<=3?'🏅':'🎽',v:ord(place),l:place===1?'Winner!':'Your place'});
-  if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
-  if(RACE&&RACE.roomNew&&RACE.roomNew.length)gifts.push({ic:RACE.roomNew[0].ic,v:RACE.roomNew[0].name,l:RACE.roomNew.length>1?`+${RACE.roomNew.length-1} more for your room`:'New for your room!'});
-  if(rw.firstSkin)gifts.push({ic:'👕',v:rw.firstSkin.name,l:'New skin unlocked!'});
-  if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
-  if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`${rankName(rw.lv.to)}! +${rw.lv.c} coins`:'Experience'});
-  if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',v:rw.lv.unlocked[0],l:'New skin unlocked'});
-  const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
+  gifts.push({ic:'🎁',ico:'coin',v:priceHTML(rw.coinsWon,'coin'),l:'Coins earned'});
+  if(rw.gemsWon)gifts.push({ic:'💎',ico:'gem',v:'+'+rw.gemsWon,l:rw.gemsWon>1?'Diamonds':'Diamond'});
+  gifts.push({ic:place===1?'🏆':place<=3?'🏅':'🎽',ico:place===1?'cup_gold':place<=3?'m_podium':'',v:ord(place),l:place===1?'Winner!':'Your place'});
+  if(GP&&RACE&&RACE.gp)gifts.push({ic:'📈',ico:'gp_points',v:'+'+(POINTS[place-1]||0),l:'Grand Prix points'});
+  if(RACE&&RACE.roomNew&&RACE.roomNew.length)gifts.push({ic:RACE.roomNew[0].ic,ico:icoOf('room',RACE.roomNew[0].id),v:RACE.roomNew[0].name,l:RACE.roomNew.length>1?`+${RACE.roomNew.length-1} more for your room`:'New for your room!'});
+  if(rw.firstSkin)gifts.push({ic:'👕',ico:icoOf('skin',rw.firstSkin.id),v:rw.firstSkin.name,l:'New skin unlocked!'});
+  if(rw.loot&&rw.loot.n)gifts.push({ic:'💥',ico:'lo_shock',v:rw.loot.n+' hit'+(rw.loot.n>1?'s':''),l:`${rw.loot.c} coins stolen`+(rw.loot.g?` +${rw.loot.g} 💎`:'')});
+  if(rw.lv)gifts.push({ic:rw.lv.to>rw.lv.from?'🆙':'⭐',ico:rw.lv.to>rw.lv.from?icoOf('rank',rankOf(rw.lv.to).n):'xp',v:'+'+rw.lv.xp+' XP',l:rw.lv.to>rw.lv.from?`${rankName(rw.lv.to)}! +${rw.lv.c} coins`:'Experience'});
+  if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',ico:icoOf('skin',(SKINS_SHOP.find(k=>k.name===rw.lv.unlocked[0])||{}).id),v:rw.lv.unlocked[0],l:'New skin unlocked'});
+  const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ico?icoHTML(x.ico):x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
   $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
   const win=rows[0]?rows[0].r:null,winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
   const steps=[[700,()=>{$('celS3').classList.add('show');sfx.beep(false);}],

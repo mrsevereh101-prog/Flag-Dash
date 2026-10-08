@@ -11,6 +11,9 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - Neon plaza with day/night, weekly top 15 flags
 - Race Desk in a locker room, one equipped perk per race, store button on the home screen
 - Accounts with a soft gate: Google sign-in tested and working (Oct 2)
+- 3D icons live (Oct 8): 168 pictures in `img/icons/` replace the emoji across the game.
+  To redo one: make a picture with its prompt in `3D-ITEMS.md`, cut it out with `art/cut.py`
+  (green or magenta screen), and save it over `img/icons/<file>.webp`. Original pictures are in `art/sheets/`.
 
 ## To finish sign-in (accounts)
 1. [x] Run `supabase/accounts.sql` in the Supabase SQL editor (click "Run query" on the warning).
