@@ -661,3 +661,378 @@ Style: polished 3D cartoon render like a premium mobile game item icon. Chunky r
 Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
 No words, letters or numbers.
 ```
+
+## Batch 37: Runner skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Classic | 👕 | `skin_classic` |
+| Middle | Rookie | 👕 | `skin_rookie` |
+| Right | Crimson | 👕 | `skin_crimson` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a sporty armoured running tunic in deep red and navy with brown leather straps.
+Middle: a sporty running tunic in bright orange and peach, like a training kit.
+Right: a sporty armoured running tunic in deep crimson cloth with red armour plates.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 38: Runner skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Frost | 👕 | `skin_frost` |
+| Middle | Shadow | 👕 | `skin_shadow` |
+| Right | Royal Gold | 👕 | `skin_gold` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a sporty armoured running tunic in icy pale blue and white with frosty edges.
+Middle: a sporty armoured running tunic in near-black with purple trim.
+Right: a sporty armoured running tunic in solid shiny gold.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 39: Runner skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Neon | 👕 | `skin_neon` |
+| Middle | Inferno | 👕 | `skin_inferno` |
+| Right | Celestial | 👕 | `skin_celestial` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a sporty running tunic in black with bright electric-blue and hot-pink stripes.
+Middle: a sporty armoured running tunic of molten orange and red armour with black cracks.
+Right: a sporty armoured running tunic in deep night-blue with tiny gold stars.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 40: Green skins (magenta screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Jungle | 👕 | `skin_jungle` |
+| Middle | Ancient Oak (Elf) | 🧝 | `skin_ancientoak` |
+| Right | World Tree (Elf) | 🧝 | `skin_worldtree` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a sporty running tunic in leaf green, jungle style.
+Middle: an elven tunic made of brown bark and green moss with glowing green runes.
+Right: an elven tunic of golden bark with little branches, green leaves and white blossoms.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like a chroma-key screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing pink, purple or magenta on the objects.
+No words, letters or numbers.
+```
+
+## Batch 41: Archer skins (magenta screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Shadow Ranger | 🏹 | `skin_shadowranger` |
+| Middle | Tide Caller | 🏹 | `skin_tidecaller` |
+| Right | Dune Walker | 🏹 | `skin_dunewalker` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a hooded archer's tunic in charcoal and forest-green leather with teal trim.
+Middle: a hooded archer's tunic of sea-green scales with pearl trim.
+Right: a hooded archer's tunic of desert-gold wraps with a sun-bleached cream hood.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like a chroma-key screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing pink, purple or magenta on the objects.
+No words, letters or numbers.
+```
+
+## Batch 42: Samurai skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Oni Shogun | ⚔️ | `skin_oni` |
+| Middle | Sakura Ronin | ⚔️ | `skin_sakura` |
+| Right | Storm Tide | ⚔️ | `skin_stormtide` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: samurai chest armour in black lacquer with blood-red cords and small gold horns on the shoulders.
+Middle: samurai chest armour in pearl white with cherry-blossom pink cords and petals.
+Right: samurai chest armour in wave-blue lacquer with white foam-crest patterns.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 43: Hero skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Sky Emperor (Samurai) | ⚔️ | `skin_skyemperor` |
+| Middle | Phoenix Hunter (Archer) | 🏹 | `skin_phoenix` |
+| Right | Moonblade (Elf) | 🧝 | `skin_moonblade` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: samurai chest armour in imperial white and gold with a dragon crest.
+Middle: a hooded archer's tunic in crimson and flame orange with golden feathers.
+Right: an elegant elven tunic in midnight-blue silk with silver trim and soft lavender panels.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 44: Warrior skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Storm Lord | 🛡️ | `skin_stormlord` |
+| Middle | Golden Titan | 🛡️ | `skin_titan` |
+| Right | Crimson Warlord | 🛡️ | `skin_warlord` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a heavy warrior breastplate in midnight steel with electric-blue lightning lines.
+Middle: a heavy warrior breastplate in polished bronze and blazing gold.
+Right: a heavy warrior breastplate in blood-red hide and blackened bronze with an orange war plume.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 45: Hero skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Continental Champion (Warrior) | 🛡️ | `skin_continentchamp` |
+| Middle | Siren Queen (Elf) | 🧝 | `skin_sirenqueen` |
+| Right | Forge King (Dwarf) | ⛏️ | `skin_forgeking` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a heavy warrior breastplate in gleaming platinum with royal purple and gold trim.
+Middle: an elegant elven tunic in coral pink and sky-blue silk with a pearl brooch.
+Right: a thick dwarven breastplate in black iron with glowing molten orange seams and gold trim.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 46: Dwarf skins (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Frost Giant | ⛏️ | `skin_frostgiant` |
+| Middle | Kraken Lord | ⛏️ | `skin_krakenlord` |
+| Right | Mountain King | ⛏️ | `skin_mountainking` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a thick dwarven breastplate in glacier-blue steel with white fur trim.
+Middle: a thick dwarven breastplate in barnacled dark iron with purple tentacle trim.
+Right: a thick dwarven breastplate of grey granite plates with glowing purple gems.
+Each one is an outfit shown on its own: the chest piece floating with no person inside, facing forward and turned slightly. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 47: Tracks (magenta screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Night Stadium | 🏟️ | `trk_stadium` |
+| Middle | Palm Coast | 🌴 | `trk_coast` |
+| Right | Amazon Rainforest | 🦜 | `trk_amazon` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a night-time athletics stadium with bright floodlights, blue seats, a green infield and an orange running track.
+Middle: a sunny beach road with palm trees, golden sand and blue sea.
+Right: a lush green rainforest with a winding river and a red parrot.
+Each one is a small round floating island diorama of a race track, like a game level preview. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like a chroma-key screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing pink, purple or magenta on the objects.
+No words, letters or numbers.
+```
+
+## Batch 48: Tracks (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Street Circuit | 🏁 | `trk_streets` |
+| Middle | Downtown | 🏙️ | `trk_city` |
+| Right | Red Canyon | 🏜️ | `trk_canyon` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a city street race circuit with red and white barriers and a checkered start line, with no trees.
+Middle: downtown skyscrapers with a road running between them, with no trees.
+Right: a red rock canyon with tall cliffs and a dusty trail.
+Each one is a small round floating island diorama of a race track, like a game level preview. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 49: Tracks (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Glacier Pass | 🏔️ | `trk_glacier` |
+| Middle | Giza Pyramids | 🐪 | `trk_giza` |
+| Right | Sahara Dunes | 🐫 | `trk_sahara` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: an icy glacier pass with snowy peaks and a frozen trail.
+Middle: the Giza pyramids on golden sand with a race road running past them.
+Right: golden Sahara sand dunes with a camel and a winding trail.
+Each one is a small round floating island diorama of a race track, like a game level preview. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 50: Tracks (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Grand Canyon | 🦅 | `trk_grandcanyon` |
+| Middle | Great Wall | 🏯 | `trk_greatwall` |
+| Right | Paris Boulevard | 🗼 | `trk_paris` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: the Grand Canyon with layered orange cliffs and an eagle flying over.
+Middle: the Great Wall of China winding over brown rocky hills, with no grass.
+Right: a Paris boulevard with cream buildings, street lamps and the Eiffel Tower behind, with no trees.
+Each one is a small round floating island diorama of a race track, like a game level preview. All three are the same size.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 51: Tracks and best time (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Outback | 🦘 | `trk_outback` |
+| Middle | Antarctica | 🐧 | `trk_antarctica` |
+| Right | Best time | ⏱️ | `stopwatch` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a small round floating island diorama of the red Australian outback with a dirt road and a kangaroo, with no plants.
+Middle: a small round floating island diorama of icy Antarctica with snow, blue ice and two penguins.
+Right: a shiny silver stopwatch with a gold button.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 52: Rarity gems (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Mythical | 🔴 | `rar_myth` |
+| Middle | Legendary | 🟡 | `rar_leg` |
+| Right | Epic | 🟣 | `rar_epic` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a round polished red ruby set in a gold ring, with a small flame-shaped crest on top.
+Middle: a round polished golden topaz set in a gold ring.
+Right: a round polished purple amethyst set in a gold ring.
+All three are the same round gem badge, same size and shape. Only the gem changes.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 53: Rarity gems and a reward (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Rare | 🔵 | `rar_rare` |
+| Middle | Common | ⚪ | `rar_com` |
+| Right | Daily task | ✅ | `task` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a round polished blue sapphire set in a silver ring, the same round gem badge shape as the next one.
+Middle: a round polished white pearl set in a silver ring.
+Right: a clipboard with three ticked boxes and a gold clip.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 54: Rewards (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Grand Prix points | 📈 | `gp_points` |
+| Middle | Room strength | 💪 | `strength` |
+| Right | Golden Start | 🌟 | `luck_golden` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a gold arrow climbing up over three rising bars, like a growth chart.
+Middle: a flexed strong arm made of gold, like a muscle emblem.
+Right: a golden running sneaker with small gold wings.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 55: Lucky Clover and room buttons (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Jackpot Boxes | 🎰 | `luck_jackpot` |
+| Middle | Collection | 📖 | `collection` |
+| Right | Decorate | ✏️ | `decorate` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a red and gold slot machine with three small mystery boxes in its window.
+Middle: a thick leather collector's album with gold corners, slightly open.
+Right: a paint roller with a blue handle and a dab of blue paint.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
+
+## Batch 56: Buttons (green screen)
+
+| Spot | Item | Replaces | File |
+|---|---|---|---|
+| Left | Chat | 💬 | `chat` |
+| Middle | Guild | 🛡️ | `guild` |
+| Right | Emotes | 🙌 | `emotes` |
+
+```
+Wide 16:9 image of three separate 3D game icons in one row, evenly spaced. Each one sits in the middle of its own third of the picture, all the same size, not touching, with nothing cut off at the edges.
+Left: a round white speech bubble with three dots.
+Middle: a blue and gold banner shield with two crossed swords.
+Right: two raised cheering cartoon hands in white gloves.
+Style: polished 3D cartoon render like a premium mobile game item icon. Chunky rounded shapes, a bold clean silhouette, glossy materials, soft studio light from the top left, rich colours, three-quarter view from slightly above.
+Background: one flat, solid pure green (#00FF00) filling the whole image, like a green screen. No shadows, floor, gradient, glow, sparkles or particles. Nothing green on the objects.
+No words, letters or numbers.
+```
