@@ -1057,6 +1057,16 @@ html.cream.sky .overlay{background:linear-gradient(180deg,rgba(10,30,60,.4),rgba
 html.cream.sky :is(.desk3 .d3-picks b,.d3-name input,.tile-lb,.lv-badge b,.lv-badge small,.rh-title b){color:#0f2a4a!important}
 html.cream.sky :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote){color:#3d5d80!important}html.cream.sky .d3-qinfo b{color:#7a4f06!important}
 html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.sky .stat i{background:#b9d6ee}
+/* ----- rarity colours: frame, heading and badge ----- */
+.col-sq.r-com{outline:2.5px solid #9aa3ad;outline-offset:-2px}.col-sq.r-rare{outline:2.5px solid #3a8ee6;outline-offset:-2px}
+.col-sq.r-epic{outline:2.5px solid #a35ce0;outline-offset:-2px;filter:drop-shadow(0 0 4px rgba(163,92,224,.55))}
+.col-sq.r-leg{outline:2.5px solid #f2b631;outline-offset:-2px;filter:drop-shadow(0 0 6px rgba(242,182,49,.75))}
+.col-sq.r-myth{outline:2.5px solid #ff3d6e;outline-offset:-2px;animation:mythGlow 1.6s ease-in-out infinite alternate!important}
+@keyframes mythGlow{from{filter:drop-shadow(0 0 4px rgba(255,61,110,.6))}to{filter:drop-shadow(0 0 10px rgba(255,140,60,.95))}}
+.col-sq.locked[class*=" r-"]{outline-color:#8f9aa6;filter:none}
+.tier-head.rh-com{color:#7f8893!important}.tier-head.rh-rare{color:#2f7fd6!important}.tier-head.rh-epic{color:#9447d6!important}.tier-head.rh-leg{color:#c8921c!important}.tier-head.rh-myth{color:#e8285a!important}
+.tier-head[class*="rh-"]::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:currentColor;box-shadow:0 0 6px currentColor}
+.tier.rb-com{background:#9aa3ad;color:#fff}.tier.rb-rare{background:#3a8ee6;color:#fff}.tier.rb-epic{background:#a35ce0;color:#fff}.tier.rb-leg{background:linear-gradient(90deg,#f6d36a,#d99a1c);color:#3a2600}.tier.rb-myth{background:linear-gradient(90deg,#ff3d6e,#ff8a3d);color:#fff}
 /* ----- reward chests, congratulations, treasure store, 3D skin shapes, fitting ----- */
 .chest-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.chest-head b{font-size:16px}.chest-all{padding:8px 14px;border-radius:11px;font-weight:800}
 .chest-row{display:flex;flex-wrap:wrap;gap:10px}
@@ -4140,6 +4150,15 @@ function renderResults(){
 const LAP_LEN={1:1500,2:900,3:700};
 // Store tiers. "usd" items show a real-money price but cannot be bought until a payment provider is connected.
 const TIERS=[{id:'free',name:'Free'},{id:'coin',name:'Coins'},{id:'gem',name:'Diamond'},{id:'usd',name:'$ Premium'}];
+// Rarity: Mythical ($), Legendary ($ / 💎 / 🍀 earned), Epic (💎), Rare (coins), Common (free)
+const RARITY=[{id:'myth',name:'Mythical',ic:'🔴'},{id:'leg',name:'Legendary',ic:'🟡'},{id:'epic',name:'Epic',ic:'🟣'},{id:'rare',name:'Rare',ic:'🔵'},{id:'com',name:'Common',ic:'⚪'}];
+const usdVal=it=>parseFloat(String(it.usd||'').replace(/[^0-9.]/g,''))||0;
+function rarityOf(it){if(!it)return 'com';if(it.rar)return it.rar;
+  if(it.tier==='usd')return usdVal(it)>=3.99?'myth':'leg';
+  if(it.tier==='gem')return (it.cost|0)>=8?'leg':'epic';
+  if(it.lvl)return it.lvl>=17?'leg':'epic';   // rank rewards: earned skins
+  return it.tier==='coin'?'rare':'com';}
+const rarName=it=>RARITY.find(r=>r.id===rarityOf(it)).name;
 // Buff keys: spd top speed, agi steering, chg power recharge, stun shorter stuns, coin more coins. All are fractions (0.05 = 5%).
 const BUFF_TEXT={spd:v=>`+${pct(v)} top speed`,agi:v=>`+${pct(v)} agility`,chg:v=>`+${pct(v)} power recharge`,stun:v=>`${pct(v)} shorter stuns`,coin:v=>`+${pct(v)} coins`};
 const BUFF_CAP={spd:0.08,agi:0.2,chg:0.3,stun:0.35,coin:0.6};
@@ -4310,7 +4329,7 @@ const heroTileImg=(h,sk)=>avatarImg(h+'.'+(sk||heroSkinFor(h)),selCountry);
 // a general skin shown as a little 3D tunic in its colours
 const skin3D=s=>`<div class="sk3d"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`;
 function shopCard(it,top,body,btnCls){const card=document.createElement('div');card.className='shop-card';
-  card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier t-${it.lvl?'lvl':it.tier}">${it.lvl?rankName(it.lvl)+' reward':TIERS.find(t=>t.id===it.tier).name}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
+  card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier rb-${rarityOf(it)}">${rarName(it)}${it.lvl?' · '+rankName(it.lvl):''}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
   card.querySelector('.shop-name').textContent=(it.icon?it.icon+' ':'')+it.name;card.querySelector('.shop-desc').textContent=it.desc;return card;}
 function renderStore(){
   pruneAttire();renderWallet();$('storeTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tab===storeTab));
@@ -4319,19 +4338,19 @@ function renderStore(){
   const grid=$('storeGrid');grid.innerHTML='';
   if(storeTab==='owned'){renderOwned(grid);return;}
   const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS;
-  TIERS.forEach(t=>{let its=list.filter(i=>i.tier===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
-    const h=document.createElement('h3');h.className='tier-head t-'+t.id;h.textContent=t.name;grid.appendChild(h);
+  RARITY.forEach(t=>{let its=list.filter(i=>rarityOf(i)===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
+    const h=document.createElement('h3');h.className='tier-head rh-'+t.id;h.textContent=t.name;grid.appendChild(h);
     const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it);
       const c=card();const cls=(c.classList.contains('on')?'on ':'')+(c.classList.contains('locked')?'locked ':'')+(c.querySelector('.owned')||c.classList.contains('on')?'own ':'')+(c.classList.contains('is-new')?'is-new':'');
       let o;if(storeTab==='skins'){o=it.hero?{img:heroTileImg(it.hero,it.id),label:it.name}:{html:skin3D(it),label:it.name};}
       else{o={icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
-      o.cls=cls;return {key:storeTab+':'+it.id,el:mkTile(o),info:()=>{const k=card();k.classList.add('in-pop');return k;}};});
+      o.cls=cls+' r-'+rarityOf(it);return {key:storeTab+':'+it.id,el:mkTile(o),info:()=>{const k=card();k.classList.add('in-pop');return k;}};});
     const g=tileGrid('store',tiles,renderStore);grid.appendChild(g);});
 }
 // Owned: everything you have, to equip or take off
 function renderOwned(grid){
   const sec=(title,its,tile,card,key)=>{if(!its.length)return;const h=document.createElement('h3');h.className='tier-head';h.textContent=title;grid.appendChild(h);
-    grid.appendChild(tileGrid('store',its.map(it=>{const c=card(it);return {key:'own:'+key+':'+it.id,el:mkTile(Object.assign(tile(it),{cls:(c.classList.contains('on')?'on ':'')+'own'})),info:()=>{const k=card(it);k.classList.add('in-pop');
+    grid.appendChild(tileGrid('store',its.map(it=>{const c=card(it);return {key:'own:'+key+':'+it.id,el:mkTile(Object.assign(tile(it),{cls:(c.classList.contains('on')?'on ':'')+'own r-'+rarityOf(it)})),info:()=>{const k=card(it);k.classList.add('in-pop');
       if(key==='skin'&&k.classList.contains('on')&&it.id!=='classic'){const u=document.createElement('button');u.className='ghost';u.textContent='Unequip';u.onclick=()=>{if(it.hero&&wallet.hs)delete wallet.hs[it.hero];else wallet.skin='classic';saveWallet();renderStore();rebuildPreview();syncLobbyPresence();};k.querySelector('.shop-row').appendChild(u);}
       return k;}};}),renderStore));};
   sec('Skins',SKINS_SHOP.filter(k=>(wallet.skins.includes(k.id)||k.tier==='free')&&!lvLocked(k)),k=>k.hero?{img:heroTileImg(k.hero,k.id),label:k.name}:{html:skin3D(k),label:k.name},skinCard,'skin');
