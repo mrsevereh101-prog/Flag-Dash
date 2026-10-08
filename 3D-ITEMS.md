@@ -8,6 +8,11 @@ Batches with green things in them use a magenta background so nothing green gets
 
 `coin`, `gem`, `xp`, `item_turbo`, `item_shield`, `item_mine`
 
+## Special cuts
+
+- `att_halo`: from batch 8 with `--hi 0.2 --lo 0` to drop its green glow.
+- `mon_HTI`: its own picture, `art/sheets/mon_HTI-citadelle.jpg` (green trees on a green screen), cut with `--hi 0.55 --lo 0.3 --spill 0.16`.
+
 ## Batch 1: Mystery box items (green screen) · made
 
 | Spot | Item | Replaces | File |

@@ -6,13 +6,14 @@ Ids are given in reading order: left to right, then top row before bottom row.
 Writes OUTDIR/<id>.webp (square, transparent) and prints one line per icon.
 --hi/--lo set the key strength (0..1) where a pixel starts to count as object and where it is solid.
 Lower them for an object with a coloured glow around it, so the glow is dropped.
+--spill lets an object keep some of the screen colour, e.g. green trees on a green screen.
 """
 import sys
 from collections import deque
 import numpy as np
 from PIL import Image
 
-VALUED = ('--size', '--hi', '--lo')
+VALUED = ('--size', '--hi', '--lo', '--spill')
 def opt(name, default):
     return float(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
 args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith('--') and sys.argv[i - 1] not in VALUED]
@@ -36,10 +37,11 @@ alpha = np.clip((hi - K) / (hi - lo), 0, 1)
 al = alpha[..., None]
 F = np.where(al > 0.02, (a - (1 - al) * B) / np.maximum(al, 0.02), a)
 F = np.clip(F, 0, 1)
+SPILL = opt('--spill', 0.0)   # how much screen colour an object may keep (raise it for green trees on a green screen)
 if bg == 'green':
-    F[..., 1] = np.minimum(F[..., 1], np.maximum(F[..., 0], F[..., 2]))
+    F[..., 1] = np.minimum(F[..., 1], np.maximum(F[..., 0], F[..., 2]) + SPILL)
 else:
-    m = np.clip(np.minimum(F[..., 0], F[..., 2]) - F[..., 1], 0, None)
+    m = np.clip(np.minimum(F[..., 0], F[..., 2]) - F[..., 1] - SPILL, 0, None)
     F[..., 0] -= m; F[..., 2] -= m
 
 # find the objects on a 4x smaller mask, merging nearby bits (a flame next to a shoe)
