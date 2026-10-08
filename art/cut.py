@@ -1,19 +1,22 @@
 #!/usr/bin/env python3
 """Cut game icons out of a chroma-key sheet (green or magenta background).
 
-usage: cut.py SHEET green|magenta OUTDIR id1 id2 ... [--size 256]
+usage: cut.py SHEET green|magenta OUTDIR id1 id2 ... [--size 256] [--hi 0.2 --lo 0]
 Ids are given in reading order: left to right, then top row before bottom row.
 Writes OUTDIR/<id>.webp (square, transparent) and prints one line per icon.
+--hi/--lo set the key strength (0..1) where a pixel starts to count as object and where it is solid.
+Lower them for an object with a coloured glow around it, so the glow is dropped.
 """
 import sys
 from collections import deque
 import numpy as np
 from PIL import Image
 
-args = [a for a in sys.argv[1:] if not a.startswith('--')]
-SIZE = int(sys.argv[sys.argv.index('--size') + 1]) if '--size' in sys.argv else 256
-if '--size' in sys.argv:
-    args.remove(str(SIZE))
+VALUED = ('--size', '--hi', '--lo')
+def opt(name, default):
+    return float(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
+args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith('--') and sys.argv[i - 1] not in VALUED]
+SIZE = int(opt('--size', 256))
 sheet, bg, outdir, ids = args[0], args[1], args[2], args[3:]
 assert bg in ('green', 'magenta') and ids
 
@@ -25,8 +28,9 @@ K = g - np.maximum(r, b) if bg == 'green' else np.minimum(r, b) - g   # how "scr
 edge = np.zeros((H, W), bool); edge[:10] = edge[-10:] = True; edge[:, :10] = edge[:, -10:] = True
 Kb = float(np.percentile(K[edge], 10))          # key strength of the background
 B = np.median(a[edge], axis=0)                  # background colour
-hi = Kb - 0.06                                   # anything below this starts to be object
-alpha = np.clip((hi - K) / (hi - 0.15), 0, 1)
+hi = opt('--hi', Kb - 0.06)                      # anything below this starts to be object
+lo = opt('--lo', 0.15)                           # anything below this is solid object
+alpha = np.clip((hi - K) / (hi - lo), 0, 1)
 
 # take the background colour back out of soft edges, then remove any leftover tint
 al = alpha[..., None]

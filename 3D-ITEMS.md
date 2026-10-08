@@ -8,7 +8,7 @@ Batches with green things in them use a magenta background so nothing green gets
 
 `coin`, `gem`, `xp`, `item_turbo`, `item_shield`, `item_mine`
 
-## Batch 1: Mystery box items (green screen)
+## Batch 1: Mystery box items (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -88,7 +88,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 5: Hero powers and race buttons (green screen)
+## Batch 5: Hero powers and race buttons (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -108,7 +108,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 6: Menu buttons (green screen)
+## Batch 6: Menu buttons (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -128,7 +128,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 7: Green things (magenta screen)
+## Batch 7: Green things (magenta screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -148,7 +148,7 @@ Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like
 No words, letters or numbers.
 ```
 
-## Batch 8: Attire (green screen)
+## Batch 8: Attire (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -168,7 +168,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 9: Attire and rewards (green screen)
+## Batch 9: Attire and rewards (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -188,7 +188,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 10: Rank badges (green screen)
+## Batch 10: Rank badges (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
