@@ -1057,6 +1057,33 @@ html.cream.sky .overlay{background:linear-gradient(180deg,rgba(10,30,60,.4),rgba
 html.cream.sky :is(.desk3 .d3-picks b,.d3-name input,.tile-lb,.lv-badge b,.lv-badge small,.rh-title b){color:#0f2a4a!important}
 html.cream.sky :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote){color:#3d5d80!important}html.cream.sky .d3-qinfo b{color:#7a4f06!important}
 html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.sky .stat i{background:#b9d6ee}
+/* ----- results screen, styled like a storybook board ----- */
+#results .board-head{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--sky1,#9fd3f5),#f6efe0 70%,var(--sky2,#e8d8a8))!important;border-bottom:2px solid #d9a227;padding:14px 16px 12px}
+#results .board-head::after{content:attr(data-art);position:absolute;right:10px;bottom:-4px;font-size:58px;filter:drop-shadow(0 4px 4px rgba(0,0,0,.3))}
+#results .board-head .eyebrow{color:#2c4a6e!important;font-weight:800;letter-spacing:.06em;font-size:11.5px;padding-right:60px}
+#results .board-head h2{background:linear-gradient(180deg,#fff2b0,#f2b631 55%,#b57a10);-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-stroke:1.2px #6a4508;filter:drop-shadow(0 2px 0 rgba(90,60,10,.45));padding-right:64px;font-size:clamp(24px,7vw,36px)!important}
+#results table{border-collapse:separate;border-spacing:0 4px;padding:0 6px}
+#results tbody td{background:linear-gradient(180deg,#fbf3df,#efe0bd);border-top:1.5px solid #d9a227;border-bottom:1.5px solid #d9a227;padding:6px 6px!important}
+#results tbody td:first-child{border-left:1.5px solid #d9a227;border-radius:10px 0 0 10px;padding-left:0!important}#results tbody td:last-child{border-right:1.5px solid #d9a227;border-radius:0 10px 10px 0}
+#results tbody tr:nth-child(1) td{background:linear-gradient(180deg,#fbe7a4,#ecc65c)}#results tbody tr.me td{box-shadow:inset 0 0 0 999px rgba(255,255,255,.15)}
+#results thead th{color:#6b7385!important;font-size:11px;padding:4px 6px!important}
+td.pl{width:58px!important}
+.rk-tag{position:relative;display:inline-flex;align-items:center;gap:2px;height:30px;padding:0 14px 0 6px;font:900 17px var(--display);color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.4);clip-path:polygon(0 0,82% 0,100% 50%,82% 100%,0 100%);border-radius:6px 0 0 6px}
+.rk-tag i{font-style:normal}.rk-tag b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:13px;margin-left:2px;box-shadow:inset 0 2px 0 rgba(255,255,255,.6),inset 0 -2px 0 rgba(0,0,0,.25)}
+.rk-tag.rk1{background:linear-gradient(180deg,#f6d36a,#c8921c)}.rk-tag.rk1 b{background:radial-gradient(circle at 40% 35%,#fff2b0,#e2a92a)}
+.rk-tag.rk2{background:linear-gradient(180deg,#d8dee8,#8f9aa6)}.rk-tag.rk2 b{background:radial-gradient(circle at 40% 35%,#ffffff,#aeb6c2)}
+.rk-tag.rk3{background:linear-gradient(180deg,#e8a36a,#a8602a)}.rk-tag.rk3 b{background:radial-gradient(circle at 40% 35%,#ffd0a8,#c47a3a)}
+.rk-tag.rk4{background:linear-gradient(180deg,#9ab0c8,#5f7590)}
+#results .medal{display:none}
+#resRewards{background:linear-gradient(180deg,#fbf0d6,#f1dfb4);border:1.5px solid #d9a227;border-radius:14px;padding:10px}
+.chest{width:68px!important;height:66px!important;animation:none!important}
+.chest .ch-body{left:3px!important;right:3px!important;height:34px!important;border-radius:5px 5px 9px 9px!important;border:2.5px solid var(--ckm)!important;background:linear-gradient(90deg,transparent 12%,var(--ckm) 12% 18%,transparent 18% 82%,var(--ckm) 82% 88%,transparent 88%),repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 7px,transparent 7px 14px),linear-gradient(180deg,var(--ckw1),var(--ckw2))!important}
+.chest .ch-lid{left:1px!important;right:1px!important;top:10px!important;height:24px!important;border-radius:16px 16px 3px 3px!important;border:2.5px solid var(--ckm)!important;background:linear-gradient(90deg,transparent 12%,var(--ckm) 12% 18%,transparent 18% 82%,var(--ckm) 82% 88%,transparent 88%),linear-gradient(180deg,var(--ckw0),var(--ckw1))!important}
+.chest .ch-lock{position:absolute!important;left:50%!important;top:-6px!important;width:12px!important;height:14px!important;margin-left:-6px!important;border-radius:3px!important;background:linear-gradient(180deg,#fff2b0,var(--ckm))!important;box-shadow:0 1px 2px rgba(0,0,0,.4)!important;z-index:3!important}
+.chest .ch-ic{opacity:1!important;top:-6px!important;font-size:26px!important;z-index:3!important;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))!important}#results td.nat{display:table-cell!important;text-align:center!important}#results td.nat img{vertical-align:middle!important}
+.chest.open .ch-ic{transform:translateY(-10px) scale(1.2)!important}.chest.open .ch-lock{opacity:0!important}
+.ck-gold{--ckm:#e7b43a;--ckw0:#c87a3a;--ckw1:#a85c28;--ckw2:#7a3e16}.ck-silver{--ckm:#c6ced8;--ckw0:#8fa3b8;--ckw1:#6c8098;--ckw2:#4a5a6e}.ck-bronze{--ckm:#c88a52;--ckw0:#9a8a78;--ckw1:#7a6a58;--ckw2:#5a4c3e}
+#results .actions button{padding:10px 8px!important;font-size:16px!important;white-space:nowrap}
 /* ----- rarity colours: frame, heading and badge ----- */
 .col-sq.r-com{outline:2.5px solid #9aa3ad;outline-offset:-2px}.col-sq.r-rare{outline:2.5px solid #3a8ee6;outline-offset:-2px}
 .col-sq.r-epic{outline:2.5px solid #a35ce0;outline-offset:-2px;filter:drop-shadow(0 0 4px rgba(163,92,224,.55))}
@@ -2977,7 +3004,7 @@ function showSurvivalResults(){
   state='results';const sv=RACE.sv;
   if((sv.wave|0)>(STATS.svBest|0)){STATS.svBest=sv.wave|0;saveJSON('flagdash-stats',STATS);RACE.roomNew=roomCheckWins();}
   $('results').querySelector('.table-wrap').hidden=true;$('teamResult').hidden=true;$('gpBox').hidden=true;
-  $('resEyebrow').textContent=`Survival · ${TH.name}`;
+  $('resEyebrow').textContent=`Survival · ${TH.name}`;resArt();
   $('resTitle').textContent=`Survived ${fmt(player.time)} · Wave ${sv.wave}`;
   const score=svScore(),key='flagdash-svbest-'+TH.id,best=parseInt(store.get(key))||0;
   if(score>best){store.set(key,String(score));$('resPB').innerHTML=best?`New best score on ${TH.name}: <b>${score}</b> (was ${best})`:`Best score set on ${TH.name}: <b>${score}</b>`;}
@@ -3090,7 +3117,7 @@ function showFlagResults(){
     const nat=td(null,'nat');const im=document.createElement('img');im.src=x.r.flag.url;im.alt='';nat.append(im,x.r.flag.name);
     const f=td(x.fin<0?`Out · round ${x.r.outRound}`:`${ord(x.fin+1)} · +${x.pp}`);if(x.est){const sp=document.createElement('span');sp.className='est';sp.textContent=' est.';f.appendChild(sp);}
     td(String(x.r.flags),'t');td(String(x.pts),'t');body.appendChild(tr);});
-  $('resEyebrow').textContent=`Flag Challenge · ${TH.name}`;
+  $('resEyebrow').textContent=`Flag Challenge · ${TH.name}`;resArt();
   $('resTitle').textContent=rank===1?`You win the Flag Challenge with ${me.pts} points!`:`You placed ${ord(rank)} with ${me.pts} points`;
   $('resPB').innerHTML=`You stole <b>${RACE.fc.stole}</b> flag${RACE.fc.stole===1?'':'s'} and lost ${RACE.fc.lost}.`+(player.out?` You were knocked out in round ${player.outRound}.`:'');
   const rw=grantRaceRewards(rank);
@@ -4130,7 +4157,7 @@ function renderResults(){
   rows.forEach((x,i)=>{const tr=document.createElement('tr');if(x.r.kind==='local')tr.className='me';
     const cells=[[`${i+1}`,'pl'],[String(x.r.lane),''],['',''],['','nat'],[fmt(x.t),'t'],[i?'+'+(x.t-win).toFixed(2):'—','t'],[String(POINTS[i]||0),'t']];
     cells.forEach(([txt,cls],ci)=>{const td=document.createElement('td');if(cls)td.className=cls;
-      if(ci===0){td.textContent=txt;if(i<3){const m=document.createElement('span');m.className='medal';m.style.background=medal[i];td.appendChild(m);}}
+      if(ci===0){const t=document.createElement('span');t.className='rk-tag rk'+Math.min(i+1,4);const n=document.createElement('i');n.textContent=txt;t.appendChild(n);if(i<3){const c=document.createElement('b');c.textContent=txt;t.appendChild(c);}td.appendChild(t);}
       else if(ci===2){if(teams&&x.r.team!=null){const d=document.createElement('span');d.className='tdot';d.style.background=TEAMS[x.r.team].css;td.appendChild(d);}td.appendChild(document.createTextNode(x.r.nm+(x.r.kind==='local'?' (you)':'')+(x.r.human?'':' · CPU')));}
       else if(ci===3){const im=document.createElement('img');im.src=x.r.flag.url;im.alt='';td.appendChild(im);td.appendChild(document.createTextNode(x.r.flag.name));}
       else if(ci===4){td.textContent=txt;if(x.est){const s=document.createElement('span');s.className='est';s.textContent=' est.';td.appendChild(s);}}
@@ -4139,7 +4166,7 @@ function renderResults(){
     body.appendChild(tr);});
   $('ptsHead').hidden=!teams;body.querySelectorAll('tr').forEach(tr=>{tr.lastChild.hidden=!teams;});
   const place=rows.findIndex(x=>x.r.kind==='local')+1;
-  $('resEyebrow').textContent=`Official result · ${TH.name} · 1,500 m`+(RACE.online?' · Online':'');
+  $('resEyebrow').textContent=`Official result · ${TH.name} · 1,500 m`+(RACE.online?' · Online':'');resArt();
   const tr=$('teamResult');
   if(teams){const tp=teamPoints(rows.map(x=>x.r));const best=Math.max(...tp);const winners=tp.map((v,i)=>v===best?i:-1).filter(i=>i>=0);const w=winners.length>1?-1:winners[0];
     tr.hidden=false;tr.innerHTML='';tp.forEach((v,t)=>{const d=document.createElement('div');d.className=['g','b','r'][t]+(w===t?' win':'');const e=document.createElement('span');e.className='eyebrow';e.textContent=teamName(t)+' team';const b=document.createElement('b');b.textContent=v+' pts';d.append(e,b);tr.appendChild(d);});
@@ -4495,13 +4522,17 @@ function renderGPBox(){
 }
 /* ---------- results: each reward is a treasure chest; tap to open, or Claim all ---------- */
 const CHEST_IC=[[/xp|rank/i,'⭐'],[/daily|task/i,'✅'],[/leaderboard/i,'🏟️'],[/room|trophy|medal|monument/i,'🏆'],[/skin|unlock/i,'👕'],[/hit|stole/i,'💥'],[/grand prix/i,'📈'],[/best/i,'⏱️']];
+// header picture for the results: the track's colours plus a mascot for the place
+const TRACK_ART={stadium:'🏟️',streets:'🏁',city:'🏙️',canyon:'🏜️',glacier:'🏔️',coast:'🌴',giza:'🐪',sahara:'🐫',grandcanyon:'🦅',amazon:'🦜',greatwall:'🏯',paris:'🗼',outback:'🦘',antarctica:'🐧'};
+function resArt(){const h=document.querySelector('#results .board-head');if(!h||!TH)return;h.style.setProperty('--sky1',TH.sky?TH.sky[1]:'#9fd3f5');h.style.setProperty('--sky2',TH.card?TH.card[1]:'#e8d8a8');h.dataset.art=TRACK_ART[TH.id]||'🏁';}
+const CHEST_KIND={'🪙':'gold','💎':'silver','⭐':'gold'};
 function chestifyRewards(coins,gems){const box=$('resRewards');
   const notes=[...box.querySelectorAll('.res-note')].map(d=>d.textContent);box.innerHTML='';
   const items=[{ic:'🪙',big:'+'+(coins|0),t:'Coins'}];if(gems)items.push({ic:'💎',big:'+'+gems,t:gems>1?'Diamonds':'Diamond'});
   notes.forEach(n=>{const m=n.match(/^\+?([\d,]+)\s*XP/i);items.push({ic:(CHEST_IC.find(([re])=>re.test(n))||[0,'🎁'])[1],big:m?'+'+m[1]+' XP':'',t:n});});
   const h=document.createElement('div');h.className='chest-head';h.innerHTML='<b>🎁 Your rewards</b>';const all=document.createElement('button');all.className='primary chest-all';all.textContent='Claim all';h.appendChild(all);box.appendChild(h);
   const row=document.createElement('div');row.className='chest-row';box.appendChild(row);
-  const chests=items.map(it=>{const c=document.createElement('button');c.type='button';c.className='chest';c.innerHTML='<span class="ch-lid"></span><span class="ch-body"></span><span class="ch-ic"></span>';c.querySelector('.ch-ic').textContent=it.ic;
+  const chests=items.map(it=>{const c=document.createElement('button');c.type='button';c.className='chest ck-'+(CHEST_KIND[it.ic]||'bronze');c.innerHTML='<span class="ch-lid"></span><span class="ch-body"><span class="ch-lock"></span></span><span class="ch-ic"></span>';c.querySelector('.ch-ic').textContent=it.ic;
     c.onclick=()=>{if(c.classList.contains('open'))return congrats([it]);c.classList.add('open');sfx.pick();congrats([it]);if(!row.querySelector('.chest:not(.open)'))all.hidden=true;};row.appendChild(c);return c;});
   all.onclick=()=>{chests.forEach(c=>c.classList.add('open'));all.hidden=true;sfx.fanfare();congrats(items);};}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
