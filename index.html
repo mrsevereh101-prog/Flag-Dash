@@ -2848,13 +2848,15 @@ function startRaceFromGo(go,online){
   if(!go.sv)runners.forEach(r=>{if(r.owned&&r.char.id==='archer')giveItem(r);});  // perk: Full Quiver
   RACE.bots=runners.filter(r=>r.kind==='bot');
   // buffs bought in the store are used up here, one of each per race
-  BUFFS.forEach(b=>{if(wallet.use[b.id]!==false&&(wallet.buffs[b.id]|0)>0){if(LAP_PERKS.includes(b.id)&&(RACE.laps<2||RACE.survival))return;wallet.buffs[b.id]--;RACE.buffs.push(b.id);}});
+  const LUCKY=luckActive()&&!go.sv;
+  if(!LUCKY)BUFFS.forEach(b=>{if(wallet.use[b.id]!==false&&(wallet.buffs[b.id]|0)>0){if(LAP_PERKS.includes(b.id)&&(RACE.laps<2||RACE.survival))return;wallet.buffs[b.id]--;RACE.buffs.push(b.id);}});
   if(RACE.buffs.length)saveWallet();
   if(RACE.buffs.includes('charge'))player.charge=1;
   if(RACE.buffs.includes('shield'))player.shield=999;
   RACE.magnet=RACE.buffs.includes('magnet');RACE.double=RACE.buffs.includes('double');
   if(RACE.buffs.includes('nullify'))player.itemProof=true;
   if(RACE.buffs.includes('swap'))player.item='swap';
+  if(LUCKY){const L=pick(LUCK_FX);RACE.luck=L;L.go(player);setTimeout(()=>{if(RACE&&RACE.luck===L)showBanner(`🍀 ${L.ic} ${L.name}`,L.desc,[0.3,0.9,0.4]);},600);}
   camL.init=true;crowdMood=0.3;moodPlace=0;
   raceTime=0;cd=online?4.2:3.2;cdShown=null;state='countdown';
   music.stop(0.6);music.sting(MUS.start);music.prep(TRACK_MUSIC[TH.id]||'race-to-the-finish');music.prep(MUS.final);RACE.finalMusic=false;shake=0;goT=0;camAng=Math.PI*0.85;
@@ -3380,6 +3382,7 @@ function hit(o,dur,src,kind,why,quiet){
   return true;
 }
 function giveItem(r){
+  if(RACE&&RACE.jackpot&&r===player){r.item=pick(['rocket','turbo','shield']);r.ai.itemT=rand(0.6,2.4);sfx.pick();return;}
   const lead=r.place<=2;const table=lead?[['banana',26],['shield',20],['ghost',10],['fire',12],['freeze',12],['rocket',12],['turbo',8]]:[['rocket',26],['turbo',20],['freeze',16],['fire',12],['ghost',10],['banana',8],['shield',8]];
   let t=Math.random()*100;r.item='turbo';for(const [k,w] of table){if((t-=w)<0){r.item=k;break;}}
   if(RACE&&RACE.rules&&RACE.rules.bananas)r.item='banana';if(RACE&&RACE.survival)r.item=pick(['shield','turbo','turbo']);r.ai.itemT=rand(0.6,2.4);if(r.kind==='local')sfx.pick();
@@ -4252,7 +4255,7 @@ let wallet=(()=>{let w=null;try{w=JSON.parse(store.get('flagdash-wallet')||'null
   const attire={};if(w.attire&&typeof w.attire==='object')for(const k in w.attire)if(attireById(k)&&typeof w.attire[k]==='number')attire[k]=w.attire[k];
   const equip={};SLOTS.forEach(s=>{const id=w.equip&&w.equip[s.id];if(id&&attire[id]&&attireById(id).slot===s.id)equip[s.id]=id;});
   return {coins:typeof w.coins==='number'?Math.max(0,Math.floor(w.coins)):200,gems:typeof w.gems==='number'?Math.max(0,Math.floor(w.gems)):0,skins,
-    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip,perk:typeof w.perk==='string'&&BUFFS.some(b=>b.id===w.perk)?w.perk:(w.perk===null?null:undefined),hs:(w.hs&&typeof w.hs==='object')?Object.fromEntries(Object.entries(w.hs).filter(([h,id])=>{const k=SKINS_SHOP.find(x=>x.id===id);return k&&k.hero===h;})):{}};})();
+    skin:skins.includes(w.skin)?w.skin:'classic',buffs:Object.assign({},w.buffs||{}),use:Object.assign({},w.use||{}),items,lo,attire,equip,luckUntil:Math.max(0,+w.luckUntil||0),perk:typeof w.perk==='string'&&BUFFS.some(b=>b.id===w.perk)?w.perk:(w.perk===null?null:undefined),hs:(w.hs&&typeof w.hs==='object')?Object.fromEntries(Object.entries(w.hs).filter(([h,id])=>{const k=SKINS_SHOP.find(x=>x.id===id);return k&&k.hero===h;})):{}};})();
 function mySkinId(){const h=wallet.hs&&wallet.hs[selChar];if(h)return h;const k=skinById(wallet.skin);return k.hero&&k.hero!==selChar?'classic':wallet.skin;}
 let loOn=store.get('flagdash-loadout')!=='off';
 function saveWallet(){store.set('flagdash-wallet',JSON.stringify(wallet));renderWallet();}
@@ -4337,10 +4340,10 @@ function renderStore(){
   const m=myMods(),mb=$('storeMods');mb.textContent=Object.keys(m).some(k=>m[k]>0)?'Your bonuses now: '+buffLine(Object.fromEntries(Object.entries(m).filter(([,v])=>v>0))):'You have no bonuses right now.';
   const grid=$('storeGrid');grid.innerHTML='';
   if(storeTab==='owned'){renderOwned(grid);return;}
-  const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS;
+  const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS.concat([LUCK]);
   RARITY.forEach(t=>{let its=list.filter(i=>rarityOf(i)===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
     const h=document.createElement('h3');h.className='tier-head rh-'+t.id;h.textContent=t.name;grid.appendChild(h);
-    const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it);
+    const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):it.id==='luck'?luckCard(it):buffCard(it);
       const c=card();const cls=(c.classList.contains('on')?'on ':'')+(c.classList.contains('locked')?'locked ':'')+(c.querySelector('.owned')||c.classList.contains('on')?'own ':'')+(c.classList.contains('is-new')?'is-new':'');
       let o;if(storeTab==='skins'){o=it.hero?{img:heroTileImg(it.hero,it.id),label:it.name}:{html:skin3D(it),label:it.name};}
       else{o={icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
@@ -4356,7 +4359,7 @@ function renderOwned(grid){
   sec('Skins',SKINS_SHOP.filter(k=>(wallet.skins.includes(k.id)||k.tier==='free')&&!lvLocked(k)),k=>k.hero?{img:heroTileImg(k.hero,k.id),label:k.name}:{html:skin3D(k),label:k.name},skinCard,'skin');
   sec('Items',LOADOUT.filter(l=>wallet.items.includes(l.id)),l=>({icon:l.icon,label:l.name}),itemCard,'item');
   sec('Attire',ATTIRE.filter(a=>attireActive(a.id)),a=>({icon:a.icon,label:a.name}),attireCard,'att');
-  sec('Buffs',BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0),b=>({icon:BUFF_ICON[b.id],label:b.name,badge:'×'+(wallet.buffs[b.id]|0)}),buffCard,'buff');
+  sec('Buffs',BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0).concat(luckActive()?[LUCK]:[]),b=>b.id==='luck'?{icon:'🍀',label:b.name}:{icon:BUFF_ICON[b.id],label:b.name,badge:'×'+(wallet.buffs[b.id]|0)},b=>b.id==='luck'?luckCard(b):buffCard(b),'buff');
   if(!grid.children.length){const p=document.createElement('p');p.className='muted';p.textContent='Nothing yet. Win races to earn coins, then come back!';grid.appendChild(p);}}
 function renderLoadout(){
   ['atk','def'].forEach(slot=>{const box=$(slot==='atk'?'loAtk':'loDef');box.innerHTML='';
@@ -4425,16 +4428,34 @@ var BUFF_ICON={start:'🚀',charge:'⚡',shield:'🛡️',magnet:'🧲',double:'
 function curPerk(){const b=BUFFS.find(x=>x.id===wallet.perk);return b&&(wallet.buffs[b.id]|0)>0?b:null;}
 function setPerk(id){wallet.perk=id||null;BUFFS.forEach(b=>{wallet.use[b.id]=b.id===id;});saveWallet();renderPerk();if(typeof locker!=='undefined'&&locker.active)locker.refresh();}
 function renderPerk(){
-  const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');if(ic)ic.textContent=p?BUFF_ICON[p.id]:'⭐';if(nm)nm.textContent=p?p.name:'No perk';
+  const p=curPerk(),ic=$('pkPerkIc'),nm=$('pkPerk');if(ic)ic.textContent=p?BUFF_ICON[p.id]:'⭐';if(nm)nm.textContent=p?p.name:'No perk';if(luckActive()){if(ic)ic.textContent='🍀';if(nm)nm.textContent='Lucky Clover';}
   const box=$('perkGrid');if(!box)return;box.innerHTML='';
   const hero=charById(selChar);const hp=$('perkHero');if(hp&&hero&&hero.perk)hp.textContent=`${hero.name}'s own perk, ⭐ ${hero.perk.name}, always works. Pick one more to bring along.`;
-  const tiles=[{key:'none',el:mkTile({icon:'🚫',label:'No perk',cls:!p?'on own':'own'}),pick:()=>setPerk(null),info:()=>tileInfo('No perk',['Race with just your hero\'s own perk.'])}];
+  const tiles=[];{const on=luckActive();tiles.push({key:'luck',el:mkTile({icon:'🍀',label:'Lucky Clover',badge:on?luckLeft().split(' ')[0]:'',cls:(on?'on own':'locked')+' r-myth'}),
+    info:()=>tileInfo('🍀 Lucky Clover · Mythical',[on?`Active · ${luckLeft()}. It replaces your perk every race (your perk is not used up).`:LUCK.desc],on?[]:[['Get it · $2.99',()=>{storeTab='buffs';openStore();}]])});}
+  tiles.push({key:'none',el:mkTile({icon:'🚫',label:'No perk',cls:!p?'on own':'own'}),pick:()=>setPerk(null),info:()=>tileInfo('No perk',['Race with just your hero\'s own perk.'])});
   BUFFS.forEach(b=>{const n=wallet.buffs[b.id]|0,on=p&&p.id===b.id;
     tiles.push({key:b.id,el:mkTile({icon:BUFF_ICON[b.id],label:b.name,badge:n?'×'+n:'',cls:on?'on own':n?'own':'locked'}),pick:n?()=>setPerk(b.id):null,
       info:()=>tileInfo(b.name,[b.desc,n?`You have ${n}. One is used up when the race starts.`:'You have none yet.'],n?[]:[[`Buy · ${b.cost} ${curOf(b)==='gem'?'💎':'🪙'}`,()=>{storeTab='perks';openStore();}]])});});
   box.appendChild(tileGrid('perk',tiles,renderPerk));
 }
 const PERK_OPEN=new Set();
+/* ---------- Lucky Clover: Mythical, $2.99, lasts 3 days. While it is active it takes the place of your
+   equipped perk (which is not used up) and rolls one race-changing effect at the start of every race. ---------- */
+const LUCK={id:'luck',name:'Lucky Clover',icon:'🍀',tier:'usd',usd:'$2.99',rar:'myth',days:3,
+  desc:'Lasts 3 days. Every race it replaces your perk with a random mythical effect that can change the race: Golden Start, Jackpot Boxes, Lead Swap, Null Field or Fortune.'};
+const luckActive=()=>(wallet.luckUntil||0)>Date.now();
+const luckLeft=()=>{const ms=(wallet.luckUntil||0)-Date.now();if(ms<=0)return '';const h=Math.ceil(ms/3600000);return h>=24?`${Math.floor(h/24)}d ${h%24}h left`:`${h}h left`;};
+const LUCK_FX=[
+  {id:'golden',ic:'🌟',name:'Golden Start',desc:'Turbo at the start and your power ready',go:p=>{RACE.buffs.push('start');p.charge=1;}},
+  {id:'jackpot',ic:'🎰',name:'Jackpot Boxes',desc:'Every mystery box gives a Rocket, Turbo or Shield',go:()=>{RACE.jackpot=true;}},
+  {id:'swap',ic:'🔄',name:'Lead Swap',desc:'Swap places with the leader during lap 1',go:p=>{p.item='swap';}},
+  {id:'null',ic:'🧿',name:'Null Field',desc:'Mystery-box items can\'t touch you',go:p=>{p.itemProof=true;}},
+  {id:'fortune',ic:'💰',name:'Fortune',desc:'Double coins and a coin magnet',go:()=>{RACE.double=true;RACE.magnet=true;}}];
+function luckCard(it){const on=luckActive();
+  const card=shopCard(it,'',`<div class="shop-have">${on?'🍀 Active · '+luckLeft():'Lasts '+it.days+' days'}</div>`);
+  buyButton(card.querySelector('.shop-row button'),it,on?'Add 3 days':'Buy',()=>{wallet.luckUntil=Math.max(Date.now(),wallet.luckUntil||0)+it.days*DAY;saveWallet();});
+  if(on)card.classList.add('on');return card;}
 function buffCard(b){
   const have=wallet.buffs[b.id]|0,use=wallet.use[b.id]!==false;
   const eq=!!curPerk()&&curPerk().id===b.id;
