@@ -1,4 +1,4 @@
-<!doctype html><html class="cream adv"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("adv");}else if(t==="cream")c.remove("adv");else if(t==="sky"){c.remove("adv");c.add("sky");}}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+<!doctype html><html class="cream adv"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("adv");}else if(t==="cream")c.remove("adv");else if(t==="sky"){c.remove("adv");c.add("sky");}}catch(e){}</script><meta charset=utf8><meta name="robots" content="noindex,nofollow"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
 #layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
 body.layout-edit #hud,body.layout-edit #touch{z-index:90}
 body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -452,7 +452,40 @@ html.cream.adv .lv-shield{background:url(img/icons/lv_shield.webp) center/contai
 </style>
 <style>html.cream.adv #settings .set-row .set-tog[aria-pressed="true"]{background:var(--blue)!important;color:#fff!important;border:1.5px solid #17558f!important}
 .dev-box{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:8px}#devTag{position:fixed;left:6px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:9999;font:700 11px/1.4 system-ui,sans-serif;background:#c0392b;color:#fff;padding:2px 8px;border-radius:9px;opacity:.9;pointer-events:none}</style>
+<style id="cleanUI">
+/* private for now */
+#gate{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;padding:16px;background:linear-gradient(180deg,#fdf8ec,#e9dcc0)}
+#gate[hidden]{display:none}
+.gate-card{display:grid;justify-items:center;gap:12px;text-align:center}
+.gate-ic{width:128px;height:128px;object-fit:contain}
+#gate h2{margin:0;font-family:var(--display);font-weight:400;font-size:30px;color:#000}
+#gateMsg{margin:0;font:700 16px var(--ui,system-ui);color:#000}
+#acct{z-index:9100!important}
+/* all text black and bold (light themes; the race countdown and banners keep their own look) */
+html.cream body{font-synthesis:none}
+html.cream body,html.cream body *:not(svg,svg *,#countdown,#countdown *,#ultBanner,#ultBanner *){color:#000!important;-webkit-text-fill-color:#000!important;font-weight:700!important;text-shadow:none!important}
+html.cream #celebrate .cel-card{background:var(--cream)!important;border:1.5px solid #c99a3a!important;box-shadow:0 10px 30px rgba(0,0,0,.35)!important}
+html.cream .cel-gift{background:rgba(255,255,255,.55)!important;border-color:#d6b46a!important}
+/* icons only: names and notes wait behind each page's ⓘ */
+:is(#resEyebrow,.tab-tx,.tile .tile-lb,.d3-qinfo>div,.d3-qnote,.d3-mmnote,.desk-info,.touch-help,.d3-friends-btn>span:last-child,.d3-tabbar button>span,.pick-btn>b,#pvName,.lv-badge>small,.panel-head .muted,#perkHero,.panel p.muted.small,#loInfo,.lo-more,.rh-title small,#roomHint,.rc-note,#lvNow,#resPB,.ch-hint,.cel-eyebrow,.cel-gift small,.cg-item small,#giftPick p.muted,#setBody .set-row small,#setVoiceNote,.slot .slot-label,.slot .slot-name,.emote-hint):not(.show-info *){display:none!important}
+:is(.lv-badge>b,#roomColBtn,#roomEdit,#menuChatBtn,#menuGuildBtn):not(.show-info *){font-size:0!important;gap:0!important}
+.lv-badge>b .rk-ico{width:20px!important;height:20px!important}
+#roomColBtn .ico,#roomEdit .ico,#menuChatBtn .ico,#menuGuildBtn .ico{width:30px!important;height:30px!important;vertical-align:middle!important}
+.tile.has-lb .col-art,.tile.has-lb .col-ic{margin-bottom:0!important}
+.info-btn{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid #17558f;background:linear-gradient(180deg,#5db3f0,#2a7fd0);color:#fff!important;-webkit-text-fill-color:#fff!important;font:italic 800 17px/1 Georgia,serif!important;display:grid;place-items:center;padding:0;cursor:pointer;box-shadow:0 2px 0 #134a7d}
+.info-btn[aria-pressed="true"]{background:linear-gradient(180deg,#ffd36a,#f2a91c);border-color:#a8740f;box-shadow:0 2px 0 #7a5208}
+.info-corner{position:absolute;top:10px;right:10px;z-index:3}
+:is(.set-card,.cel-card,.cg-card,#results .board){position:relative}
+.cg-info{top:62px!important}
+#rcTabs .tab-ico{width:26px!important;height:26px!important;margin:0!important}
+.ico-btn{padding:4px 10px!important}.ico-btn .ico{width:30px;height:30px}
+@media (max-width:460px){#store .store-head{flex-wrap:nowrap;gap:6px}#store .st-title{font-size:22px}#store .st-piles{gap:4px}#store .st-pile{font-size:14px;gap:1px}#store .st-pile svg{width:26px;height:19px}#store .store-head .info-btn{width:26px;height:26px;font-size:15px!important}#storeClose{flex:none;padding:6px 10px}}
+#storeTabs button,#roomTabs button{display:grid;place-items:center;gap:2px;min-width:0;padding:5px 2px}#storeTabs,#roomTabs{min-width:0}#storeTabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));width:100%}
+#storeTabs .tab-ico,#roomTabs .tab-ico{width:30px;height:30px;margin:0 auto}
+.info-home{position:absolute;left:10px;top:60px;z-index:3;width:36px;height:36px}
+</style>
 </head><body>
+<div id="gate" role="dialog" aria-label="Race Your Flag is private for now"><div class="gate-card"><img class="gate-ic" src="img/icons/tab_quick.webp" alt=""><h2>Race Your Flag</h2><p id="gateMsg">…</p><button class="primary" id="gateSign" hidden>Sign in</button><button class="ghost" id="gateOut" hidden>Sign out</button></div></div>
 <title>Race Your Flag</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1371,17 +1404,17 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
         <div class="track-grid" id="trackGrid"></div>
       </section>
       <section class="panel" data-sec="perk">
-        <div class="panel-head"><div><h2>Pick your perk</h2></div><button class="ghost" id="perkStore">Get more perks</button></div>
+        <div class="panel-head"><div><h2>Pick your perk</h2></div><button class="ghost ico-btn" id="perkStore" aria-label="Get more perks" title="Get more perks"><img class="ico" src="img/icons/menu_store.webp" alt=""></button></div>
         <p class="muted" id="perkHero"></p>
         <div class="perk-grid" id="perkGrid"></div>
         <p class="muted small">Your perk is used up when the race starts. Buy more in the store.</p>
       </section>
       <section class="panel lo-panel" data-sec="loadout">
-        <div class="panel-head"><div><h2>Pick your loadout</h2></div><button class="ghost" id="loStore">Get more items</button></div>
+        <div class="panel-head"><div><h2>Pick your loadout</h2></div><button class="ghost ico-btn" id="loStore" aria-label="Get more items" title="Get more items"><img class="ico" src="img/icons/menu_store.webp" alt=""></button></div>
         <div class="lo-row"><h3>Attack · R</h3><div class="lo-chips" id="loAtk"></div></div>
         <div class="lo-row"><h3>Defence · F</h3><div class="lo-chips" id="loDef"></div></div>
         <button class="info-line" id="loInfo" type="button"><span class="info-i">i</span> What do these do?</button><p class="muted" id="loDesc" hidden></p>
-        <label class="check"><input type="checkbox" id="loToggle"> Allow loadout items in my races (turn off for a pure race)</label>
+        <label class="check"><input type="checkbox" id="loToggle"> Items in races<span class="lo-more"> (turn off for a pure race)</span></label>
       </section>
     </div>
 </aside>
@@ -1479,7 +1512,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
   <div class="rh-top"><button class="d3-round" id="roomBack" aria-label="Back to the Race Desk">←</button>
     <div class="rh-title"><b><img class="ico" src="img/icons/menu_room.webp" alt=""> My Room</b><small id="roomCount"></small><small id="roomBonus"></small></div>
     <div class="rh-str" title="Strength: every item on display adds to it"><span><img class="ico" src="img/icons/strength.webp" alt=""></span><b id="roomStr">0</b></div></div>
-  <div class="rh-bottom"><p id="roomHint"></p><div class="rh-tabs" id="roomTabs"><button data-a="skins">Skins</button><button data-a="trophies">Trophies</button><button data-a="medals">Medals</button><button data-a="perks">Perks</button></div><div class="rh-btns"><button class="ghost" id="roomColBtn"><img class="ico" src="img/icons/collection.webp" alt=""> Collection</button><button class="primary" id="roomEdit"><img class="ico" src="img/icons/decorate.webp" alt=""> Decorate</button></div></div>
+  <div class="rh-bottom"><p id="roomHint"></p><div class="rh-tabs" id="roomTabs"><button data-a="skins" title="Skins" aria-label="Skins"><img class="ico tab-ico" src="img/icons/skin_classic.webp" alt=""><span class="tab-tx">Skins</span></button><button data-a="trophies" title="Trophies" aria-label="Trophies"><img class="ico tab-ico" src="img/icons/cup_gold.webp" alt=""><span class="tab-tx">Trophies</span></button><button data-a="medals" title="Medals" aria-label="Medals"><img class="ico tab-ico" src="img/icons/m_podium.webp" alt=""><span class="tab-tx">Medals</span></button><button data-a="perks" title="Perks" aria-label="Perks"><img class="ico tab-ico" src="img/icons/perk_charge.webp" alt=""><span class="tab-tx">Perks</span></button></div><div class="rh-btns"><button class="ghost" id="roomColBtn"><img class="ico" src="img/icons/collection.webp" alt=""> Collection</button><button class="primary" id="roomEdit"><img class="ico" src="img/icons/decorate.webp" alt=""> Decorate</button></div></div>
 </div>
 <div id="roomPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="rpTitle"><div class="store-head"><h2 id="rpTitle">Spot</h2><button class="ghost" id="rpClose">Close</button></div>
   <div class="rp-list" id="rpList"></div><div class="rp-foot"><button class="ghost" id="rpRemove">Put in storage</button><button class="ghost" id="rpMore">Get more items</button></div></div></div>
@@ -1574,7 +1607,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 <div id="store" class="overlay" hidden>
   <div class="store-card">
     <div class="store-head st-treasure"><h2 class="st-title">Store</h2><div class="st-piles"><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="cgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".5" stop-color="#f2b631"/><stop offset="1" stop-color="#a8740f"/></linearGradient></defs><g fill="url(#cgG)" stroke="#8a5d0c" stroke-width=".8"><ellipse cx="12" cy="25" rx="9" ry="3.5"/><ellipse cx="12" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="25" rx="9" ry="3.5"/><ellipse cx="30" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="17" rx="9" ry="3.5"/><ellipse cx="21" cy="13" rx="9" ry="3.5"/><ellipse cx="21" cy="9" rx="9" ry="3.5"/></g></svg><b id="stCoins">0</b></span><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="dgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6fbff"/><stop offset=".5" stop-color="#5fc8ff"/><stop offset="1" stop-color="#1c6fb8"/></linearGradient></defs><g fill="url(#dgG)" stroke="#155a96" stroke-width=".8"><path d="M4 20l5-6h8l5 6-9 9z"/><path d="M22 20l5-6h8l5 6-9 9z"/><path d="M13 12l5-6h8l5 6-9 9z"/></g></svg><b id="stGems">0</b></span></div><button class="ghost" id="storeClose">Close</button></div>
-    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned">Owned</button><button data-tab="items">Items</button><button data-tab="skins">Skins</button><button data-tab="attire">Attire</button><button data-tab="buffs">Buffs</button></div>
+    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned" title="Owned" aria-label="Owned"><img class="ico tab-ico" src="img/chest-closed.png" alt=""><span class="tab-tx">Owned</span></button><button data-tab="items" title="Items" aria-label="Items"><img class="ico tab-ico" src="img/icons/box.webp" alt=""><span class="tab-tx">Items</span></button><button data-tab="skins" title="Skins" aria-label="Skins"><img class="ico tab-ico" src="img/icons/skin_classic.webp" alt=""><span class="tab-tx">Skins</span></button><button data-tab="attire" title="Attire" aria-label="Attire"><img class="ico tab-ico" src="img/icons/att_crown.webp" alt=""><span class="tab-tx">Attire</span></button><button data-tab="buffs" title="Perks" aria-label="Perks"><img class="ico tab-ico" src="img/icons/perk_charge.webp" alt=""><span class="tab-tx">Perks</span></button></div>
     <p class="store-note" id="storeNote" hidden></p>
     <p class="store-mods" id="storeMods" hidden></p>
     <div id="storeGrid" class="store-grid"></div>
@@ -3353,6 +3386,22 @@ function renderSettings(){
   const vn=$('setVoiceNote');if(vn)vn.textContent=voice.supported()?'Runners speak their taunts with this device’s built-in voice. Recorded voices replace it line by line.':'This browser has no built-in voice. Taunts still show as speech bubbles.';
 }
 let settingsPaused=false;
+// ⓘ buttons: names and notes stay hidden until a page's ⓘ is tapped
+function infoBtn(host,scope,onToggle,cls,after){if(!host||!scope||host.querySelector(':scope>.info-btn'))return null;const b=document.createElement('button');b.type='button';b.className='info-btn'+(cls?' '+cls:'');b.textContent='i';
+  b.setAttribute('aria-label','Show info');b.setAttribute('aria-pressed','false');
+  b.onclick=e=>{e.stopPropagation();const on=!scope.classList.contains('show-info');scope.classList.toggle('show-info',on);b.setAttribute('aria-pressed',on);if(onToggle)onToggle(on);};if(after)after.after(b);else host.appendChild(b);return b;}
+function setupInfo(){
+  document.querySelectorAll('#picker .panel').forEach(p=>infoBtn(p.querySelector('.panel-head'),p,p.dataset.sec==='loadout'?on=>{$('loDesc').hidden=!on;}:null));
+  infoBtn(document.querySelector('#store .store-head'),$('store'),null,'',document.querySelector('#store .st-title'));
+  infoBtn(document.querySelector('#roomCol .store-head'),$('roomCol'));
+  infoBtn(document.querySelector('#giftPick .store-head'),$('giftPick'));
+  infoBtn(document.querySelector('#lvPanel .store-head'),$('lvPanel'));
+  infoBtn(document.querySelector('#roomHud .rh-top'),$('roomHud'));
+  infoBtn(document.querySelector('#settings .set-card'),$('settings'),null,'info-corner');
+  infoBtn(document.querySelector('#results .board'),$('results'),null,'info-corner');
+  infoBtn(document.querySelector('#celebrate .cel-card'),$('celebrate'),null,'info-corner');
+  infoBtn(document.querySelector('#congrats .cg-card'),$('congrats'),null,'info-corner cg-info');
+  infoBtn(document.querySelector('#menu .preview-wrap'),$('menu'),null,'info-home');}
 // ---------- developer mode ----------
 const DEV_KEEP=['flagdash-devmode','flagdash-devbak','flagdash-sync','flagdash-secret'];
 const devKeys=()=>{const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!DEV_KEEP.includes(k))out.push(k);}}catch(e){}return out;};
@@ -4113,7 +4162,7 @@ function localSave(){const d={};for(let i=0;i<localStorage.length;i++){const k=l
 const syncMeta=()=>{try{return JSON.parse(localStorage.getItem('flagdash-sync')||'null');}catch(e){return null;}};
 function setSyncMeta(m){try{localStorage.setItem('flagdash-sync',JSON.stringify(m));}catch(e){}}
 async function initAuth(){
-  if(!AUTH.on){AUTH.ready=true;renderAcct();return;}
+  if(!AUTH.on){AUTH.ready=true;renderAcct();renderGate();return;}
   try{
     const sb=await getSb();const hashErr=/error_description=([^&]+)/.exec(location.hash);
     const {data}=await sb.auth.getSession();
@@ -4123,12 +4172,19 @@ async function initAuth(){
     AUTH.ready=true;setUser(data&&data.session?data.session.user:null);
     sb.auth.onAuthStateChange((ev,s)=>setUser(s?s.user:null));
   }catch(e){AUTH.on=false;AUTH.ready=true;renderAcct();}
+  renderGate();
   try{const t=sessionStorage.getItem('flagdash-loaded');if(t){sessionStorage.removeItem('flagdash-loaded');feed('Loaded your saved progress from your account','good');}}catch(e){}
   setInterval(syncPush,20000);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)syncPush();});
 }
 // Developer accounts are listed in Supabase (supabase/devs.sql). Only they see the Developer switch in Settings.
-async function checkDev(){let dev=false;if(AUTH.user){try{const sb=await getSb();const {data,error}=await sb.rpc('fd_is_dev');dev=!error&&data===true;}catch(e){}}AUTH.dev=dev;renderDevBox();}
+async function checkDev(){AUTH.dev=undefined;renderGate();let dev=false;if(AUTH.user){try{const sb=await getSb();const {data,error}=await sb.rpc('fd_is_dev');dev=!error&&data===true;}catch(e){}}AUTH.dev=dev;renderDevBox();renderGate();}
+// Private for now: only accounts on the developer list (supabase/devs.sql) get past this screen.
+const GATED=!window.claude;
+function renderGate(){const g=$('gate');if(!g)return;if(!GATED||AUTH.dev===true){g.hidden=true;return;}g.hidden=false;
+  const wait=!AUTH.ready||(AUTH.user&&AUTH.dev===undefined),msg=$('gateMsg');
+  msg.textContent=wait?'…':!AUTH.user?'Coming soon':'Coming soon · this account has no access';
+  $('gateSign').hidden=wait||!!AUTH.user;$('gateOut').hidden=wait||!AUTH.user;}
 function setUser(u){
   const prev=AUTH.user;AUTH.user=u?{id:u.id,email:u.email||'',name:(u.user_metadata&&(u.user_metadata.full_name||u.user_metadata.name))||''}:null;renderAcct();
   if(AUTH.user&&(!prev||prev.id!==AUTH.user.id)){AUTH.sent=false;syncPull();glbSubmit();
@@ -4862,7 +4918,7 @@ const COL_CATS=[['all','All']].concat(ROOM_CATS);
 // Tap a square for its details and how to get it.
 function renderCollection(){
   if(!COL_CATS.some(c=>c[0]===RV.colTab))RV.colTab='all';
-  const tabs=$('rcTabs');tabs.innerHTML='';COL_CATS.forEach(([id,nm])=>{const b=document.createElement('button');const ca=icoOf('room',{trophy:'cup_gold',medal:'m_podium',monument:'mon_hall',furniture:'f_couch',decor:'d_poster',gift:'g_box'}[id]);if(ca){b.textContent=nm.replace(/^\S+\s+/,'');b.prepend(icoEl(ca,'tab-ico'));}else b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;RV.colSel=null;renderCollection();};tabs.appendChild(b);});
+  const tabs=$('rcTabs');tabs.innerHTML='';COL_CATS.forEach(([id,nm])=>{const b=document.createElement('button');const ca=icoOf('room',{trophy:'cup_gold',medal:'m_podium',monument:'mon_hall',furniture:'f_couch',decor:'d_poster',gift:'g_box'}[id]);if(ca){b.textContent='';const t=document.createElement('span');t.className='tab-tx';t.textContent=nm.replace(/^\S+\s+/,'');b.append(icoEl(ca,'tab-ico'),t);b.title=t.textContent;}else b.textContent=nm;b.setAttribute('aria-pressed',id===RV.colTab);b.onclick=()=>{RV.colTab=id;RV.colSel=null;renderCollection();};tabs.appendChild(b);});
   const L=$('rcList');L.innerHTML='';
   let list=RV.colTab==='all'?ROOM_ITEMS.slice():ROOM_ITEMS.filter(it=>it.cat===RV.colTab);
   list.sort((a,b)=>ownsItem(b.id)-ownsItem(a.id)||(b.cc===selCountry)-(a.cc===selCountry));
@@ -6677,6 +6733,8 @@ const LAYOUT=(()=>{
   $('set_devLuck').onclick=()=>{wallet.luckUntil=luckActive()?0:Date.now()+365*DAY;saveWallet();renderDevBox();};
   $('set_devFill').onclick=()=>{devUnlock();location.reload();};
   $('deskEdit').onclick=()=>open('desk');
+  setupInfo();
+  $('gateSign').onclick=()=>openAcct('');$('gateOut').onclick=async()=>{await signOut();renderGate();};
   applyAll();if(mig0)save();
   return {applyAll,isEditing:()=>editing};
 })();

@@ -49,6 +49,11 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 1. [ ] Run `supabase/social.sql` in the Supabase SQL editor (New query, paste everything, Run; click "Run query" if a warning shows).
 2. [ ] Test with a friend: both tap **Online > Find a Race**, then use the 👥 button during the race to add each other and send a message.
 
+## Private for now (Oct 8)
+- The game shows a "Coming soon" screen to everyone except accounts on the developer list (`supabase/devs.sql`).
+  It also asks search engines not to list the site. To open the game to everyone again, remove the gate
+  (the `#gate` screen and `renderGate()` in index.html) and the robots meta tag.
+
 ## Developer accounts
 - Run `supabase/devs.sql` once in the Supabase SQL editor, then the `insert` line in it with the email you sign in with.
 - In the game: sign in, Settings, Developer mode. Everything unlocks in a sandbox that never syncs or posts scores;
