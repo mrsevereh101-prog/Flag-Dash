@@ -33,7 +33,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 2: Attacks and the mystery box (green screen)
+## Batch 2: Attacks and the mystery box (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -480,7 +480,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 24: Room furniture (green screen)
+## Batch 24: Room furniture (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -500,7 +500,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 25: Arcade, neon and gifts (green screen)
+## Batch 25: Arcade, neon and gifts (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -540,7 +540,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 27: Buttons (green screen)
+## Batch 27: Buttons (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
