@@ -1084,6 +1084,17 @@ td.pl{width:58px!important}
 .chest.open .ch-ic{transform:translateY(-10px) scale(1.2)!important}.chest.open .ch-lock{opacity:0!important}
 .ck-gold{--ckm:#e7b43a;--ckw0:#c87a3a;--ckw1:#a85c28;--ckw2:#7a3e16}.ck-silver{--ckm:#c6ced8;--ckw0:#8fa3b8;--ckw1:#6c8098;--ckw2:#4a5a6e}.ck-bronze{--ckm:#c88a52;--ckw0:#9a8a78;--ckw1:#7a6a58;--ckw2:#5a4c3e}
 #results .actions button{padding:10px 8px!important;font-size:16px!important;white-space:nowrap}
+/* results: darker cream, thick gold frames, rows touching */
+#results .board{background:linear-gradient(180deg,#e9d6aa,#dcc18a)!important;border:4px solid #c8921c!important;box-shadow:0 0 0 1px #8a5d0c,0 10px 30px rgba(0,0,0,.4)!important}
+#results table{border-spacing:0!important;padding:0!important;width:100%!important}#results .table-wrap{padding:0 8px;box-sizing:border-box}#results .est{display:none}#results table{table-layout:auto}#results th:nth-child(1),#results td:nth-child(1){width:64px!important}#results th:nth-child(4),#results td:nth-child(4){width:52px}#results th:nth-child(5),#results td:nth-child(5){width:68px;text-align:right}#results td:nth-child(3),#results th:nth-child(3){max-width:0!important;width:100%;overflow:hidden;text-overflow:ellipsis}#results .chest-row{gap:6px;flex-wrap:nowrap;justify-content:space-between}#results .chest{width:60px!important;height:60px!important;flex:none}
+#results tbody td{background:linear-gradient(180deg,#ecd9ae,#dcc290)!important;border-top:3px solid #c8921c!important;border-bottom:0!important}
+#results tbody tr:last-child td{border-bottom:3px solid #c8921c!important}
+#results tbody td:first-child{border-left:3px solid #c8921c!important;border-radius:0!important}#results tbody td:last-child{border-right:3px solid #c8921c!important;border-radius:0!important}
+#results tbody tr:first-child td:first-child{border-radius:10px 0 0 0!important}#results tbody tr:first-child td:last-child{border-radius:0 10px 0 0!important}
+#results tbody tr:last-child td:first-child{border-radius:0 0 0 10px!important}#results tbody tr:last-child td:last-child{border-radius:0 0 10px 0!important}
+#results tbody tr:nth-child(1) td{background:linear-gradient(180deg,#f2d27a,#ddb24a)!important}
+#resRewards{background:linear-gradient(180deg,#e6d0a0,#d8bd84)!important;border:3px solid #c8921c!important}
+#results .board-head{border-bottom:3px solid #c8921c!important}
 /* ----- rarity colours: frame, heading and badge ----- */
 .col-sq.r-com{outline:2.5px solid #9aa3ad;outline-offset:-2px}.col-sq.r-rare{outline:2.5px solid #3a8ee6;outline-offset:-2px}
 .col-sq.r-epic{outline:2.5px solid #a35ce0;outline-offset:-2px;filter:drop-shadow(0 0 4px rgba(163,92,224,.55))}
