@@ -4094,6 +4094,7 @@ const setT=(id,v)=>{if(hudCache[id]!==v){hudCache[id]=v;$(id).textContent=v;}};
 function fmt(t){if(t<60)return t.toFixed(2);const m=Math.floor(t/60);return `${m}:${(t-m*60).toFixed(2).padStart(5,'0')}`;}
 function teamPoints(order){const p=[0,0,0].slice(0,teamCount(RACE?RACE.mode:'teams'));order.forEach((r,i)=>{if(r.team!=null)p[r.team]+=POINTS[i]||0;});return p;}
 const mm={cv:$('minimap'),pts:null,map:null};
+document.head.insertAdjacentHTML('beforeend','<style>#minimap{display:none!important}</style>'); // test: course map hidden
 function setupMinimap(){
   const cv=mm.cv;cv.hidden=!TH.turns;if(cv.hidden)return;
   const raw=[];let x0=1e9,x1=-1e9,z0=1e9,z1=-1e9;
@@ -6337,7 +6338,7 @@ function updateWeather(dt,now){
 const camL={x:0,y:4,b:8.5,init:true};
 function followCam(dt){
   const gh=Hf(player.d);const behind=camAng<0.05;
-  let dist=8.5,ht=3.7;if(state==='finished'||state==='results'){dist=5.2;ht=2.1;}
+  let dist=10.5,ht=4.6;if(state==='finished'||state==='results'){dist=5.2;ht=2.1;}
   if(state==='countdown'){dist=6;ht=2.3;}
   // camera lives in track coordinates (across, back along the course, height) so it follows the curves
   const px=player.x,py=gh+player.y,k=Math.min(1,dt*6);
@@ -6348,7 +6349,7 @@ function followCam(dt){
   const ahead=Math.max(0,1-camAng/1.2);
   const a=W(px,player.d,py+1.2),b=W(player.x*0.8,player.d+10,Hf(player.d+10)+1.3+player.y*0.3);
   lookAt.copy(a).lerp(b,ahead);
-  const fovT=62+(player.boost>0?9:0)+clamp((player.speed-BASE)*0.4,-4,6);camera.fov+=(fovT-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix();
+  const fovT=66+(player.boost>0?9:0)+clamp((player.speed-BASE)*0.4,-4,6);camera.fov+=(fovT-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix();
   camera.lookAt(lookAt);
   if(shake>0){shake=Math.max(0,shake-dt);camera.position.x+=rand(-1,1)*shake*0.35;camera.position.y+=rand(-1,1)*shake*0.35;}
 }
