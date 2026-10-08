@@ -450,6 +450,8 @@ html.cream.adv .lv-shield{background:url(img/icons/lv_shield.webp) center/contai
 .tgroup button .ico{width:66%;height:66%;margin:auto}
 #storeGrid>.tgrid{grid-column:1/-1}
 </style>
+<style>html.cream.adv #settings .set-row .set-tog[aria-pressed="true"]{background:var(--blue)!important;color:#fff!important;border:1.5px solid #17558f!important}
+.dev-box{display:grid;gap:8px;border-top:1px dashed var(--line);padding-top:8px}#devTag{position:fixed;left:6px;bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:9999;font:700 11px/1.4 system-ui,sans-serif;background:#c0392b;color:#fff;padding:2px 8px;border-radius:9px;opacity:.9;pointer-events:none}</style>
 </head><body>
 <title>Race Your Flag</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1546,6 +1548,11 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
       <div class="set-row set-row2"><span>Account <small class="muted" style="display:block;font-weight:400">Sign in, save progress</small></span><button class="set-tog" id="setAcct">Open</button></div>
       <div class="set-row set-row2"><span>Privacy policy</span><a class="set-tog" href="privacy.html" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">View</a></div>
       <div class="set-row set-row2"><span>Screen layout <small class="muted" style="display:block;font-weight:400">Move and resize buttons</small></span><button class="set-tog" id="setLayout">Edit</button></div>
+      <div id="devBox" class="dev-box" hidden>
+        <div class="set-row set-row2"><span>Developer mode <small class="muted" style="display:block;font-weight:400">Everything unlocked to test. Switch off to get your real save back.</small></span><button class="set-tog" id="set_dev">Off</button></div>
+        <div class="set-row set-row2 dev-on" hidden><span>Lucky Clover <small class="muted" style="display:block;font-weight:400">Replaces your perk each race</small></span><button class="set-tog" id="set_devLuck">Off</button></div>
+        <div class="set-row set-row2 dev-on" hidden><span>Refill <small class="muted" style="display:block;font-weight:400">Coins, diamonds, 99 of each perk</small></span><button class="set-tog" id="set_devFill">Refill</button></div>
+      </div>
       <p class="muted" id="setVoiceNote"></p>
       <button class="ghost" id="setTest">Test voice</button>
     </div>
@@ -3342,9 +3349,33 @@ function renderSettings(){
   const box=$('setBody');if(!box)return;
   [['music','Music'],['sfx','Sound effects'],['voice','Voices']].forEach(([k])=>{const t=$('set_'+k),v=$('set_'+k+'Vol');if(t){t.setAttribute('aria-pressed',SET[k]);t.textContent=SET[k]?'On':'Off';}if(v){v.value=Math.round(SET[k+'Vol']*100);v.disabled=!SET[k];}});
   ['chat','filter','dmFriends'].forEach(k=>{const t=$('set_'+k);if(t){t.setAttribute('aria-pressed',!!SET[k]);t.textContent=SET[k]?'On':'Off';}});
+  renderDevBox();
   const vn=$('setVoiceNote');if(vn)vn.textContent=voice.supported()?'Runners speak their taunts with this device’s built-in voice. Recorded voices replace it line by line.':'This browser has no built-in voice. Taunts still show as speech bubbles.';
 }
 let settingsPaused=false;
+// ---------- developer mode ----------
+const DEV_KEEP=['flagdash-devmode','flagdash-devbak','flagdash-sync','flagdash-secret'];
+const devKeys=()=>{const out=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!DEV_KEEP.includes(k))out.push(k);}}catch(e){}return out;};
+// every skin, item, attire piece and room item, 99 of every perk, plenty of coins and diamonds
+function devUnlock(){const now=Date.now(),w=JSON.parse(JSON.stringify(wallet));
+  w.coins=999999;w.gems=99999;w.skins=SKINS_SHOP.map(k=>k.id);w.items=LOADOUT.map(l=>l.id);
+  w.attire={};ATTIRE.forEach(a=>w.attire[a.id]=now+365*DAY);w.buffs={};BUFFS.forEach(b=>w.buffs[b.id]=99);
+  store.set('flagdash-wallet',JSON.stringify(w));
+  const R=JSON.parse(JSON.stringify(ROOM));ROOM_ITEMS.forEach(i=>{R.own[i.id]=Math.max(1,R.own[i.id]|0);});saveJSON('flagdash-room',R);}
+function devSet(on){
+  if(on===DEVMODE)return;
+  if(on){if(!AUTH.dev)return;const bak={};devKeys().forEach(k=>bak[k]=store.get(k));
+    try{localStorage.setItem('flagdash-devbak',JSON.stringify(bak));}catch(e){feed('Could not keep a copy of your save, so developer mode stayed off','bad');return;}
+    devUnlock();store.set('flagdash-devmode','1');}
+  else{let bak=null;try{bak=JSON.parse(store.get('flagdash-devbak')||'null');}catch(e){}
+    // put the real save back exactly as it was before developer mode
+    try{if(bak){devKeys().forEach(k=>localStorage.removeItem(k));for(const k in bak)if(bak[k]!=null)localStorage.setItem(k,bak[k]);}
+      localStorage.removeItem('flagdash-devbak');localStorage.removeItem('flagdash-devmode');}catch(e){}}
+  location.reload();}
+function renderDevBox(){const box=$('devBox');if(!box)return;box.hidden=!(AUTH.dev||DEVMODE);
+  const t=$('set_dev');if(t){t.setAttribute('aria-pressed',DEVMODE);t.textContent=DEVMODE?'On':'Off';t.disabled=!DEVMODE&&!AUTH.dev;}
+  box.querySelectorAll('.dev-on').forEach(r=>r.hidden=!DEVMODE);
+  const l=$('set_devLuck');if(l){const on=luckActive();l.setAttribute('aria-pressed',on);l.textContent=on?'On':'Off';}}
 function openSettings(){const o=$('settings');o.hidden=false;renderSettings();
   {const inRace=!$('hud').hidden;$('setQuit').hidden=!inRace;$('setClose').textContent=inRace?'Resume':'Done';$('settings').querySelector('h2').textContent=inRace?'Paused':'Settings';}
   if((canAct()||state==='countdown')&&!(RACE&&RACE.online)&&state!=='paused'){togglePause();$('pause').hidden=true;settingsPaused=true;}
@@ -4077,7 +4108,7 @@ async function getSb(){
   return SB;}
 const AUTH={on:!window.claude,ready:false,user:null,pending:null,why:'',msg:'',sent:false,google:null};
 const SYNC={sig:'',timer:0,busy:false,at:0};
-const SYNC_SKIP=new Set(['flagdash-sync','flagdash-seen']);
+const SYNC_SKIP=new Set(['flagdash-sync','flagdash-seen','flagdash-devmode','flagdash-devbak']);
 function localSave(){const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('flagdash-')&&!SYNC_SKIP.has(k))d[k]=localStorage.getItem(k);}return d;}
 const syncMeta=()=>{try{return JSON.parse(localStorage.getItem('flagdash-sync')||'null');}catch(e){return null;}};
 function setSyncMeta(m){try{localStorage.setItem('flagdash-sync',JSON.stringify(m));}catch(e){}}
@@ -4096,19 +4127,22 @@ async function initAuth(){
   setInterval(syncPush,20000);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)syncPush();});
 }
+// Developer accounts are listed in Supabase (supabase/devs.sql). Only they see the Developer switch in Settings.
+async function checkDev(){let dev=false;if(AUTH.user){try{const sb=await getSb();const {data,error}=await sb.rpc('fd_is_dev');dev=!error&&data===true;}catch(e){}}AUTH.dev=dev;renderDevBox();}
 function setUser(u){
   const prev=AUTH.user;AUTH.user=u?{id:u.id,email:u.email||'',name:(u.user_metadata&&(u.user_metadata.full_name||u.user_metadata.name))||''}:null;renderAcct();
   if(AUTH.user&&(!prev||prev.id!==AUTH.user.id)){AUTH.sent=false;syncPull();glbSubmit();
     if(AUTH.pending){const f=AUTH.pending;AUTH.pending=null;closeAcct();setTimeout(f,0);}}
   if(prev&&(!AUTH.user||prev.id!==AUTH.user.id))setTimeout(()=>{SOC.list=[];SOC.inbox=[];SOC.code=null;SOC.ok=null;SOC.seen=null;renderSocBadges();},0);
   if(AUTH.user&&(!prev||prev.id!==AUTH.user.id))setTimeout(()=>socRefresh(),1200);
+  if(!AUTH.user||!prev||prev.id!==AUTH.user.id)checkDev();
 }
 /** True if the player may go ahead. Otherwise ask them to sign in, and run fn once they have. */
 function requireAuth(why,fn){if(!AUTH.on||AUTH.user)return true;AUTH.pending=fn;openAcct(why);return false;}
 const signedIn=()=>!AUTH.on||!!AUTH.user;
 // Bring the account's saved game to this device, or save this device's game to a new account.
 async function syncPull(){
-  if(!AUTH.user||SYNC.busy)return;SYNC.busy=true;
+  if(!AUTH.user||SYNC.busy||DEVMODE)return;SYNC.busy=true;
   try{
     const sb=await getSb(),uid=AUTH.user.id;
     const {data,error}=await sb.from('fd_profiles').select('data,updated_at').eq('user_id',uid).maybeSingle();if(error)throw error;
@@ -4125,7 +4159,7 @@ async function syncPull(){
   }catch(e){SYNC.busy=false;}
 }
 async function syncPush(force){
-  if(!AUTH.user||SYNC.busy)return;const d=localSave(),sig=JSON.stringify(d);if(!force&&sig===SYNC.sig)return;
+  if(!AUTH.user||SYNC.busy||DEVMODE)return;const d=localSave(),sig=JSON.stringify(d);if(!force&&sig===SYNC.sig)return;
   SYNC.busy=true;
   try{const sb=await getSb(),now=new Date().toISOString();
     const {error}=await sb.from('fd_profiles').upsert({user_id:AUTH.user.id,data:d,updated_at:now});if(error)throw error;
@@ -4367,9 +4401,12 @@ const LAP_PERKS=['comeback','swap'];
 const curOf=it=>it.tier==='gem'?'gem':'coin';
 const PLACE_COINS=[60,40,30,20,15,10,10,10],GP_COINS=[300,150,80,40,30,20,20,20],GP_GEMS=[5,2,1];
 let selLaps=[1,2,3].includes(+store.get('flagdash-laps'))?+store.get('flagdash-laps'):1;
+// Developer mode: a sandbox with everything unlocked, switched on in Settings by a developer account.
+// It never syncs to the account or posts scores, and switching it off brings back the real save.
+const DEVMODE=store.get('flagdash-devmode')==='1';
 let wallet=(()=>{let w=null;try{w=JSON.parse(store.get('flagdash-wallet')||'null');}catch(e){w=null;}if(!w||typeof w!=='object')w={};
   const skins=Array.isArray(w.skins)?w.skins.filter(id=>SKINS_SHOP.some(s=>s.id===id)):[];if(!skins.includes('classic'))skins.unshift('classic');
-  const items=Array.isArray(w.items)?w.items.filter(id=>loById(id)&&loById(id).tier!=='usd'):[];LOADOUT.filter(l=>l.tier==='free').forEach(l=>{if(!items.includes(l.id))items.push(l.id);});
+  const items=Array.isArray(w.items)?w.items.filter(id=>loById(id)&&(DEVMODE||loById(id).tier!=='usd')):[];LOADOUT.filter(l=>l.tier==='free').forEach(l=>{if(!items.includes(l.id))items.push(l.id);});
   const lo=Object.assign({atk:'dart',def:'ram'},w.lo||{});if(!items.includes(lo.atk))lo.atk='dart';if(!items.includes(lo.def))lo.def='ram';
   const attire={};if(w.attire&&typeof w.attire==='object')for(const k in w.attire)if(attireById(k)&&typeof w.attire[k]==='number')attire[k]=w.attire[k];
   const equip={};SLOTS.forEach(s=>{const id=w.equip&&w.equip[s.id];if(id&&attire[id]&&attireById(id).slot===s.id)equip[s.id]=id;});
@@ -4866,7 +4903,7 @@ function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`
     const tiles=ROOM_ITEMS.filter(i=>i.src==='gift').map(it=>{const ok=canAfford(it.cost,it.cur);
       return {key:it.id,el:mkTile({ico:icoOf('room',it.id),icon:it.ic,label:it.name,cls:ok?'own':'locked'}),
         info:()=>{const pr=document.createElement('div');pr.innerHTML=priceHTML(it.cost,it.cur);
-          return tileInfo(it.name,[`💪 +${it.pw} Strength for their room`,pr],[[ok?'Send gift':'Not enough',async()=>{if(busy||!spend(it.cost,it.cur))return;busy=true;$('gfNote').textContent='Sending…';
+          return tileInfo(it.name,[`💪 +${it.pw} Strength for their room`,pr],[[ok?'Send gift':'Not enough',async()=>{if(DEVMODE){$('gfNote').textContent='Gifts are off in developer mode.';return;}if(busy||!spend(it.cost,it.cur))return;busy=true;$('gfNote').textContent='Sending…';
             const r=await socSend(friend.uid,'gift',it.id);busy=false;if(r.ok){$('gfNote').textContent=`${it.ic} ${it.name} sent to ${friend.nm}!`;sfx.pick();setTimeout(()=>$('giftPick').hidden=true,1300);}
             else{wallet[it.cur==='gem'?'gems':'coins']+=it.cost;saveWallet();$('gfNote').textContent=r.text+' You were not charged.';}},'buy',!ok]]);}};});
     box.appendChild(tileGrid('gift',tiles,draw));};
@@ -5059,7 +5096,7 @@ async function sbCall(path,body){
   if(!r.ok)throw new Error('supabase '+r.status);return r.json();}
 // Send my points; the server allows one save every 20 seconds, so later changes wait their turn.
 function glbSubmit(){
-  if(!GLB.enabled||!signedIn())return;  // only signed-in players are ranked worldwideclearTimeout(GLB.timer);
+  if(!GLB.enabled||!signedIn()||DEVMODE)return;  // only signed-in players are ranked worldwideclearTimeout(GLB.timer);
   const wait=GLB.lastSent+21000-Date.now();if(wait>0){GLB.timer=setTimeout(glbSubmit,wait);return;}
   rollPeriods();const c=socialCard();
   const rows=[{p:'d',k:MYPTS.d.k,pts:MYPTS.d.p|0,r:MYPTS.d.r|0},{p:'w',k:MYPTS.w.k,pts:MYPTS.w.p|0,r:MYPTS.w.r|0,gb:MYPTS.w.gb|0},{p:'s',k:MYPTS.s.k,pts:MYPTS.s.p|0,r:MYPTS.s.r|0},{p:'a',k:'all',pts:MYPTS.a.p|0,r:MYPTS.a.r|0}];
@@ -6636,6 +6673,9 @@ const LAYOUT=(()=>{
     requestAnimationFrame(()=>requestAnimationFrame(()=>{if(editing)return;scope='race';straighten();}));
   }).observe($('hud'),{attributes:true,attributeFilter:['hidden']});
   $('setLayout').onclick=()=>{$('settings').hidden=true;open('race');};
+  $('set_dev').onclick=()=>devSet(!DEVMODE);
+  $('set_devLuck').onclick=()=>{wallet.luckUntil=luckActive()?0:Date.now()+365*DAY;saveWallet();renderDevBox();};
+  $('set_devFill').onclick=()=>{devUnlock();location.reload();};
   $('deskEdit').onclick=()=>open('desk');
   applyAll();if(mig0)save();
   return {applyAll,isEditing:()=>editing};
@@ -6892,4 +6932,6 @@ requestAnimationFrame(frame);
 })();
 </script>
 
+<div id="devTag" hidden>Developer mode</div>
+<script>try{if(localStorage.getItem("flagdash-devmode")==="1")document.getElementById("devTag").hidden=false;}catch(e){}</script>
 </body></html>

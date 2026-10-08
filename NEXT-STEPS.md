@@ -49,6 +49,11 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 1. [ ] Run `supabase/social.sql` in the Supabase SQL editor (New query, paste everything, Run; click "Run query" if a warning shows).
 2. [ ] Test with a friend: both tap **Online > Find a Race**, then use the 👥 button during the race to add each other and send a message.
 
+## Developer accounts
+- Run `supabase/devs.sql` once in the Supabase SQL editor, then the `insert` line in it with the email you sign in with.
+- In the game: sign in, Settings, Developer mode. Everything unlocks in a sandbox that never syncs or posts scores;
+  switching it off brings back your real save.
+
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
 - [ ] Better hero graphics (more detailed models), when there's time
