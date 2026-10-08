@@ -48,7 +48,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 3: Defences and Rocket Start (green screen)
+## Batch 3: Defences and Rocket Start (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -68,7 +68,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 4: Perks (green screen)
+## Batch 4: Perks (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -209,7 +209,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 11: Rank badges (green screen)
+## Batch 11: Rank badges (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -230,7 +230,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 12: Runner skins (green screen)
+## Batch 12: Runner skins (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -251,7 +251,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 13: Skins (green screen)
+## Batch 13: Skins (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -272,7 +272,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 14: Samurai and warrior skins (green screen)
+## Batch 14: Samurai and warrior skins (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -293,7 +293,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 15: Warrior and dwarf skins (green screen)
+## Batch 15: Warrior and dwarf skins (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -314,7 +314,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 16: Green skins (magenta screen)
+## Batch 16: Green skins (magenta screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -335,7 +335,7 @@ Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like
 No words, letters or numbers.
 ```
 
-## Batch 17: Tracks (green screen)
+## Batch 17: Tracks (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -355,7 +355,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 18: Tracks and Golden Start (green screen)
+## Batch 18: Tracks and Golden Start (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -375,7 +375,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 19: Green tracks and monuments (magenta screen)
+## Batch 19: Green tracks and monuments (magenta screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -395,7 +395,7 @@ Background: one flat, solid pure magenta (#FF00FF) filling the whole image, like
 No words, letters or numbers.
 ```
 
-## Batch 20: Room trophies (green screen)
+## Batch 20: Room trophies (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -415,7 +415,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 21: Room monuments (green screen)
+## Batch 21: Room monuments (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -435,7 +435,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 22: Room monuments and medals (green screen)
+## Batch 22: Room monuments and medals (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -455,7 +455,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 23: Wall medals and decor (green screen)
+## Batch 23: Wall medals and decor (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
@@ -515,7 +515,7 @@ Background: one flat, solid pure green (#00FF00) filling the whole image, like a
 No words, letters or numbers.
 ```
 
-## Batch 26: Rarity gems and strength (green screen)
+## Batch 26: Rarity gems and strength (green screen) · made
 
 | Spot | Item | Replaces | File |
 |---|---|---|---|
