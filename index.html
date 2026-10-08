@@ -1084,6 +1084,22 @@ td.pl{width:58px!important}
 .chest.open .ch-ic{transform:translateY(-10px) scale(1.2)!important}.chest.open .ch-lock{opacity:0!important}
 .ck-gold{--ckm:#e7b43a;--ckw0:#c87a3a;--ckw1:#a85c28;--ckw2:#7a3e16}.ck-silver{--ckm:#c6ced8;--ckw0:#8fa3b8;--ckw1:#6c8098;--ckw2:#4a5a6e}.ck-bronze{--ckm:#c88a52;--ckw0:#9a8a78;--ckw1:#7a6a58;--ckw2:#5a4c3e}
 #results .actions button{padding:10px 8px!important;font-size:16px!important;white-space:nowrap}
+/* the treasure chests (art in img/chest-*.png) */
+#resRewards .chest{width:72px!important;height:72px!important}
+.chest .ch-lid,.chest .ch-body{display:none!important}
+.chest .ch-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 4px rgba(60,30,0,.45));transition:transform .25s}
+.chest:not(.open) .ch-img{animation:chestWiggle 2.4s ease-in-out infinite}.chest:hover .ch-img{transform:scale(1.06)}
+@keyframes chestWiggle{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-5deg)}90%{transform:rotate(5deg)}95%{transform:rotate(-3deg)}}
+.chest .ch-glow{position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(255,226,120,.95),rgba(255,190,40,.4) 40%,rgba(255,190,40,0) 70%);opacity:0;transform:scale(.5);transition:opacity .35s,transform .45s}
+.chest.open .ch-glow{opacity:1;transform:scale(1.1)}
+.chest .ch-ic{top:-14px!important;font-size:22px!important;transition:transform .45s cubic-bezier(.2,1.6,.4,1)!important}
+.chest.open .ch-ic{transform:translateY(-6px) scale(1.35)!important}
+.ck-silver .ch-img{filter:grayscale(1) brightness(1.18) contrast(1.05) drop-shadow(0 4px 4px rgba(40,50,60,.45))}
+.ck-bronze .ch-img{filter:sepia(.5) saturate(.55) brightness(.82) drop-shadow(0 4px 4px rgba(40,30,20,.45))}
+.cg-burst{position:relative;height:110px;display:grid;place-items:center;animation:none!important}.cg-burst img{position:relative;width:110px;height:110px;object-fit:contain;filter:drop-shadow(0 6px 6px rgba(0,0,0,.35))}
+.cg-rays{position:absolute;width:170px;height:170px;border-radius:50%;background:repeating-conic-gradient(rgba(255,214,90,.55) 0 10deg,rgba(255,214,90,0) 10deg 22deg);-webkit-mask:radial-gradient(circle,#000 30%,transparent 70%);mask:radial-gradient(circle,#000 30%,transparent 70%);animation:raySpin 8s linear infinite}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.chest .ch-img,.cg-rays{animation:none!important}}
 /* results: darker cream, thick gold frames, rows touching */
 #results .board{background:linear-gradient(180deg,#e9d6aa,#dcc18a)!important;border:4px solid #c8921c!important;box-shadow:0 0 0 1px #8a5d0c,0 10px 30px rgba(0,0,0,.4)!important}
 #results table{border-spacing:0!important;padding:0!important;width:100%!important}#results .table-wrap{padding:0 8px;box-sizing:border-box}#results .est{display:none}#results table{table-layout:auto}#results th:nth-child(1),#results td:nth-child(1){width:64px!important}#results th:nth-child(4),#results td:nth-child(4){width:52px}#results th:nth-child(5),#results td:nth-child(5){width:68px;text-align:right}#results td:nth-child(3),#results th:nth-child(3){max-width:0!important;width:100%;overflow:hidden;text-overflow:ellipsis}#results .chest-row{gap:6px;flex-wrap:nowrap;justify-content:space-between}#results .chest{width:60px!important;height:60px!important;flex:none}
@@ -1531,7 +1547,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
     <div class="cel-actions"><button class="ghost" id="celSkip">Skip</button><button class="primary d3-gold" id="celNext" hidden>Continue</button></div>
   </div>
 </div>
-<div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><div class="cg-burst">🎉</div><h2 id="cgTitle">Congratulations!</h2><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
+<div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><div class="cg-burst"><span class="cg-rays"></span><img alt="" src="img/chest-open.png"></div><h2 id="cgTitle">Congratulations!</h2><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
 <div id="results" class="overlay" hidden>
   <div class="board">
     <div class="board-head"><div class="eyebrow" id="resEyebrow">Official result</div><h2 id="resTitle"></h2></div>
@@ -4544,9 +4560,10 @@ function chestifyRewards(coins,gems){const box=$('resRewards');
   notes.forEach(n=>{const m=n.match(/^\+?([\d,]+)\s*XP/i);items.push({ic:(CHEST_IC.find(([re])=>re.test(n))||[0,'🎁'])[1],big:m?'+'+m[1]+' XP':'',t:n});});
   const h=document.createElement('div');h.className='chest-head';h.innerHTML='<b>🎁 Your rewards</b>';const all=document.createElement('button');all.className='primary chest-all';all.textContent='Claim all';h.appendChild(all);box.appendChild(h);
   const row=document.createElement('div');row.className='chest-row';box.appendChild(row);
-  const chests=items.map(it=>{const c=document.createElement('button');c.type='button';c.className='chest ck-'+(CHEST_KIND[it.ic]||'bronze');c.innerHTML='<span class="ch-lid"></span><span class="ch-body"><span class="ch-lock"></span></span><span class="ch-ic"></span>';c.querySelector('.ch-ic').textContent=it.ic;
-    c.onclick=()=>{if(c.classList.contains('open'))return congrats([it]);c.classList.add('open');sfx.pick();congrats([it]);if(!row.querySelector('.chest:not(.open)'))all.hidden=true;};row.appendChild(c);return c;});
-  all.onclick=()=>{chests.forEach(c=>c.classList.add('open'));all.hidden=true;sfx.fanfare();congrats(items);};}
+  const chests=items.map(it=>{const c=document.createElement('button');c.type='button';c.className='chest ck-'+(CHEST_KIND[it.ic]||'bronze');c.innerHTML='<span class="ch-glow"></span><img class="ch-img" alt="" src="img/chest-closed.png"><span class="ch-ic"></span>';c.querySelector('.ch-ic').textContent=it.ic;
+    c.onclick=()=>{if(c.classList.contains('open'))return congrats([it]);openChest(c);sfx.pick();congrats([it]);if(!row.querySelector('.chest:not(.open)'))all.hidden=true;};row.appendChild(c);return c;});
+  all.onclick=()=>{chests.forEach((c,i)=>setTimeout(()=>openChest(c),i*120));all.hidden=true;sfx.fanfare();congrats(items);};}
+function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open.png';c.classList.add('open');}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
   items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';i.textContent=it.ic;const tx=document.createElement('div');
     const b=document.createElement('b');b.textContent=it.big||'';const sm=document.createElement('small');sm.textContent=it.t;if(it.big)tx.appendChild(b);tx.appendChild(sm);d.append(i,tx);L.appendChild(d);});
