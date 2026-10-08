@@ -1,4 +1,4 @@
-<!doctype html><html class="cream sky"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("sky");}else if(t==="cream")c.remove("sky");}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+<!doctype html><html class="cream adv"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("adv");}else if(t==="cream")c.remove("adv");else if(t==="sky"){c.remove("adv");c.add("sky");}}catch(e){}</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
 #layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
 body.layout-edit #hud,body.layout-edit #touch{z-index:90}
 body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -1057,6 +1057,38 @@ html.cream.sky .overlay{background:linear-gradient(180deg,rgba(10,30,60,.4),rgba
 html.cream.sky :is(.desk3 .d3-picks b,.d3-name input,.tile-lb,.lv-badge b,.lv-badge small,.rh-title b){color:#0f2a4a!important}
 html.cream.sky :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote){color:#3d5d80!important}html.cream.sky .d3-qinfo b{color:#7a4f06!important}
 html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.sky .stat i{background:#b9d6ee}
+/* ===== Adventure theme: cream panels with thin gold edges, blue actions, orange for Decorate, steel-blue squares ===== */
+html.cream.adv{--night:#e9dcc0;--night-2:#f6ecd6;--panel:rgba(251,244,228,.98);--panel-solid:#f8efdc;--line:#d6b46a;--chalk:#2c3a4e;--muted:#6b7385;
+  --cream:linear-gradient(180deg,#fdf8ec,#f3e7cb);--gframe:linear-gradient(180deg,#f1d68e,#c99a3a);--blue:linear-gradient(180deg,#5db3f0,#2a7fd0 55%,#1d64ad);--d3-navy:#fdf8ec;--d3-navy2:#f3e7cb}
+html.cream.adv *{animation-name:none}html.cream.adv .tile.is-new,html.cream.adv .tut-glow,html.cream.adv #tutArrow,html.cream.adv .slot.ready .meter{animation-name:revert}
+html.cream.adv :is(.store-card,.col-info,.lb-row,.lb-pod,.lb-list,.lb-mebar,.rh-top,.rh-bottom,.hud-top,.slot,.msg,#coach,.onb-card,#onbBar,.panel,.perk-card,.rc-row,.rp-item,.hub-row,.pick-btn,.d3-round,.d3-wallet,.lv-badge,.picker,.seg,.wallet-hud,#minimap,.pz-card,.d3-rname,.hub-form,.lb-season,.d3-arrow,.chip-btn,.av-opt,#tutSkip,.desk3 .d3-top,.desk3 .d3-picks,.desk3 .d3-card,.desk3 .d3-emotes,.d3-name input,.set-row,.pause-card,.set-tog,.d3-emote-ic,.tile-pop){
+  border:1.5px solid transparent!important;background:var(--cream) padding-box,var(--gframe) border-box!important;background-size:100% 100%!important;box-shadow:0 3px 10px rgba(90,70,30,.18)!important}
+/* blue action buttons, blue selected tabs */
+html.cream.adv :is(button.primary,.primary,.buy,.lb-rw summary,.d3-tabbar button,.set-tog.on,.set-tog[aria-pressed="true"]){background:var(--blue)!important;color:#fff!important;border:1.5px solid #17558f!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 0 #134a7d!important;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+html.cream.adv .d3-tabbar button{border-radius:14px}html.cream.adv .d3-tabbar button.cur{background:linear-gradient(180deg,#7cc6ff,#3a92e0 55%,#2470bb)!important;box-shadow:0 0 0 2px #f1d68e,0 3px 0 #134a7d!important}
+html.cream.adv :is(.seg button[aria-pressed="true"],.rh-tabs button.on){background:var(--blue)!important;color:#fff!important}
+html.cream.adv :is(button.ghost,.ghost){background:#fdf8ec!important;color:#2c3a4e!important;border:1.5px solid #d6b46a!important}
+html.cream.adv #roomEdit{background:linear-gradient(180deg,#ffb257,#f08a1c 55%,#d46f0a)!important;border-color:#a8550a!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 3px 0 #a8550a!important;color:#fff!important}
+/* steel-blue squares make the 3D icons pop */
+html.cream.adv .col-sq{border:1.5px solid transparent!important;background:linear-gradient(170deg,#7aaad6,#4a7fb5 55%,#36679a) padding-box,var(--gframe) border-box!important;background-size:100% 100%!important;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.25),0 3px 6px rgba(40,60,90,.3)!important}
+html.cream.adv .col-sq.locked{background:linear-gradient(170deg,#a9b6c4,#8494a6) padding-box,linear-gradient(180deg,#c9d0d8,#8f9aa6) border-box!important}
+html.cream.adv .col-sq.on{box-shadow:0 0 0 2px #f6c84a,0 0 12px rgba(240,180,40,.7)!important}
+html.cream.adv .tile-lb{color:#fff!important;text-shadow:0 1px 2px #0c2340,0 0 3px #0c2340!important}html.cream.adv .tile-bd{color:#ffe08a;text-shadow:0 1px 2px #0c2340}
+html.cream.adv .col-info::after{background:#fbf3e3;border-color:#c99a3a}html.cream.adv .tile-pop,html.cream.adv .col-info{background:#fbf3e3!important}
+/* text colours */
+html.cream.adv :is(.desk3 .d3-picks b,.d3-name input,.lv-badge b,.lv-badge small,.rh-title b,.store-head h2,#hubTitle,.d3-qinfo b){color:#1f4f86!important}
+html.cream.adv :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote,.muted){color:#6b7385!important}
+html.cream.adv .d3-round{color:#2a7fd0}html.cream.adv .d3-logo{color:#1f4f86}
+/* striped orange bars (XP, stats, room) */
+html.cream.adv :is(.lv-bar i,.stat i b,.rc-bar i){background:repeating-linear-gradient(90deg,#ffb04a 0 10px,#f08a1c 10px 13px)!important}
+html.cream.adv :is(.lv-bar,.stat i,.rc-bar){background:#e6dcc6!important;border:1px solid #d6b46a!important}
+html.cream.adv .lb-row.me,html.cream.adv .lb-mebar{background:linear-gradient(180deg,#e3f1fd,#c3e0f8) padding-box,var(--gframe) border-box!important}
+html.cream.adv .overlay{background:linear-gradient(180deg,rgba(30,50,80,.35),rgba(30,50,80,.6))}
+/* level shield */
+.lv-shield{display:none}
+html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;height:42px;font:900 16px var(--ui);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);
+  background:linear-gradient(180deg,#ffb257,#f08a1c 60%,#d46f0a);clip-path:polygon(50% 0,100% 18%,100% 62%,50% 100%,0 62%,0 18%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
 @media (prefers-reduced-motion:reduce){html.cream *{animation-duration:0s!important}}
 </style>
 
@@ -1066,7 +1098,7 @@ html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.s
   <div class="menu-inner desk3">
     <div class="left-col">
       <div class="d3-top">
-        <div class="desk-top"><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards">🏟️</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
+        <div class="desk-top"><span class="lv-shield" id="lvShield" title="Your level">1</span><button class="d3-round" id="plazaBtn" aria-label="My room" title="My room">🏠</button><button class="d3-round" id="deskSet" aria-label="Settings">⚙</button><button class="d3-round d3-store-top" id="deskStore" aria-label="Store" title="Store">🛒</button><button class="d3-round badge-btn" id="deskBoards" aria-label="Leaderboards" title="Leaderboards">🏟️</button><button class="d3-round soc-open badge-btn" id="deskInbox" data-tab="inbox" aria-label="Friends and inbox" title="Friends and inbox">✉️</button><button class="d3-round d3-acct" id="deskAcct" aria-label="Account" title="Sign in">👤</button></div>
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem">💎 <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
@@ -4609,7 +4641,7 @@ async function claimGift(m){const it=roomItem(m.body);if(!it)return;const g=gran
   if(g&&!g.fresh){wallet.coins+=100;saveWallet();SOC.msg=`You already had a ${it.name}, so it turned into 100 coins.`;}else SOC.msg=`${it.ic} ${it.name} added to your room! (+${it.pw} Strength)`;
   SOC.inbox=SOC.inbox.filter(x=>x!==m);renderSocial();renderSocBadges();try{const sb=await getSb();await sb.from('fd_inbox').delete().eq('id',m.id);}catch(e){}}
 
-function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);
+function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJSON('flagdash-xp',{xp:0}).xp);const sh=$('lvShield');if(sh)sh.textContent=l.L;
   const rk=rankOf(l.L);el.querySelector('b').textContent=rk.ic+' '+rk.n+' '+rk.step;el.querySelector('i').style.width=(l.into/l.need*100).toFixed(1)+'%';el.querySelector('small').textContent=l.max?'Top rank':`${l.into}/${l.need} XP`;const st=el.querySelector('em');if(st&&typeof roomStrength==='function')st.textContent='💪 '+roomStrength();}
 // Called by hit() whenever a rival lands a hit. The victim's game takes the loot away;
 // the attacker's game pays it out (online, through a 'loot' message).
@@ -5614,10 +5646,10 @@ $('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1)
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
-{const H=document.documentElement,tb=$('set_theme'),cur=()=>H.classList.contains('sky')?'sky':H.classList.contains('cream')?'cream':'night';
-  const show=()=>{tb.textContent={sky:'Sky gold',cream:'Cream gold',night:'Night blue'}[cur()];};show();
-  // themes cycle: Sky gold -> Cream gold -> Night blue
-  tb.onclick=()=>{const n={sky:'cream',cream:'night',night:'sky'}[cur()];H.classList.toggle('cream',n!=='night');H.classList.toggle('sky',n==='sky');store.set('flagdash-theme',n);show();};}
+{const H=document.documentElement,tb=$('set_theme'),cur=()=>H.classList.contains('adv')?'adv':H.classList.contains('sky')?'sky':H.classList.contains('cream')?'cream':'night';
+  const show=()=>{tb.textContent={adv:'Adventure',sky:'Sky gold',cream:'Cream gold',night:'Night blue'}[cur()];};show();
+  // themes cycle: Adventure -> Sky gold -> Cream gold -> Night blue
+  tb.onclick=()=>{const n={adv:'sky',sky:'cream',cream:'night',night:'adv'}[cur()];H.classList.toggle('cream',n!=='night');H.classList.toggle('sky',n==='sky');H.classList.toggle('adv',n==='adv');store.set('flagdash-theme',n);show();};}
 $('avClose').onclick=()=>$('avPick').hidden=true;
 $('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
 $('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
