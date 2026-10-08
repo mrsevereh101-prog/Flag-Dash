@@ -1057,6 +1057,36 @@ html.cream.sky .overlay{background:linear-gradient(180deg,rgba(10,30,60,.4),rgba
 html.cream.sky :is(.desk3 .d3-picks b,.d3-name input,.tile-lb,.lv-badge b,.lv-badge small,.rh-title b){color:#0f2a4a!important}
 html.cream.sky :is(.desk3 .d3-picks span,.d3-qinfo small,.d3-qnote){color:#3d5d80!important}html.cream.sky .d3-qinfo b{color:#7a4f06!important}
 html.cream.sky .tile-lb{text-shadow:0 1px 0 #e6f4ff,0 0 3px #e6f4ff}html.cream.sky .stat i{background:#b9d6ee}
+/* ----- reward chests, congratulations, treasure store, 3D skin shapes, fitting ----- */
+.chest-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.chest-head b{font-size:16px}.chest-all{padding:8px 14px;border-radius:11px;font-weight:800}
+.chest-row{display:flex;flex-wrap:wrap;gap:10px}
+.chest{position:relative;width:64px;height:58px;border:0;background:none;padding:0;cursor:pointer;filter:drop-shadow(0 4px 4px rgba(0,0,0,.35));animation:chestBob 1.6s ease-in-out infinite alternate}
+.chest .ch-body{position:absolute;left:4px;right:4px;bottom:2px;height:32px;border-radius:4px 4px 8px 8px;background:linear-gradient(90deg,transparent 46%,#f2c14a 46% 54%,transparent 54%),linear-gradient(180deg,#b5642a,#7a3a12);border:2px solid #f2c14a}
+.chest .ch-lid{position:absolute;left:2px;right:2px;top:6px;height:22px;border-radius:14px 14px 3px 3px;background:linear-gradient(90deg,transparent 46%,#f2c14a 46% 54%,transparent 54%),linear-gradient(180deg,#d07a34,#9a4a18);border:2px solid #f2c14a;transform-origin:50% 100%;transition:transform .35s;z-index:2}
+.chest .ch-ic{position:absolute;left:0;right:0;top:12px;text-align:center;font-size:24px;opacity:0;transition:transform .4s,opacity .3s;z-index:1}
+.chest.open{animation:none}.chest.open .ch-lid{transform:translateY(-6px) rotateX(70deg) scaleY(.5)}.chest.open .ch-ic{opacity:1;transform:translateY(-16px) scale(1.15)}
+@keyframes chestBob{to{transform:translateY(-3px) rotate(-2deg)}}
+#congrats{z-index:70;display:grid;place-items:center}#congrats[hidden]{display:none}
+.cg-card{width:min(100%,360px);box-sizing:border-box;background:var(--panel);border:2px solid var(--gold);border-radius:20px;padding:18px;text-align:center;display:grid;gap:10px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.cg-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:26px;color:var(--gold)}.cg-burst{font-size:44px;animation:chestBob .7s ease-in-out infinite alternate}
+.cg-list{display:grid;gap:6px;max-height:46vh;overflow:auto}.cg-item{display:flex;gap:10px;align-items:center;text-align:left;background:rgba(0,0,0,.08);border-radius:12px;padding:6px 10px}.cg-ic{font-size:28px}.cg-item b{display:block;font-size:18px}.cg-item small{font-size:12.5px;line-height:1.3}
+#resRewards .muted{display:none}#resPB{font-size:12.5px;opacity:.85}
+@media (max-width:560px){#results th:nth-child(2),#results td:nth-child(2),#results th:nth-child(6),#results td:nth-child(6){display:none}#results td.nat{font-size:0;white-space:nowrap}#results td.nat img{width:28px;height:19px}
+  #results table{width:100%;min-width:0!important;table-layout:auto}#results th:nth-child(7),#results td:nth-child(7){display:none}#results td.t{font-size:13px}#results td:nth-child(3){max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#results td,#results th{padding:8px 6px}#results .actions{flex-wrap:wrap}#results .actions button{flex:1 1 40%}}
+.cel-congrats{text-align:center;font-family:var(--display);font-size:20px;color:#ffd860;text-shadow:0 2px 0 rgba(0,0,0,.4);margin:2px 0 4px}
+.cel-gifts{grid-template-columns:repeat(auto-fill,minmax(88px,1fr))!important;gap:6px!important}
+.cel-gift{padding:6px 4px!important;border-radius:12px!important;min-height:0!important}.cel-gift .gbox{font-size:24px!important}.cel-gift b{font-size:14px!important}.cel-gift small{font-size:10.5px!important;line-height:1.2}
+@media (max-width:560px){.cel-card{padding:12px!important}.cel-title{font-size:22px!important}.cel-podium{transform:scale(.85);transform-origin:50% 0;margin-bottom:-30px}}
+.st-treasure{background:linear-gradient(180deg,rgba(242,182,49,.25),rgba(168,116,15,.12));border:2px solid #d9a227;border-radius:16px;padding:8px 10px;align-items:center}
+.st-title{margin:0;font-family:var(--display);font-weight:400;font-size:28px;color:#c8921c;text-shadow:0 2px 0 #6a4508,0 0 10px rgba(242,182,49,.5)}
+.st-piles{display:flex;gap:10px;margin-left:auto}.st-pile{display:flex;align-items:center;gap:3px;font-weight:900;font-size:16px}.st-pile svg{width:40px;height:28px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.sk3d{position:absolute;inset:0;display:grid;place-items:center;filter:drop-shadow(0 4px 3px rgba(0,0,0,.45))}
+.sk3d i{display:block;width:62%;height:62%;clip-path:polygon(28% 0,40% 8%,60% 8%,72% 0,100% 16%,90% 40%,78% 34%,78% 100%,22% 100%,22% 34%,10% 40%,0 16%);transform:perspective(120px) rotateY(-12deg);margin-bottom:12px}
+.sk3d.big{position:relative;height:110px}.sk3d.big i{width:96px;height:96px;margin:0}
+/* home top bar fits narrow phones */
+@media (max-width:440px){.desk3 .desk-top{gap:3px!important;min-width:0}.desk3 .desk-top .d3-round{width:32px!important;height:32px!important;font-size:15px!important;flex:none}
+  .lv-shield{width:30px!important;height:34px!important;font-size:13px!important}.desk3 .d3-top{gap:4px!important;padding:6px!important}.desk3 .d3-wallet{font-size:11px!important;padding:4px 6px!important;gap:3px!important;min-width:0}}
+html,body{max-width:100%;overflow-x:hidden}
 /* ===== Adventure theme: cream panels with thin gold edges, blue actions, orange for Decorate, steel-blue squares ===== */
 html.cream.adv{--night:#e9dcc0;--night-2:#f6ecd6;--panel:rgba(251,244,228,.98);--panel-solid:#f8efdc;--line:#d6b46a;--chalk:#2c3a4e;--muted:#6b7385;
   --cream:linear-gradient(180deg,#fdf8ec,#f3e7cb);--gframe:linear-gradient(180deg,#f1d68e,#c99a3a);--blue:linear-gradient(180deg,#5db3f0,#2a7fd0 55%,#1d64ad);--d3-navy:#fdf8ec;--d3-navy2:#f3e7cb}
@@ -1422,12 +1452,11 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 
 <div id="store" class="overlay" hidden>
   <div class="store-card">
-    <div class="store-head"><div><div class="eyebrow">Store</div><h2>Items, skins and attire</h2></div><div class="wallet-big"><span class="coin-ic"></span><b id="stCoins">0</b><span class="gem-ic"></span><b id="stGems">0</b></div><button class="ghost" id="storeClose">Close</button></div>
-    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="items">Items</button><button data-tab="skins">Skins</button><button data-tab="attire">Attire</button><button data-tab="buffs">Buffs</button></div>
-    <p class="store-note" id="storeNote"></p>
-    <p class="store-mods" id="storeMods"></p>
+    <div class="store-head st-treasure"><h2 class="st-title">Store</h2><div class="st-piles"><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="cgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".5" stop-color="#f2b631"/><stop offset="1" stop-color="#a8740f"/></linearGradient></defs><g fill="url(#cgG)" stroke="#8a5d0c" stroke-width=".8"><ellipse cx="12" cy="25" rx="9" ry="3.5"/><ellipse cx="12" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="25" rx="9" ry="3.5"/><ellipse cx="30" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="17" rx="9" ry="3.5"/><ellipse cx="21" cy="13" rx="9" ry="3.5"/><ellipse cx="21" cy="9" rx="9" ry="3.5"/></g></svg><b id="stCoins">0</b></span><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="dgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6fbff"/><stop offset=".5" stop-color="#5fc8ff"/><stop offset="1" stop-color="#1c6fb8"/></linearGradient></defs><g fill="url(#dgG)" stroke="#155a96" stroke-width=".8"><path d="M4 20l5-6h8l5 6-9 9z"/><path d="M22 20l5-6h8l5 6-9 9z"/><path d="M13 12l5-6h8l5 6-9 9z"/></g></svg><b id="stGems">0</b></span></div><button class="ghost" id="storeClose">Close</button></div>
+    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned">Owned</button><button data-tab="items">Items</button><button data-tab="skins">Skins</button><button data-tab="attire">Attire</button><button data-tab="buffs">Buffs</button></div>
+    <p class="store-note" id="storeNote" hidden></p>
+    <p class="store-mods" id="storeMods" hidden></p>
     <div id="storeGrid" class="store-grid"></div>
-    <p class="muted">Earn coins and diamonds by picking them up on the track and by finishing well. Your wallet is saved in this browser. $ Premium items show their planned price; real-money checkout isn't connected yet.</p>
   </div>
 </div>
 
@@ -1450,10 +1479,11 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
     <div class="cel-podium">
       <div class="cel-step s2" id="celS2"></div><div class="cel-step s1" id="celS1"></div><div class="cel-step s3" id="celS3"></div>
     </div>
-    <div class="cel-gifts" id="celGifts"></div>
+    <div class="cel-congrats" id="celCongrats">🎉 Congratulations!</div><div class="cel-gifts" id="celGifts"></div>
     <div class="cel-actions"><button class="ghost" id="celSkip">Skip</button><button class="primary d3-gold" id="celNext" hidden>Continue</button></div>
   </div>
 </div>
+<div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><div class="cg-burst">🎉</div><h2 id="cgTitle">Congratulations!</h2><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
 <div id="results" class="overlay" hidden>
   <div class="board">
     <div class="board-head"><div class="eyebrow" id="resEyebrow">Official result</div><h2 id="resTitle"></h2></div>
@@ -2945,6 +2975,7 @@ function showSurvivalResults(){
     wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();RACE.reward={coinsWon,gemsWon,extra,lv:addXP(10+sv.wave*5)};}
   const rw=RACE.reward;
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${sv.wave} wave${sv.wave>1?'s':''} reached, ${sv.dodged} zombies dodged${rw.extra?`, ${rw.extra} from coin bonuses`:''}${RACE.gems?', '+RACE.gems+' diamond'+(RACE.gems>1?'s':'')+' found':''})</span>`;
+  chestifyRewards(rw.coinsWon,rw.gemsWon);
   $('againBtn').textContent='Survive again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
@@ -3054,6 +3085,7 @@ function showFlagResults(){
   if(!RACE.fcPaid){RACE.fcPaid=true;RACE.fcCoins=player.flags*FC_FLAG_COINS;wallet.coins+=RACE.fcCoins;saveWallet();}
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon+RACE.fcCoins,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(rank)} place, ${RACE.fcCoins} for the ${player.flags} flag${player.flags===1?'':'s'} you carried${rw.extra?`, ${rw.extra} from coin bonuses`:''}${rank===1?', 1 diamond for the win':''})</span>`;
   {const notes=evaluateRace(rank);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
+  chestifyRewards(rw.coinsWon+RACE.fcCoins,rw.gemsWon);
   $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
@@ -4069,6 +4101,7 @@ function showResults(){
   const place=resultRows().findIndex(x=>x.r.kind==='local')+1,rw=grantRaceRewards(place);
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Rank up! You are now ${rankName(rw.lv.to)} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}${rw.lv.unlocked&&rw.lv.unlocked.length?'. Unlocked in the store: '+rw.lv.unlocked.join(', '):''}`:''}</div>`:''}`;
   {const notes=evaluateRace(place);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
+  chestifyRewards(rw.coinsWon,rw.gemsWon);
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
@@ -4231,7 +4264,7 @@ function freeIds(){return [...SKINS_SHOP,...ATTIRE,...LOADOUT].filter(i=>i.tier=
 function freeUnseen(){let seen=[];try{seen=JSON.parse(store.get('flagdash-freeseen')||'[]');}catch(e){}return freeIds().filter(id=>!seen.includes(id));}
 function renderStoreDot(){const on=freeUnseen().length>0;['deskStore','pzStore','d3Store','storeBtn'].forEach(id=>{const b=$(id);if(b){b.classList.toggle('has-dot',on);b.setAttribute('aria-label',on?'Store, free items waiting':'Store');}});}
 function markFreeSeen(){store.set('flagdash-freeseen',JSON.stringify(freeIds()));renderStoreDot();}
-const STORE_NOTE={items:'Pick one attack and one defence before each race. Each can be used once per race: R for attack, F for defence. Items you buy are yours to keep.',
+const STORE_NOTE={owned:'',items:'Pick one attack and one defence before each race. Each can be used once per race: R for attack, F for defence. Items you buy are yours to keep.',
   skins:'⚔️ Hero skins are free, two for each hero: equipping one switches you to that hero. Other skins work on every runner and are yours to keep; some give a bonus while you wear them.',
   attire:`Attire lasts ${ATTIRE_DAYS} days from purchase. Wear one piece per slot for its full bonus. Pieces you own but aren't wearing still give 10% of their bonus.`,
   buffs:'Each buff lasts one race.'};
@@ -4274,6 +4307,8 @@ function tileInfo(title,lines,btns){const d=document.createElement('div');d.clas
 // the 3D portrait of a hero in a skin (rendered by the game, cached)
 const heroSkinFor=h=>(wallet.hs&&wallet.hs[h])||(skinById(wallet.skin).hero?'classic':wallet.skin);
 const heroTileImg=(h,sk)=>avatarImg(h+'.'+(sk||heroSkinFor(h)),selCountry);
+// a general skin shown as a little 3D tunic in its colours
+const skin3D=s=>`<div class="sk3d"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`;
 function shopCard(it,top,body,btnCls){const card=document.createElement('div');card.className='shop-card';
   card.innerHTML=`${top||''}<div class="shop-title"><span class="shop-name"></span><span class="tier t-${it.lvl?'lvl':it.tier}">${it.lvl?rankName(it.lvl)+' reward':TIERS.find(t=>t.id===it.tier).name}</span></div><div class="shop-desc"></div>${it.buff?`<div class="shop-buff">${buffLine(it.buff)}</div>`:''}${body||''}<div class="shop-row">${priceTag(it)}<button class="${btnCls||'buy'}"></button></div>`;
   card.querySelector('.shop-name').textContent=(it.icon?it.icon+' ':'')+it.name;card.querySelector('.shop-desc').textContent=it.desc;return card;}
@@ -4282,16 +4317,28 @@ function renderStore(){
   $('storeNote').textContent=STORE_NOTE[storeTab];
   const m=myMods(),mb=$('storeMods');mb.textContent=Object.keys(m).some(k=>m[k]>0)?'Your bonuses now: '+buffLine(Object.fromEntries(Object.entries(m).filter(([,v])=>v>0))):'You have no bonuses right now.';
   const grid=$('storeGrid');grid.innerHTML='';
+  if(storeTab==='owned'){renderOwned(grid);return;}
   const list=storeTab==='items'?LOADOUT:storeTab==='skins'?SKINS_SHOP:storeTab==='attire'?ATTIRE:BUFFS;
   TIERS.forEach(t=>{let its=list.filter(i=>i.tier===t.id);if(storeTab==='skins')its=its.slice().sort((a,b)=>(b.hero===selChar)-(a.hero===selChar)||(!!b.hero)-(!!a.hero));if(!its.length)return;
     const h=document.createElement('h3');h.className='tier-head t-'+t.id;h.textContent=t.name;grid.appendChild(h);
     const tiles=its.map(it=>{const card=()=>storeTab==='items'?itemCard(it):storeTab==='skins'?skinCard(it):storeTab==='attire'?attireCard(it):buffCard(it);
       const c=card();const cls=(c.classList.contains('on')?'on ':'')+(c.classList.contains('locked')?'locked ':'')+(c.querySelector('.owned')||c.classList.contains('on')?'own ':'')+(c.classList.contains('is-new')?'is-new':'');
-      let o;if(storeTab==='skins'){const hero=it.hero||selChar;o={img:heroTileImg(hero,it.id),label:it.name};}
+      let o;if(storeTab==='skins'){o=it.hero?{img:heroTileImg(it.hero,it.id),label:it.name}:{html:skin3D(it),label:it.name};}
       else{o={icon:it.icon||BUFF_ICON[it.id]||'⭐',label:it.name,badge:storeTab==='perks'&&(wallet.buffs[it.id]|0)?'×'+(wallet.buffs[it.id]|0):''};}
       o.cls=cls;return {key:storeTab+':'+it.id,el:mkTile(o),info:()=>{const k=card();k.classList.add('in-pop');return k;}};});
     const g=tileGrid('store',tiles,renderStore);grid.appendChild(g);});
 }
+// Owned: everything you have, to equip or take off
+function renderOwned(grid){
+  const sec=(title,its,tile,card,key)=>{if(!its.length)return;const h=document.createElement('h3');h.className='tier-head';h.textContent=title;grid.appendChild(h);
+    grid.appendChild(tileGrid('store',its.map(it=>{const c=card(it);return {key:'own:'+key+':'+it.id,el:mkTile(Object.assign(tile(it),{cls:(c.classList.contains('on')?'on ':'')+'own'})),info:()=>{const k=card(it);k.classList.add('in-pop');
+      if(key==='skin'&&k.classList.contains('on')&&it.id!=='classic'){const u=document.createElement('button');u.className='ghost';u.textContent='Unequip';u.onclick=()=>{if(it.hero&&wallet.hs)delete wallet.hs[it.hero];else wallet.skin='classic';saveWallet();renderStore();rebuildPreview();syncLobbyPresence();};k.querySelector('.shop-row').appendChild(u);}
+      return k;}};}),renderStore));};
+  sec('Skins',SKINS_SHOP.filter(k=>(wallet.skins.includes(k.id)||k.tier==='free')&&!lvLocked(k)),k=>k.hero?{img:heroTileImg(k.hero,k.id),label:k.name}:{html:skin3D(k),label:k.name},skinCard,'skin');
+  sec('Items',LOADOUT.filter(l=>wallet.items.includes(l.id)),l=>({icon:l.icon,label:l.name}),itemCard,'item');
+  sec('Attire',ATTIRE.filter(a=>attireActive(a.id)),a=>({icon:a.icon,label:a.name}),attireCard,'att');
+  sec('Buffs',BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0),b=>({icon:BUFF_ICON[b.id],label:b.name,badge:'×'+(wallet.buffs[b.id]|0)}),buffCard,'buff');
+  if(!grid.children.length){const p=document.createElement('p');p.className='muted';p.textContent='Nothing yet. Win races to earn coins, then come back!';grid.appendChild(p);}}
 function renderLoadout(){
   ['atk','def'].forEach(slot=>{const box=$(slot==='atk'?'loAtk':'loDef');box.innerHTML='';
     const tiles=LOADOUT.filter(l=>l.slot===slot).map(l=>{const owned=wallet.items.includes(l.id),on=wallet.lo[slot]===l.id;
@@ -4324,7 +4371,7 @@ function equipSkin(s){if(store.get('flagdash-newskin')===s.id)store.set('flagdas
 function skinCard(s){
   const isNew=store.get('flagdash-newskin')===s.id;
   const locked=lvLocked(s),owned=wallet.skins.includes(s.id)||(s.tier==='free'&&!locked),eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
-  const card=shopCard(s,`<div class="swatch" style="background:${s.sw}"></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
+  const card=shopCard(s,s.hero?'':`<div class="sk3d big"><i style="background:radial-gradient(ellipse at 35% 22%,rgba(255,255,255,.75),rgba(255,255,255,0) 45%),linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.35)),${s.sw}"></i></div>`,'',eq?'ghost':'buy');if(eq)card.classList.add('on');if(isNew){card.classList.add('is-new');setTimeout(()=>card.scrollIntoView({block:'center',behavior:reduceMotion?'auto':'smooth'}),120);}
   const btn=card.querySelector('button');
   if(eq){btn.textContent='Equipped';btn.disabled=true;}
   else if(locked){btn.textContent=`Reach ${rankName(s.lvl)}`;btn.disabled=true;card.classList.add('locked');}
@@ -4406,6 +4453,21 @@ function renderGPBox(){
     li.innerHTML=`<span class="gp-pos">${i+1}</span><img alt="" src="${f.url}"><span class="gp-nm"></span><b>${x.pts} pts</b>`;li.querySelector('.gp-nm').textContent=(x.e.bot?f.name:(cleanName(x.e.nm)||f.name))+(x.e.local?' (you)':'');ol.appendChild(li);});
   box.appendChild(ol);
 }
+/* ---------- results: each reward is a treasure chest; tap to open, or Claim all ---------- */
+const CHEST_IC=[[/xp|rank/i,'⭐'],[/daily|task/i,'✅'],[/leaderboard/i,'🏟️'],[/room|trophy|medal|monument/i,'🏆'],[/skin|unlock/i,'👕'],[/hit|stole/i,'💥'],[/grand prix/i,'📈'],[/best/i,'⏱️']];
+function chestifyRewards(coins,gems){const box=$('resRewards');
+  const notes=[...box.querySelectorAll('.res-note')].map(d=>d.textContent);box.innerHTML='';
+  const items=[{ic:'🪙',big:'+'+(coins|0),t:'Coins'}];if(gems)items.push({ic:'💎',big:'+'+gems,t:gems>1?'Diamonds':'Diamond'});
+  notes.forEach(n=>{const m=n.match(/^\+?([\d,]+)\s*XP/i);items.push({ic:(CHEST_IC.find(([re])=>re.test(n))||[0,'🎁'])[1],big:m?'+'+m[1]+' XP':'',t:n});});
+  const h=document.createElement('div');h.className='chest-head';h.innerHTML='<b>🎁 Your rewards</b>';const all=document.createElement('button');all.className='primary chest-all';all.textContent='Claim all';h.appendChild(all);box.appendChild(h);
+  const row=document.createElement('div');row.className='chest-row';box.appendChild(row);
+  const chests=items.map(it=>{const c=document.createElement('button');c.type='button';c.className='chest';c.innerHTML='<span class="ch-lid"></span><span class="ch-body"></span><span class="ch-ic"></span>';c.querySelector('.ch-ic').textContent=it.ic;
+    c.onclick=()=>{if(c.classList.contains('open'))return congrats([it]);c.classList.add('open');sfx.pick();congrats([it]);if(!row.querySelector('.chest:not(.open)'))all.hidden=true;};row.appendChild(c);return c;});
+  all.onclick=()=>{chests.forEach(c=>c.classList.add('open'));all.hidden=true;sfx.fanfare();congrats(items);};}
+function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
+  items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';i.textContent=it.ic;const tx=document.createElement('div');
+    const b=document.createElement('b');b.textContent=it.big||'';const sm=document.createElement('small');sm.textContent=it.t;if(it.big)tx.appendChild(b);tx.appendChild(sm);d.append(i,tx);L.appendChild(d);});
+  ov.hidden=false;try{confetti(60);}catch(e){}}
 function showPodium(){
   const st=gpStandings(),mine=st.findIndex(x=>x.e.local)+1;
   if(mine===1&&!GP.wonCounted){GP.wonCounted=true;STATS.gpWins=(STATS.gpWins|0)+1;saveJSON('flagdash-stats',STATS);roomCheckWins();}
@@ -5650,6 +5712,7 @@ $('storeBtn').onclick=()=>openStore();
   const show=()=>{tb.textContent={adv:'Adventure',sky:'Sky gold',cream:'Cream gold',night:'Night blue'}[cur()];};show();
   // themes cycle: Adventure -> Sky gold -> Cream gold -> Night blue
   tb.onclick=()=>{const n={adv:'sky',sky:'cream',cream:'night',night:'adv'}[cur()];H.classList.toggle('cream',n!=='night');H.classList.toggle('sky',n==='sky');H.classList.toggle('adv',n==='adv');store.set('flagdash-theme',n);show();};}
+$('cgOk').onclick=()=>$('congrats').hidden=true;
 $('avClose').onclick=()=>$('avPick').hidden=true;
 $('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
 $('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
