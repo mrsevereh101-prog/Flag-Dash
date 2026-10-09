@@ -17,7 +17,3 @@ When a hero gets this voice, rename each file to `<hero>-<kind>-<nn>.mp3` (for e
 - block-02-blocked.mp3
 - banana-01-whoa-whoa-whoa.mp3
 - banana-02-who-left-that-there.mp3
-- samurai-own-hit-1.mp3 (Feel my blade!)
-- samurai-own-hit-2.mp3 (One strike is all I need.)
-- samurai-own-hurt-1.mp3 (My honor demands revenge!)
-- samurai-own-hurt-2.mp3 (You fight without honor!)
