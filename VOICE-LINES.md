@@ -1,6 +1,6 @@
 # Race Your Flag: hero voices
 
-Record 18 lines per hero in batches of 3, one hero at a time, each in that hero's own voice. Samurai: done. The rest are saved for later.
+Record 18 lines per hero in batches of 3, one hero at a time, each in that hero's own voice. Warrior: 3 of 18 done. Samurai: starting fresh. The rest are saved for later.
 
 Record every line of a hero with that hero's one saved voice. Name each MP3 exactly as the file name and send them in batches.
 
