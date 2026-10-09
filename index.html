@@ -1401,6 +1401,27 @@ html #tileModal .tm-card .rc-card.rc-card.rc-card,.tile-modal .rc-card{animation
 .tile-modal .ti-btns{justify-content:center}
 .tile-modal .tp-x{top:10px!important;right:10px!important;width:32px!important;height:32px!important;font-size:14px!important}
 @media (prefers-reduced-motion:reduce){.tile-modal,.tile-modal .tm-card{transition:none}}
+
+/* power report */
+.pr-open{display:flex;align-items:center;gap:8px;width:100%;box-sizing:border-box;margin:6px 0 2px;padding:8px 12px;border-radius:12px;border:2px solid #d9a227;background:linear-gradient(180deg,#fff8e4,#f1e2bc);color:#2a1c04;font:800 15px var(--body,system-ui);cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.pr-open .pr-ic{font-size:20px}.pr-open b{flex:1;text-align:left}.pr-mini{font-weight:900;font-size:16px;color:#1f4f86}
+html .pr-open .tab-tx{display:inline}
+#tileModal.pr-modal .pr-card{width:min(100%,440px);text-align:left;gap:12px}
+.pr-h{margin:0;font-size:20px;padding-right:36px}
+.pr-top{display:flex;gap:14px;align-items:center}
+.pr-dial{--p:0;flex:none;width:112px;height:112px;border-radius:50%;display:grid;place-content:center;text-align:center;background:radial-gradient(closest-side,#fffaf0 72%,transparent 73%),conic-gradient(#e2a92a calc(var(--p)*1%),rgba(120,90,30,.18) 0);box-shadow:0 0 0 3px #d9a227 inset,0 4px 10px rgba(0,0,0,.18)}
+.pr-dial b{font-size:28px;line-height:1}.pr-dial small{font-size:11px;font-weight:700;max-width:80px}
+.pr-sum{margin:0;font-size:13.5px;line-height:1.4}
+.pr-rows{display:grid;gap:10px}
+.pr-lab{display:flex;align-items:baseline;gap:6px;font-size:14.5px}.pr-lab b{flex:1}.pr-lab em{font-style:normal;font-weight:900;font-variant-numeric:tabular-nums}.pr-lab em small{font-weight:700;opacity:.7}
+.pr-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:rgba(120,90,30,.16);box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+.pr-bar i{height:100%;flex:none}.pr-bar i+i{box-shadow:inset 2px 0 0 rgba(255,255,255,.6)}
+.pr-over{display:block;font-size:12px;margin-top:2px;color:#2d7a3a}
+.pr-legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;font-weight:700}.pr-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.pr-inv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pr-inv>div{display:grid;justify-items:center;text-align:center;gap:2px;padding:8px 4px;border-radius:12px;background:rgba(255,255,255,.55);border:1.5px solid rgba(200,146,28,.55)}
+.pr-inv b{font-size:20px;font-variant-numeric:tabular-nums}.pr-inv b small{font-size:13px;opacity:.7}.pr-inv span{font-size:11.5px;font-weight:700;line-height:1.2}
+@media (max-width:380px){.pr-top{flex-direction:column}.pr-inv{grid-template-columns:repeat(2,1fr)}}
 </style>
 
 <div id="stage"></div>
@@ -1650,7 +1671,7 @@ html #tileModal .tm-card .rc-card.rc-card.rc-card,.tile-modal .rc-card{animation
 </div>
 <div id="roomPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="rpTitle"><div class="store-head"><h2 id="rpTitle">Spot</h2><button class="ghost" id="rpClose">Close</button></div>
   <div class="rp-list" id="rpList"></div><div class="rp-foot"><button class="ghost" id="rpRemove">Put in storage</button><button class="ghost" id="rpMore">Get more items</button></div></div></div>
-<div id="roomCol" class="overlay" hidden><div class="store-card rp-card rc-card" role="dialog" aria-labelledby="rcTitle"><div class="store-head"><h2 id="rcTitle"><img class="ico" src="img/icons/collection.webp" alt=""> Room collection</h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="rcClose">Close</button></div>
+<div id="roomCol" class="overlay" hidden><div class="store-card rp-card rc-card" role="dialog" aria-labelledby="rcTitle"><div class="store-head"><h2 id="rcTitle"><img class="ico" src="img/icons/collection.webp" alt=""> Room collection</h2><div class="wallet-big"><span class="coin-ic"></span><b class="hubCoins"></b><span class="gem-ic"></span><b class="hubGems"></b></div><button class="ghost" id="rcClose">Close</button></div><button type="button" class="pr-open" id="rcPower"><span class="pr-ic">📊</span><b>Power report</b><span class="pr-mini" id="rcPowerPct"></span></button>
   <div class="seg rc-tabs" id="rcTabs" role="group" aria-label="Item type"></div><div class="rp-list" id="rcList"></div></div></div>
 <div id="giftPick" class="overlay" hidden><div class="store-card rp-card" role="dialog" aria-labelledby="gfTitle"><div class="store-head"><h2 id="gfTitle">Send a gift</h2><button class="ghost" id="gfClose">Close</button></div>
   <p class="muted">Gifts go to your friend's inbox and decorate their room. You pay for the gift.</p><div class="rp-list" id="gfList"></div><p class="soc-msg" id="gfNote"></p></div></div>
@@ -1742,6 +1763,7 @@ html #tileModal .tm-card .rc-card.rc-card.rc-card,.tile-modal .rc-card{animation
   <div class="store-card">
     <div class="store-head st-treasure"><h2 class="st-title">Store</h2><div class="st-piles"><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="cgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".5" stop-color="#f2b631"/><stop offset="1" stop-color="#a8740f"/></linearGradient></defs><g fill="url(#cgG)" stroke="#8a5d0c" stroke-width=".8"><ellipse cx="12" cy="25" rx="9" ry="3.5"/><ellipse cx="12" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="25" rx="9" ry="3.5"/><ellipse cx="30" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="17" rx="9" ry="3.5"/><ellipse cx="21" cy="13" rx="9" ry="3.5"/><ellipse cx="21" cy="9" rx="9" ry="3.5"/></g></svg><b id="stCoins">0</b></span><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="dgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6fbff"/><stop offset=".5" stop-color="#5fc8ff"/><stop offset="1" stop-color="#1c6fb8"/></linearGradient></defs><g fill="url(#dgG)" stroke="#155a96" stroke-width=".8"><path d="M4 20l5-6h8l5 6-9 9z"/><path d="M22 20l5-6h8l5 6-9 9z"/><path d="M13 12l5-6h8l5 6-9 9z"/></g></svg><b id="stGems">0</b></span></div><button class="ghost" id="storeClose">Close</button></div>
     <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned" title="Owned" aria-label="Owned"><img class="ico tab-ico" src="img/chest-closed-glow.webp" alt=""><span class="tab-tx">Owned</span></button><button data-tab="items" title="Items" aria-label="Items"><img class="ico tab-ico" src="img/icons/box.webp" alt=""><span class="tab-tx">Items</span></button><button data-tab="skins" title="Skins" aria-label="Skins"><img class="ico tab-ico" src="img/icons/skin_classic.webp" alt=""><span class="tab-tx">Skins</span></button><button data-tab="attire" title="Attire" aria-label="Attire"><img class="ico tab-ico" src="img/icons/att_crown.webp" alt=""><span class="tab-tx">Attire</span></button><button data-tab="buffs" title="Perks" aria-label="Perks"><img class="ico tab-ico" src="img/icons/perk_charge.webp" alt=""><span class="tab-tx">Perks</span></button></div>
+    <button type="button" class="pr-open" id="storePower"><span class="pr-ic">📊</span><b>Power report</b><span class="pr-mini" id="storePowerPct"></span></button>
     <p class="store-note" id="storeNote" hidden></p>
     <p class="store-mods" id="storeMods" hidden></p>
     <div id="storeGrid" class="store-grid"></div>
@@ -4693,7 +4715,7 @@ const priceHTML=(cost,cur)=>`<span class="price"><span class="${cur==='gem'?'gem
 const canAfford=(cost,cur)=>cur==='gem'?wallet.gems>=cost:wallet.coins>=cost;
 function spend(cost,cur){if(!canAfford(cost,cur))return false;if(cur==='gem')wallet.gems-=cost;else wallet.coins-=cost;return true;}
 let storeTab='items';
-function openStore(){closePicker();$('store').hidden=false;renderStore();$('storeClose').focus();markFreeSeen();}
+function openStore(){closePicker();$('store').hidden=false;renderStore();renderPowerMini();$('storeClose').focus();markFreeSeen();}
 // Red dot on the store buttons while there are free items the player hasn't looked at yet. Opening the store clears it.
 const myLevel=()=>levelOf(loadJSON('flagdash-xp',{xp:0}).xp).L;
 const lvLocked=it=>!!(it&&it.lvl&&myLevel()<it.lvl&&!(wallet.skins||[]).includes(it.id));
@@ -5142,7 +5164,7 @@ function openSlot(slot){RV.slot=slot;const cur=ROOM.place[slot.id];$('rpTitle').
   $('rpRemove').hidden=!cur;$('roomPick').hidden=false;}
 $('rpRemove').onclick=()=>{if(RV.slot){delete ROOM.place[RV.slot.id];saveRoom();}$('roomPick').hidden=true;renderRoomHud();};
 $('rpClose').onclick=()=>$('roomPick').hidden=true;$('rpMore').onclick=()=>{$('roomPick').hidden=true;openCollection(RV.slot&&{shelf:'trophy',wall:'decor',floor:'furniture',pedestal:'monument'}[RV.slot.type]);};
-function openCollection(tab){if(tab)RV.colTab=tab;$('roomCol').hidden=false;renderCollection();}
+function openCollection(tab){if(tab)RV.colTab=tab;$('roomCol').hidden=false;renderCollection();renderPowerMini();}
 $('rcClose').onclick=()=>{$('roomCol').hidden=true;renderRoomHud();};
 const COL_CATS=[['all','All']].concat(ROOM_CATS);
 // The collection: every collectible as a small square; ones you don't have yet are greyed out with a lock.
@@ -5181,6 +5203,46 @@ function renderCollection(){
     const sq=grid.querySelector('.col-sq.sel');requestAnimationFrame(()=>{if(sq)tilePop(grid,sq,row,()=>{RV.colSel=null;renderCollection();});});}
   else document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});
 }
+
+/* ---------- power report: every bonus you have, where it comes from, and how close each is to its maximum ---------- */
+const PR_STATS=[['spd','🏃','Top speed'],['agi','🌀','Agility'],['chg','⚡','Power recharge'],['stun','🛡️','Shorter stuns'],['coin','🪙','Coins']];
+const PR_SRC=[['skin','Skin','#e2a92a'],['worn','Attire worn','#3a92e0'],['stock','Attire in stock','#8fc4ff'],['room','Room trophies','#5fb36a']];
+function powerData(){pruneAttire();const src={skin:{},worn:{},stock:{},room:{}};addBuff(src.skin,skinById(mySkinId()).buff,1);
+  for(const id in wallet.attire){const a=attireById(id);if(!a)continue;const worn=wallet.equip[a.slot]===id;addBuff(worn?src.worn:src.stock,a.buff,worn?1:STOCK_SHARE);}
+  addBuff(src.room,roomBonus(),1);
+  const rows=PR_STATS.map(([k,ic,name])=>{const parts=PR_SRC.map(([s])=>src[s][k]||0),raw=parts.reduce((a,b)=>a+b,0),cap=BUFF_CAP[k];return {k,ic,name,parts,raw,val:Math.min(cap,raw),cap,fill:Math.min(1,raw/cap)};});
+  const overall=rows.reduce((a,r)=>a+r.fill,0)/rows.length;return {rows,overall};}
+const powerPct=()=>Math.round(powerData().overall*100)+'%';
+function renderPowerMini(){['storePowerPct','rcPowerPct'].forEach(id=>{const e=$(id);if(e)e.textContent=powerPct();});}
+function openPowerReport(){document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});
+  const {rows,overall}=powerData(),P=Math.round(overall*100);
+  const ov=document.createElement('div');ov.className='tile-modal pr-modal';ov.id='tileModal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Power report');
+  const c=document.createElement('div');c.className='col-info tile-pop tm-card pr-card';
+  const owned=(list,has)=>[list.filter(has).length,list.length];
+  const sk=owned(SKINS_SHOP,k=>wallet.skins.includes(k.id)),at=[Object.keys(wallet.attire).length,ATTIRE.length],
+        lo=owned(LOADOUT,l=>wallet.items.includes(l.id)),ri=owned(ROOM_ITEMS,i=>ownsItem(i.id)),
+        perks=BUFFS.reduce((a,b)=>a+(wallet.buffs[b.id]|0),0),pk=BUFFS.filter(b=>(wallet.buffs[b.id]|0)>0).length;
+  const pctTxt=v=>(v*100<1&&v>0?(v*100).toFixed(1):Math.round(v*100*10)/10)+'%';
+  c.innerHTML=`<h3 class="pr-h">📊 Power report</h3>
+    <div class="pr-top"><div class="pr-dial" style="--p:${P}"><b>${P}%</b><small>of max power</small></div>
+      <p class="pr-sum">All your bonuses combined, out of the most each one can reach. Skins, attire and room trophies all count. Attire in stock gives ${Math.round(STOCK_SHARE*100)}% of its bonus.</p></div>
+    <div class="pr-rows">${rows.map(r=>`<div class="pr-row"><div class="pr-lab"><span>${r.ic}</span><b>${r.name}</b><em>${pctTxt(r.val)} <small>/ ${pctTxt(r.cap)}</small></em></div>
+      <div class="pr-bar" role="img" aria-label="${r.name}: ${pctTxt(r.val)} of ${pctTxt(r.cap)}">${r.parts.map((v,i)=>v>0?`<i style="width:${Math.min(100,v/r.cap*100)}%;background:${PR_SRC[i][2]}"></i>`:'').join('')}</div>
+      ${r.raw>r.cap?`<small class="pr-over">At the maximum (${pctTxt(r.raw-r.cap)} extra is not used)</small>`:''}</div>`).join('')}</div>
+    <div class="pr-legend">${PR_SRC.map(([,n,col])=>`<span><i style="background:${col}"></i>${n}</span>`).join('')}</div>
+    <div class="pr-inv">
+      <div><b>${sk[0]}<small>/${sk[1]}</small></b><span>Skins</span></div>
+      <div><b>${at[0]}<small>/${at[1]}</small></b><span>Attire</span></div>
+      <div><b>${lo[0]}<small>/${lo[1]}</small></b><span>Loadout items</span></div>
+      <div><b>${perks}</b><span>Perks in stock (${pk} kinds)</span></div>
+      <div><b>${ri[0]}<small>/${ri[1]}</small></b><span>Room items</span></div>
+      <div><b>💪 ${roomStrength()}</b><span>Room strength</span></div>
+    </div>`;
+  const done=()=>{document.removeEventListener('keydown',key,true);ov.remove();};
+  const key=e=>{if(e.key==='Escape'){e.stopPropagation();e.preventDefault();done();}};document.addEventListener('keydown',key,true);
+  const x=document.createElement('button');x.type='button';x.className='tp-x';x.textContent='✕';x.setAttribute('aria-label','Close');x.onclick=e=>{e.stopPropagation();done();};c.appendChild(x);
+  ov.onclick=e=>{if(e.target===ov)done();};ov.appendChild(c);document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));x.focus({preventScroll:true});}
+$('storePower').onclick=openPowerReport;$('rcPower').onclick=openPowerReport;
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
   let busy=false;const draw=()=>{const box=$('gfList');box.innerHTML='';
