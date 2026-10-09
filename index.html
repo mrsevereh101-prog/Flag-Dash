@@ -1393,6 +1393,10 @@ html.mode-page #menu .left-col>:not(#d3Sheet){visibility:hidden}
 .tm-art>*{position:static!important;width:140px!important;height:140px!important;max-width:none!important;object-fit:contain;margin:0!important;transform:none!important;font-size:96px!important;line-height:140px!important;display:grid;place-items:center;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
 .tm-art>.tile-art,.tm-art>.tile-art>*{width:140px!important;height:140px!important}
 .tile-modal .shop-card>.sk-big,.tile-modal .shop-card>.sk3d.big{display:none}
+html #tileModal .tm-card .rc-card.rc-card.rc-card,.tile-modal .rc-card{animation:none!important;background-image:none!important;position:static!important;display:grid!important;gap:8px;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;text-align:center}
+.tile-modal .rc-card::before,.tile-modal .rc-card::after{display:none!important}
+.tile-modal .rc-card .ri-tx{display:grid;gap:6px;justify-items:center}.tile-modal .rc-card .ri-tx>b{font-size:19px}
+.tile-modal .rc-card .col-buffs{justify-content:center}.tile-modal .rc-card .rc-bar{display:block;width:80%;height:8px}.tile-modal .rc-card .rc-side{display:flex;justify-content:center}
 .tile-modal .ti-box{gap:6px}.tile-modal .ti-box>b{font-size:19px}.tile-modal .ti-box small{font-size:14px}
 .tile-modal .ti-btns{justify-content:center}
 .tile-modal .tp-x{top:10px!important;right:10px!important;width:32px!important;height:32px!important;font-size:14px!important}
@@ -4728,7 +4732,7 @@ function tileGrid(menu,tiles,rerender){const g=document.createElement('div');g.c
   return g;}
 // Details for a tile: a mid-size card in the middle of the screen with a big picture of the item
 function tilePop(grid,tile,content,close){document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});if(!grid.isConnected)return;
-  const ov=document.createElement('div');ov.className='tile-modal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+  const ov=document.createElement('div');ov.className='tile-modal';ov.id='tileModal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
   const pop=document.createElement('div');pop.className='col-info tile-pop tm-card';
   const art=tile.querySelector('.col-art,.tile-img,.tile-art,.col-ic,img');if(art){const w=document.createElement('div');w.className='tm-art';const c=art.cloneNode(true);c.removeAttribute('id');w.appendChild(c);pop.appendChild(w);}
   pop.appendChild(content);
@@ -5172,13 +5176,10 @@ function renderCollection(){
     // what the item adds: Strength and the bonuses it gives, plus XP the first time you get it
     const bf=document.createElement('div');bf.className='col-buffs';
     bf.innerHTML=`<span>💪 +${it.pw} Strength</span><span>🪙 +${+(it.pw/10).toFixed(1)}% coins</span><span>⚡ +${+(it.pw/20).toFixed(2)}% power recharge</span>${own?'':`<span>⭐ +${it.pw*5} XP</span>`}`;
-    mid.appendChild(bf);row.append(ic,mid,side);
-    row.onclick=e=>{if(e.target.closest('button'))return;RV.colSel=null;renderCollection();};row.title='Tap to close';
-    // show it as a pop-up right above the square you tapped (below it on the first row)
-    const sq=grid.querySelector('.col-sq.sel');grid.appendChild(row);
-    requestAnimationFrame(()=>{if(!sq)return;const h=row.offsetHeight,top=sq.offsetTop-h-8;
-      if(top>=0){row.style.top=top+'px';row.classList.add('up');}else{const t=sq.offsetTop+sq.offsetHeight+8;row.style.top=t+'px';row.classList.add('down');grid.style.paddingBottom=Math.max(0,t+h+8-grid.offsetHeight)+'px';}
-      const ax=sq.offsetLeft+sq.offsetWidth/2;row.style.setProperty('--ax',ax+'px');row.scrollIntoView({block:'nearest',behavior:'smooth'});});}
+    mid.appendChild(bf);row.append(mid,side);row.classList.remove('col-info');row.classList.add('rc-card');
+    // the same mid-size card in the middle of the screen as the store, with the item big
+    const sq=grid.querySelector('.col-sq.sel');requestAnimationFrame(()=>{if(sq)tilePop(grid,sq,row,()=>{RV.colSel=null;renderCollection();});});}
+  else document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});
 }
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
