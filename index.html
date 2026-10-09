@@ -1269,6 +1269,45 @@ html.cream.adv .overlay{background:linear-gradient(180deg,rgba(30,50,80,.35),rgb
 html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;height:42px;font:900 16px var(--ui);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);
   background:linear-gradient(180deg,#ffb257,#f08a1c 60%,#d46f0a);clip-path:polygon(50% 0,100% 18%,100% 62%,50% 100%,0 62%,0 18%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
 @media (prefers-reduced-motion:reduce){html.cream *{animation-duration:0s!important}}
+
+/* chest opening: a full-screen moment (dim, chest flies in, shakes, bursts open, rewards fly out one by one) */
+#chestCine{position:fixed;inset:0;z-index:65;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at 50% 52%,rgba(60,35,0,.55),rgba(5,6,20,.94) 70%);opacity:0;transition:opacity .35s}
+#chestCine[hidden]{display:none}#chestCine.in{opacity:1}
+.cc-stage{position:relative;width:min(70vw,300px);aspect-ratio:1;display:grid;place-items:center}
+.cc-chest{position:relative;z-index:3;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 14px 18px rgba(0,0,0,.6));transform:translateY(60vh) scale(.3) rotate(-14deg)}
+#chestCine.in .cc-chest{animation:ccIn .75s cubic-bezier(.2,1.35,.4,1) forwards}
+#chestCine.charge .cc-chest{animation:ccShake 1.1s linear forwards}
+#chestCine.burst .cc-chest{animation:ccPunch .6s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes ccIn{to{transform:none}}
+@keyframes ccShake{0%{transform:none}10%{transform:translateX(-2px) rotate(-1deg)}20%{transform:translateX(2px) rotate(1deg)}30%{transform:translateX(-4px) rotate(-2deg)}40%{transform:translateX(4px) rotate(2deg)}50%{transform:translateX(-6px) rotate(-3deg) scale(1.02)}60%{transform:translateX(6px) rotate(3deg) scale(1.03)}70%{transform:translateX(-8px) rotate(-4deg) scale(1.05)}80%{transform:translateX(9px) rotate(4deg) scale(1.07)}90%{transform:translateX(-10px) rotate(-5deg) scale(1.09)}100%{transform:scale(.9,1.08) translateY(6px)}}
+@keyframes ccPunch{0%{transform:scale(.85,1.1)}40%{transform:scale(1.22) translateY(-10px)}100%{transform:scale(1.04)}}
+.cc-glow{position:absolute;inset:-25%;border-radius:50%;z-index:1;background:radial-gradient(circle,rgba(255,236,150,.95),rgba(255,190,40,.45) 35%,rgba(255,190,40,0) 68%);opacity:0;transform:scale(.4);transition:opacity 1.1s,transform 1.1s}
+#chestCine.charge .cc-glow{opacity:.75;transform:scale(.9)}#chestCine.burst .cc-glow{opacity:1;transform:scale(1.25);transition-duration:.3s}
+.cc-rays{position:absolute;width:260%;aspect-ratio:1;z-index:0;border-radius:50%;background:repeating-conic-gradient(rgba(255,220,110,.5) 0 8deg,rgba(255,220,110,0) 8deg 20deg);-webkit-mask:radial-gradient(circle,#000 15%,transparent 62%);mask:radial-gradient(circle,#000 15%,transparent 62%);opacity:0;transform:scale(.2)}
+#chestCine.burst .cc-rays{animation:ccRays .8s cubic-bezier(.2,1.2,.4,1) forwards,raySpin 14s linear infinite}
+@keyframes ccRays{to{opacity:1;transform:scale(1)}}
+.cc-ring{position:absolute;z-index:2;width:60%;aspect-ratio:1;border-radius:50%;border:6px solid rgba(255,240,180,.95);box-shadow:0 0 30px rgba(255,210,90,.9);opacity:0}
+#chestCine.burst .cc-ring{animation:ccRing .8s ease-out forwards}
+@keyframes ccRing{0%{opacity:1;transform:scale(.4)}100%{opacity:0;transform:scale(3.4);border-width:1px}}
+.cc-flash{position:absolute;inset:0;background:#fff8dc;opacity:0;pointer-events:none;z-index:9}
+#chestCine.burst .cc-flash{animation:ccFlash .55s ease-out}
+@keyframes ccFlash{0%{opacity:.95}100%{opacity:0}}
+.cc-pops{position:absolute;left:50%;top:42%;width:0;height:0;z-index:4}
+.cc-pops>span{position:absolute;left:-30px;top:-30px;width:60px;height:60px;display:grid;place-items:center;font-size:44px;opacity:0;filter:drop-shadow(0 4px 6px rgba(0,0,0,.55)) drop-shadow(0 0 10px rgba(255,220,120,.8))}
+.cc-pops>span img{width:100%;height:100%;object-fit:contain}
+.cc-pops>span.go{animation:ccPop 1s cubic-bezier(.2,1.3,.4,1) forwards}
+@keyframes ccPop{0%{opacity:0;transform:translate(0,30px) scale(.2) rotate(-30deg)}35%{opacity:1;transform:translate(calc(var(--x)*.5),calc(var(--y) - 60px)) scale(1.5) rotate(10deg)}100%{opacity:1;transform:translate(var(--x),var(--y)) scale(1)}}
+.cc-sparks{position:absolute;inset:0;pointer-events:none;z-index:5}
+.cc-sparks i{position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:#ffe27a;box-shadow:0 0 8px #ffcf40;animation:ccSpark 1.1s ease-out forwards}
+@keyframes ccSpark{0%{opacity:1;transform:translate(-50%,-50%)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.3)}}
+@media (prefers-reduced-motion:reduce){#chestCine{display:none!important}}
+
+/* results: the nation is its own middle column, flag plus the full name (wraps instead of running into the time) */
+#results th:nth-child(3),#results td:nth-child(3){width:34%!important;max-width:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#results th:nth-child(4),#results td.nat{width:40%!important;text-align:left!important}
+#results td.nat{font-size:inherit!important;white-space:normal!important}
+#results td.nat .nat-in{display:flex;align-items:center;gap:8px;line-height:1.15}#results td.nat img{flex:none;width:36px;height:24px}
+@media (max-width:560px){#results td.nat{font-size:12px!important}#results td.nat .nat-in{gap:5px}#results td.nat img{width:26px;height:17px}#results th:nth-child(3),#results td:nth-child(3){width:30%!important}}
 </style>
 
 <div id="stage"></div>
@@ -1633,10 +1672,11 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
     <div class="cel-podium">
       <div class="cel-step s2" id="celS2"></div><div class="cel-step s1" id="celS1"></div><div class="cel-step s3" id="celS3"></div>
     </div>
-    <div class="cel-congrats" id="celCongrats"><img alt="Congratulations!" src="img/congrats.webp" width="760" height="323"></div><div class="cel-gifts" id="celGifts"></div>
+    <div class="cel-gifts" id="celGifts" hidden></div>
     <div class="cel-actions"><button class="ghost" id="celSkip">Skip</button><button class="primary d3-gold" id="celNext" hidden>Continue</button></div>
   </div>
 </div>
+<div id="chestCine" hidden aria-hidden="true"><div class="cc-stage"><span class="cc-rays"></span><span class="cc-ring"></span><span class="cc-glow"></span><img class="cc-chest" alt="" src="img/chest-closed.png"><div class="cc-pops"></div></div><div class="cc-sparks"></div><div class="cc-flash"></div></div>
 <div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><h2 id="cgTitle" class="cg-title"><img alt="Congratulations!" src="img/congrats.webp" width="760" height="323"></h2><div class="cg-burst"><span class="cg-rays"></span><img alt="" src="img/chest-open.png"></div><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
 <div id="results" class="overlay" hidden>
   <div class="board">
@@ -4340,8 +4380,8 @@ function renderResults(){
     const cells=[[`${i+1}`,'pl'],[String(x.r.lane),''],['',''],['','nat'],[fmt(x.t),'t'],[i?'+'+(x.t-win).toFixed(2):'—','t'],[String(POINTS[i]||0),'t']];
     cells.forEach(([txt,cls],ci)=>{const td=document.createElement('td');if(cls)td.className=cls;
       if(ci===0){const t=document.createElement('span');t.className='rk-tag rk'+Math.min(i+1,4);const n=document.createElement('i');n.textContent=txt;t.appendChild(n);if(i<3){const c=document.createElement('b');c.textContent=txt;t.appendChild(c);}td.appendChild(t);}
-      else if(ci===2){if(teams&&x.r.team!=null){const d=document.createElement('span');d.className='tdot';d.style.background=TEAMS[x.r.team].css;td.appendChild(d);}td.appendChild(document.createTextNode(x.r.nm+(x.r.kind==='local'?' (you)':'')+(x.r.human?'':' · CPU')));}
-      else if(ci===3){const im=document.createElement('img');im.src=x.r.flag.url;im.alt='';td.appendChild(im);td.appendChild(document.createTextNode(x.r.flag.name));}
+      else if(ci===2){if(teams&&x.r.team!=null){const d=document.createElement('span');d.className='tdot';d.style.background=TEAMS[x.r.team].css;td.appendChild(d);}td.appendChild(document.createTextNode(!x.r.human&&x.r.kind!=='local'&&x.r.nm===x.r.flag.name?'CPU':x.r.nm+(x.r.kind==='local'?' (you)':'')+(x.r.human?'':' · CPU')));}
+      else if(ci===3){const w=document.createElement('span');w.className='nat-in';const im=document.createElement('img');im.src=x.r.flag.url;im.alt='';const nm=document.createElement('span');nm.textContent=x.r.flag.name;w.append(im,nm);td.appendChild(w);}
       else if(ci===4){td.textContent=txt;if(x.est){const s=document.createElement('span');s.className='est';s.textContent=' est.';td.appendChild(s);}}
       else td.textContent=txt;
       tr.appendChild(td);});
@@ -4727,8 +4767,29 @@ function chestifyRewards(coins,gems){const box=$('resRewards');
   items.forEach((it,k)=>{const sp=document.createElement('span');if(it.ico)sp.appendChild(icoEl(it.ico));else sp.textContent=it.ic;const n=items.length,a=(n===1?0:(k/(n-1)-.5))*120;sp.style.setProperty('--a',a+'deg');sp.style.setProperty('--d',(k*90)+'ms');pops.appendChild(sp);});
   const hint=document.createElement('div');hint.className='ch-hint';hint.textContent=`🎁 ${items.length} reward${items.length>1?'s':''} · tap to open`;
   c.appendChild(pops);
-  c.onclick=()=>{if(!c.classList.contains('open')){openChest(c);sfx.fanfare();hint.textContent='Tap to see your rewards again';setTimeout(()=>congrats(items),1400);}else congrats(items);};
+  c.onclick=()=>{if(!c.classList.contains('open')){openChest(c);hint.textContent='Tap to see your rewards again';chestCine(items);}else congrats(items);};
   wrap.append(c,hint);box.appendChild(wrap);}
+// the big moment: the chest flies in, rumbles and glows, bursts open with a flash, then each reward shoots out
+const CC={timers:[]};
+function chestCine(items){const ov=$('chestCine');CC.timers.forEach(clearTimeout);CC.timers=[];
+  if(reduceMotion){congrats(items);return;}
+  const img=ov.querySelector('.cc-chest'),pops=ov.querySelector('.cc-pops'),sp=ov.querySelector('.cc-sparks');
+  img.src='img/chest-closed.png';pops.innerHTML='';sp.innerHTML='';ov.className='';ov.hidden=false;
+  const n=items.length,R=Math.min(innerWidth*.36,170);
+  items.forEach((it,k)=>{const e=document.createElement('span');if(it.ico)e.appendChild(icoEl(it.ico));else e.textContent=it.ic;
+    const a=(n===1?0:(k/(n-1)-.5))*Math.min(200,40*n)*Math.PI/180;e.style.setProperty('--x',Math.sin(a)*R+'px');e.style.setProperty('--y',-Math.cos(a)*R*.9-40+'px');pops.appendChild(e);});
+  const at=(ms,f)=>CC.timers.push(setTimeout(f,ms));
+  const end=()=>{CC.timers.forEach(clearTimeout);CC.timers=[];ov.className='in burst';img.src='img/chest-open.png';[...pops.children].forEach(e=>e.classList.add('go'));congrats(items);};
+  ov.onclick=end;
+  requestAnimationFrame(()=>ov.classList.add('in'));tone(90,0.6,'sawtooth',0.04,60);
+  at(800,()=>{ov.classList.add('charge');[0,250,450,600,720,820,900].forEach((d,i)=>tone(300+i*90,0.09,'square',0.035,0,d/1000));tone(70,1.1,'sawtooth',0.035,80);});
+  at(1900,()=>{ov.classList.remove('charge');ov.classList.add('burst');img.src='img/chest-open.png';
+    tone(60,0.7,'sawtooth',0.09,-30);tone(140,0.5,'square',0.06,-90);sfx.fanfare();
+    for(let i=0;i<46;i++){const s=document.createElement('i'),a=Math.random()*Math.PI*2,d=120+Math.random()*Math.max(innerWidth,innerHeight)*.5;
+      s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');s.style.animationDelay=Math.random()*.15+'s';
+      if(i%3===0)s.style.background='#fff';sp.appendChild(s);}});
+  [...pops.children].forEach((e,k)=>at(2150+k*300,()=>{e.classList.add('go');sfx.pick();}));
+  at(2150+n*300+900,end);}
 function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open.png';c.classList.add('open');}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
   items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';setIco(i,it.ico,it.ic);const tx=document.createElement('div');
@@ -5978,7 +6039,7 @@ $('storeBtn').onclick=()=>openStore();
   const show=()=>{tb.textContent={adv:'Adventure',sky:'Sky gold',cream:'Cream gold',night:'Night blue'}[cur()];};show();
   // themes cycle: Adventure -> Sky gold -> Cream gold -> Night blue
   tb.onclick=()=>{const n={adv:'sky',sky:'cream',cream:'night',night:'adv'}[cur()];H.classList.toggle('cream',n!=='night');H.classList.toggle('sky',n==='sky');H.classList.toggle('adv',n==='adv');store.set('flagdash-theme',n);show();};}
-$('cgOk').onclick=()=>$('congrats').hidden=true;
+$('cgOk').onclick=()=>{$('congrats').hidden=true;CC.timers.forEach(clearTimeout);CC.timers=[];$('chestCine').hidden=true;};
 $('avClose').onclick=()=>$('avPick').hidden=true;
 $('avFile').onchange=e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;if(!requireAuth('Sign in to upload a profile picture.',()=>openAvatarPicker()))return;uploadPic(f);};
 $('avRemove').onclick=removePic;$('deskBoards').onclick=()=>openHub('boards');$('menuTasksBtn').onclick=()=>openHub('tasks');$('menuBoardsBtn').onclick=()=>openHub('boards');$('menuGuildBtn').onclick=()=>openHub('guild');$('hubClose').onclick=closeHub;
@@ -6797,8 +6858,7 @@ function celebrate(rows,place,rw,done){
   const steps=[[700,()=>{$('celS3').classList.add('show');sfx.beep(false);}],
     [2000,()=>{$('celS2').classList.add('show');sfx.beep(false);}],
     [3500,()=>{$('celS1').classList.add('show');t.textContent='🏆 '+winName;t.classList.add('win');sfx.fanfare();confetti(win&&win.kind==='local'?160:110);}],
-    [4900,()=>{[...g.children].forEach((d,i)=>CEL.timers.push(setTimeout(()=>d.classList.add('show'),i*350)));}],
-    [4900+gifts.length*350+500,()=>{$('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}]];
+    [5200,()=>{$('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}]];
   if(reduceMotion)steps.forEach(([,f])=>f());else steps.forEach(([ms,f])=>CEL.timers.push(setTimeout(f,ms)));
 }
 function celFinish(){CEL.timers.forEach(clearTimeout);CEL.timers=[];
