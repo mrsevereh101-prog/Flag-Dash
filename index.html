@@ -1345,10 +1345,11 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 #results #resRewards .chest-one{justify-items:start;padding:0}
 #results #resRewards .chest.big{width:96px!important;height:96px!important}
 #results .ch-hint{display:none}
-#results .chest:not(.open) .ch-glow{inset:-22%!important;opacity:1;transform:scale(1);animation:chGlow 1.8s ease-in-out infinite;background:radial-gradient(circle,rgba(255,236,140,1),rgba(255,196,40,.75) 38%,rgba(255,170,20,0) 70%)!important;z-index:0}
-#results .chest:not(.open) .ch-img{position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(255,200,60,.95)) drop-shadow(0 4px 4px rgba(60,30,0,.45))!important}
+#results .chest:not(.open) .ch-glow{display:none}
+#results .chest:not(.open) .ch-img{animation:chPulse 1.8s ease-in-out infinite!important;filter:drop-shadow(0 4px 4px rgba(60,30,0,.4))!important}
+@keyframes chPulse{0%,100%{transform:scale(1);filter:brightness(1) drop-shadow(0 4px 4px rgba(60,30,0,.4))}50%{transform:scale(1.05);filter:brightness(1.15) drop-shadow(0 0 12px rgba(255,210,80,.9))}}
 @keyframes chGlow{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.12)}}
-@media (prefers-reduced-motion:reduce){#results .chest:not(.open) .ch-glow{animation:none}}
+@media (prefers-reduced-motion:reduce){#results .chest:not(.open) .ch-img{animation:none!important}}
 #results .actions{display:flex!important;flex-wrap:nowrap!important;gap:12px;justify-content:center}
 #results .actions button.rb-icon{flex:0 0 auto!important;width:74px;height:64px;padding:0!important;display:grid;place-items:center}
 #results .actions button:not(.rb-icon){flex:1 1 auto!important}
@@ -1692,7 +1693,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 <div id="store" class="overlay" hidden>
   <div class="store-card">
     <div class="store-head st-treasure"><h2 class="st-title">Store</h2><div class="st-piles"><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="cgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff1a8"/><stop offset=".5" stop-color="#f2b631"/><stop offset="1" stop-color="#a8740f"/></linearGradient></defs><g fill="url(#cgG)" stroke="#8a5d0c" stroke-width=".8"><ellipse cx="12" cy="25" rx="9" ry="3.5"/><ellipse cx="12" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="25" rx="9" ry="3.5"/><ellipse cx="30" cy="21" rx="9" ry="3.5"/><ellipse cx="30" cy="17" rx="9" ry="3.5"/><ellipse cx="21" cy="13" rx="9" ry="3.5"/><ellipse cx="21" cy="9" rx="9" ry="3.5"/></g></svg><b id="stCoins">0</b></span><span class="st-pile"><svg viewBox="0 0 44 30" aria-hidden="true"><defs><linearGradient id="dgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6fbff"/><stop offset=".5" stop-color="#5fc8ff"/><stop offset="1" stop-color="#1c6fb8"/></linearGradient></defs><g fill="url(#dgG)" stroke="#155a96" stroke-width=".8"><path d="M4 20l5-6h8l5 6-9 9z"/><path d="M22 20l5-6h8l5 6-9 9z"/><path d="M13 12l5-6h8l5 6-9 9z"/></g></svg><b id="stGems">0</b></span></div><button class="ghost" id="storeClose">Close</button></div>
-    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned" title="Owned" aria-label="Owned"><img class="ico tab-ico" src="img/chest-closed.png" alt=""><span class="tab-tx">Owned</span></button><button data-tab="items" title="Items" aria-label="Items"><img class="ico tab-ico" src="img/icons/box.webp" alt=""><span class="tab-tx">Items</span></button><button data-tab="skins" title="Skins" aria-label="Skins"><img class="ico tab-ico" src="img/icons/skin_classic.webp" alt=""><span class="tab-tx">Skins</span></button><button data-tab="attire" title="Attire" aria-label="Attire"><img class="ico tab-ico" src="img/icons/att_crown.webp" alt=""><span class="tab-tx">Attire</span></button><button data-tab="buffs" title="Perks" aria-label="Perks"><img class="ico tab-ico" src="img/icons/perk_charge.webp" alt=""><span class="tab-tx">Perks</span></button></div>
+    <div class="seg" id="storeTabs" role="group" aria-label="Store section"><button data-tab="owned" title="Owned" aria-label="Owned"><img class="ico tab-ico" src="img/chest-closed-glow.webp" alt=""><span class="tab-tx">Owned</span></button><button data-tab="items" title="Items" aria-label="Items"><img class="ico tab-ico" src="img/icons/box.webp" alt=""><span class="tab-tx">Items</span></button><button data-tab="skins" title="Skins" aria-label="Skins"><img class="ico tab-ico" src="img/icons/skin_classic.webp" alt=""><span class="tab-tx">Skins</span></button><button data-tab="attire" title="Attire" aria-label="Attire"><img class="ico tab-ico" src="img/icons/att_crown.webp" alt=""><span class="tab-tx">Attire</span></button><button data-tab="buffs" title="Perks" aria-label="Perks"><img class="ico tab-ico" src="img/icons/perk_charge.webp" alt=""><span class="tab-tx">Perks</span></button></div>
     <p class="store-note" id="storeNote" hidden></p>
     <p class="store-mods" id="storeMods" hidden></p>
     <div id="storeGrid" class="store-grid"></div>
@@ -1722,8 +1723,8 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
     <div class="cel-actions"><button class="ghost" id="celSkip">Skip</button><button class="primary d3-gold" id="celNext" hidden>Continue</button></div>
   </div>
 </div>
-<div id="chestCine" hidden aria-hidden="true"><div class="cc-stage"><span class="cc-rays"></span><span class="cc-ring"></span><span class="cc-glow"></span><img class="cc-chest" alt="" src="img/chest-closed.png"><div class="cc-pops"></div></div><div class="cc-sparks"></div><div class="cc-flash"></div></div>
-<div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><h2 id="cgTitle" class="cg-title"><img alt="Congratulations!" src="img/congrats.webp" width="760" height="323"></h2><div class="cg-burst"><span class="cg-rays"></span><img alt="" src="img/chest-open.png"></div><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
+<div id="chestCine" hidden aria-hidden="true"><div class="cc-stage"><span class="cc-rays"></span><span class="cc-ring"></span><span class="cc-glow"></span><img class="cc-chest" alt="" src="img/chest-closed-glow.webp"><div class="cc-pops"></div></div><div class="cc-sparks"></div><div class="cc-flash"></div></div>
+<div id="congrats" class="overlay" hidden><div class="cg-card" role="dialog" aria-labelledby="cgTitle"><h2 id="cgTitle" class="cg-title"><img alt="Congratulations!" src="img/congrats.webp" width="760" height="323"></h2><div class="cg-burst"><span class="cg-rays"></span><img alt="" src="img/chest-open-glow.webp"></div><div id="cgList" class="cg-list"></div><button class="primary" id="cgOk">Collect</button></div></div>
 <div id="results" class="overlay" hidden>
   <div class="board">
     <div class="board-head"><div class="eyebrow" id="resEyebrow">Official result</div><h2 id="resTitle"></h2></div>
@@ -4842,7 +4843,7 @@ function chestifyRewards(coins,gems){const box=$('resRewards');
   // one big chest: tap it and every reward flies out, then the Congratulations card lists them
   const wrap=document.createElement('div');wrap.className='chest-one';
   const c=document.createElement('button');c.type='button';c.className='chest big';c.setAttribute('aria-label','Open your rewards');
-  c.innerHTML='<span class="ch-glow"></span><img class="ch-img" alt="" src="img/chest-closed.png">';
+  c.innerHTML='<span class="ch-glow"></span><img class="ch-img" alt="" src="img/chest-closed-glow.webp">';
   const pops=document.createElement('div');pops.className='ch-pops';
   items.forEach((it,k)=>{const sp=document.createElement('span');if(it.ico)sp.appendChild(icoEl(it.ico));else sp.textContent=it.ic;const n=items.length,a=(n===1?0:(k/(n-1)-.5))*120;sp.style.setProperty('--a',a+'deg');sp.style.setProperty('--d',(k*90)+'ms');pops.appendChild(sp);});
   const hint=document.createElement('div');hint.className='ch-hint';hint.textContent=`🎁 ${items.length} reward${items.length>1?'s':''} · tap to open`;
@@ -4854,23 +4855,23 @@ const CC={timers:[]};
 function chestCine(items){const ov=$('chestCine');CC.timers.forEach(clearTimeout);CC.timers=[];
   if(reduceMotion){congrats(items);return;}
   const img=ov.querySelector('.cc-chest'),pops=ov.querySelector('.cc-pops'),sp=ov.querySelector('.cc-sparks');
-  img.src='img/chest-closed.png';pops.innerHTML='';sp.innerHTML='';ov.className='';ov.hidden=false;
+  img.src='img/chest-closed-glow.webp';pops.innerHTML='';sp.innerHTML='';ov.className='';ov.hidden=false;
   const n=items.length,R=Math.min(innerWidth*.36,170);
   items.forEach((it,k)=>{const e=document.createElement('span');if(it.ico)e.appendChild(icoEl(it.ico));else e.textContent=it.ic;
     const a=(n===1?0:(k/(n-1)-.5))*Math.min(200,40*n)*Math.PI/180;e.style.setProperty('--x',Math.sin(a)*R+'px');e.style.setProperty('--y',-Math.cos(a)*R*.9-40+'px');pops.appendChild(e);});
   const at=(ms,f)=>CC.timers.push(setTimeout(f,ms));
-  const end=()=>{CC.timers.forEach(clearTimeout);CC.timers=[];ov.className='in burst';img.src='img/chest-open.png';[...pops.children].forEach(e=>e.classList.add('go'));congrats(items);};
+  const end=()=>{CC.timers.forEach(clearTimeout);CC.timers=[];ov.className='in burst';img.src='img/chest-open-glow.webp';[...pops.children].forEach(e=>e.classList.add('go'));congrats(items);};
   ov.onclick=end;
   requestAnimationFrame(()=>ov.classList.add('in'));tone(90,0.6,'sawtooth',0.04,60);
   at(800,()=>{ov.classList.add('charge');[0,250,450,600,720,820,900].forEach((d,i)=>tone(300+i*90,0.09,'square',0.035,0,d/1000));tone(70,1.1,'sawtooth',0.035,80);});
-  at(1900,()=>{ov.classList.remove('charge');ov.classList.add('burst');img.src='img/chest-open.png';
+  at(1900,()=>{ov.classList.remove('charge');ov.classList.add('burst');img.src='img/chest-open-glow.webp';
     tone(60,0.7,'sawtooth',0.09,-30);tone(140,0.5,'square',0.06,-90);sfx.fanfare();
     for(let i=0;i<46;i++){const s=document.createElement('i'),a=Math.random()*Math.PI*2,d=120+Math.random()*Math.max(innerWidth,innerHeight)*.5;
       s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');s.style.animationDelay=Math.random()*.15+'s';
       if(i%3===0)s.style.background='#fff';sp.appendChild(s);}});
   [...pops.children].forEach((e,k)=>at(2150+k*300,()=>{e.classList.add('go');sfx.pick();}));
   at(2150+n*300+900,end);}
-function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open.png';c.classList.add('open');}
+function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open-glow.webp';c.classList.add('open');}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
   items.forEach(it=>{const d=document.createElement('div');d.className='cg-item';const i=document.createElement('span');i.className='cg-ic';setIco(i,it.ico,it.ic);const tx=document.createElement('div');
     const b=document.createElement('b');b.textContent=it.big||'';const sm=document.createElement('small');sm.textContent=it.t;if(it.big)tx.appendChild(b);tx.appendChild(sm);d.append(i,tx);L.appendChild(d);});

@@ -7,13 +7,14 @@ Writes OUTDIR/<id>.webp (square, transparent) and prints one line per icon.
 --hi/--lo set the key strength (0..1) where a pixel starts to count as object and where it is solid.
 Lower them for an object with a coloured glow around it, so the glow is dropped.
 --spill lets an object keep some of the screen colour, e.g. green trees on a green screen.
+--bright keeps very bright pixels solid; --warm turns soft glow edges gold instead of lime.
 """
 import sys
 from collections import deque
 import numpy as np
 from PIL import Image
 
-VALUED = ('--size', '--hi', '--lo', '--spill')
+VALUED = ('--size', '--hi', '--lo', '--spill', '--bright')
 def opt(name, default):
     return float(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
 args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith('--') and sys.argv[i - 1] not in VALUED]
@@ -32,6 +33,9 @@ B = np.median(a[edge], axis=0)                  # background colour
 hi = opt('--hi', Kb - 0.06)                      # anything below this starts to be object
 lo = opt('--lo', 0.15)                           # anything below this is solid object
 alpha = np.clip((hi - K) / (hi - lo), 0, 1)
+BRIGHT = opt('--bright', 0)            # pixels brighter than this stay solid (a white-hot glow on a green screen)
+if BRIGHT:
+    alpha = np.maximum(alpha, np.clip((a.min(axis=2) - (BRIGHT - 0.15)) / 0.15, 0, 1))
 
 # take the background colour back out of soft edges, then remove any leftover tint
 al = alpha[..., None]
@@ -40,6 +44,9 @@ F = np.clip(F, 0, 1)
 SPILL = opt('--spill', 0.0)   # how much screen colour an object may keep (raise it for green trees on a green screen)
 if bg == 'green':
     F[..., 1] = np.minimum(F[..., 1], np.maximum(F[..., 0], F[..., 2]) + SPILL)
+    if '--warm' in sys.argv:   # soft glow edges turn gold instead of lime
+        hot = np.clip((a.min(axis=2) - 0.65) / 0.2, 0, 1)   # white-hot centre stays as it is
+        F[..., 1] = hot * F[..., 1] + (1 - hot) * np.minimum(F[..., 1], F[..., 0] * 0.84)
 else:
     m = np.clip(np.minimum(F[..., 0], F[..., 2]) - F[..., 1] - SPILL, 0, None)
     F[..., 0] -= m; F[..., 2] -= m
