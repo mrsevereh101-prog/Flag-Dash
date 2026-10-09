@@ -3755,15 +3755,17 @@ const SAY_HT={
   hurt:[['M ap jwenn ou!','ht-m-ap-jwenn-ou'],['Ou pral peye sa!','ht-ou-pral-peye-sa'],['Tann mwen!','ht-tann-mwen']]
 };
 const VOICE_DIR='voice/';
-const VOICE_FILES=new Set([/* e.g. 'ht-pran-sa' */]);
+const VOICE_FILES=new Set(['samurai-own-hit-1']);
 const SAY_KINDS=new Set(['hit','hurt','block','banana','power']);const SAY_CD=3.5,SAY_MAX=3,SAY_NEAR=45;
 const bubbles=[];const bubbleTex=new Map();
 // Lines are numbered in one list per kind so every player in an online race sees the same line.
+// Each line is [text, recording id, language]. Recordings are per hero (voice/<hero>-<kind>-<nn>.mp3, see VOICE-LINES.md).
 function sayPool(r,k){
-  const ch=CHAR_SAY[r.char.id]||{};const out=[];
-  (k==='power'?(ch.power||ch.hit||SAY.hit):(SAY[k]||[])).forEach(t=>out.push([t,null]));
-  if(k!=='power'&&ch[k])ch[k].forEach(t=>{out.push([t,null]);out.push([t,null]);});
-  if(r.flag.code==='HTI'&&SAY_HT[k])SAY_HT[k].forEach(l=>{for(let i=0;i<4;i++)out.push(l);});
+  const h=r.char.id,ch=CHAR_SAY[h]||{};const out=[];
+  if(k==='power')(ch.power||ch.hit||SAY.hit).forEach((t,i)=>out.push([t,ch.power||ch.hit?`${h}-own-hit-${i+1}`:`${h}-hit-${pad2(i+1)}`,'en']));
+  else (SAY[k]||[]).forEach((t,i)=>out.push([t,`${h}-${k}-${pad2(i+1)}`,'en']));
+  if(k!=='power'&&ch[k])ch[k].forEach((t,i)=>{const l=[t,`${h}-own-${k}-${i+1}`,'en'];out.push(l);out.push(l);});
+  if(r.flag.code==='HTI'&&SAY_HT[k])SAY_HT[k].forEach(([t,id])=>{const l=[t,VOICE_FILES.has(h+'-'+id)?h+'-'+id:id,'ht'];for(let i=0;i<4;i++)out.push(l);});
   return out;
 }
 function bubbleNear(r){if(!player)return false;if(r===player)return true;return Math.abs(prog(r)-prog(player))<SAY_NEAR;}
@@ -3774,7 +3776,9 @@ function speak(r,k,delay){
   if(!bubbleNear(r)&&!RACE.online)return;
   const pool=sayPool(r,k);if(!pool.length)return;
   r.sayT=now+SAY_CD+(delay||0);
-  const i=Math.floor(Math.random()*pool.length);
+  // lines with a recording are picked more often, so the hero's real voice is heard
+  const rec=pool.map((l,j)=>VOICE_FILES.has(l[1])?j:-1).filter(j=>j>=0);
+  const i=rec.length&&Math.random()<0.75?rec[Math.floor(Math.random()*rec.length)]:Math.floor(Math.random()*pool.length);
   const go=()=>{if(RACE&&runners.includes(r))sendAct(r,{t:'say',k,i});};
   if(delay)setTimeout(go,delay*1000);else go();
 }
@@ -3798,7 +3802,7 @@ function showSay(r,k,i){
   const tex=bubbleTexture(line[0],r.char.rgb);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,depthTest:false,opacity:0});
   const sp=new THREE.Sprite(mat);const hgt=0.62,wid=hgt*tex.userData.w/tex.userData.h;sp.scale.set(wid,hgt,1);sp.position.y=r.m.tag?3.65:3.3;sp.renderOrder=20;r.m.root.add(sp);
   bubbles.push({r,sp,mat,t:0,dur:1.9,w:wid,h:hgt});
-  voice.say(line[0],r,line[1]?'ht':'en',line[1]&&VOICE_FILES.has(line[1])?VOICE_DIR+line[1]+'.mp3':null,involvesPlayer(r)?2:1);
+  voice.say(line[0],r,line[2]||'en',VOICE_FILES.has(line[1])?VOICE_DIR+line[1]+'.mp3':null,involvesPlayer(r)?2:1);
 }
 function involvesPlayer(r){return r===player||(r.lastFoe===player);}
 function showQuickBubble(r,text){if(!r||!r.m)return;const old=bubbles.findIndex(b=>b.r===r);if(old>=0)killBubble(old);const tex=bubbleTexture(text,[0.95,0.75,0.2]);const mat=new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false,depthTest:false,opacity:0});const sp=new THREE.Sprite(mat);const hgt=0.62,wid=hgt*tex.userData.w/tex.userData.h;sp.scale.set(wid,hgt,1);sp.position.y=r.m.tag?3.65:3.3;sp.renderOrder=20;r.m.root.add(sp);bubbles.push({r,sp,mat,t:0,dur:2.6,w:wid,h:hgt});}
