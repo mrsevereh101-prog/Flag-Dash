@@ -3532,13 +3532,13 @@ const voice={list:[],ready:false,cur:null,curPri:0,
     if(!pool.length&&lang==='ht')pool=L.filter(v=>(v.lang||'').toLowerCase().startsWith('fr'));
     if(!pool.length)pool=L.filter(v=>(v.lang||'').toLowerCase().startsWith('en'));
     if(!pool.length)pool=L;return pool[Math.abs(seed)%pool.length];},
-  stop(){if(this.supported())try{speechSynthesis.cancel();}catch(e){}if(this.audio){try{this.audio.pause();}catch(e){}this.audio=null;}},
+  stop(){if(this.supported())try{speechSynthesis.cancel();}catch(e){}clipStop();if(this.audio){try{this.audio.pause();}catch(e){}this.audio=null;}},
   // pri 2 = involves you, 1 = someone nearby. A higher-priority line interrupts; others wait their turn.
   say(text,r,lang,file,pri){
     if(!SET.voice||!text)return;
-    const busy=(this.supported()&&speechSynthesis.speaking)||(this.audio&&!this.audio.paused&&!this.audio.ended);
+    const busy=(this.supported()&&speechSynthesis.speaking)||!!CLIP.cur;
     if(busy&&pri<=this.curPri)return;if(busy)this.stop();this.curPri=pri;
-    if(file){try{const a=new Audio(file);a.volume=SET.voiceVol;this.audio=a;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});a.onended=()=>{this.curPri=0;};return;}catch(e){}}
+    if(file&&clipPlay(file,SET.voiceVol,()=>{this.curPri=0;}))return;
     if(!this.supported())return;
     const u=new SpeechSynthesisUtterance(text);const st=VOICE_STYLE[r.char.id]||{pitch:1,rate:1.05};
     let h=0;for(const ch of String(r.id))h=(h*31+ch.charCodeAt(0))|0;
@@ -3771,6 +3771,15 @@ const SAY_HT={
   hurt:[['M ap jwenn ou!','ht-m-ap-jwenn-ou'],['Ou pral peye sa!','ht-ou-pral-peye-sa'],['Tann mwen!','ht-tann-mwen']]
 };
 const VOICE_DIR='voice/';
+// Voice clips play through the game's audio engine (an <audio> started from a timer is blocked on phones).
+const CLIP={buf:new Map(),cur:null};
+function clipLoad(url){if(!actx)return Promise.reject();let p=CLIP.buf.get(url);if(!p){p=fetch(url).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer();}).then(b=>new Promise((ok,no)=>actx.decodeAudioData(b,ok,no)));CLIP.buf.set(url,p);p.catch(()=>CLIP.buf.delete(url));}return p;}
+function clipStop(){if(CLIP.cur){try{CLIP.cur.stop();}catch(e){}CLIP.cur=null;}}
+function clipPlay(url,vol,onend,duck){initAudio();if(!actx)return false;if(actx.state==='suspended')actx.resume().catch(()=>{});
+  clipLoad(url).then(buf=>{clipStop();const src=actx.createBufferSource(),g=actx.createGain();src.buffer=buf;g.gain.value=clamp(vol,0,1.2);src.connect(g);g.connect(actx.destination);
+    if(duck)musicDuck(buf.duration);src.onended=()=>{if(CLIP.cur===src)CLIP.cur=null;if(onend)onend();};CLIP.cur=src;src.start();}).catch(()=>{if(onend)onend();});return true;}
+// lower the music while someone talks, then bring it back
+function musicDuck(sec){if(!musicOn)return;music.chans.forEach(c=>{if(c.v>0&&!c.el.paused){const v=c.v;music.ramp(c,v*0.3,0.15);clearTimeout(c.duckT);c.duckT=setTimeout(()=>{if(c.v===v*0.3)music.ramp(c,v,0.5);},sec*1000+150);}});}
 const VOICE_FILES=new Set(['samurai-win-1','dwarf-banana-02','dwarf-block-01','dwarf-hit-01','dwarf-hit-03','dwarf-hurt-01','dwarf-own-hit-1','dwarf-own-hit-2','dwarf-own-hurt-1','dwarf-own-hurt-2','dwarf-win-1','elf-hit-05','elf-hurt-02','elf-hurt-04','elf-win-1','elf-own-hit-1','elf-own-hit-2','elf-own-hurt-1','elf-own-hurt-2','archer-banana-01','archer-block-01','archer-block-02','archer-hit-02','archer-hit-05','archer-own-hurt-1','archer-own-hurt-2','archer-hurt-03','archer-own-hit-1','archer-own-hit-2','archer-win-1','samurai-banana-01','samurai-banana-02','samurai-block-01','samurai-block-02','samurai-hit-01','samurai-hit-02','samurai-hit-03','samurai-hit-04','samurai-hit-05','samurai-hurt-01','samurai-hurt-02','samurai-hurt-03','samurai-hurt-04','samurai-hurt-05','samurai-own-hit-1','samurai-own-hit-2','samurai-own-hurt-1','samurai-own-hurt-2','warrior-block-01','warrior-hit-05','warrior-hurt-03','warrior-win-1','warrior-win-2','warrior-own-hit-1','warrior-own-hit-2','warrior-own-hurt-1','warrior-own-hurt-2']);
 const SAY_KINDS=new Set(['hit','hurt','block','banana','power']);const SAY_CD=3.5,SAY_MAX=3,SAY_NEAR=45;
 const bubbles=[];const bubbleTex=new Map();
@@ -6936,18 +6945,19 @@ function celebrate(rows,place,rw,done){
   if(rw.lv&&rw.lv.unlocked&&rw.lv.unlocked.length)gifts.push({ic:'🔓',ico:icoOf('skin',(SKINS_SHOP.find(k=>k.name===rw.lv.unlocked[0])||{}).id),v:rw.lv.unlocked[0],l:'New skin unlocked'});
   const g=$('celGifts');g.innerHTML='';gifts.forEach(x=>{const d=document.createElement('div');d.className='cel-gift';d.innerHTML=`<span class="gbox">${x.ico?icoHTML(x.ico):x.ic}</span><b>${x.v}</b><small>${x.l}</small>`;g.appendChild(d);});
   $('celNext').hidden=true;$('celSkip').hidden=false;ov.hidden=false;
-  const win=rows[0]?rows[0].r:null,winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
+  const win=rows[0]?rows[0].r:null;CEL.winSaid=false;CEL.winUrl=winClip(win);if(CEL.winUrl)clipLoad(CEL.winUrl).catch(()=>{});
+  const winName=win?(win.kind==='local'?'YOU WIN!':`${nm(win)} wins!`):'';
   const steps=[[700,()=>{$('celS3').classList.add('show');sfx.beep(false);}],
     [2000,()=>{$('celS2').classList.add('show');sfx.beep(false);}],
     [3500,()=>{$('celS1').classList.add('show');t.textContent='🏆 '+winName;t.classList.add('win');sfx.fanfare();confetti(win&&win.kind==='local'?160:110);}],
-    [4100,()=>winLine(win)],
+    [4100,winLine],
     [5200,()=>{$('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}]];
   if(reduceMotion)steps.forEach(([,f])=>f());else steps.forEach(([ms,f])=>CEL.timers.push(setTimeout(f,ms)));
 }
 // the winner's triumph line (voice/<hero>-win-<n>.mp3); heroes without one stay quiet
-function winLine(r){if(!r||!r.char||!SET.voice)return;const ids=[1,2,3,4].map(n=>`${r.char.id}-win-${n}`).filter(id=>VOICE_FILES.has(id));if(!ids.length)return;
-  voice.stop();try{const a=new Audio(VOICE_DIR+ids[Math.floor(Math.random()*ids.length)]+'.mp3');a.volume=Math.min(1,SET.voiceVol*1.1);voice.audio=a;voice.curPri=3;a.onended=()=>{voice.curPri=0;};const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});}catch(e){}}
-function celFinish(){CEL.timers.forEach(clearTimeout);CEL.timers=[];
+function winClip(r){if(!r||!r.char)return null;const ids=[1,2,3,4].map(n=>`${r.char.id}-win-${n}`).filter(id=>VOICE_FILES.has(id));return ids.length?VOICE_DIR+ids[Math.floor(Math.random()*ids.length)]+'.mp3':null;}
+function winLine(){if(CEL.winSaid||!CEL.winUrl||!SET.voice)return;CEL.winSaid=true;voice.stop();voice.curPri=3;clipPlay(CEL.winUrl,Math.min(1.2,SET.voiceVol*1.15),()=>{voice.curPri=0;},true);}
+function celFinish(){CEL.timers.forEach(clearTimeout);CEL.timers=[];winLine();
   ['celS3','celS2','celS1'].forEach(id=>$(id).classList.add('show'));[...$('celGifts').children].forEach(d=>d.classList.add('show'));
   const t=$('celTitle');if(!t.classList.contains('win')){const w=$('celS1').querySelector('.cel-nm');if(w)t.textContent='🏆 '+(w.textContent.includes('(you)')?'YOU WIN!':w.textContent+' wins!');t.classList.add('win');}
   $('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}
