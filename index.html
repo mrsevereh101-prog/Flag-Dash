@@ -3755,16 +3755,15 @@ const SAY_HT={
   hurt:[['M ap jwenn ou!','ht-m-ap-jwenn-ou'],['Ou pral peye sa!','ht-ou-pral-peye-sa'],['Tann mwen!','ht-tann-mwen']]
 };
 const VOICE_DIR='voice/';
-const VOICE_FILES=new Set(['all-banana-01','all-banana-02','all-block-01','all-block-02','all-hit-01','all-hit-02','all-hit-03','all-hit-04','all-hit-05','all-hurt-01','all-hurt-02','all-hurt-03','all-hurt-04','all-hurt-05','samurai-own-hit-1','samurai-own-hit-2','samurai-own-hurt-1','samurai-own-hurt-2','warrior-own-hit-2','warrior-own-hurt-1','warrior-own-hurt-2']);
+const VOICE_FILES=new Set(['samurai-banana-01','samurai-banana-02','samurai-block-01','samurai-block-02','samurai-hit-01','samurai-hit-02','samurai-hit-03','samurai-hit-04','samurai-hit-05','samurai-hurt-01','samurai-hurt-02','samurai-hurt-03','samurai-hurt-04','samurai-hurt-05','samurai-own-hit-1','samurai-own-hit-2','samurai-own-hurt-1','samurai-own-hurt-2','warrior-own-hit-2','warrior-own-hurt-1','warrior-own-hurt-2']);
 const SAY_KINDS=new Set(['hit','hurt','block','banana','power']);const SAY_CD=3.5,SAY_MAX=3,SAY_NEAR=45;
 const bubbles=[];const bubbleTex=new Map();
 // Lines are numbered in one list per kind so every player in an online race sees the same line.
 // Each line is [text, recording id, language]. Recordings are per hero (voice/<hero>-<kind>-<nn>.mp3, see VOICE-LINES.md).
 function sayPool(r,k){
   const h=r.char.id,ch=CHAR_SAY[h]||{};const out=[];
-  if(k==='power')(ch.power||ch.hit||SAY.hit).forEach((t,i)=>out.push([t,ch.power||ch.hit?`${h}-own-hit-${i+1}`:`all-hit-${pad2(i+1)}`,'en']));
-  // shared lines: one recording for every hero (voice/all-<kind>-<nn>.mp3), unless a hero has their own
-  else (SAY[k]||[]).forEach((t,i)=>{const own=`${h}-${k}-${pad2(i+1)}`;out.push([t,VOICE_FILES.has(own)?own:`all-${k}-${pad2(i+1)}`,'en']);});
+  if(k==='power')(ch.power||ch.hit||SAY.hit).forEach((t,i)=>out.push([t,ch.power||ch.hit?`${h}-own-hit-${i+1}`:`${h}-hit-${pad2(i+1)}`,'en']));
+  else (SAY[k]||[]).forEach((t,i)=>out.push([t,`${h}-${k}-${pad2(i+1)}`,'en']));
   if(k!=='power'&&ch[k])ch[k].forEach((t,i)=>{const l=[t,`${h}-own-${k}-${i+1}`,'en'];out.push(l);out.push(l);});
   if(r.flag.code==='HTI'&&SAY_HT[k])SAY_HT[k].forEach(([t,id])=>{const l=[t,VOICE_FILES.has(h+'-'+id)?h+'-'+id:id,'ht'];for(let i=0;i<4;i++)out.push(l);});
   return out;
