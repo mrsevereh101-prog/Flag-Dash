@@ -1307,7 +1307,38 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 #results th:nth-child(4),#results td.nat{width:40%!important;text-align:left!important}
 #results td.nat{font-size:inherit!important;white-space:normal!important}
 #results td.nat .nat-in{display:flex;align-items:center;gap:8px;line-height:1.15}#results td.nat img{flex:none;width:36px;height:24px}
-@media (max-width:560px){#results td.nat{font-size:12px!important}#results td.nat .nat-in{gap:5px}#results td.nat img{width:26px;height:17px}#results th:nth-child(3),#results td:nth-child(3){width:30%!important}}
+@media (max-width:560px){#results td.nat img{width:34px;height:23px}}
+
+/* results: no time or gap in the ranks (they are on the Record tab). Wide screens: flag + country name in the middle.
+   Phones: the runner's full name, and only the flag on the far right */
+#results :is(th,td).tm,#results :is(th,td).gp{display:none!important}
+#results .rn-full{display:none}
+@media (max-width:560px){#results td.nat .nat-in span{display:none}#results td.nat .nat-in{justify-content:flex-end}#results th:nth-child(4){text-align:right!important}
+  #results th:nth-child(3),#results td:nth-child(3){width:auto!important}#results th:nth-child(4),#results td.nat{width:48px!important}
+  #results .rn-full{display:inline}#results .rn-short{display:none}#results td:nth-child(3){max-width:0!important;width:100%!important}}
+.res-tabs{display:grid!important;grid-template-columns:1fr 1fr;width:calc(100% - 16px);margin:6px 8px;max-width:none}
+.res-tabs button{display:grid;place-items:center;padding:5px 2px;background:transparent;border:0}.res-tabs .tab-ico{width:30px;height:30px}
+.res-tabs button[aria-pressed="true"]{background:linear-gradient(180deg,#f6d77f,#e0a92c)}
+.res-rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;padding:0 8px 8px}.res-rec[hidden]{display:none}
+.rec-card{background:linear-gradient(180deg,#fbf0d6,#f1dfb4);border:2px solid #c8921c;border-radius:12px;padding:8px 10px;display:grid;gap:4px;align-content:start}
+.rec-wide{grid-column:1/-1}
+.rec-h{display:flex;align-items:center;gap:6px;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}.rec-h .ico{width:24px;height:24px}
+.rec-big{font-family:var(--display);font-size:26px;line-height:1}.rec-pb{font-size:12px}
+.rec-line{display:flex;align-items:center;gap:8px;min-width:0;font-size:14px}.rec-line .ico{width:20px;height:20px;vertical-align:middle}
+.rec-line>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rec-line>em{font-style:normal;margin-left:auto}
+.rec-line>i{font-style:normal;width:16px;text-align:center}.rec-wide .rec-line{padding:3px 4px;border-radius:8px}.rec-wide .rec-line.me{background:rgba(242,182,49,.35)}
+.rec-wide .rec-line>em{min-width:52px;text-align:right}
+.rec-flag{width:30px;height:20px;border-radius:3px;object-fit:cover;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+
+/* ranks: gold, silver and copper rows; a profile picture beside each runner */
+#results tbody tr:nth-child(2) td{background:linear-gradient(180deg,#eef1f5,#c3cad4)!important}
+#results tbody tr:nth-child(3) td{background:linear-gradient(180deg,#f2c39a,#cf8a52)!important}
+#results td.rn .res-av{width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;background:radial-gradient(circle at 50% 35%,#fff7e0,#e8cf96);box-shadow:0 0 0 2px #c8921c;cursor:default}
+#results tbody tr:nth-child(1) .res-av{box-shadow:0 0 0 2px #b8860b}#results tbody tr:nth-child(2) .res-av{box-shadow:0 0 0 2px #8f9aa6}#results tbody tr:nth-child(3) .res-av{box-shadow:0 0 0 2px #a8602a}
+@media (max-width:560px){#results td.rn .res-av{width:28px;height:28px;margin-right:6px}}
+#results td.rn{white-space:nowrap}#results td.rn .res-av{display:inline-block!important}
+.rec-wide .rec-line>b{margin-left:auto}.rec-wide .rec-line.rk1{background:linear-gradient(180deg,#f6dc8a,#e2b440)}.rec-wide .rec-line.rk2{background:linear-gradient(180deg,#eef1f5,#c3cad4)}.rec-wide .rec-line.rk3{background:linear-gradient(180deg,#f2c39a,#cf8a52)}.rec-wide .rec-line.me{box-shadow:inset 0 0 0 2px #c8921c}
+#results :is(th,td).ln{display:none!important}.rec-line>em{white-space:nowrap}
 </style>
 
 <div id="stage"></div>
@@ -1682,7 +1713,9 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
   <div class="board">
     <div class="board-head"><div class="eyebrow" id="resEyebrow">Official result</div><h2 id="resTitle"></h2></div>
     <div class="team-result" id="teamResult" hidden></div>
-    <div class="table-wrap"><table><thead><tr><th>Pl.</th><th>Lane</th><th>Runner</th><th>Nation</th><th class="t">Time</th><th class="t">Gap</th><th class="t" id="ptsHead">Pts</th></tr></thead><tbody id="resBody"></tbody></table></div>
+    <div class="seg res-tabs" id="resTabs" role="group" aria-label="Results view"><button data-rt="rank" aria-pressed="true" title="Ranks" aria-label="Ranks"><img class="ico tab-ico" src="img/icons/cup_gold.webp" alt=""><span class="tab-tx">Ranks</span></button><button data-rt="rec" aria-pressed="false" title="Record" aria-label="Record"><img class="ico tab-ico" src="img/icons/stopwatch.webp" alt=""><span class="tab-tx">Record</span></button></div>
+    <div id="resRec" class="res-rec" hidden></div>
+    <div class="table-wrap"><table><thead><tr><th>Pl.</th><th class="ln">Lane</th><th>Runner</th><th>Nation</th><th class="t tm">Time</th><th class="t gp">Gap</th><th class="t" id="ptsHead">Pts</th></tr></thead><tbody id="resBody"></tbody></table></div>
     <div id="gpBox" class="gp-box" hidden></div>
     <div class="board-foot"><div id="resRewards" class="rewards"></div><div id="resPB"></div><div class="actions"><button class="primary" id="againBtn">Race again</button><button class="ghost" id="changeBtn">Change setup</button><button class="ghost" id="resRunners" hidden>👥 Runners</button><button class="ghost" id="resPlaza">Home</button></div></div>
   </div>
@@ -3019,7 +3052,7 @@ function makeRunner(e,idx,n,online){
   const nm=e.bot?(e.nm&&cleanName(e.nm)||flag.name):(cleanName(e.nm)||flag.name);
   let skin=skinById(e.sk);if(skin.hero&&skin.hero!==ch.id)skin=skinById('classic');
   if(e.bot&&!skin.hero){const hs=SKINS_SHOP.filter(x=>x.hero===ch.id);let hh=0;for(const c of String(e.id)+ch.id+(RACE&&RACE.id||''))hh=(hh*31+c.charCodeAt(0))>>>0;if(hs.length&&hh%10<4)skin=hs[hh%hs.length];}
-  const r={id:e.id,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag,char:ch,team,lane:idx+1,skin,lap:1,
+  const r={id:e.id,cc:e.cc,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag,char:ch,team,lane:idx+1,skin,lap:1,
     d:0,x,y:0,vx:0,vy:0,speed:0,stun:0,stunKind:'trip',slide:0,boost:0,boostMul:1,phase:0,shield:0,slow:0,leaping:false,flip:0,
     item:null,charge:0.35,finished:false,time:0,place:1,jumpBuf:0,anim:Math.random()*TAU,spin:0,oi:0,lastWall:null,lastPad:null,emote:null,world:true,
     ai:{skill:rand(0.72,0.93),pace:rand(0.965,1.015),greed:rand(0.6,1.4),t:0,lane:x<0?1:2,tx:x,handled:new Set(),itemT:0,chargedFor:0,loT:rand(9,22)},net:null,ram:0,mods:{},lo:null};
@@ -4350,20 +4383,43 @@ function updateHUD(){
    RESULTS
    ========================================================= */
 function resultRows(){return runners.map(r=>({r,t:r.finished?r.time:raceTime+Math.max(0,totalLen()-prog(r))/(BASE*r.char.speed*0.98),est:!r.finished})).sort((a,b)=>a.t-b.t);}
+// Ranks / Record tabs on the results board
+function resTab(t){$('resTabs').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.rt===t)));
+  $('results').querySelector('.table-wrap').hidden=t!=='rank';$('resRec').hidden=t!=='rec';}
+$('resTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)resTab(b.dataset.rt);});
+// the record: your time, everyone's times, who you hit and who hit you, and what was stolen
+function renderRecord(pb){const box=$('resRec');box.innerHTML='';const rows=resultRows(),win=rows[0].t,RC=RACE.rec||{on:{},by:{},lc:0,lg:0},L=RACE.loot||{c:0,g:0};
+  const nm=r=>r.nm||(r.flag&&r.flag.name)||'Runner';
+  const flag=r=>{const i=document.createElement('img');i.className='rec-flag';i.src=flagURL(r);i.alt='';return i;};
+  const card=(ico,label,...kids)=>{const c=document.createElement('div');c.className='rec-card';const h=document.createElement('div');h.className='rec-h';if(ico)h.appendChild(icoEl(ico));const l=document.createElement('span');l.textContent=label;h.appendChild(l);c.appendChild(h);kids.forEach(k=>k&&c.appendChild(k));box.appendChild(c);return c;};
+  const line=(...parts)=>{const d=document.createElement('div');d.className='rec-line';parts.forEach(x=>d.append(x));return d;};
+  const top=m=>{let id=null,n=0;for(const k in m)if(m[k]>n){n=m[k];id=k;}const r=id!=null&&runners.find(x=>String(x.id)===String(id));return r?{r,n}:null;};
+  const who=(t,empty)=>t?line(flag(t.r),Object.assign(document.createElement('b'),{textContent:nm(t.r)}),Object.assign(document.createElement('em'),{textContent:'× '+t.n})):line(Object.assign(document.createElement('small'),{textContent:empty}));
+  const loot=(sign,c,g)=>{const d=line();d.innerHTML=(c||g)?`<b>${sign}${c|0}</b> ${icoHTML('coin')}${g?` <b>${sign}${g}</b> ${icoHTML('gem')}`:''}`:'<small>Nothing</small>';return d;};
+  // your time
+  const me=rows.find(x=>x.r.kind==='local');const t=document.createElement('div');t.className='rec-big';t.textContent=fmt(me.t);
+  const pbl=document.createElement('small');pbl.className='rec-pb';pbl.textContent=!pb||player.time<pb?'New personal best!':'Personal best '+fmt(pb);
+  card('stopwatch','Your time',t,pbl);
+  card('lo_shock','You hit the most',who(top(RC.on),'No hits'));
+  card('perk_shield','Hit you the most',who(top(RC.by),'Nobody hit you'));
+  card('coin','Stolen from you',loot('-',RC.lc,RC.lg));
+  card('gem','You stole',loot('+',L.c,L.g));
+  const all=card('m_podium','Times');all.classList.add('rec-wide');
+  rows.forEach((x,i)=>{const d=line(flag(x.r),Object.assign(document.createElement('span'),{textContent:nm(x.r)+(x.r.kind==='local'?' (you)':'')}),Object.assign(document.createElement('b'),{textContent:(x.est?'≈ ':'')+fmt(x.t)}));if(i<3)d.classList.add('rk'+(i+1));if(x.r.kind==='local')d.classList.add('me');all.appendChild(d);});}
 const RES_HEAD=document.querySelector('#results thead tr').innerHTML;
 function showResults(){
-  document.querySelector('#results thead tr').innerHTML=RES_HEAD;
+  document.querySelector('#results thead tr').innerHTML=RES_HEAD;$('resTabs').hidden=true;$('resRec').hidden=true;
   if(RACE&&RACE.fc){showFlagResults();return;}
   if(RACE&&RACE.survival){showSurvivalResults();return;}
   $('results').querySelector('.table-wrap').hidden=false;
-  state='results';renderResults();
+  state='results';renderResults();resTab('rank');$('resTabs').hidden=false;
   const key='flagdash-pb-'+TH.id,pb=parseFloat(store.get(key));
   if(!pb||player.time<pb){store.set(key,String(player.time));$('resPB').innerHTML=pb?`New personal best on ${TH.name}: <b>${fmt(player.time)}</b> (was ${fmt(pb)})`:`Personal best set on ${TH.name}: <b>${fmt(player.time)}</b>`;}
   else $('resPB').innerHTML=`Your time <b>${fmt(player.time)}</b> · Personal best on ${TH.name} ${fmt(pb)}`;
   const place=resultRows().findIndex(x=>x.r.kind==='local')+1,rw=grantRaceRewards(place);
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(place)} place${rw.extra?`, ${rw.extra} from coin bonuses`:''}${place===1?', 1 diamond for the win':''}${(RACE.gems-(rw.loot?rw.loot.g:0))>0?', '+(RACE.gems-(rw.loot?rw.loot.g:0))+' diamond'+((RACE.gems-(rw.loot?rw.loot.g:0))>1?'s':'')+' found':''}${rw.loot?`, ${rw.loot.c} coins${rw.loot.g?' and '+rw.loot.g+' diamond'+(rw.loot.g>1?'s':''):''} stolen with ${rw.loot.n} hit${rw.loot.n>1?'s':''}`:''})</span>${rw.lv?`<div class="res-note">⭐ +${rw.lv.xp} XP${rw.lv.to>rw.lv.from?` · Rank up! You are now ${rankName(rw.lv.to)} and got ${rw.lv.c} coins${rw.lv.g?' and '+rw.lv.g+' diamond'+(rw.lv.g>1?'s':''):''}${rw.lv.unlocked&&rw.lv.unlocked.length?'. Unlocked in the store: '+rw.lv.unlocked.join(', '):''}`:''}</div>`:''}`;
   {const notes=evaluateRace(place);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
-  chestifyRewards(rw.coinsWon,rw.gemsWon);
+  chestifyRewards(rw.coinsWon,rw.gemsWon);renderRecord(pb);
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
@@ -4377,10 +4433,10 @@ function renderResults(){
   const medal=['var(--gold)','var(--silver)','var(--bronze)'];
   const body=$('resBody');body.innerHTML='';
   rows.forEach((x,i)=>{const tr=document.createElement('tr');if(x.r.kind==='local')tr.className='me';
-    const cells=[[`${i+1}`,'pl'],[String(x.r.lane),''],['',''],['','nat'],[fmt(x.t),'t'],[i?'+'+(x.t-win).toFixed(2):'—','t'],[String(POINTS[i]||0),'t']];
+    const cells=[[`${i+1}`,'pl'],[String(x.r.lane),'ln'],['',''],['','nat'],[fmt(x.t),'t tm'],[i?'+'+(x.t-win).toFixed(2):'—','t gp'],[String(POINTS[i]||0),'t']];
     cells.forEach(([txt,cls],ci)=>{const td=document.createElement('td');if(cls)td.className=cls;
-      if(ci===0){const t=document.createElement('span');t.className='rk-tag rk'+Math.min(i+1,4);const n=document.createElement('i');n.textContent=txt;t.appendChild(n);if(i<3){const c=document.createElement('b');c.textContent=txt;t.appendChild(c);}td.appendChild(t);}
-      else if(ci===2){if(teams&&x.r.team!=null){const d=document.createElement('span');d.className='tdot';d.style.background=TEAMS[x.r.team].css;td.appendChild(d);}td.appendChild(document.createTextNode(!x.r.human&&x.r.kind!=='local'&&x.r.nm===x.r.flag.name?'CPU':x.r.nm+(x.r.kind==='local'?' (you)':'')+(x.r.human?'':' · CPU')));}
+      if(ci===0){const t=document.createElement('span');t.className='rk-tag rk'+Math.min(i+1,4);const n=document.createElement('i');n.textContent=txt;t.appendChild(n);td.appendChild(t);}
+      else if(ci===2){if(teams&&x.r.team!=null){const d=document.createElement('span');d.className='tdot';d.style.background=TEAMS[x.r.team].css;td.appendChild(d);}td.classList.add('rn');td.appendChild(rowAvatar({me:x.r.kind==='local',av:x.r.char.id+'.'+(x.r.skin&&x.r.skin.id||'classic'),nm:x.r.nm,cc:x.r.cc},'res-av'));const full=x.r.nm+(x.r.kind==='local'?' (you)':'')+(x.r.human?'':' · CPU'),sh=!x.r.human&&x.r.kind!=='local'&&x.r.nm===x.r.flag.name;const a=document.createElement('span');a.className=sh?'rn-full':'';a.textContent=full;td.appendChild(a);if(sh){const b=document.createElement('span');b.className='rn-short';b.textContent='CPU';td.appendChild(b);}}
       else if(ci===3){const w=document.createElement('span');w.className='nat-in';const im=document.createElement('img');im.src=x.r.flag.url;im.alt='';const nm=document.createElement('span');nm.textContent=x.r.flag.name;w.append(im,nm);td.appendChild(w);}
       else if(ci===4){td.textContent=txt;if(x.est){const s=document.createElement('span');s.className='est';s.textContent=' est.';td.appendChild(s);}}
       else td.textContent=txt;
@@ -5037,7 +5093,8 @@ function renderLevel(){const el=$('lvBadge');if(!el)return;const l=levelOf(loadJ
 function lootHit(src,o,power){
   if(!RACE||RACE.survival||!src||src===o||!runners.includes(src))return;
   const steal=power?POWER_STEAL:HIT_STEAL,gem=power&&Math.random()<GEM_STEAL?1:0;
-  if(o===player){const lost=Math.min(steal,RACE.coins|0);if(lost)RACE.coins-=lost;const lg=gem&&(RACE.gems|0)>0;if(lg)RACE.gems--;
+  const RC=RACE.rec||(RACE.rec={on:{},by:{},lc:0,lg:0});if(src===player)RC.on[o.id]=(RC.on[o.id]|0)+1;
+  if(o===player){RC.by[src.id]=(RC.by[src.id]|0)+1;const lost=Math.min(steal,RACE.coins|0);if(lost)RACE.coins-=lost;const lg=gem&&(RACE.gems|0)>0;if(lg)RACE.gems--;RC.lc+=lost;if(lg)RC.lg++;
     if(lost||lg){const t=(lost?`-${lost}🪙`:'')+(lg?' -1💎':'');if(!chipLoot(src,o,t))feed(t,'bad');}}
   if(src===player)gainLoot(o,power,gem);
   else if(RACE.online&&!src.owned)sendAct(o,{t:'loot',by:src.id,p:power?1:0,g:gem});
