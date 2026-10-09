@@ -1381,6 +1381,22 @@ html.mode-page #menu .left-col>:not(#d3Sheet){visibility:hidden}
 /* phones zoom in on any text box under 16px; keep them all at 16px so the screen never zooms */
 @media (pointer:coarse){input[type=text],input[type=search],input:not([type]),textarea,select{font-size:16px!important}}
 .desk3 .d3-name{margin-top:6px}
+
+/* tile details: a mid-size card in the middle of the screen with the item big */
+.tile-modal{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px;background:rgba(6,10,30,.55);opacity:0;transition:opacity .18s}
+.tile-modal.in{opacity:1}
+.tile-modal .tm-card{position:relative;top:auto!important;left:auto!important;width:min(100%,340px);max-height:calc(100dvh - 48px);overflow:auto;box-sizing:border-box;padding:18px 18px 16px!important;border-radius:20px;
+  border:3px solid #d9a227;box-shadow:0 0 0 2px rgba(255,236,170,.55),0 18px 50px rgba(0,0,0,.5);display:grid;gap:10px;text-align:center;transform:scale(.92);transition:transform .2s cubic-bezier(.2,1.4,.4,1)}
+.tile-modal.in .tm-card{transform:none}
+.tile-modal .tm-card::before,.tile-modal .tm-card::after{display:none!important}
+.tm-art{display:grid;place-items:center;height:150px;border-radius:16px;background:radial-gradient(circle at 50% 45%,rgba(255,236,170,.9),rgba(255,214,120,.35) 45%,rgba(255,214,120,0) 70%)}
+.tm-art>*{position:static!important;width:140px!important;height:140px!important;max-width:none!important;object-fit:contain;margin:0!important;transform:none!important;font-size:96px!important;line-height:140px!important;display:grid;place-items:center;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
+.tm-art>.tile-art,.tm-art>.tile-art>*{width:140px!important;height:140px!important}
+.tile-modal .shop-card>.sk-big,.tile-modal .shop-card>.sk3d.big{display:none}
+.tile-modal .ti-box{gap:6px}.tile-modal .ti-box>b{font-size:19px}.tile-modal .ti-box small{font-size:14px}
+.tile-modal .ti-btns{justify-content:center}
+.tile-modal .tp-x{top:10px!important;right:10px!important;width:32px!important;height:32px!important;font-size:14px!important}
+@media (prefers-reduced-motion:reduce){.tile-modal,.tile-modal .tm-card{transition:none}}
 </style>
 
 <div id="stage"></div>
@@ -4708,14 +4724,21 @@ function mkTile(o){const b=document.createElement('button');b.type='button';b.cl
 function tileGrid(menu,tiles,rerender){const g=document.createElement('div');g.className='col-grid tgrid';
   tiles.forEach(t=>{t.el.dataset.key=t.key;if(TSEL[menu]===t.key)t.el.classList.add('sel');g.appendChild(t.el);
     t.el.onclick=()=>{const open=TSEL[menu]===t.key;TSEL[menu]=open?null:t.key;if(!open&&t.pick)t.pick();if(rerender)rerender();};});
-  const t=tiles.find(x=>x.key===TSEL[menu]);if(t&&t.info)requestAnimationFrame(()=>tilePop(g,t.el,t.info(),()=>{TSEL[menu]=null;if(rerender)rerender();}));
+  const t=tiles.find(x=>x.key===TSEL[menu]);if(!(t&&t.info))document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});if(t&&t.info)requestAnimationFrame(()=>tilePop(g,t.el,t.info(),()=>{TSEL[menu]=null;if(rerender)rerender();}));
   return g;}
-function tilePop(grid,tile,content,close){if(!grid.isConnected)return;grid.querySelectorAll('.tile-pop').forEach(x=>x.remove());grid.style.paddingBottom='';
-  const pop=document.createElement('div');pop.className='col-info tile-pop';pop.appendChild(content);
-  const x=document.createElement('button');x.type='button';x.className='tp-x';x.textContent='✕';x.setAttribute('aria-label','Close');x.onclick=e=>{e.stopPropagation();close();};pop.appendChild(x);
-  grid.appendChild(pop);const h=pop.offsetHeight,top=tile.offsetTop-h-8;
-  if(top>=0){pop.style.top=top+'px';pop.classList.add('up');}else{const t=tile.offsetTop+tile.offsetHeight+8;pop.style.top=t+'px';pop.classList.add('down');grid.style.paddingBottom=Math.max(0,t+h+8-grid.offsetHeight)+'px';}
-  pop.style.setProperty('--ax',(tile.offsetLeft+tile.offsetWidth/2)+'px');pop.scrollIntoView({block:'nearest',behavior:'smooth'});}
+// Details for a tile: a mid-size card in the middle of the screen with a big picture of the item
+function tilePop(grid,tile,content,close){document.querySelectorAll('.tile-modal').forEach(x=>{clearInterval(x._iv);x.remove();});if(!grid.isConnected)return;
+  const ov=document.createElement('div');ov.className='tile-modal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
+  const pop=document.createElement('div');pop.className='col-info tile-pop tm-card';
+  const art=tile.querySelector('.col-art,.tile-img,.tile-art,.col-ic,img');if(art){const w=document.createElement('div');w.className='tm-art';const c=art.cloneNode(true);c.removeAttribute('id');w.appendChild(c);pop.appendChild(w);}
+  pop.appendChild(content);
+  const done=()=>{clearInterval(ov._iv);document.removeEventListener('keydown',key,true);ov.remove();close();};
+  const key=e=>{if(e.key==='Escape'){e.stopPropagation();e.preventDefault();done();}};document.addEventListener('keydown',key,true);
+  const x=document.createElement('button');x.type='button';x.className='tp-x';x.textContent='✕';x.setAttribute('aria-label','Close');x.onclick=e=>{e.stopPropagation();done();};pop.appendChild(x);
+  ov.onclick=e=>{if(e.target===ov)done();};ov.appendChild(pop);document.body.appendChild(ov);
+  // the page behind closed or changed: take the card away too
+  ov._iv=setInterval(()=>{if(!grid.isConnected||!grid.offsetParent){clearInterval(ov._iv);document.removeEventListener('keydown',key,true);ov.remove();}},300);
+  requestAnimationFrame(()=>ov.classList.add('in'));x.focus({preventScroll:true});}
 // simple details box: title line, text lines and optional buttons
 function tileInfo(title,lines,btns){const d=document.createElement('div');d.className='ti-box';const b=document.createElement('b');b.textContent=title;d.appendChild(b);
   (lines||[]).forEach(l=>{if(l instanceof Element){d.appendChild(l);return;}const p=document.createElement('small');p.textContent=l;d.appendChild(p);});
