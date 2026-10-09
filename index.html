@@ -1339,6 +1339,21 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 #results td.rn{white-space:nowrap}#results td.rn .res-av{display:inline-block!important}
 .rec-wide .rec-line>b{margin-left:auto}.rec-wide .rec-line.rk1{background:linear-gradient(180deg,#f6dc8a,#e2b440)}.rec-wide .rec-line.rk2{background:linear-gradient(180deg,#eef1f5,#c3cad4)}.rec-wide .rec-line.rk3{background:linear-gradient(180deg,#f2c39a,#cf8a52)}.rec-wide .rec-line.me{box-shadow:inset 0 0 0 2px #c8921c}
 #results :is(th,td).ln{display:none!important}.rec-line>em{white-space:nowrap}
+
+/* results: the chest sits small at the top left under the table, no panel; buttons are icons */
+#results #resRewards{background:none!important;border:0!important;box-shadow:none!important;padding:2px 8px 0!important;margin:0!important}
+#results #resRewards .chest-one{justify-items:start;padding:0}
+#results #resRewards .chest.big{width:96px!important;height:96px!important}
+#results .ch-hint{display:none}
+#results .chest:not(.open) .ch-glow{inset:-22%!important;opacity:1;transform:scale(1);animation:chGlow 1.8s ease-in-out infinite;background:radial-gradient(circle,rgba(255,236,140,1),rgba(255,196,40,.75) 38%,rgba(255,170,20,0) 70%)!important;z-index:0}
+#results .chest:not(.open) .ch-img{position:relative;z-index:1;filter:drop-shadow(0 0 10px rgba(255,200,60,.95)) drop-shadow(0 4px 4px rgba(60,30,0,.45))!important}
+@keyframes chGlow{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.12)}}
+@media (prefers-reduced-motion:reduce){#results .chest:not(.open) .ch-glow{animation:none}}
+#results .actions{display:flex!important;flex-wrap:nowrap!important;gap:12px;justify-content:center}
+#results .actions button.rb-icon{flex:0 0 auto!important;width:74px;height:64px;padding:0!important;display:grid;place-items:center}
+#results .actions button:not(.rb-icon){flex:1 1 auto!important}
+.rb-ic{width:40px;height:40px;display:grid;place-items:center;line-height:1}.rb-ic svg{width:40px;height:40px}img.rb-ic{object-fit:contain}
+.rb-emoji{font-size:36px}
 </style>
 
 <div id="stage"></div>
@@ -3219,7 +3234,7 @@ function showSurvivalResults(){
   const rw=RACE.reward;
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${sv.wave} wave${sv.wave>1?'s':''} reached, ${sv.dodged} zombies dodged${rw.extra?`, ${rw.extra} from coin bonuses`:''}${RACE.gems?', '+RACE.gems+' diamond'+(RACE.gems>1?'s':'')+' found':''})</span>`;
   chestifyRewards(rw.coinsWon,rw.gemsWon);
-  $('againBtn').textContent='Survive again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';
+  $('againBtn').textContent='Survive again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';resIcons();
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 
@@ -3329,7 +3344,7 @@ function showFlagResults(){
   $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon+RACE.fcCoins,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${RACE.coins} coins picked up, ${rw.bonus} for ${ord(rank)} place, ${RACE.fcCoins} for the ${player.flags} flag${player.flags===1?'':'s'} you carried${rw.extra?`, ${rw.extra} from coin bonuses`:''}${rank===1?', 1 diamond for the win':''})</span>`;
   {const notes=evaluateRace(rank);notes.forEach(t=>{const d=document.createElement('div');d.className='res-note';d.textContent=t;$('resRewards').appendChild(d);});}
   chestifyRewards(rw.coinsWon+RACE.fcCoins,rw.gemsWon);
-  $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';
+  $('againBtn').textContent=RACE.online?'Back to lobby':'Play again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=RACE.online?'Leave room':'Change setup';resIcons();
   $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 
@@ -4410,6 +4425,11 @@ function renderRecord(pb){const box=$('resRec');box.innerHTML='';const rows=resu
   card('gem','You stole',loot('+',L.c,L.g));
   const all=card('m_podium','Times');all.classList.add('rec-wide');
   rows.forEach((x,i)=>{const d=line(flag(x.r),Object.assign(document.createElement('span'),{textContent:nm(x.r)+(x.r.kind==='local'?' (you)':'')}),Object.assign(document.createElement('b'),{textContent:(x.est?'≈ ':'')+fmt(x.t)}));if(i<3)d.classList.add('rk'+(i+1));if(x.r.kind==='local')d.classList.add('me');all.appendChild(d);});}
+// results buttons: rematch / setup / home show as icons when they have their usual meaning
+const HOME_SVG='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 5 4 15h3.5v11h7v-7h3v7h7V15H28z" fill="#3a6fd8" stroke="#1d3f8f" stroke-width="1.6" stroke-linejoin="round"/><path d="M13 21H6m0 0 3.2-3.2M6 21l3.2 3.2" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function resIcons(){const b=[['againBtn',/^(Race|Play|Survive) again$/,'<span class="rb-ic rb-emoji">♻️</span>'],['changeBtn',/^Change setup$/,'<img class="rb-ic" alt="" src="img/icons/menu_settings.webp">'],['resPlaza',/^Home$/,'<span class="rb-ic">'+HOME_SVG+'</span>']];
+  b.forEach(([id,re,html])=>{const el=$(id);const t=el.querySelector('.rb-ic')?el.dataset.label:el.textContent.trim();el.dataset.label=t;
+    if(re.test(t)){el.innerHTML=html;el.classList.add('rb-icon');el.title=t;el.setAttribute('aria-label',t);}else{el.classList.remove('rb-icon');el.textContent=t;el.removeAttribute('aria-label');el.title='';}});}
 const RES_HEAD=document.querySelector('#results thead tr').innerHTML;
 function showResults(){
   document.querySelector('#results thead tr').innerHTML=RES_HEAD;$('resTabs').hidden=true;$('resRec').hidden=true;
@@ -4427,7 +4447,7 @@ function showResults(){
   if(GP&&RACE.gp&&GP.counted!==GP.round){resultRows().forEach((x,i)=>{GP.pts[x.r.id]=(GP.pts[x.r.id]|0)+(POINTS[i]||0);});GP.counted=GP.round;}
   renderGPBox();
   const gpLast=GP&&RACE.gp&&GP.round>=GP.tracks.length-1;
-  $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?(NET.mmRoom?'⚡ Find another race':'Back to lobby'):'Race again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';
+  $('againBtn').textContent=GP&&RACE.gp?(gpLast?'See the podium':`Next race (${GP.round+2}/${GP.tracks.length})`):RACE.online?(NET.mmRoom?'⚡ Find another race':'Back to lobby'):'Race again';$('resRunners').hidden=!RACE.online;$('changeBtn').textContent=GP&&RACE.gp?'Quit Grand Prix':RACE.online?'Leave room':'Change setup';resIcons();
   $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{if(RACE&&RACE.tut){store.set('flagdash-onboard','done');clearInterval(ONB.iv);$('coach').hidden=true;toMenu('desk');setTimeout(onboardHome,400);return;}$('results').hidden=false;$('againBtn').focus();});
 }
 function renderResults(){
