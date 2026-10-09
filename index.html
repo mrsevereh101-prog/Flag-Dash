@@ -3183,7 +3183,7 @@ function svSpawn(pp,wv){
 function svUpdate(dt,now){
   const sv=RACE.sv;if(!sv||sv.over)return;
   sv.t+=dt;const wv=1+Math.floor(sv.t/SV_WAVE_LEN);
-  if(wv!==sv.wave){sv.wave=wv;showBanner('WAVE '+wv,svWaveText(wv),[1,0.35,0.2]);sfx.beep(true);}
+  if(wv!==sv.wave){sv.wave=wv;showBanner('WAVE '+wv,svWaveText(wv),[1,0.35,0.2]);sfx.wave();}
   const pp=prog(player),LO=(player.lap-1)*TRACK;
   // the horde behind: it gains on you whenever you stumble
   const hv=Math.min(BASE,BASE*(0.8+0.025*wv));
@@ -3261,8 +3261,8 @@ const fcAlive=()=>runners.filter(r=>!r.out);
 function fcSteal(th,vi){
   th.flags++;vi.flags--;vi.fcImm=2;th.fcCd=1;
   const p=wpos(vi,1.6);burst(p.x,p.y,p.z,12,[1,0.8,0.2],{max:4,up:3,grav:6,size:0.22});
-  if(th===player){RACE.fc.stole++;sfx.pick();feed(`You stole a flag from ${vi.nm}! (${th.flags})`,'good');}
-  else if(vi===player){RACE.fc.lost++;sfx.beep(false);feed(`${th.nm} stole one of your flags (${vi.flags} left)`,'bad');}
+  if(th===player){RACE.fc.stole++;sfx.flagSteal();feed(`You stole a flag from ${vi.nm}! (${th.flags})`,'good');}
+  else if(vi===player){RACE.fc.lost++;sfx.flagLost();feed(`${th.nm} stole one of your flags (${vi.flags} left)`,'bad');}
 }
 function fcEliminate(){
   const fc=RACE.fc,cand=fcAlive().filter(r=>!r.finished);if(!cand.length)return;
@@ -3282,7 +3282,7 @@ function fcPack(){const fc=RACE.fc,f={},o={};runners.forEach(r=>{f[r.id]=r.flags
 function fcApply(pk){
   const fc=RACE.fc;if(!fc||!pk.f||typeof pk.f!=='object')return;
   for(const r of runners){const nf=pk.f[r.id];if(!Number.isFinite(nf)||nf===r.flags)continue;
-    if(r===player){if(nf>r.flags){fc.stole+=nf-r.flags;sfx.pick();feed(`You stole a flag! (${nf})`,'good');}else{fc.lost+=r.flags-nf;sfx.beep(false);feed(`A rival stole one of your flags (${nf} left)`,'bad');}}
+    if(r===player){if(nf>r.flags){fc.stole+=nf-r.flags;sfx.flagSteal();feed(`You stole a flag! (${nf})`,'good');}else{fc.lost+=r.flags-nf;sfx.flagLost();feed(`A rival stole one of your flags (${nf} left)`,'bad');}}
     r.flags=clamp(nf|0,0,99);}
   if(pk.o&&typeof pk.o==='object')for(const r of runners)if(!r.out&&Number.isFinite(pk.o[r.id]))fcOut(r,pk.o[r.id]|0);
   if(Number.isFinite(pk.n))fc.next=pk.n;if(Number.isFinite(pk.r))fc.round=pk.r|0;
@@ -3299,7 +3299,7 @@ function fcUpdate(dt){
   // elimination clock, until only FC_KEEP runners are left
   if(state==='race'||state==='finished'||(state==='results'&&RACE.online)){
     if(fcAlive().filter(r=>!r.finished).length&&fcAlive().length>FC_KEEP){const before=Math.ceil(fc.next);fc.next-=dt;
-      if(Math.ceil(fc.next)!==before&&fc.next<=3&&fc.next>0&&!player.out&&!player.finished)sfx.beep(false);
+      if(Math.ceil(fc.next)!==before&&fc.next<=3&&fc.next>0&&!player.out&&!player.finished)sfx.countBeep();
       if(fc.next<=0){fcEliminate();fc.round++;fc.next=FC_ROUND;}}
   }
   fcHud();
@@ -3353,13 +3353,38 @@ function showFlagResults(){
    AUDIO
    ========================================================= */
 let actx=null,muted=store.get('flagdash-muted')==='1';
-function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){actx=null;}}
+function initAudio(){if(actx)return;try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){actx=null;}loadSfx();}
+/* Recorded sound effects (ElevenLabs), one file per sound in sfx/<name>.mp3 (see SOUND-EFFECTS.md).
+   A sound plays its recording once it has loaded; until then (or if the file is missing) it falls back to the old synth beep. */
+const SFX_DIR='sfx/';
+const SFX_FILES=['coin','jump','hit','slide','item_get','item_use','count_beep','count_go','finish','chest_rumble','chest_burst','reward_pop',
+  'gem','boost_pad','jump_pad','power_slash','power_thunder','power_wind','power_trees','power_quake','power_ready','wall_smash','meteor','shield_block',
+  'dart','net','shockwave','vortex','ram','bubble','escape','titan','aegis','banana','rocket','freeze','mine','ghost','fire',
+  'tap','purchase','equip','claim','level_up','message','flag_steal','flag_lost','wave'];
+const sfxBuf={};let sfxLoading=false,sfxStamp=0;
+function loadSfx(){if(!actx||sfxLoading)return;sfxLoading=true;
+  SFX_FILES.forEach(n=>fetch(SFX_DIR+n+'.mp3').then(r=>r.ok?r.arrayBuffer():Promise.reject()).then(b=>new Promise((res,rej)=>actx.decodeAudioData(b,res,rej))).then(buf=>{sfxBuf[n]=buf;}).catch(()=>{}));}
+// play a recording; returns false when it is not loaded so the caller can use the synth instead
+function samp(n,vol,delay){if(!actx||!sfxBuf[n])return false;if(muted)return true;sfxStamp=performance.now();
+  try{const s=actx.createBufferSource();s.buffer=sfxBuf[n];const g=actx.createGain();g.gain.value=vol==null?0.9:vol;s.connect(g);g.connect(sfxOut());s.start(actx.currentTime+(delay||0));}catch(e){}return true;}
 function tone(f,dur,type,vol,slide,delay){if(!actx||muted)return;const t=actx.currentTime+(delay||0);const o=actx.createOscillator(),g=actx.createGain();o.type=type||'square';o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),t+dur);g.gain.setValueAtTime(vol||0.05,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(g);g.connect(sfxOut());o.start(t);o.stop(t+dur+0.02);}
-const sfx={jump:()=>tone(320,0.14,'square',0.04,280),slide:()=>tone(260,0.18,'sawtooth',0.03,-140),
+const sfx={jump:()=>samp('jump')||tone(320,0.14,'square',0.04,280),slide:()=>samp('slide')||tone(260,0.18,'sawtooth',0.03,-140),
   pick:()=>{tone(660,0.08,'square',0.04);tone(880,0.08,'square',0.04,0,0.07);tone(1175,0.1,'square',0.04,0,0.14);},
-  hit:()=>{tone(180,0.3,'sawtooth',0.07,-120);tone(90,0.3,'square',0.05,-40);},use:()=>tone(520,0.16,'triangle',0.06,400),
+  hit:()=>{if(samp('hit'))return;tone(180,0.3,'sawtooth',0.07,-120);tone(90,0.3,'square',0.05,-40);},use:()=>samp('item_use')||tone(520,0.16,'triangle',0.06,400),
   power:()=>{tone(300,0.25,'sawtooth',0.05,700);tone(600,0.3,'triangle',0.04,600,0.05);},beep:hi=>tone(hi?880:440,hi?0.35:0.18,'square',0.05),
-  fanfare:()=>[523,659,784,1047].forEach((f,i)=>tone(f,0.22,'square',0.05,0,i*0.12)),pop:()=>tone(700,0.08,'triangle',0.04,300)};
+  fanfare:()=>[523,659,784,1047].forEach((f,i)=>tone(f,0.22,'square',0.05,0,i*0.12)),pop:()=>tone(700,0.08,'triangle',0.04,300),
+  // sounds that only exist as recordings, each with a synth stand-in
+  itemGet:()=>samp('item_get')||sfx.pick(),countBeep:()=>samp('count_beep')||sfx.beep(false),countGo:()=>samp('count_go')||sfx.beep(true),
+  finish:()=>samp('finish',1),powerReady:()=>samp('power_ready')||tone(880,0.2,'triangle',0.04,440),shieldBlock:()=>samp('shield_block')||tone(1200,0.12,'triangle',0.04,-300),
+  tap:()=>samp('tap',0.6),purchase:()=>samp('purchase')||sfx.pick(),equip:()=>samp('equip')||sfx.pick(),claim:()=>samp('claim')||sfx.pick(),
+  levelUp:()=>samp('level_up')||sfx.fanfare(),message:()=>samp('message',0.7)||sfx.pop(),
+  flagSteal:()=>samp('flag_steal')||sfx.pick(),flagLost:()=>samp('flag_lost')||sfx.beep(false),wave:()=>samp('wave')||sfx.beep(true),
+  rewardPop:()=>samp('reward_pop')||sfx.pick(),
+  // items and loadout pieces each have their own recording; anything without one uses the generic sound
+  item:k=>samp(ITEM_SFX[k]||k)||sfx.use(),loadout:(k,def)=>samp(ITEM_SFX[k]||k)||(def?sfx.power():sfx.use())};
+const ITEM_SFX={shock:'shockwave',turbo:'boost_pad',shield:'bubble',swap:'item_use',banana:'item_use',mine:'item_use'};
+// any button that makes no sound of its own gives a soft tap
+document.addEventListener('click',e=>{if(!e.target.closest||!e.target.closest('button'))return;const t0=sfxStamp;setTimeout(()=>{if(sfxStamp===t0)sfx.tap();},0);},true);
 /* Crowd audio that follows how the local player is doing: roars and "woo"s in the top 3, groans and murmurs below it. */
 const crowd={src:null,g:null,bp:null,out:null,soft:null,white:null,
   bufs(){if(this.soft)return;const len=actx.sampleRate*2;this.soft=actx.createBuffer(1,len,actx.sampleRate);this.white=actx.createBuffer(1,len,actx.sampleRate);const d=this.soft.getChannelData(0),w=this.white.getChannelData(0);let v=0;for(let i=0;i<len;i++){const n=Math.random()*2-1;v=0.97*v+0.03*n;d[i]=v*3.2;w[i]=n;}},
@@ -3655,7 +3680,7 @@ function hit(o,dur,src,kind,why,quiet){
   if(o.ghost>0){ghostFx(o);if(src&&src!==o){const nx=nextInLine(o,src);if(o.kind==='local')feed(nx?`${src.nm}'s attack went through you and hit ${nx.nm}`:`${src.nm}'s attack went through you`,'good');
       if(nx){if(nx.owned)hit(nx,dur,src,kind,`${src.nm}'s attack passed through ${o.nm} and hit you`,quiet);else if(RACE&&RACE.online)sendAct(o,{t:'redir',to:nx.id,by:src.id,dur:Math.round(dur*100)/100,k:kind});}}
     return false;}
-  if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(src&&src!==o)hitFeed(src,o,'🛡️');else if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
+  if(o.shield>0){o.shield=0;ringFx(o.x,o.d,0x8fd8ff,2.5,0.4);if(o.kind==='local'||(src&&src.kind==='local'))sfx.shieldBlock();if(src&&src!==o)hitFeed(src,o,'🛡️');else if(o.kind==='local')feed('Your shield blocked it','good');if(src&&src!==o)speak(o,'block');notifyAttacker(src,o,'blk');return false;}
   dur*=1-((o.mods&&o.mods.stun)||0);
   if(o.char&&o.char.id==='samurai')dur*=0.7;  // perk: Bushido
   o.stun=Math.max(o.stun,dur);o.grace=dur+1.2;o.stunKind=kind||'trip';o.speed*=0.35;o.slide=0;if(kind==='knock')o.vy=Math.max(o.vy,5.5);
@@ -3664,21 +3689,21 @@ function hit(o,dur,src,kind,why,quiet){
   if(src&&src!==o)hitFeed(src,o,hitIcon(why,src));
   if(!quiet)notifyAttacker(src,o,'hit');
   lootHit(src,o,!!quiet);
-  if(why==='Slipped on a banana'){speak(o,'banana');if(src&&src!==o)speak(src,'hit');}
+  if(why==='Slipped on a banana'){speak(o,'banana');if(o.kind==='local')samp('banana');if(src&&src!==o)speak(src,'hit');}
   else if(src&&src!==o){if(!quiet)sayHit(src,o);else if(o===player||Math.random()<0.35)speak(o,'hurt',0.6);}
   return true;
 }
 function giveItem(r){
-  if(RACE&&RACE.jackpot&&r===player){r.item=pick(['rocket','turbo','shield']);r.ai.itemT=rand(0.6,2.4);sfx.pick();return;}
+  if(RACE&&RACE.jackpot&&r===player){r.item=pick(['rocket','turbo','shield']);r.ai.itemT=rand(0.6,2.4);sfx.itemGet();return;}
   const lead=r.place<=2;const table=lead?[['banana',26],['shield',20],['ghost',10],['fire',12],['freeze',12],['rocket',12],['turbo',8]]:[['rocket',26],['turbo',20],['freeze',16],['fire',12],['ghost',10],['banana',8],['shield',8]];
   let t=Math.random()*100;r.item='turbo';for(const [k,w] of table){if((t-=w)<0){r.item=k;break;}}
-  if(RACE&&RACE.rules&&RACE.rules.bananas)r.item='banana';if(RACE&&RACE.survival)r.item=pick(['shield','turbo','turbo']);r.ai.itemT=rand(0.6,2.4);if(r.kind==='local')sfx.pick();
+  if(RACE&&RACE.rules&&RACE.rules.bananas)r.item='banana';if(RACE&&RACE.survival)r.item=pick(['shield','turbo','turbo']);r.ai.itemT=rand(0.6,2.4);if(r.kind==='local')sfx.itemGet();
 }
 function nearestAhead(r,maxD){let best=null,bd=maxD;for(const o of runners){if(o===r||o.finished||sameTeam(o,r))continue;const dd=prog(o)-prog(r);if(dd>0.5&&dd<bd){bd=dd;best=o;}}return best;}
 const canAct=()=>state==='race'||state==='finished';
 function useItem(r){
   if(!r||!r.item||r.finished||!canAct())return;
-  const it=r.item;r.item=null;if(r.kind==='local'){sfx.use();raceStat('items');}
+  const it=r.item;r.item=null;if(r.kind==='local'){sfx.item(it);raceStat('items');}
   if(it==='banana'){sendAct(r,{t:'ban',id:uid(),x:rnd2(r.x),d:rnd2(r.d-1.8)});;}
   else if(it==='mine'){sendAct(r,{t:'ban',k:'mine',id:uid(),x:rnd2(r.x),d:rnd2(r.d-1.8)});}
   else if(it==='rocket'){const tg=nearestAhead(r,120);sendAct(r,{t:'rkt',id:uid(),x:rnd2(r.x),d:rnd2(r.d+0.8),tg:tg?tg.id:null});;}
@@ -3711,13 +3736,13 @@ function useLoadout(r,slot){
     let tg=null;
     if(id==='dart'||id==='net'){tg=nearestAhead(r,70);if(!tg){if(r.kind==='local')feed('No rival ahead to hit','');return;}}
     if(id==='meteor'){tg=raceLeader(r);if(!tg||prog(tg)<prog(r)){if(r.kind==='local')feed('You are leading. Save the meteor','');return;}}
-    r.lo[used]=true;if(r.kind==='local'){sfx.use();raceStat('items');}
+    r.lo[used]=true;if(r.kind==='local'){if(id!=='meteor')sfx.loadout(id);raceStat('items');}
     sendAct(r,{t:'la',k:id,tg:tg?tg.id:null});
   }else{
     // Escape is the one item you can use while stunned.
     if(r.stun>0&&id!=='escape')return;
     if(id==='escape'&&r.stun<=0&&r.slow<=0){if(r.kind==='local')feed('Escape works when you are stunned or frozen','');return;}
-    r.lo[used]=true;if(r.kind==='local'){sfx.power();raceStat('items');}
+    r.lo[used]=true;if(r.kind==='local'){sfx.loadout(id,true);raceStat('items');}
     if(id==='ram')r.ram=2.5;
     else if(id==='bubble')r.shield=15;
     else if(id==='escape'){r.stun=0;r.slow=0;r.grace=1.5;r.boost=1.5;r.boostMul=1.45;r.vy=Math.min(r.vy,0);}
@@ -3726,7 +3751,7 @@ function useLoadout(r,slot){
     sendAct(r,{t:'ld',k:id});
   }
 }
-Object.assign(sfx,{smash:()=>{tone(120,0.18,'square',0.06,-60);tone(60,0.25,'sawtooth',0.05,-20,0.03);},meteor:()=>{tone(900,0.6,'sawtooth',0.05,-800);tone(50,0.6,'square',0.08,-20,0.5);}});
+Object.assign(sfx,{smash:()=>{if(samp('wall_smash'))return;tone(120,0.18,'square',0.06,-60);tone(60,0.25,'sawtooth',0.05,-20,0.03);},meteor:()=>{if(samp('meteor',1))return;tone(900,0.6,'sawtooth',0.05,-800);tone(50,0.6,'square',0.08,-20,0.5);}});
 function smashFx(o){const p=W(o.x,o.d,Hf(o.d)+1);burst(p.x,p.y,p.z,22,TH.dust,{max:7,up:5,grav:10,size:0.35});burst(p.x,p.y,p.z,8,[1,0.85,0.4],{add:true,max:4,grav:3});}
 function meteorFx(o){const B=wpos(o,0.5),A=B.clone();A.y+=40;A.x+=8;const m=new THREE.Mesh(sharedGeo('meteor',()=>new THREE.DodecahedronGeometry(0.9,0)),new THREE.MeshBasicMaterial({color:0xff7a2a}));m.position.copy(A);scene.add(m);
   let boom=false;fx.push({m,t:0,dur:0.55,dispose(){m.material.dispose();},update(k){m.position.lerpVectors(A,B,k);if(Math.random()<0.8)emit(PA,{x:m.position.x,y:m.position.y,z:m.position.z,vy:1,life:0.4,size:0.6,c:[1,0.5,0.15]});if(k>=1&&!boom){boom=true;explode(B.x,B.y,B.z);}}});}
@@ -3847,15 +3872,15 @@ function explode(x,y,z){burst(x,y,z,26,[1,0.6,0.2],{add:true,max:6,up:4,grav:3,s
 function makeRocketMesh(){const g=new THREE.Group();const body=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,0.7,8),new THREE.MeshLambertMaterial({color:0xd8342a}));body.rotation.x=Math.PI/2;g.add(body);const tip=new THREE.Mesh(new THREE.ConeGeometry(0.12,0.28,8),new THREE.MeshLambertMaterial({color:0xeef1f8}));tip.rotation.x=-Math.PI/2;tip.position.z=-0.49;g.add(tip);const fl=new THREE.Mesh(new THREE.ConeGeometry(0.1,0.45,8),new THREE.MeshBasicMaterial({color:0xffb030}));fl.rotation.x=-Math.PI/2;fl.position.z=0.55;g.add(fl);return g;}
 /* ---------- stun-everyone powers ---------- */
 Object.assign(sfx,{
-  slash:()=>{tone(1400,0.25,'sawtooth',0.05,-1200);tone(900,0.2,'triangle',0.04,-600,0.05);},
-  thunder:()=>{tone(70,0.8,'sawtooth',0.09,-40);tone(140,0.4,'square',0.05,-100,0.05);},
-  wind:()=>{tone(500,0.7,'triangle',0.05,-350);tone(700,0.6,'triangle',0.03,-500,0.1);},
-  trees:()=>{tone(160,0.35,'square',0.05,220);tone(240,0.3,'square',0.04,200,0.12);},
-  quake:()=>{tone(45,0.9,'sawtooth',0.1,-15);tone(80,0.6,'square',0.06,-30,0.1);},
-  coin:()=>{tone(1320,0.07,'square',0.03);tone(1760,0.09,'square',0.03,0,0.05);},
-  gem:()=>{[1047,1319,1568,2093].forEach((f,i)=>tone(f,0.12,'triangle',0.04,0,i*0.06));},
-  boostPad:()=>tone(420,0.3,'sawtooth',0.04,900),
-  jumpPad:()=>{tone(200,0.25,'square',0.05,600);tone(500,0.3,'triangle',0.04,700,0.08);},
+  slash:()=>{if(samp('power_slash',1))return;tone(1400,0.25,'sawtooth',0.05,-1200);tone(900,0.2,'triangle',0.04,-600,0.05);},
+  thunder:()=>{if(samp('power_thunder',1))return;tone(70,0.8,'sawtooth',0.09,-40);tone(140,0.4,'square',0.05,-100,0.05);},
+  wind:()=>{if(samp('power_wind',1))return;tone(500,0.7,'triangle',0.05,-350);tone(700,0.6,'triangle',0.03,-500,0.1);},
+  trees:()=>{if(samp('power_trees',1))return;tone(160,0.35,'square',0.05,220);tone(240,0.3,'square',0.04,200,0.12);},
+  quake:()=>{if(samp('power_quake',1))return;tone(45,0.9,'sawtooth',0.1,-15);tone(80,0.6,'square',0.06,-30,0.1);},
+  coin:()=>{if(samp('coin',0.7))return;tone(1320,0.07,'square',0.03);tone(1760,0.09,'square',0.03,0,0.05);},
+  gem:()=>{if(samp('gem'))return;[1047,1319,1568,2093].forEach((f,i)=>tone(f,0.12,'triangle',0.04,0,i*0.06));},
+  boostPad:()=>samp('boost_pad')||tone(420,0.3,'sawtooth',0.04,900),
+  jumpPad:()=>{if(samp('jump_pad'))return;tone(200,0.25,'square',0.05,600);tone(500,0.3,'triangle',0.04,700,0.08);},
 });
 function showUlt(src){showBanner(src.char.power+'!',`${src.nm} · ${src.char.name}`,src.char.rgb);}
 function showBanner(big,small,rgb){const el=$('ultBanner');el.innerHTML='';const b=document.createElement('b');b.textContent=big;const s=document.createElement('span');s.textContent=small;el.append(b,s);
@@ -3970,7 +3995,7 @@ function stepRunner(r,dt){
   for(let i=bananas.length-1;i>=0;i--){const b=bananas[i];if((b.owner===r&&b.safe>0)||sameTeam(b.owner,r)&&b.owner!==r)continue;
     if(Math.abs(r.d-b.d)<0.8&&Math.abs(r.x-b.x)<0.8&&r.y<0.4&&r.phase<=0&&!r.leaping&&!r.finished){sendAct(r,{t:'banx',id:b.id});
       if(itemProof(r,b.kind==='mine'?'the land mine':'the banana')){}
-      else if(b.kind==='mine'){if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
+      else if(b.kind==='mine'){if(r.kind==='local')samp('mine',1);if(hit(r,1.7,b.owner===r?null:b.owner,'knock',b.owner&&b.owner!==r?`Blown up by ${b.owner.nm}'s land mine`:'Stepped on a land mine')&&r.y<=0.05)r.vy=Math.max(r.vy||0,7);}
       else if(r.char.id==='elf'){if(r.kind==='local')feed('Light Feet: hopped over the banana','good');}
       else hit(r,1.1,b.owner===r?null:b.owner,'slip','Slipped on a banana');}}
   if(!r.finished&&!r.leaping&&r.phase<=0&&r.y<0.45)for(let i=0;i<traps.length;i++){const t=traps[i];if(t.cd>0||Math.abs(r.d-t.d)>0.85||Math.abs(r.x-t.x)>0.85)continue;
@@ -4015,7 +4040,7 @@ function newLap(r){if(RACE.survival){camL.init=true;resetPickups();return;}
     if(RACE.buffs.includes('comeback')&&r.place>=4&&r.place<=6){r.boost=3;r.boostMul=1.5;sendAct(r,{t:'pw',p:'turbo'});feed(`🔥 Comeback Boost! Speed burst from ${ord(r.place)} place`,'good');}}flashScreen('#0b0e26');camL.init=true;showBanner('LAP '+r.lap+'/'+RACE.laps,r.lap===RACE.laps?'Final lap':'Keep going',[0.95,0.75,0.2]);resetPickups();sfx.beep(true);}
 function finish(r,time){
   r.finished=true;r.time=time;r.item=null;computeRanks();
-  if(r.kind==='local'){state='finished';resultsT=3.2;music.stop(0.5);if(r.place===1){music.sting(MUS.win);music.play(MUS.results,{fade:2,delay:6});}else if(r.place<=3){music.play(MUS.results,{fade:1.5,delay:0.6});}else{music.sting(MUS.lose);music.play(MUS.menu,{fade:2.5,delay:3});}if(!musicOn)sfx.fanfare();if(r.place<=3)crowd.cheer(true);else crowd.disappoint();feed(`Finished ${ord(r.place)} in ${fmt(r.time)}`,'gold');const p=wpos(r,2);for(let i=0;i<60;i++)emit(PA,{x:p.x,y:p.y,z:p.z,vx:rand(-4,4),vy:rand(3,8),vz:rand(-4,4),life:1.4,size:0.2,c:pick([[1,0.8,0.2],[0.3,0.6,1],[1,0.3,0.3],[0.4,1,0.5]]),grav:7,drag:1});}
+  if(r.kind==='local'){state='finished';resultsT=3.2;sfx.finish();music.stop(0.5);if(r.place===1){music.sting(MUS.win);music.play(MUS.results,{fade:2,delay:6});}else if(r.place<=3){music.play(MUS.results,{fade:1.5,delay:0.6});}else{music.sting(MUS.lose);music.play(MUS.menu,{fade:2.5,delay:3});}if(!musicOn)sfx.fanfare();if(r.place<=3)crowd.cheer(true);else crowd.disappoint();feed(`Finished ${ord(r.place)} in ${fmt(r.time)}`,'gold');const p=wpos(r,2);for(let i=0;i<60;i++)emit(PA,{x:p.x,y:p.y,z:p.z,vx:rand(-4,4),vy:rand(3,8),vz:rand(-4,4),life:1.4,size:0.2,c:pick([[1,0.8,0.2],[0.3,0.6,1],[1,0.3,0.3],[0.4,1,0.5]]),grav:7,drag:1});}
 }
 function computeRanks(){const s=runners.slice().sort((a,b)=>((a.out?1:0)-(b.out?1:0))||(a.finished&&b.finished)?a.time-b.time:a.finished?-1:b.finished?1:prog(b)-prog(a));s.forEach((r,i)=>r.place=i+1);}
 function separate(){for(let i=0;i<runners.length;i++)for(let j=i+1;j<runners.length;j++){const a=runners[i],b=runners[j];if((!a.owned&&!b.owned)||a.lap!==b.lap||a.out||b.out)continue;const dz=a.d-b.d,dx=a.x-b.x;
@@ -4405,7 +4430,7 @@ function updateHUD(){
   if(hudCache.item!==it){hudCache.item=it;setIco($('itemIcon'),it?icoOf('item',it):'',it?ITEMS[it].icon:'');$('itemName').textContent=it?ITEMS[it].name:'Empty';$('itemSlot').classList.toggle('full',!!it);}
   drawMinimap();
   const p=Math.floor(player.charge*100);
-  if(hudCache.pow!==p){hudCache.pow=p;$('meter').style.setProperty('--p',p);$('meterPct').textContent=p>=100?'GO':p+'%';$('powerSlot').classList.toggle('ready',p>=100);}
+  if(hudCache.pow!==p){if(p>=100&&hudCache.pow!=null&&hudCache.pow<100&&state==='race')sfx.powerReady();hudCache.pow=p;$('meter').style.setProperty('--p',p);$('meterPct').textContent=p>=100?'GO':p+'%';$('powerSlot').classList.toggle('ready',p>=100);}
 }
 
 /* =========================================================
@@ -4636,9 +4661,9 @@ function priceTag(it){if(lvLocked(it))return `<span class="price lvl">🔒 ${ran
 // Buy button for any store item; usd items stay locked because no payment provider is connected.
 function buyButton(btn,it,label,onBuy){
   if(it.tier==='usd'){btn.textContent='Coming soon';btn.disabled=true;btn.title='Real-money checkout is not connected yet';return;}
-  if(it.tier==='free'){btn.textContent=label==='Buy'?'Claim':label;btn.onclick=()=>{onBuy();sfx.pick();renderStore();};return;}
+  if(it.tier==='free'){btn.textContent=label==='Buy'?'Claim':label;btn.onclick=()=>{onBuy();sfx.claim();renderStore();};return;}
   const ok=canAfford(it.cost,curOf(it));btn.textContent=ok?label:'Not enough';btn.disabled=!ok;
-  btn.onclick=()=>{if(!spend(it.cost,curOf(it)))return;onBuy();sfx.pick();renderStore();};
+  btn.onclick=()=>{if(!spend(it.cost,curOf(it)))return;onBuy();sfx.purchase();renderStore();};
 }
 /* ---------- Square tiles with a pop-up for details (store, pickers, room) ----------
    TSEL remembers which tile's details are open in each menu, so a re-render keeps it open. */
@@ -4731,7 +4756,7 @@ document.querySelectorAll('.pick-btn').forEach(b=>b.onclick=()=>{if(pickOpen===b
 $('pickDone').onclick=()=>closePicker();
 $('perkStore').onclick=()=>openStore();
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&pickOpen&&state==='menu')closePicker();if(e.key==='Escape'&&!$('settings').hidden){closeSettings();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('hub').hidden){closeHub();e.stopImmediatePropagation();}else if(e.key==='Escape'&&!$('chat').hidden){closeChat();e.stopImmediatePropagation();}},true);
-function equipSkin(s){if(store.get('flagdash-newskin')===s.id)store.set('flagdash-newskin','');if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
+function equipSkin(s){sfx.equip();if(store.get('flagdash-newskin')===s.id)store.set('flagdash-newskin','');if(s.hero){wallet.hs=wallet.hs||{};wallet.hs[s.hero]=s.id;if(selChar!==s.hero){selChar=s.hero;store.set('flagdash-char',selChar);refreshMenu();}}else{wallet.skin=s.id;if(wallet.hs)delete wallet.hs[selChar];}}
 function skinCard(s){
   const isNew=store.get('flagdash-newskin')===s.id;
   const locked=lvLocked(s),owned=wallet.skins.includes(s.id)||(s.tier==='free'&&!locked),eq=mySkinId()===s.id&&(!s.hero||s.hero===selChar);
@@ -4762,7 +4787,7 @@ function attireCard(a){
   const btn=card.querySelector('.shop-row button');
   if(active&&a.tier==='free'){btn.textContent='Claimed';btn.disabled=true;}
   else buyButton(btn,a,active?`Add ${ATTIRE_DAYS} days`:'Buy',()=>{wallet.attire[a.id]=Math.max(Date.now(),wallet.attire[a.id]||0)+ATTIRE_DAYS*DAY;if(!wallet.equip[a.slot])wallet.equip[a.slot]=a.id;saveWallet();rebuildPreview('flex');syncLobbyPresence();});
-  const wb=card.querySelector('.wear');if(wb){wb.textContent=worn?'Take off':'Wear';wb.onclick=()=>{if(worn)delete wallet.equip[a.slot];else wallet.equip[a.slot]=a.id;saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
+  const wb=card.querySelector('.wear');if(wb){wb.textContent=worn?'Take off':'Wear';wb.onclick=()=>{if(worn)delete wallet.equip[a.slot];else wallet.equip[a.slot]=a.id;sfx.equip();saveWallet();renderStore();rebuildPreview('flex');syncLobbyPresence();};}
   return card;
 }
 /* ---------- Perks: the buffs you buy. You take one into each race; it is used up when the race starts. ---------- */
@@ -4872,13 +4897,13 @@ function chestCine(items){const ov=$('chestCine');CC.timers.forEach(clearTimeout
   const end=()=>{CC.timers.forEach(clearTimeout);CC.timers=[];ov.className='in burst';img.src='img/chest-open-glow.webp';[...pops.children].forEach(e=>e.classList.add('go'));congrats(items);};
   ov.onclick=end;
   requestAnimationFrame(()=>ov.classList.add('in'));tone(90,0.6,'sawtooth',0.04,60);
-  at(800,()=>{ov.classList.add('charge');[0,250,450,600,720,820,900].forEach((d,i)=>tone(300+i*90,0.09,'square',0.035,0,d/1000));tone(70,1.1,'sawtooth',0.035,80);});
+  at(800,()=>{ov.classList.add('charge');if(samp('chest_rumble',1))return;[0,250,450,600,720,820,900].forEach((d,i)=>tone(300+i*90,0.09,'square',0.035,0,d/1000));tone(70,1.1,'sawtooth',0.035,80);});
   at(1900,()=>{ov.classList.remove('charge');ov.classList.add('burst');img.src='img/chest-open-glow.webp';
-    tone(60,0.7,'sawtooth',0.09,-30);tone(140,0.5,'square',0.06,-90);sfx.fanfare();
+    if(!samp('chest_burst',1)){tone(60,0.7,'sawtooth',0.09,-30);tone(140,0.5,'square',0.06,-90);sfx.fanfare();}
     for(let i=0;i<46;i++){const s=document.createElement('i'),a=Math.random()*Math.PI*2,d=120+Math.random()*Math.max(innerWidth,innerHeight)*.5;
       s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');s.style.animationDelay=Math.random()*.15+'s';
       if(i%3===0)s.style.background='#fff';sp.appendChild(s);}});
-  [...pops.children].forEach((e,k)=>at(2150+k*300,()=>{e.classList.add('go');sfx.pick();}));
+  [...pops.children].forEach((e,k)=>at(2150+k*300,()=>{e.classList.add('go');sfx.rewardPop();}));
   at(2150+n*300+900,end);}
 function openChest(c){if(c.classList.contains('open'))return;c.querySelector('.ch-img').src='img/chest-open-glow.webp';c.classList.add('open');}
 function congrats(items){const ov=$('congrats'),L=$('cgList');L.innerHTML='';
@@ -5041,7 +5066,7 @@ function renderRoomHud(){const n=Object.values(ROOM.place).filter(id=>ownsItem(i
   const b=roomBonus();$('roomBonus').textContent=`Bonus: +${(b.coin*100).toFixed(1).replace('.0','')}% coins · +${(b.chg*100).toFixed(1).replace('.0','')}% power recharge`;locker.refresh();}
 $('roomEdit').onclick=()=>{RV.edit=!RV.edit;renderRoomHud();};
 $('roomBack').onclick=closeRoom;
-$('roomTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{RV.tx=ROOM_AREAS[b.dataset.a]/ROOM_YAW;sfx.pick();markRoomTab();});
+$('roomTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{RV.tx=ROOM_AREAS[b.dataset.a]/ROOM_YAW;sfx.tap();markRoomTab();});
 function markRoomTab(){const yaw=RV.tx*ROOM_YAW;let best=null,bd=9;for(const k in ROOM_AREAS){const d=Math.abs(ROOM_AREAS[k]-yaw);if(d<bd){bd=d;best=k;}}$('roomTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.a===best&&bd<0.12));}$('roomColBtn').onclick=()=>openCollection();
 // drag to pan, tap a spot (while decorating) to choose its item
 stage.addEventListener('pointerdown',e=>{if(!RV.on)return;RV.drag={x:e.clientX,cx:RV.tx};RV.moved=0;});
@@ -5091,7 +5116,7 @@ function renderCollection(){
     if(own){const placed=Object.values(ROOM.place).includes(it.id);sub.textContent=placed?'On display':'In storage. Tap Decorate in your room to place it.';side.insertAdjacentHTML('beforeend','<span class="owned">Owned</span>');mid.append(nm,sub);}
     else if(it.src==='win'){const [v,n]=it.win(STATS);sub.textContent=`${it.how} · ${Math.min(v,n)}/${n}`;const bar=document.createElement('i');bar.className='rc-bar';bar.innerHTML=`<i style="width:${Math.min(100,v/n*100)}%"></i>`;mid.append(nm,sub,bar);}
     else if(it.src==='buy'){sub.textContent=SLOT_NAME[it.slot];const b=document.createElement('button');b.className='buy';const ok=canAfford(it.cost,it.cur);b.innerHTML=priceHTML(it.cost,it.cur);b.disabled=!ok;b.title=ok?'Buy':'Not enough';
-      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.pick();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);mid.append(nm,sub);}
+      b.onclick=()=>{if(!spend(it.cost,it.cur))return;sfx.purchase();const g=grantItem(it.id,'buy');renderCollection();renderRoomHud();if(g&&g.lv&&g.lv.to>g.lv.from){sfx.levelUp();}if(g&&g.lv&&g.lv.to>g.lv.from)feed(`Rank up! You are now ${rankName(g.lv.to)}`,'good');};side.appendChild(b);mid.append(nm,sub);}
     else{sub.textContent='Only a friend can send this ('+priceHTML(it.cost,it.cur).replace(/<[^>]+>/g,'')+(it.cur==='gem'?' diamonds':' coins')+')';mid.append(nm,sub);}
     // what the item adds: Strength and the bonuses it gives, plus XP the first time you get it
     const bf=document.createElement('div');bf.className='col-buffs';
@@ -5243,7 +5268,7 @@ function renderTasks(box,tab){
     const row=document.createElement('div');row.className='hub-row'+(claimed?' done':'');
     row.innerHTML=`<div class="hub-main"><b></b><div class="bar"><i style="width:${Math.min(100,(st.prog[t.id]|0)/t.n*100)}%"></i></div><small>${Math.min(st.prog[t.id]|0,t.n)} / ${t.n}</small></div><div class="hub-side"><span class="rewards">${rewardHTML(t.rw)}</span><button class="buy"></button></div>`;
     row.querySelector('b').textContent=t.txt;const b=row.querySelector('button');
-    if(claimed){b.textContent='Claimed';b.disabled=true;}else if(done){b.textContent='Claim';b.onclick=()=>{st.claimed.push(t.id);saveJSON('flagdash-daily',st);giveReward(t.rw);sfx.pick();renderHub();};}else{b.textContent='In progress';b.disabled=true;}
+    if(claimed){b.textContent='Claimed';b.disabled=true;}else if(done){b.textContent='Claim';b.onclick=()=>{st.claimed.push(t.id);saveJSON('flagdash-daily',st);giveReward(t.rw);sfx.claim();renderHub();};}else{b.textContent='In progress';b.disabled=true;}
     box.appendChild(row);});
   const all=list.every(t=>st.claimed.includes(t.id));const row=document.createElement('div');row.className='hub-row bonus';
   row.innerHTML=`<div class="hub-main"><b>Daily bonus: claim all three tasks</b></div><div class="hub-side"><span class="rewards">${rewardHTML(DAILY_BONUS)}</span><button class="buy"></button></div>`;
@@ -5720,7 +5745,7 @@ const toastQ=[];let toastT=null;
 function toast(title,body,onOpen){if(!chatOn())return;toastQ.push({title,body,onOpen});if(toastQ.length>4)toastQ.shift();pumpToast();}
 function pumpToast(){if(toastT||!toastQ.length)return;if(state==='race'||state==='countdown'){toastT=setTimeout(()=>{toastT=null;pumpToast();},2000);return;}
   const t=toastQ.shift();const el=$('toast');el.innerHTML='';const b=document.createElement('b');b.textContent=t.title;const s=document.createElement('span');s.textContent=t.body;el.append(b);if(t.body)el.append(s);
-  el.onclick=()=>{el.classList.remove('show');if(t.onOpen)t.onOpen();};el.classList.add('show');
+  el.onclick=()=>{el.classList.remove('show');if(t.onOpen)t.onOpen();};el.classList.add('show');sfx.message();
   toastT=setTimeout(()=>{el.classList.remove('show');toastT=setTimeout(()=>{toastT=null;pumpToast();},400);},4200);}
 
 /* ---------- speech bubbles over players in the plaza ---------- */
@@ -6723,10 +6748,10 @@ function tick(now){
   }
   if(state==='countdown'){
     cd-=dt;const n=Math.ceil(cd);
-    if(n!==cdShown&&n>0&&n<=3){cdShown=n;const c=$('countdown');c.innerHTML='';c.append(String(n));if(n===3){const s=document.createElement('small');s.textContent=TH.name;c.appendChild(s);}c.classList.add('pop');setTimeout(()=>c.classList.remove('pop'),120);sfx.beep(false);}
+    if(n!==cdShown&&n>0&&n<=3){cdShown=n;const c=$('countdown');c.innerHTML='';c.append(String(n));if(n===3){const s=document.createElement('small');s.textContent=TH.name;c.appendChild(s);}c.classList.add('pop');setTimeout(()=>c.classList.remove('pop'),120);sfx.countBeep();}
     camAng=Math.max(0,Math.min(camAng,Math.PI*0.85*clamp((cd-0.3)/2.8,0,1)));
     runners.forEach(r=>{r.pose='set';r.setHigh=cd<1.2;r.speed=0;placeModel(r,dt,now);});
-    if(cd<=0){music.cutSting(MUS.start,0.3);music.sting(MUS.go);music.play(TRACK_MUSIC[TH.id]||'race-to-the-finish',{fade:1.6,delay:0.9});if(TH.id==='streets'||TH.id==='stadium'){crowd.start();crowd.swell();}state='race';camAng=0;if(RACE.buffs.includes('start')){player.boost=2;player.boostMul=1.6;}if(RACE.buffs.length)feed('Buffs active: '+RACE.buffs.map(id=>BUFFS.find(b=>b.id===id).name).join(', '),'gold');runners.forEach(r=>r.pose=null);$('countdown').textContent='GO!';goT=0.8;sfx.beep(true);}
+    if(cd<=0){music.cutSting(MUS.start,0.3);music.sting(MUS.go);music.play(TRACK_MUSIC[TH.id]||'race-to-the-finish',{fade:1.6,delay:0.9});if(TH.id==='streets'||TH.id==='stadium'){crowd.start();crowd.swell();}state='race';camAng=0;if(RACE.buffs.includes('start')){player.boost=2;player.boostMul=1.6;}if(RACE.buffs.length)feed('Buffs active: '+RACE.buffs.map(id=>BUFFS.find(b=>b.id===id).name).join(', '),'gold');runners.forEach(r=>r.pose=null);$('countdown').textContent='GO!';goT=0.8;sfx.countGo();}
   }else if(canAct()){
     raceTime+=dt;
     for(const r of runners){if(r.owned)stepRunner(r,dt);else updateRemote(r,dt);}

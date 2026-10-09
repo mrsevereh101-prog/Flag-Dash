@@ -1,5 +1,7 @@
 # Race Your Flag sound effects
 
+**Status (Oct 9): all 48 made and in the game.** The files are in `sfx/`; the game loads them when sound starts and falls back to the old synth beeps for any file that is missing. To redo a sound, make it again with its prompt below and save it over `sfx/<file>`. Note: ElevenLabs' shortest length is 0.5 s, so `count_beep.mp3` is 0.5 s.
+
 Make each sound in ElevenLabs Sound Effects: paste the prompt, set the length, download as MP3 and name it exactly as the file name (for example `coin.mp3`). Send them 3 at a time. Short, punchy, cartoon / arcade style, no music, no voices.
 
 ## Batch 1: Race basics
