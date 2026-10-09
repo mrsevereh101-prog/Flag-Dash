@@ -3755,7 +3755,7 @@ const SAY_HT={
   hurt:[['M ap jwenn ou!','ht-m-ap-jwenn-ou'],['Ou pral peye sa!','ht-ou-pral-peye-sa'],['Tann mwen!','ht-tann-mwen']]
 };
 const VOICE_DIR='voice/';
-const VOICE_FILES=new Set(['samurai-banana-01','samurai-banana-02','samurai-block-01','samurai-block-02','samurai-hit-01','samurai-hit-02','samurai-hit-03','samurai-hit-04','samurai-hit-05','samurai-hurt-01','samurai-hurt-02','samurai-hurt-03','samurai-hurt-04','samurai-hurt-05','samurai-own-hit-1','samurai-own-hit-2','samurai-own-hurt-1','samurai-own-hurt-2','warrior-hit-05','warrior-own-hit-1','warrior-own-hit-2','warrior-own-hurt-1','warrior-own-hurt-2']);
+const VOICE_FILES=new Set(['samurai-banana-01','samurai-banana-02','samurai-block-01','samurai-block-02','samurai-hit-01','samurai-hit-02','samurai-hit-03','samurai-hit-04','samurai-hit-05','samurai-hurt-01','samurai-hurt-02','samurai-hurt-03','samurai-hurt-04','samurai-hurt-05','samurai-own-hit-1','samurai-own-hit-2','samurai-own-hurt-1','samurai-own-hurt-2','warrior-block-01','warrior-hit-05','warrior-hurt-03','warrior-win-1','warrior-own-hit-1','warrior-own-hit-2','warrior-own-hurt-1','warrior-own-hurt-2']);
 const SAY_KINDS=new Set(['hit','hurt','block','banana','power']);const SAY_CD=3.5,SAY_MAX=3,SAY_NEAR=45;
 const bubbles=[];const bubbleTex=new Map();
 // Lines are numbered in one list per kind so every player in an online race sees the same line.
@@ -6919,9 +6919,13 @@ function celebrate(rows,place,rw,done){
   const steps=[[700,()=>{$('celS3').classList.add('show');sfx.beep(false);}],
     [2000,()=>{$('celS2').classList.add('show');sfx.beep(false);}],
     [3500,()=>{$('celS1').classList.add('show');t.textContent='🏆 '+winName;t.classList.add('win');sfx.fanfare();confetti(win&&win.kind==='local'?160:110);}],
+    [4100,()=>winLine(win)],
     [5200,()=>{$('celNext').hidden=false;$('celSkip').hidden=true;$('celNext').focus();}]];
   if(reduceMotion)steps.forEach(([,f])=>f());else steps.forEach(([ms,f])=>CEL.timers.push(setTimeout(f,ms)));
 }
+// the winner's triumph line (voice/<hero>-win-<n>.mp3); heroes without one stay quiet
+function winLine(r){if(!r||!r.char||!SET.voice)return;const ids=[1,2,3,4].map(n=>`${r.char.id}-win-${n}`).filter(id=>VOICE_FILES.has(id));if(!ids.length)return;
+  voice.stop();try{const a=new Audio(VOICE_DIR+ids[Math.floor(Math.random()*ids.length)]+'.mp3');a.volume=Math.min(1,SET.voiceVol*1.1);voice.audio=a;voice.curPri=3;a.onended=()=>{voice.curPri=0;};const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{});}catch(e){}}
 function celFinish(){CEL.timers.forEach(clearTimeout);CEL.timers=[];
   ['celS3','celS2','celS1'].forEach(id=>$(id).classList.add('show'));[...$('celGifts').children].forEach(d=>d.classList.add('show'));
   const t=$('celTitle');if(!t.classList.contains('win')){const w=$('celS1').querySelector('.cel-nm');if(w)t.textContent='🏆 '+(w.textContent.includes('(you)')?'YOU WIN!':w.textContent+' wins!');t.classList.add('win');}
