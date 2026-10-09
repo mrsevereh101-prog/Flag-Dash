@@ -1355,6 +1355,30 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
 #results .actions button:not(.rb-icon){flex:1 1 auto!important}
 .rb-ic{width:40px;height:40px;display:grid;place-items:center;line-height:1}.rb-ic svg{width:40px;height:40px}img.rb-ic{object-fit:contain}
 .rb-emoji{font-size:36px}
+
+/* home: no blue panel behind the three mode buttons; each one opens its own full page */
+#d3Sheet:not(.open){background:none!important;border:0!important;box-shadow:none!important}
+#d3Sheet:not(.open) .d3-handle{display:none}
+#d3Sheet.open{top:0;bottom:0;left:0;right:0;transform:none;width:100%;max-width:none;border-radius:0;border:0;align-content:stretch;grid-template-rows:1fr auto;
+  padding:calc(8px + env(safe-area-inset-top,0px)) max(12px,calc(50% - 280px)) calc(10px + env(safe-area-inset-bottom,0px))}
+#d3Sheet.open .d3-sheet-body{max-height:none!important;overflow:auto;align-content:start}
+#d3Sheet.open .d3-handle{justify-items:start;padding:4px 0 6px}
+#d3Sheet.open .d3-handle-bar{display:none}
+#d3Sheet.open .d3-handle-arrow{transform:none!important;font-size:0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--cream,#f6ecd2);border:2px solid #d9a227;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+#d3Sheet.open .d3-handle-arrow::before{content:"";width:12px;height:12px;border-left:4px solid #3a2a08;border-bottom:4px solid #3a2a08;transform:translateX(3px) rotate(45deg)}
+html.mode-page #menu .left-col>:not(#d3Sheet){visibility:hidden}
+/* the flag button sits under the emote button */
+.home-flag{position:absolute;right:4px;top:84px;z-index:3;width:64px;height:64px;border-radius:50%;padding:0;display:grid;place-items:center;border:2px solid #d9a227;background:var(--cream,#f6ecd2);box-shadow:0 3px 0 rgba(0,0,0,.25),0 6px 14px rgba(0,0,0,.25);cursor:pointer}
+.home-flag img{width:42px;height:28px;border-radius:4px;object-fit:cover;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
+.d3-emotes.open~.home-flag{display:none}
+/* your name and picture: a slim bar at the top right */
+.d3-id{display:flex;align-items:center;gap:8px;margin:6px 4px 0 auto;width:min(62%,250px);height:44px;box-sizing:border-box;padding:3px 12px 3px 4px;border-radius:12px;
+  background:linear-gradient(180deg,#fff8e4,#f1e2bc);border:2px solid #c8921c;box-shadow:inset 0 1px 0 #fff,0 0 0 2px rgba(255,236,170,.6),0 3px 8px rgba(0,0,0,.3)}
+.d3-id-av{flex:none;width:34px;height:34px;display:grid;place-items:center}
+.d3-id-av img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:radial-gradient(circle at 50% 35%,#fff7e0,#e8cf96);box-shadow:0 0 0 2px #c8921c}
+.d3-id input,html.cream .d3-id input,html.cream.adv .d3-id input,html.cream.sky .d3-id input{flex:1;min-width:0;width:100%;height:100%;padding:0!important;margin:0;border:0!important;background:transparent!important;box-shadow:none!important;
+  font-size:15px!important;font-weight:800!important;text-align:left!important;color:#2a1c04!important;border-radius:0!important}
+.desk3 .d3-name{margin-top:6px}
 </style>
 
 <div id="stage"></div>
@@ -1367,6 +1391,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem"><span class="gem-ic"></span> <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
+      <div class="d3-id" id="d3Id"><span class="d3-id-av" id="d3IdAv"></span></div>
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
       <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"><span class="lv-badge" id="lvBadge" title="Your level. Earn XP by finishing races and hitting rivals."><b>Lv 1</b><span class="lv-bar"><i></i></span><small></small><em title="Strength from your room"></em></span></label>
       <section class="d3-stage" id="playPanel" aria-label="Race Desk">
@@ -1377,6 +1402,7 @@ html.cream.adv .lv-shield{display:grid;place-items:center;flex:none;width:38px;h
         <div class="emote-row d3-emotes" aria-label="Emotes"><button class="d3-emote-ic" id="emoteToggle" aria-expanded="false" aria-label="Emotes"><img class="ico" src="img/icons/emotes.webp" alt=""></button>
           <button class="chip-btn" data-emote="wave">Wave</button><button class="chip-btn" data-emote="flex">Flex</button><button class="chip-btn" data-emote="dance">Dance</button><button class="chip-btn" data-emote="point">Point</button>
         </div>
+        <button class="home-flag" id="homeFlag" aria-label="Choose your flag" title="Your flag"><img id="homeFlagImg" alt=""></button>
       </section>
       <div class="sum-row" hidden><div id="sumCountry"></div><div id="sumChar"></div></div>
       <div class="d3-sheet" id="d3Sheet">
@@ -7130,8 +7156,8 @@ if(isFirstVisit())setTimeout(onboardSetup,700);
 
 /* ---------- Race Desk bottom tabs: Quick Race · Online · Challenges. Each opens its own panel; tap it again to close. ---------- */
 (()=>{const sh=$('d3Sheet'),hd=$('d3Handle'),T={quick:['tabQuick','paneQuick'],online:['tabOnline','paneOnline'],solo:['tabSolo','paneSolo']};
-  let tab=store.get('flagdash-desktab');if(!T[tab])tab='solo';let open=store.get('flagdash-sheet')==='1';
-  function render(){sh.classList.toggle('open',open);
+  let tab=store.get('flagdash-desktab');if(!T[tab])tab='solo';let open=false;
+  function render(){sh.classList.toggle('open',open);document.documentElement.classList.toggle('mode-page',open);hd.setAttribute('aria-label',open?'Back':'Close panel');
     Object.entries(T).forEach(([k,[t,p]])=>{const on=k===tab;$(t).setAttribute('aria-selected',on&&open);$(t).classList.toggle('cur',on);$(p).hidden=!on;});
     store.set('flagdash-desktab',tab);store.set('flagdash-sheet',open?'1':'0');}
   Object.entries(T).forEach(([k,[t]])=>$(t).addEventListener('click',()=>{if(open&&tab===k)open=false;else{tab=k;open=true;}render();}));
@@ -7145,6 +7171,12 @@ if(isFirstVisit())setTimeout(onboardSetup,700);
   new MutationObserver(()=>{if(!$('lobbyReturn').hidden){open=true;render();}}).observe($('lobbyReturn'),{attributes:true,attributeFilter:['hidden']});
   const vis=()=>{sh.style.display=$('menu').hidden?'none':'';};new MutationObserver(vis).observe($('menu'),{attributes:true,attributeFilter:['hidden']});vis();
   render();
+  // home: the flag button under the emote, and the name with your picture at the top right
+  const sf=$('sumFlag'),hf=$('homeFlagImg'),syncF=()=>{hf.src=sf.src;};new MutationObserver(syncF).observe(sf,{attributes:true,attributeFilter:['src']});syncF();
+  $('homeFlag').onclick=()=>openPicker('flag');
+  $('d3Id').appendChild($('nameInput'));
+  let avKey='';const syncAv=()=>{if(typeof THREE==='undefined')return;const k=myAvatar()+'|'+selCountry+'|'+(store.get('flagdash-pic')||'');if(k===avKey)return;avKey=k;const b=$('d3IdAv');b.innerHTML='';b.appendChild(rowAvatar({me:true,cc:selCountry},'d3-id-img'));};
+  syncAv();setInterval(()=>{if(!$('menu').hidden)syncAv();},1500);
 })();
 
 /* ---------- Race Desk emote icon ---------- */
