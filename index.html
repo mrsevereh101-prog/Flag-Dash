@@ -1,4 +1,4 @@
-<!doctype html><html class="cream adv"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("adv");}else if(t==="cream")c.remove("adv");else if(t==="sky"){c.remove("adv");c.add("sky");}}catch(e){}</script><meta charset=utf8><meta name="robots" content="noindex,nofollow"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
+<!doctype html><html class="cream adv"><head><script>try{var t=localStorage.getItem("flagdash-theme"),c=document.documentElement.classList;if(t==="night"){c.remove("cream");c.remove("adv");}else if(t==="cream")c.remove("adv");else if(t==="sky"){c.remove("adv");c.add("sky");}}catch(e){}</script><meta charset=utf8><meta name="robots" content="noindex,nofollow"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}/* ---------- screen layout editor ---------- */
 #layBackdrop{position:fixed;inset:0;z-index:88;background:rgba(6,8,24,.8)}
 body.layout-edit #hud,body.layout-edit #touch{z-index:90}
 body.layout-edit .lay-piece{pointer-events:auto!important;outline:2px dashed rgba(242,182,49,.85);outline-offset:3px;cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -1377,7 +1377,9 @@ html.mode-page #menu .left-col>:not(#d3Sheet){visibility:hidden}
 .d3-id-av{flex:none;width:34px;height:34px;display:grid;place-items:center}
 .d3-id-av img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:radial-gradient(circle at 50% 35%,#fff7e0,#e8cf96);box-shadow:0 0 0 2px #c8921c}
 .d3-id input,html.cream .d3-id input,html.cream.adv .d3-id input,html.cream.sky .d3-id input{flex:1;min-width:0;width:100%;height:100%;padding:0!important;margin:0;border:0!important;background:transparent!important;box-shadow:none!important;
-  font-size:15px!important;font-weight:800!important;text-align:left!important;color:#2a1c04!important;border-radius:0!important}
+  font-size:16px!important;font-weight:800!important;text-align:left!important;color:#2a1c04!important;border-radius:0!important}
+/* phones zoom in on any text box under 16px; keep them all at 16px so the screen never zooms */
+@media (pointer:coarse){input[type=text],input[type=search],input:not([type]),textarea,select{font-size:16px!important}}
 .desk3 .d3-name{margin-top:6px}
 </style>
 
