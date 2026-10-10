@@ -14,7 +14,7 @@ from collections import deque
 import numpy as np
 from PIL import Image
 
-VALUED = ('--size', '--hi', '--lo', '--spill', '--bright')
+VALUED = ('--size', '--hi', '--lo', '--spill', '--bright', '--gap')
 def opt(name, default):
     return float(sys.argv[sys.argv.index(name) + 1]) if name in sys.argv else default
 args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith('--') and sys.argv[i - 1] not in VALUED]
@@ -54,7 +54,7 @@ else:
 # find the objects on a 4x smaller mask, merging nearby bits (a flame next to a shoe)
 S = 4
 small = alpha[:H - H % S, :W - W % S].reshape(H // S, S, W // S, S).max(axis=(1, 3)) > 0.35
-R = 4
+R = int(opt('--gap', 4))   # how far apart bits can be and still count as one object (in 4px steps); lower it when objects sit close together
 dil = small.copy()
 for dy in range(-R, R + 1):
     for dx in range(-R, R + 1):
