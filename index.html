@@ -1473,6 +1473,8 @@ html.mode-page .hero-dock{visibility:hidden}
   html .desk3 .d3-stage{height:calc(100dvh - var(--app-top,0px) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 545px)!important;min-height:210px!important}
   .left-col{padding-bottom:96px}
 }
+html body img[src*="img/flags/"]{box-shadow:none!important;border-radius:0!important;object-fit:contain!important;transform:none!important;background:none!important;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.f3d-pg{font-size:10.5px;color:var(--gold,#f5c542);min-height:1em;line-height:1}
 </style>
 
 <div id="stage"></div>
@@ -3204,7 +3206,7 @@ function makeRunner(e,idx,n,online){
   const nm=e.bot?(e.nm&&cleanName(e.nm)||flag.name):(cleanName(e.nm)||flag.name);
   let skin=skinById(e.sk);if(skin.hero&&skin.hero!==ch.id)skin=skinById('classic');
   if(e.bot&&!skin.hero){const hs=SKINS_SHOP.filter(x=>x.hero===ch.id);let hh=0;for(const c of String(e.id)+ch.id+(RACE&&RACE.id||''))hh=(hh*31+c.charCodeAt(0))>>>0;if(hs.length&&hh%10<4)skin=hs[hh%hs.length];}
-  const r={id:e.id,cc:e.cc,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag,char:ch,team,lane:idx+1,skin,lap:1,
+  const r={id:e.id,cc:e.cc,kind,owned,human:!e.bot,gt:e.gt||'',peer:e.peer||null,nm,flag:isLocal&&flag3d(flag.code).on?Object.assign({},flag,{url:myFlagUrl(flag.code)}):flag,char:ch,team,lane:idx+1,skin,lap:1,
     d:0,x,y:0,vx:0,vy:0,speed:0,stun:0,stunKind:'trip',slide:0,boost:0,boostMul:1,phase:0,shield:0,slow:0,leaping:false,flip:0,
     item:null,charge:0.35,finished:false,time:0,place:1,jumpBuf:0,anim:Math.random()*TAU,spin:0,oi:0,lastWall:null,lastPad:null,emote:null,world:true,
     ai:{skill:rand(0.72,0.93),pace:rand(0.965,1.015),greed:rand(0.6,1.4),t:0,lane:x<0?1:2,tx:x,handled:new Set(),itemT:0,chargedFor:0,loT:rand(9,22)},net:null,ram:0,mods:{},lo:null};
@@ -5372,6 +5374,11 @@ const rewardHTML=rw=>(rw.c?priceHTML(rw.c,'coin'):'')+(rw.g?' '+priceHTML(rw.g,'
 
 /* ---------- lifetime stats ---------- */
 let STATS=loadJSON('flagdash-stats',{races:0,wins:0,top3:0,coins:0,gems:0,hits:0,powers:0,items:0,clears:0,online:0,teamWins:0,best:{}});
+/* 3D flags: a flag's 3D icon unlocks after 10 single-player wins and 3 online (vs) wins with it */
+const F3D_SOLO=10,F3D_VS=3;
+if(!STATS.soloBy){STATS.soloBy=Object.assign({},STATS.winsBy||{});STATS.vsBy=STATS.vsBy||{};}
+function flag3d(cc){const s=(STATS.soloBy||{})[cc]|0,v=(STATS.vsBy||{})[cc]|0;return {s:Math.min(s,F3D_SOLO),v:Math.min(v,F3D_VS),on:DEVMODE||(s>=F3D_SOLO&&v>=F3D_VS)};}
+function myFlagUrl(cc){return flag3d(cc).on?'img/flags/'+cc+'.webp':flagCanvas(cc).url;}
 // Per-race counters, filled in while you race.
 function raceStat(k,n){if(!RACE||!RACE.st)return;RACE.st[k]=(RACE.st[k]||0)+(n||1);}
 
@@ -5435,7 +5442,7 @@ function evaluateRace(place){
   const notes=[];
   // lifetime
   STATS.races++;if(place===1)STATS.wins++;if(place<=3)STATS.top3++;STATS.coins+=st.coins|0;STATS.gems+=st.gems|0;STATS.hits+=st.hits|0;STATS.powers+=st.powers|0;STATS.items+=st.items|0;STATS.clears+=st.clears|0;if(st.online)STATS.online++;if(st.teamWin)STATS.teamWins++;
-  if(place===1){if(st.online)STATS.onlineWins=(STATS.onlineWins|0)+1;STATS.winsBy=STATS.winsBy||{};const cc=player&&player.flag?player.flag.code:selCountry;STATS.winsBy[cc]=(STATS.winsBy[cc]|0)+1;if(RACE.fc)STATS.fcWins=(STATS.fcWins|0)+1;}
+  if(place===1){if(st.online)STATS.onlineWins=(STATS.onlineWins|0)+1;STATS.winsBy=STATS.winsBy||{};const cc=player&&player.flag?player.flag.code:selCountry;STATS.winsBy[cc]=(STATS.winsBy[cc]|0)+1;{const k=st.online?'vsBy':'soloBy',was=flag3d(cc).on;STATS[k]=STATS[k]||{};STATS[k][cc]=(STATS[k][cc]|0)+1;if(!was&&flag3d(cc).on)notes.push(`✨ 3D flag unlocked: ${flagCanvas(cc).name}!`);}if(RACE.fc)STATS.fcWins=(STATS.fcWins|0)+1;}
   saveJSON('flagdash-stats',STATS);
   RACE.roomNew=roomCheckWins();
   // daily
@@ -6227,7 +6234,7 @@ setInterval(()=>{
    ========================================================= */
 const flagGrid=$('flagGrid'),charGrid=$('charGrid'),trackGrid=$('trackGrid');
 COUNTRIES.slice().sort((a,b)=>{const top=['USA','HTI'],ia=top.indexOf(a[0]),ib=top.indexOf(b[0]);if(ia>=0||ib>=0)return (ia<0?9:ia)-(ib<0?9:ib);return a[1].localeCompare(b[1]);}).forEach(([code,name])=>{const f=flagCanvas(code);const b=document.createElement('button');b.className='flag-btn';b.dataset.code=code;b.dataset.name=name.toLowerCase();
-  const im=document.createElement('img');im.alt='';im.src=f.url;const sp=document.createElement('span');sp.textContent=name;b.append(im,sp);
+  const im=document.createElement('img');im.alt='';im.src=f.url;const sp=document.createElement('span');sp.textContent=name;const pg=document.createElement('small');pg.className='f3d-pg';b.append(im,sp,pg);
   b.onclick=()=>{selCountry=code;store.set('flagdash-country',code);refreshMenu('wave');syncLobbyPresence();};flagGrid.appendChild(b);});
 $('flagSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.hidden=!!q&&!b.dataset.name.includes(q)&&!b.dataset.code.toLowerCase().includes(q);});});
 function infoTap(b,e){const onI=e&&e.target&&e.target.closest&&e.target.closest('.info-i');
@@ -6250,13 +6257,13 @@ function renderTrackTiles(){trackGrid.innerHTML='';
   trackGrid.appendChild(tileGrid('track',tiles,renderTrackTiles));}
 function refreshMenu(emote){
   try{renderHeroDock();}catch(e){}
-  flagGrid.querySelectorAll('.flag-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.code===selCountry));
+  flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.code===selCountry);const g=flag3d(b.dataset.code),im=b.querySelector('img'),u=myFlagUrl(b.dataset.code);if(im.getAttribute('src')!==u)im.src=u;const pg=b.querySelector('.f3d-pg');pg.textContent=g.on?'✨ 3D':(g.s||g.v)?`🏆${g.s}/${F3D_SOLO} ⚔️${g.v}/${F3D_VS}`:'';pg.title=g.on?'3D flag unlocked':`3D flag: win ${F3D_SOLO} single races and ${F3D_VS} online races with this flag`;});
   renderCharTiles();renderTrackTiles();
   {const tm=selMode==='teams'||selMode==='trio';$('modeSeg').querySelector('[data-mode="solo"]').setAttribute('aria-pressed',!tm);const tb=$('teamsBtn');tb.setAttribute('aria-pressed',tm);tb.textContent=tm?(selMode==='trio'?'Teams · 2v2v2 ▾':'Teams · 3v3 ▾'):'Teams ▾';
     $('teamSub').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tmode===selMode));}
   $('lapSeg').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.laps===selLaps));$('lapHint').textContent=selLaps===1?'One lap of 1,500 m.':`${selLaps} laps of ${LAP_LEN[selLaps]} m (${(selLaps*LAP_LEN[selLaps]).toLocaleString()} m total).`;renderWallet();renderLoadout();
   const f=flagCanvas(selCountry),ch=charById(selChar);
-  $('sumFlag').src=f.url;$('sumCountry').textContent=f.name;$('sumChar').textContent=`${ch.name} · ${ch.power}`;
+  $('sumFlag').src=myFlagUrl(selCountry);$('sumCountry').textContent=f.name;$('sumChar').textContent=`${ch.name} · ${ch.power}`;
   $('pkFlag').textContent=f.name;$('pkRunner').textContent=ch.name;$('pkTrack').textContent=themeById(selTrack).name;setIco($('pkTrackIc'),icoOf('trk',selTrack),'🛣️');
   const inRoom=!!NET.game;$('lobbyReturn').hidden=!inRoom;$('playChoices').hidden=inRoom;document.querySelectorAll('.cpu-go').forEach(e=>e.hidden=inRoom);$('returnCode').textContent=NET.code||'';
   if(emote!==undefined)rebuildPreview(emote);
