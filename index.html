@@ -1474,6 +1474,7 @@ html.mode-page .hero-dock{visibility:hidden}
   .left-col{padding-bottom:96px}
 }
 html body img[src*="img/flags/"]{box-shadow:none!important;border-radius:0!important;object-fit:contain!important;transform:none!important;background:none!important;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+html #flagGrid .flag-btn>span{display:none!important}html #flagGrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}html #flagGrid .flag-btn{padding:8px 4px;gap:3px}html #flagGrid .f3d-pg:empty{display:none}html #flagGrid .f3d-pg{font-size:9.5px;white-space:nowrap}html #flagGrid .flag-btn img{width:100%;max-width:72px;height:auto;aspect-ratio:3/2}
 .f3d-pg{font-size:10.5px;color:var(--gold,#f5c542);min-height:1em;line-height:1}
 </style>
 
@@ -6233,7 +6234,7 @@ setInterval(()=>{
    MENU + LOBBY UI
    ========================================================= */
 const flagGrid=$('flagGrid'),charGrid=$('charGrid'),trackGrid=$('trackGrid');
-COUNTRIES.slice().sort((a,b)=>{const top=['USA','HTI'],ia=top.indexOf(a[0]),ib=top.indexOf(b[0]);if(ia>=0||ib>=0)return (ia<0?9:ia)-(ib<0?9:ib);return a[1].localeCompare(b[1]);}).forEach(([code,name])=>{const f=flagCanvas(code);const b=document.createElement('button');b.className='flag-btn';b.dataset.code=code;b.dataset.name=name.toLowerCase();
+COUNTRIES.slice().sort((a,b)=>{const top=['USA','HTI'],ia=top.indexOf(a[0]),ib=top.indexOf(b[0]);if(ia>=0||ib>=0)return (ia<0?9:ia)-(ib<0?9:ib);return a[1].localeCompare(b[1]);}).forEach(([code,name])=>{const f=flagCanvas(code);const b=document.createElement('button');b.className='flag-btn';b.dataset.code=code;b.dataset.name=name.toLowerCase();b.title=name;b.setAttribute('aria-label',name);
   const im=document.createElement('img');im.alt='';im.src=f.url;const sp=document.createElement('span');sp.textContent=name;const pg=document.createElement('small');pg.className='f3d-pg';b.append(im,sp,pg);
   b.onclick=()=>{selCountry=code;store.set('flagdash-country',code);refreshMenu('wave');syncLobbyPresence();};flagGrid.appendChild(b);});
 $('flagSearch').addEventListener('input',e=>{const q=e.target.value.trim().toLowerCase();flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.hidden=!!q&&!b.dataset.name.includes(q)&&!b.dataset.code.toLowerCase().includes(q);});});
@@ -6257,7 +6258,7 @@ function renderTrackTiles(){trackGrid.innerHTML='';
   trackGrid.appendChild(tileGrid('track',tiles,renderTrackTiles));}
 function refreshMenu(emote){
   try{renderHeroDock();}catch(e){}
-  flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.code===selCountry);const g=flag3d(b.dataset.code),im=b.querySelector('img'),u=myFlagUrl(b.dataset.code);if(im.getAttribute('src')!==u)im.src=u;const pg=b.querySelector('.f3d-pg');pg.textContent=g.on?'✨ 3D':(g.s||g.v)?`🏆${g.s}/${F3D_SOLO} ⚔️${g.v}/${F3D_VS}`:'';pg.title=g.on?'3D flag unlocked':`3D flag: win ${F3D_SOLO} single races and ${F3D_VS} online races with this flag`;});
+  flagGrid.querySelectorAll('.flag-btn').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.code===selCountry);const g=flag3d(b.dataset.code),im=b.querySelector('img'),u=myFlagUrl(b.dataset.code);if(im.getAttribute('src')!==u)im.src=u;const pg=b.querySelector('.f3d-pg');pg.textContent=g.on?'✨ 3D':(g.s||g.v)?`${g.s}/${F3D_SOLO} · ${g.v}/${F3D_VS}`:'';pg.title=g.on?'3D flag unlocked':`3D flag: win ${F3D_SOLO} single races and ${F3D_VS} online races with this flag`;});
   renderCharTiles();renderTrackTiles();
   {const tm=selMode==='teams'||selMode==='trio';$('modeSeg').querySelector('[data-mode="solo"]').setAttribute('aria-pressed',!tm);const tb=$('teamsBtn');tb.setAttribute('aria-pressed',tm);tb.textContent=tm?(selMode==='trio'?'Teams · 2v2v2 ▾':'Teams · 3v3 ▾'):'Teams ▾';
     $('teamSub').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tmode===selMode));}
