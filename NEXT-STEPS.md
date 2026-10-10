@@ -59,6 +59,19 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - In the game: sign in, Settings, Developer mode. Everything unlocks in a sandbox that never syncs or posts scores;
   switching it off brings back your real save.
 
+## To do (added Oct 10)
+- [ ] **Guild wars**: guilds race against each other for a season, with a guild leaderboard and rewards for the winning guild.
+- [ ] **Guild perks**: bonuses a guild unlocks together (for example more coins or faster power recharge for every member), bought with guild points.
+- [ ] **Gifts to each other**: players can already send room items to friends (they arrive in the inbox). Next: send other things too, like perks, coins or skins.
+- [ ] **Guild custom flags**: each guild designs its own flag (colors, emblem), shown in guild races and on members.
+- [ ] **Flag capes**: a cape in your country's flag (or your guild's flag) worn on the back, as attire.
+- [ ] **New heroes** (each needs a look, a power, a perk, speech lines and a voice):
+  - [ ] Knight
+  - [ ] Viking
+  - [ ] Shaolin monk
+  - [ ] Indian warrior
+  - [ ] Queen of All Beasts: a Black woman hero who commands animals
+
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
 - [ ] Better hero graphics (more detailed models), when there's time
