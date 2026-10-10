@@ -1436,6 +1436,18 @@ html .pr-open .tab-tx{display:inline}
 .cel-flags.n2{grid-template-columns:1fr}.cel-flags.n3{grid-template-columns:1fr 1fr}.cel-flags.n3 img:first-child{grid-column:1/-1}
 .cel-step.team .cel-flags img,[id^="celS"].team .cel-flags img{width:auto!important;max-width:100%;height:auto;max-height:34px;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.2)}
 [id^="celS"].team .cel-flags.n3 img{max-height:26px}
+
+/* settings: a row of group icons; each opens its own settings underneath */
+.set-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.set-tile{display:grid;place-items:center;gap:2px;padding:12px 4px;border-radius:16px;border:2px solid #d9a227;background:linear-gradient(180deg,#fff8e4,#f1e2bc);box-shadow:0 3px 0 rgba(0,0,0,.18);cursor:pointer}
+.set-tile .st-ic{font-size:34px;line-height:1.1}
+.set-tile[aria-expanded="true"]{background:linear-gradient(180deg,#ffe08a,#e2a92a);box-shadow:0 0 0 3px rgba(255,236,170,.8),0 3px 0 rgba(0,0,0,.2);transform:translateY(1px)}
+.set-tile:focus-visible{outline:3px solid #1f4f86;outline-offset:2px}
+.set-grp{display:grid;gap:8px;padding:10px;border-radius:16px;border:2px dashed rgba(200,146,28,.55);animation:setOpen .2s ease-out}
+.set-grp[hidden]{display:none}
+.set-grp .dev-box{border-top:0;padding-top:0}
+@keyframes setOpen{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.set-grp{animation:none}}
 </style>
 
 <div id="stage"></div>
@@ -1740,23 +1752,36 @@ html .pr-open .tab-tx{display:inline}
   <div class="pause-card set-card" role="dialog" aria-label="Settings">
     <h2>Settings</h2>
     <div id="setBody" class="set-body">
+      <div class="set-tiles" role="group" aria-label="Settings sections"><button type="button" class="set-tile" data-g="look" aria-expanded="false" aria-controls="setG_look" aria-label="Theme" title="Theme"><span class="st-ic">🎨</span><span class="tab-tx">Theme</span></button><button type="button" class="set-tile" data-g="sound" aria-expanded="false" aria-controls="setG_sound" aria-label="Sound" title="Sound"><span class="st-ic">🎵</span><span class="tab-tx">Sound</span></button><button type="button" class="set-tile" data-g="chat" aria-expanded="false" aria-controls="setG_chat" aria-label="Chat" title="Chat"><span class="st-ic">💬</span><span class="tab-tx">Chat</span></button><button type="button" class="set-tile" data-g="account" aria-expanded="false" aria-controls="setG_account" aria-label="Account" title="Account"><span class="st-ic">👤</span><span class="tab-tx">Account</span></button><button type="button" class="set-tile" data-g="layout" aria-expanded="false" aria-controls="setG_layout" aria-label="Screen layout" title="Screen layout"><span class="st-ic">📐</span><span class="tab-tx">Screen layout</span></button><button type="button" class="set-tile" data-g="dev" aria-expanded="false" aria-controls="setG_dev" aria-label="Developer" title="Developer" hidden><span class="st-ic">🛠️</span><span class="tab-tx">Developer</span></button></div>
+      <div class="set-grp" id="setG_look" data-g="look" hidden>
       <div class="set-row"><span>Theme</span><button class="set-tog" id="set_theme"></button><span></span></div>
+      </div>
+      <div class="set-grp" id="setG_sound" data-g="sound" hidden>
       <div class="set-row"><span>Music</span><button class="set-tog" id="set_music"></button><input type="range" min="0" max="100" id="set_musicVol" aria-label="Music volume"></div>
       <div class="set-row"><span>Sound effects</span><button class="set-tog" id="set_sfx"></button><input type="range" min="0" max="100" id="set_sfxVol" aria-label="Sound effects volume"></div>
       <div class="set-row"><span>Voices</span><button class="set-tog" id="set_voice"></button><input type="range" min="0" max="100" id="set_voiceVol" aria-label="Voice volume"></div>
+      <p class="muted" id="setVoiceNote"></p>
+      <button class="ghost" id="setTest">Test voice</button>
+      </div>
+      <div class="set-grp" id="setG_chat" data-g="chat" hidden>
       <div class="set-row set-row2"><span>Chat</span><button class="set-tog" id="set_chat"></button></div>
       <div class="set-row set-row2"><span>Hide bad words</span><button class="set-tog" id="set_filter"></button></div>
       <div class="set-row set-row2"><span>Private messages from friends only</span><button class="set-tog" id="set_dmFriends"></button></div>
+      </div>
+      <div class="set-grp" id="setG_account" data-g="account" hidden>
       <div class="set-row set-row2"><span>Account <small class="muted" style="display:block;font-weight:400">Sign in, save progress</small></span><button class="set-tog" id="setAcct">Open</button></div>
       <div class="set-row set-row2"><span>Privacy policy</span><a class="set-tog" href="privacy.html" target="_blank" rel="noopener" style="text-decoration:none;text-align:center">View</a></div>
+      </div>
+      <div class="set-grp" id="setG_layout" data-g="layout" hidden>
       <div class="set-row set-row2"><span>Screen layout <small class="muted" style="display:block;font-weight:400">Move and resize buttons</small></span><button class="set-tog" id="setLayout">Edit</button></div>
+      </div>
+      <div class="set-grp" id="setG_dev" data-g="dev" hidden>
       <div id="devBox" class="dev-box" hidden>
         <div class="set-row set-row2"><span>Developer mode <small class="muted" style="display:block;font-weight:400">Everything unlocked to test. Switch off to get your real save back.</small></span><button class="set-tog" id="set_dev">Off</button></div>
         <div class="set-row set-row2 dev-on" hidden><span>Lucky Clover <small class="muted" style="display:block;font-weight:400">Replaces your perk each race</small></span><button class="set-tog" id="set_devLuck">Off</button></div>
         <div class="set-row set-row2 dev-on" hidden><span>Refill <small class="muted" style="display:block;font-weight:400">Coins, diamonds, 99 of each perk</small></span><button class="set-tog" id="set_devFill">Refill</button></div>
       </div>
-      <p class="muted" id="setVoiceNote"></p>
-      <button class="ghost" id="setTest">Test voice</button>
+      </div>
     </div>
     <button class="primary" id="setClose">Done</button>
     <button class="ghost" id="setQuit" hidden>Quit to menu</button>
@@ -5258,6 +5283,15 @@ function openPowerReport(){document.querySelectorAll('.tile-modal').forEach(x=>{
   const x=document.createElement('button');x.type='button';x.className='tp-x';x.textContent='✕';x.setAttribute('aria-label','Close');x.onclick=e=>{e.stopPropagation();done();};c.appendChild(x);
   ov.onclick=e=>{if(e.target===ov)done();};ov.appendChild(c);document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));x.focus({preventScroll:true});}
 $('storePower').onclick=openPowerReport;$('rcPower').onclick=openPowerReport;
+
+/* ---------- settings: one icon per group; tapping it opens that group's settings ---------- */
+(()=>{const tiles=[...document.querySelectorAll('.set-tile')];let cur=null;
+  const show=g=>{cur=cur===g?null:g;tiles.forEach(t=>t.setAttribute('aria-expanded',String(t.dataset.g===cur)));document.querySelectorAll('.set-grp').forEach(x=>x.hidden=x.dataset.g!==cur);};
+  tiles.forEach(t=>t.addEventListener('click',()=>show(t.dataset.g)));
+  // the developer icon only shows for developer accounts
+  const db=$('devBox'),dt=tiles.find(t=>t.dataset.g==='dev'),sync=()=>{dt.hidden=db.hidden;if(db.hidden&&cur==='dev')show('dev');};
+  new MutationObserver(sync).observe(db,{attributes:true,attributeFilter:['hidden']});sync();
+})();
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
   let busy=false;const draw=()=>{const box=$('gfList');box.innerHTML='';
