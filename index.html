@@ -2831,7 +2831,7 @@ function buildModel(flag,charId,opt){
     const bs=P.bigShoes?1.35:1;add(Sph(1),P.shoe,0,-0.44*ls-0.02,-0.06,knee).scale.set(0.11*bs,0.065,0.2*bs);return {hip,knee};};
   const legL=leg(-1),legR=leg(1);
   const shieldDisk=(tex,r,rimMat)=>{const g=new THREE.Group();const side=M(0x5b3b25);add(new THREE.CylinderGeometry(r,r,0.05,24),[side,TX(tex),side],0,0,0,g);if(rimMat)add(Tor(r,0.025),rimMat,0,0.03,0,g,Math.PI/2);return g;};
-  const quiver=(x)=>{const q=new THREE.Group();q.position.set(x,0.42,tr+0.08);q.rotation.z=-0.35*Math.sign(x);torso.add(q);add(Cyl(0.065,0.055,0.5),M(0x6b4326),0,0,0,q);const shaft=M(0x9a7a4a),fl=M(0xe8e4dc);for(let i=0;i<5;i++){const ox=(i-2)*0.022;add(Cyl(0.008,0.008,0.25),shaft,ox,0.33,((i%2)-0.5)*0.03,q);add(new THREE.ConeGeometry(0.02,0.08,4),fl,ox,0.47,((i%2)-0.5)*0.03,q);}};
+  const quiver=(x)=>{const q=new THREE.Group();q.position.set(x,0.22,0.02);q.rotation.z=-0.18*Math.sign(x);torso.add(q);add(Cyl(0.065,0.055,0.5),M(0x6b4326),0,0,0,q);const shaft=M(0x9a7a4a),fl=M(0xe8e4dc);for(let i=0;i<5;i++){const ox=(i-2)*0.022;add(Cyl(0.008,0.008,0.25),shaft,ox,0.33,((i%2)-0.5)*0.03,q);add(new THREE.ConeGeometry(0.02,0.08,4),fl,ox,0.47,((i%2)-0.5)*0.03,q);}};
   const bow=(hand,col,tips)=>{const g=new THREE.Group();g.rotation.y=Math.PI/2;hand.add(g);const Rr=0.6;add(Tor(Rr,0.018,Math.PI*0.85),col,Rr,0,0,g,0,0,Math.PI*0.575);
     const sx=Rr*(1-Math.cos(Math.PI*0.425)),sy=Rr*Math.sin(Math.PI*0.425);add(Cyl(0.004,0.004,sy*2),M(0xeeeeee),sx,0,0,g);
     if(tips)[-1,1].forEach(s=>add(Sph(0.03),tips,sx,s*sy,0,g));return g;};
@@ -2874,7 +2874,7 @@ function buildModel(flag,charId,opt){
     add(Cyl(0.23*b,0.3*b,0.36,true),TX('quilt',{side:DS}),0,-0.13,0,pelvis);
     [armL,armR].forEach((a,i)=>add(Sph(0.1*b),M(0x5b3b25),(i?1:-1)*0.02,0.02,0,a.sh).scale.set(1,0.6,1.1));
     [legL,legR].forEach(l=>add(Tor(0.1*b,0.03),P.shin,0,-0.04,0,l.knee,Math.PI/2));
-    quiver(0.12*b);bow(armL.hand,M(0x4a2e18),null);
+    quiver(tr+0.09);bow(armL.hand,M(0x4a2e18),null);
   }else if(id==='elf'){
     longHair(P.hair,0.6);
     const g=gold();
@@ -2884,7 +2884,7 @@ function buildModel(flag,charId,opt){
     [armL,armR].forEach((a,i)=>{const s=i?1:-1;add(Sph(0.12*b),M(0x4d6b3a),s*0.02,0.02,0,a.sh).scale.set(1.1,0.55,1.2);add(Tor(0.12*b,0.012),g,s*0.02,0.0,0,a.sh,Math.PI/2);});
     const tab=TX('elfTab',{side:DS});add(new THREE.PlaneGeometry(0.24,0.52),tab,0,-0.24,-0.2*b-0.02,pelvis);add(new THREE.PlaneGeometry(0.24,0.52),tab,0,-0.24,0.2*b+0.02,pelvis);
     [legL,legR].forEach(l=>add(Sph(0.09),M(0x8a8a3a),0,0,-0.07,l.knee).scale.set(1,1,0.6));
-    quiver(0.12*b);bow(armL.hand,M(0x7a4a26),g);
+    quiver(tr+0.09);bow(armL.hand,M(0x7a4a26),g);
     const sw=new THREE.Group();sw.rotation.set(0.9,0,-0.1);armR.hand.add(sw);add(Cyl(0.018,0.018,0.18),M(0x4a3020),0,0.03,0,sw);add(new THREE.BoxGeometry(0.16,0.02,0.03),g,0,-0.07,0,sw);add(new THREE.BoxGeometry(0.014,0.85,0.035),M(0xe6ecf2,{emissive:0x222222}),0,-0.5,0,sw);
   }else{
     const st=steel(),g=gold();
@@ -2902,14 +2902,18 @@ function buildModel(flag,charId,opt){
     const ax=new THREE.Group();ax.rotation.set(0.5,0,0);armR.hand.add(ax);
     add(Cyl(0.028,0.028,0.85),wood(),0,0.15,0,ax);add(new THREE.BoxGeometry(0.035,0.36,0.3),TX('rune'),0,0.5,-0.16,ax);add(new THREE.ConeGeometry(0.04,0.14,6),st,0,0.5,0.08,ax,-Math.PI/2,0,0);
   }
-  let cape=null;
-  if(P.cape){cape=new THREE.Group();cape.position.set(0,0.56,tr+0.03);torso.add(cape);const cg=new THREE.PlaneGeometry(0.52*b,P.cape[1],1,4);cg.translate(0,-P.cape[1]/2,0);add(cg,M(P.cape[0],{side:DS}),0,0,0,cape);}
-  const px=(id==='archer'||id==='elf')?-0.14*b:0.14*b;
-  add(sharedGeo('pole',()=>new THREE.CylinderGeometry(0.022,0.022,1.3,6)),M(0x9aa0ab),px,0.75,tr+0.05,torso);
   if(!flag.tex){flag.tex=new THREE.CanvasTexture(flag.canvas);flag.tex.__shared=true;}
+  // every hero wears their flag as a cape (it replaces the small flag on the shoulder pole)
+  const dw=id==='dwarf',capeL=dw?1.05:P.cape?Math.max(0.9,P.cape[1]):1.0,capeW=0.62*b;
+  if(!flag.capeTex){const t=new THREE.CanvasTexture(flag.canvas);t.__shared=true;flag.capeTex=t;}
+  const cape=new THREE.Group();cape.position.set(0,dw?0.5:0.56,tr+(dw?0.2:0.03));torso.add(cape);
+  const cg=new THREE.PlaneGeometry(capeW,capeL,1,6);cg.translate(0,-capeL/2,0);
+  const capeMat=M(0xffffff,{map:flag.capeTex,side:DS});add(cg,capeMat,0,0,0,cape);
+  add(new THREE.BoxGeometry(capeW+0.04,0.06,0.06),M(0xd9a227),0,0,0,cape);
+  const px=0;
   const flagPivot=new THREE.Group();flagPivot.position.set(px,1.12,tr+0.05);torso.add(flagPivot);
   const fg=sharedGeo('flagplane',()=>{const g=new THREE.PlaneGeometry(0.84,0.56,8,1);g.translate(0.42,0,0);return g;});
-  const flagMesh=add(fg,M(0xffffff,{map:flag.tex,side:DS}),0,0,0,flagPivot);
+  const flagMesh=add(fg,M(0xffffff,{map:flag.tex,side:DS}),0,0,0,flagPivot);flagPivot.visible=false;
   const stars=new THREE.Group();stars.position.y=0.62;headP.add(stars);
   for(let i=0;i<3;i++){const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:starTex,transparent:true,depthWrite:false}));sp.scale.setScalar(0.18);const a=i*TAU/3;sp.position.set(Math.cos(a)*0.32,0,Math.sin(a)*0.32);stars.add(sp);}stars.visible=false;
   const shadow=new THREE.Mesh(shadowGeo,shadowMat);shadow.rotation.x=-Math.PI/2;root.add(shadow);
@@ -2925,15 +2929,15 @@ function buildModel(flag,charId,opt){
     else if(gid==='shades'){const k=L(0x111118,{emissive:0x0a0a14});[-0.08,0.08].forEach(x=>add(new THREE.BoxGeometry(0.12,0.07,0.03),k,x,0.27,-0.225,headP));add(new THREE.BoxGeometry(0.06,0.02,0.02),k,0,0.28,-0.23,headP);}
     else if(gid==='crown'){const g=L(0xf2c14a,{emissive:0x3a2a00});add(Cyl(0.15,0.15,0.1,true),new THREE.MeshLambertMaterial({color:0xf2c14a,emissive:0x3a2a00,side:DS}),0,0.52,0,headP);for(let i=0;i<5;i++){const a=i*TAU/5;add(new THREE.ConeGeometry(0.03,0.09,5),g,Math.cos(a)*0.15,0.6,Math.sin(a)*0.15,headP);}}
     else if(gid==='halo')add(Tor(0.2,0.025),new THREE.MeshBasicMaterial({color:0xfff2a0}),0,0.66,0,headP,Math.PI/2);
-    else if(gid==='cape'){const cg=new THREE.PlaneGeometry(0.56*b,1.05,1,4);cg.translate(0,-0.52,0);add(cg,L(0xc4202a,{side:DS}),0,0.58,tr+0.08,torso,0.12);}
+    else if(gid==='cape'){const g=L(0xf2c14a,{emissive:0x3a2a00});[-1,1].forEach(sd=>add(new THREE.BoxGeometry(0.035,capeL,0.03),g,sd*capeW/2,-capeL/2,0,cape));add(new THREE.BoxGeometry(capeW+0.035,0.035,0.03),g,0,-capeL,0,cape);}
     else if(gid==='wings'){const w=L(0xf4f4fa);[-1,1].forEach(s=>{const m=add(Sph(0.3),w,s*0.26,0.5,tr+0.12,torso,0,0,s*-0.6);m.scale.set(1.5,0.5,0.12);});}
     else if(gid==='jetpack'){const gr=L(0x8a90a0),rd=L(0xd8342a);[-0.09,0.09].forEach(x=>{add(Cyl(0.075,0.075,0.42),gr,x,0.36,tr+0.14,torso);add(new THREE.ConeGeometry(0.075,0.12,10),rd,x,0.1,tr+0.14,torso,Math.PI);});}
   });
-  if(opt.skin&&opt.skin.pal){const P=opt.skin.pal.map(c=>new THREE.Color(c)),a=opt.skin.amt||0.8,ex=new Set([skin,sash,flagMesh.material]);
+  if(opt.skin&&opt.skin.pal){const P=opt.skin.pal.map(c=>new THREE.Color(c)),a=opt.skin.amt||0.8,ex=new Set([skin,sash,flagMesh.material,capeMat]);
     body.forEach(mt=>{if(ex.has(mt)||!mt.color)return;const c=mt.color,L=0.2126*c.r+0.7152*c.g+0.0722*c.b;
       if(mt.map){const gm=gradMapTex(mt.map,opt.skin);if(gm){mt.map=gm;c.setRGB(1,1,1);}else c.lerp(P[1],a);}else{const tgt=L<0.2?P[0]:L>0.6?P[2]:P[1];c.lerp(tgt,a);}
       if(opt.skin.emissive)mt.userData.be=new THREE.Color(opt.skin.emissive).multiplyScalar(L>0.6?1.6:1);});}
-  if(opt.skin&&opt.skin.tint!=null){const tc=new THREE.Color(opt.skin.tint),ex=new Set([skin,sash,flagMesh.material]);body.forEach(mt=>{if(ex.has(mt))return;mt.color.lerp(tc,opt.skin.amt);if(opt.skin.emissive)mt.userData.be=new THREE.Color(opt.skin.emissive);});}
+  if(opt.skin&&opt.skin.tint!=null){const tc=new THREE.Color(opt.skin.tint),ex=new Set([skin,sash,flagMesh.material,capeMat]);body.forEach(mt=>{if(ex.has(mt))return;mt.color.lerp(tc,opt.skin.amt);if(opt.skin.emissive)mt.userData.be=new THREE.Color(opt.skin.emissive);});}
   return {root,pelvis,torso,headP,eyes,mouth,stars,armL,armR,legL,legR,flagPivot,flagMesh,shadow,shield,ring,tag,body,hipH,look:lk,sc:lk.sc,cape};
 }
 function disposeModel(m){disposeTree(m.root);}
@@ -3090,7 +3094,7 @@ function renderPreview(dt,now){
   if(!pv.runner)return;const w=pvCanvas.clientWidth,h=pvCanvas.clientHeight;if(!w||!h)return;
   if(w!==pv.w||h!==pv.h){pv.w=w;pv.h=h;pv.r.setSize(w,h,false);pv.cam.aspect=w/h;pv.cam.updateProjectionMatrix();}
   pv.autoT-=dt;if(pv.autoT<=0&&!pv.runner.emote){pv.runner.emote={id:pick(EMOTES),t:1.8};pv.autoT=rand(4,7);}
-  if(!pv.drag)pv.rotY+=((pv.base||0)+Math.sin(now/2600)*(pv.base==null?0.5:0.12)-pv.rotY)*Math.min(1,dt*0.8);
+  if(!pv.drag)pv.rotY+=((pv.base==null?1.25:pv.base)+Math.sin(now/2600)*(pv.base==null?0.3:0.12)-pv.rotY)*Math.min(1,dt*0.8);
   pv.runner.m.root.rotation.y=pv.rotY;poseRunner(pv.runner,dt,now);fitPreview(w,h,dt);if(studio.on)studioIdle(pv.runner,now,true);pv.r.render(pv.scene,pv.cam);if(studio.on)studioIdle(pv.runner,now,false);
 }
 // While a picker is open it covers part of the preview, so zoom out and slide the runner
