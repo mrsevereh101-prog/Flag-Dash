@@ -64,7 +64,7 @@ Supabase project: hzzqnwzsasuwjafmsgqh
 - [ ] **Guild perks**: bonuses a guild unlocks together (for example more coins or faster power recharge for every member), bought with guild points.
 - [ ] **Gifts to each other**: players can already send room items to friends (they arrive in the inbox). Next: send other things too, like perks, coins or skins.
 - [ ] **Guild custom flags**: each guild designs its own flag (colors, emblem), shown in guild races and on members.
-- [ ] **Flag capes**: a cape in your country's flag (or your guild's flag) worn on the back, as attire.
+- [x] **Flag capes**: every hero wears their country's flag as a cape (done Oct 10). Next: guild flag capes.
 - [ ] **New heroes** (each needs a look, a power, a perk, speech lines and a voice):
   - [ ] Knight
   - [ ] Viking
@@ -72,16 +72,24 @@ Supabase project: hzzqnwzsasuwjafmsgqh
   - [ ] Indian warrior
   - [ ] Queen of All Beasts: a Black woman hero who commands animals
 
-## Flag capes (on hold, added Oct 10)
-- Heroes wear their flag as a cape instead of the flag on their shoulder. Build as a preview first.
-- Home screen: turn the runner slightly so the cape shows.
-- Wings and jetpack: remove them or replace them with something else (undecided).
-- The bought Hero Cape could become a gold trim on the flag cape.
+## Flag capes (done Oct 10)
+- [x] Heroes wear their flag as a cape instead of the flag on their shoulder
+- [x] Home screen: the runner stands turned so the cape shows
+- [x] The bought Hero Cape adds a gold trim on the flag cape
+- [ ] Wings and jetpack: remove them or replace them with something else (undecided)
+- [ ] Optional: print the 3D flag art on the cape instead of the simple drawn flag
 
 ## Flags (added Oct 10)
-- [ ] **3D flag icons**: test batch of 6 sent (straight flags on a shiny platter). After the style is chosen, 25 batches of 6 for all 147 flags. The game keeps its current flags until a player earns the 3D one.
+- [x] **3D flag icons**: all 147 made with Gemini, no platters (Oct 10). A flag's 3D icon unlocks after 10 single-player wins and 3 online wins with it.
+- [ ] Show other players your 3D flag online (needs your unlock status sent to the server)
 - [ ] **Flag perks**: earn a country's 3D flag as a reward, then buy its perks. 3 perks per flag, each unlocked by an achievement with that flag, permanent once bought. Shown with star, gold, diamond and platinum symbols by value. Open questions: how a flag is won, what the perks do, prices, and how the 4 symbols map to 3 perks.
 - [ ] **National symbols**: a list of each country's symbols (coat of arms, national animal or bird, national plant) for all 147 countries, checked before use. Ideas: a symbol badge on the 3D flag, the animal as a companion or power effect at platinum, and the symbol as that flag's perk icon.
+
+## Messaging (pending)
+- [ ] Private messages from anyone, not only friends, unless the sender is blocked or their account is penalized or suspended. Needs a block list and a suspended flag in Supabase.
+
+## Security
+- [ ] Delete and regenerate the Gemini API key that was pasted in chat (Google AI Studio > API keys)
 
 ## Later
 - [ ] Rewrite hero speech lines: edit `HERO-SPEECH.md` and send it back
