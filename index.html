@@ -463,7 +463,8 @@ html.cream.adv .lv-shield{background:url(img/icons/lv_shield.webp) center/contai
 #acct{z-index:9100!important}
 /* all text black and bold (light themes; the race countdown and banners keep their own look) */
 html.cream body{font-synthesis:none}
-html.cream body,html.cream body *:not(svg,svg *,#countdown,#countdown *,#ultBanner,#ultBanner *){color:#000!important;-webkit-text-fill-color:#000!important;font-weight:700!important;text-shadow:none!important}
+html body,html body *:not(svg,svg *,#countdown,#countdown *,#ultBanner,#ultBanner *,input,textarea,select,option){color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:800!important;text-shadow:-1px 0 0 #000,1px 0 0 #000,0 -1px 0 #000,0 1px 0 #000,0 2px 3px rgba(0,0,0,.45)!important}
+html body :is(input,textarea,select){color:#111!important;-webkit-text-fill-color:#111!important;font-weight:700!important;text-shadow:none!important}
 html.cream #celebrate .cel-card{background:var(--cream)!important;border:1.5px solid #c99a3a!important;box-shadow:0 10px 30px rgba(0,0,0,.35)!important}
 html.cream .cel-gift{background:rgba(255,255,255,.55)!important;border-color:#d6b46a!important}
 /* icons only: names and notes wait behind each page's ⓘ */
@@ -1475,6 +1476,16 @@ html.mode-page .hero-dock{visibility:hidden}
 }
 html body img[src*="img/flags/"]{box-shadow:none!important;border-radius:0!important;object-fit:contain!important;transform:none!important;background:none!important;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
 html #flagGrid .flag-btn>span{display:none!important}html #flagGrid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}html #flagGrid .flag-btn{padding:8px 4px;gap:3px}html #flagGrid .flag-btn,html #flagGrid .flag-btn[aria-pressed="true"]{background:linear-gradient(160deg,#8a8f99,#565b65)!important}html #flagGrid .f3d-pg{color:#ffe08a}html #flagGrid .f3d-pg:empty{display:none}html #flagGrid .f3d-pg{font-size:9.5px;white-space:nowrap}html #flagGrid .flag-btn img{width:100%;max-width:72px;height:auto;aspect-ratio:3/2}
+html #flagGrid .flag-btn,html #flagGrid .flag-btn[aria-pressed="true"],html #flagGrid .flag-btn:hover{background:none!important;border:0!important;box-shadow:none!important;padding:4px 2px}
+html #flagGrid .flag-btn[aria-pressed="true"] img{filter:drop-shadow(0 0 3px #ffd34d) drop-shadow(0 0 7px #ffb300)!important;transform:scale(1.08)!important}
+html #menu #homeFlag.home-flag{background:none!important;border:0!important;box-shadow:none!important;border-radius:0}
+html #menu #homeFlag.home-flag img{width:58px;height:40px}
+html #menu .d3-top>#d3Id{display:none}
+#deskAcct .acct-av{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+html #menu #deskAcct.d3-acct{padding:0;overflow:hidden;border-radius:50%}
+.d3-top{grid-template-columns:auto 1fr auto auto}
+@media (max-width:440px){html #menu .d3-top .d3-wallet{display:grid!important;justify-items:end;gap:0!important;padding:2px 7px!important;line-height:1.15;border-radius:10px;font-size:11px!important}html #menu .d3-top .d3-wallet .d3-coin{order:-1}html #menu #deskAcct.d3-acct{width:36px!important;height:36px!important}}
+#acct #d3Id{display:flex;width:100%;margin:0 0 12px;height:52px}#acct #d3Id .d3-id-av{cursor:pointer;width:44px;height:44px}#acct #d3Id .d3-id-av img{width:44px;height:44px}
 .f3d-pg{font-size:10.5px;color:var(--gold,#f5c542);min-height:1em;line-height:1}
 </style>
 
@@ -1488,7 +1499,7 @@ html #flagGrid .flag-btn>span{display:none!important}html #flagGrid{grid-templat
         <div class="d3-logo"><span class="d3-logo-ic">⚑</span>Race Your Flag</div>
         <div class="d3-wallet" aria-label="Wallet. Open the store" role="button" tabindex="0" id="deskWallet" title="Open the store"><span class="d3-gem"><span class="gem-ic"></span> <b id="d3Gems">0</b></span><span class="d3-coin"><b id="d3Coins">0</b> <span class="coin-ic"></span></span></div>
       </div>
-      <div class="d3-id" id="d3Id"><span class="d3-id-av" id="d3IdAv"></span></div>
+      
       <header class="brand" hidden><div class="step">1,500 m obstacle sprint</div><h1>Flag<span>Dash</span></h1><div class="lanes-rule"></div></header>
       <label class="field d3-name" for="nameInput"><span class="sr-only">Your name</span><input type="text" id="nameInput" maxlength="16" autocomplete="off"><span class="lv-badge" id="lvBadge" title="Your level. Earn XP by finishing races and hitting rivals."><b>Lv 1</b><span class="lv-bar"><i></i></span><small></small><em title="Strength from your room"></em></span></label>
       <section class="d3-stage" id="playPanel" aria-label="Race Desk">
@@ -1774,7 +1785,7 @@ html #flagGrid .flag-btn>span{display:none!important}html #flagGrid{grid-templat
 <div id="acct" class="overlay" hidden>
   <div class="store-card acct-card" role="dialog" aria-label="Account">
     <div class="store-head"><h2 id="acctTitle">Sign in</h2><button class="ghost" id="acctClose">Close</button></div>
-    <div id="acctBody" class="hub-body acct-body"></div>
+    <div class="d3-id" id="d3Id"><span class="d3-id-av" id="d3IdAv" role="button" tabindex="0" title="Change your picture" aria-label="Change your picture"></span></div><div id="acctBody" class="hub-body acct-body"></div><p class="muted small" style="margin:12px 0 0"><a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a></p>
   </div>
 </div>
 <div id="settings" class="overlay" hidden>
@@ -4505,10 +4516,10 @@ const maskEmail=e=>{const m=/^(.)(.*)(@.*)$/.exec(e||'');return m?m[1]+'••�
 function openAcct(why){AUTH.why=why||'';if(!AUTH.user)AUTH.msg='';$('acct').hidden=false;renderAcct();}
 function closeAcct(){$('acct').hidden=true;AUTH.pending=null;}
 function renderAcct(){
-  const b=$('deskAcct');if(b){b.classList.toggle('in',!!AUTH.user);b.title=AUTH.user?'Account: signed in':'Sign in';}
+  const b=$('deskAcct');if(b){b.classList.toggle('in',!!AUTH.user);b.title='Profile';}
   const box=$('acctBody');if(!box||$('acct').hidden)return;box.innerHTML='';
   const el=(t,c,txt)=>{const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;box.appendChild(e);return e;};
-  $('acctTitle').textContent=AUTH.user?'Your account':'Sign in to Race Your Flag';
+  $('acctTitle').textContent='Profile';
   if(!AUTH.on){el('p','muted','Accounts work in the full game at mrsevereh101-prog.github.io/race-your-flag. Everything is unlocked here.');return;}
   if(!AUTH.ready){el('p','muted','Loading…');return;}
   if(AUTH.user){
@@ -7367,8 +7378,16 @@ if(isFirstVisit())setTimeout(onboardSetup,700);
   const sf=$('sumFlag'),hf=$('homeFlagImg'),syncF=()=>{hf.src=sf.src;};new MutationObserver(syncF).observe(sf,{attributes:true,attributeFilter:['src']});syncF();
   $('homeFlag').onclick=()=>openPicker('flag');
   $('d3Id').appendChild($('nameInput'));
-  let avKey='';const syncAv=()=>{if(typeof THREE==='undefined')return;const k=myAvatar()+'|'+selCountry+'|'+(store.get('flagdash-pic')||'');if(k===avKey)return;avKey=k;const b=$('d3IdAv');b.innerHTML='';b.appendChild(rowAvatar({me:true,cc:selCountry},'d3-id-img'));};
+  document.querySelector('.d3-top').appendChild($('deskAcct'));$('deskAcct').setAttribute('aria-label','Profile');$('d3IdAv').onclick=()=>openAvatarPicker();
+  let avKey='';const syncAv=()=>{if(typeof THREE==='undefined')return;const k=myAvatar()+'|'+selCountry+'|'+(store.get('flagdash-pic')||'');if(k===avKey)return;avKey=k;const b=$('d3IdAv');b.innerHTML='';b.appendChild(rowAvatar({me:true,cc:selCountry},'d3-id-img'));const a=$('deskAcct');a.textContent='';a.appendChild(rowAvatar({me:true,cc:selCountry},'acct-av'));};
   syncAv();setInterval(()=>{if(!$('menu').hidden)syncAv();},1500);
+  // fit the home screen: the runner stage takes whatever height is left between the top bar and the mode buttons
+  const fitHome=()=>{const st=$('playPanel'),dock=$('heroDock'),bar=document.querySelector('#d3Sheet .d3-tabbar');
+    if($('menu').hidden||!st||!dock||!bar||document.documentElement.classList.contains('mode-page')||matchMedia('(min-width:981px)').matches){if(st)st.style.removeProperty('height');return;}
+    const bt=bar.getBoundingClientRect().top,dt=dock.getBoundingClientRect(),stt=st.getBoundingClientRect().top;if(!bt||!dt.height)return;
+    const cur=st.getBoundingClientRect().height,gap=dt.top-(stt+cur);const h=Math.round(bt-10-dt.height-gap-stt);
+    if(Math.abs(h-cur)>2){st.style.setProperty('height',Math.max(150,h)+'px','important');st.style.setProperty('min-height','0','important');}};
+  window.addEventListener('resize',()=>requestAnimationFrame(fitHome));setInterval(fitHome,700);requestAnimationFrame(fitHome);
 })();
 
 /* ---------- Race Desk emote icon ---------- */
