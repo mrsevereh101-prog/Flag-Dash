@@ -1448,6 +1448,31 @@ html .pr-open .tab-tx{display:inline}
 .set-grp .dev-box{border-top:0;padding-top:0}
 @keyframes setOpen{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.set-grp{animation:none}}
+
+/* home, mockup layout: name plate under the hero, a row of runner portraits, the runner's card, labeled mode buttons */
+html .desk3 #pvName.d3-rname{display:grid!important;justify-items:center;gap:0;bottom:12px;padding:6px 26px;border-radius:12px;border:2px solid #b98a2e;background:linear-gradient(180deg,#8a7a63,#5b4e3c);color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 4px 10px rgba(0,0,0,.35);font:900 19px var(--display,system-ui);letter-spacing:.04em;text-transform:uppercase;min-width:130px;text-align:center}
+html .desk3 #pvName small{font:700 12px var(--body,system-ui);letter-spacing:0;text-transform:none;opacity:.95;color:#f6ecd2}
+.hero-dock{display:grid;gap:6px;margin:2px 0 0}
+.hd-title{margin:0;text-align:center;font:900 15px var(--display,system-ui);letter-spacing:.06em;text-transform:uppercase;color:#f6ecd2;text-shadow:0 2px 3px rgba(0,0,0,.5)}
+.hd-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:340px;margin:0 auto;width:100%}
+.hd-hero{aspect-ratio:1;padding:0;border-radius:14px;overflow:hidden;border:2px solid #c8921c;background:radial-gradient(circle at 50% 35%,#fff7e0,#e8cf96);box-shadow:0 3px 0 rgba(0,0,0,.25);cursor:pointer;display:grid;place-items:center}
+.hd-hero img{width:100%;height:100%;object-fit:cover}
+.hd-hero[aria-pressed="true"]{border:3px solid #ffd447;box-shadow:0 0 0 3px rgba(255,212,71,.55),0 0 16px rgba(255,200,60,.8)}
+.hd-card{background:linear-gradient(180deg,#fffaf0,#f3e6c6);border:2px solid #d9a227;border-radius:16px;padding:8px 12px;display:grid;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,.25);color:#2a1c04}
+.hd-h{display:flex;gap:6px;align-items:baseline;font:900 16px var(--display,system-ui);text-transform:uppercase;letter-spacing:.03em;color:#1f4f86}
+.hd-desc,.hd-perk{margin:0;font-size:12.5px;line-height:1.3;font-weight:600}
+.hd-perk{display:flex;gap:6px}.hd-perk b{color:#a8620e}
+.hd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:2px}
+.hd-stat{display:grid;gap:3px;font:800 10.5px var(--body,system-ui);text-transform:uppercase;letter-spacing:.03em}
+.hd-stat i{display:grid;grid-template-columns:repeat(10,1fr);gap:2px}.hd-stat b{height:7px;border-radius:3px;background:rgba(120,90,30,.18)}.hd-stat b.on{background:linear-gradient(180deg,#ffb347,#e07b1a)}
+html #menu #d3Sheet .d3-tabbar button>span{display:block!important;font:900 12.5px var(--display,system-ui);letter-spacing:.04em;text-transform:uppercase}
+html.mode-page .hero-dock{visibility:hidden}
+@media (max-height:760px){.hd-desc,.hd-perk{display:none}html .desk3 .d3-stage{min-height:170px!important;height:calc(100dvh - var(--app-top,0px) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 470px)!important}}
+.d3-id{margin-left:auto;margin-right:auto}
+@media all{
+  html .desk3 .d3-stage{height:calc(100dvh - var(--app-top,0px) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 545px)!important;min-height:210px!important}
+  .left-col{padding-bottom:96px}
+}
 </style>
 
 <div id="stage"></div>
@@ -1473,6 +1498,7 @@ html .pr-open .tab-tx{display:inline}
         </div>
         <button class="home-flag" id="homeFlag" aria-label="Choose your flag" title="Your flag"><img id="homeFlagImg" alt=""></button>
       </section>
+      <section class="hero-dock" id="heroDock" aria-label="Pick your runner"><h3 class="hd-title">Pick your runner</h3><div class="hd-row" id="hdRow" role="group" aria-label="Runners"></div><div class="hd-card" id="hdCard"></div></section>
       <div class="sum-row" hidden><div id="sumCountry"></div><div id="sumChar"></div></div>
       <div class="d3-sheet" id="d3Sheet">
       <div class="d3-sheet-body" id="d3SheetBody">
@@ -5292,6 +5318,19 @@ $('storePower').onclick=openPowerReport;$('rcPower').onclick=openPowerReport;
   const db=$('devBox'),dt=tiles.find(t=>t.dataset.g==='dev'),sync=()=>{dt.hidden=db.hidden;if(db.hidden&&cur==='dev')show('dev');};
   new MutationObserver(sync).observe(db,{attributes:true,attributeFilter:['hidden']});sync();
 })();
+
+/* ---------- home: pick your runner (portraits) and the runner's card ---------- */
+const HD_RANGE={speed:[0.95,1.04],agility:[0.82,1.15],charge:[24,16]};
+const hdBar=(v,[a,b])=>Math.max(1,Math.min(10,Math.round((v-a)/(b-a)*10)));
+function renderHeroDock(){const row=$('hdRow'),card=$('hdCard');if(!row)return;
+  if(row.dataset.built!=='1'){row.innerHTML='';CHARS.forEach(ch=>{const b=document.createElement('button');b.type='button';b.className='hd-hero';b.dataset.ch=ch.id;b.title=ch.name;b.setAttribute('aria-label',ch.name);
+      b.onclick=()=>{if(selChar===ch.id)return;selChar=ch.id;store.set('flagdash-char',ch.id);refreshMenu('flex');syncLobbyPresence();};row.appendChild(b);});row.dataset.built='1';}
+  row.querySelectorAll('.hd-hero').forEach(b=>{const id=b.dataset.ch,k=id+'.'+heroSkinFor(id)+'|'+selCountry;b.setAttribute('aria-pressed',String(id===selChar));
+    if(b.dataset.k!==k&&typeof THREE!=='undefined'){b.dataset.k=k;b.innerHTML='';b.appendChild(heroTileImg(id));}});
+  const ch=charById(selChar);if(!ch)return;
+  const bar=(lab,v,r)=>{const n=hdBar(v,r);return `<div class="hd-stat"><span>${lab}</span><i>${Array.from({length:10},(_,i)=>`<b class="${i<n?'on':''}"></b>`).join('')}</i></div>`;};
+  card.innerHTML=`<div class="hd-h"><b>${ch.name}</b><span>·</span><b class="hd-pw">${ch.power}</b></div><p class="hd-desc"></p><p class="hd-perk"><span>⭐</span><span><b>${ch.perk.name}:</b> <span class="hd-pd"></span></span></p><div class="hd-stats">${bar('Speed',ch.speed,HD_RANGE.speed)}${bar('Agility',ch.agility,HD_RANGE.agility)}${bar('Recharge',ch.charge,HD_RANGE.charge)}</div>`;
+  card.querySelector('.hd-desc').textContent=ch.desc;card.querySelector('.hd-pd').textContent=ch.perk.desc;}
 // Gifts: pick a gift for a friend; you pay, they get it in their inbox.
 function openGift(friend){$('gfTitle').textContent=`Send a gift to ${friend.nm}`;$('gfNote').textContent='';TSEL.gift=null;
   let busy=false;const draw=()=>{const box=$('gfList');box.innerHTML='';
@@ -6210,6 +6249,7 @@ function renderTrackTiles(){trackGrid.innerHTML='';
       info:()=>tileInfo(th.name+(th.region?' · '+th.region:''),[th.blurb,`${th.turns?th.turns.length+' turns':'No turns'} · elevation range ${Math.round(pr.hi-pr.lo)} m${th.slope<0?' · downhill':''}`])};});
   trackGrid.appendChild(tileGrid('track',tiles,renderTrackTiles));}
 function refreshMenu(emote){
+  try{renderHeroDock();}catch(e){}
   flagGrid.querySelectorAll('.flag-btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.code===selCountry));
   renderCharTiles();renderTrackTiles();
   {const tm=selMode==='teams'||selMode==='trio';$('modeSeg').querySelector('[data-mode="solo"]').setAttribute('aria-pressed',!tm);const tb=$('teamsBtn');tb.setAttribute('aria-pressed',tm);tb.textContent=tm?(selMode==='trio'?'Teams · 2v2v2 ▾':'Teams · 3v3 ▾'):'Teams ▾';
