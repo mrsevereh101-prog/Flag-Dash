@@ -72,6 +72,12 @@ Supabase project: hzzqnwzsasuwjafmsgqh
   - [ ] Indian warrior
   - [ ] Queen of All Beasts: a Black woman hero who commands animals
 
+## Flag capes (on hold, added Oct 10)
+- Heroes wear their flag as a cape instead of the flag on their shoulder. Build as a preview first.
+- Home screen: turn the runner slightly so the cape shows.
+- Wings and jetpack: remove them or replace them with something else (undecided).
+- The bought Hero Cape could become a gold trim on the flag cape.
+
 ## Flags (added Oct 10)
 - [ ] **3D flag icons**: test batch of 6 sent (straight flags on a shiny platter). After the style is chosen, 25 batches of 6 for all 147 flags. The game keeps its current flags until a player earns the 3D one.
 - [ ] **Flag perks**: earn a country's 3D flag as a reward, then buy its perks. 3 perks per flag, each unlocked by an achievement with that flag, permanent once bought. Shown with star, gold, diamond and platinum symbols by value. Open questions: how a flag is won, what the perks do, prices, and how the 4 symbols map to 3 perks.
