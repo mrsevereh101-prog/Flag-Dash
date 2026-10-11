@@ -1495,7 +1495,21 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
 #zdBar .zd-w.armed{border-color:#7fd8ff;box-shadow:0 0 0 4px rgba(127,216,255,.45),0 0 18px #7fd8ff;animation:zdPulse .7s ease-in-out infinite alternate}
 @keyframes zdPulse{to{transform:scale(1.08)}}
 #zdTip{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 30px);transform:translateX(-50%);z-index:12;padding:8px 16px;border-radius:999px;background:rgba(10,20,60,.85);border:2px solid #7fd8ff;font-size:15px;white-space:nowrap;pointer-events:none}
-#hud.zd #itemSlot,#hud.zd #powerSlot,#hud.zd #atkSlot,#hud.zd #defSlot,#hud.zd #trackBar{display:none!important}
+#hud.zd #itemSlot,#hud.zd #atkSlot,#hud.zd #defSlot,#hud.zd #trackBar,#hud.zd #svLives{display:none!important}
+html.zd-mode #svHud{left:auto!important;right:max(12px,env(safe-area-inset-right,0px))!important;top:calc(env(safe-area-inset-top,0px) + var(--app-top,0px) + 130px)!important;transform:none!important;text-align:right;align-items:flex-end!important}
+#zdSquad{position:fixed;left:max(10px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + var(--app-top,0px) + 74px);z-index:12;display:grid;gap:6px;pointer-events:none;width:min(44vw,170px)}
+.zd-hero{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:6px;padding:4px 8px 4px 4px;border-radius:12px;background:rgba(10,16,50,.72);border:2px solid rgba(242,193,74,.5);position:relative}
+.zd-hero.me{border-color:#f2c14a;box-shadow:0 0 10px rgba(242,193,74,.6)}
+.zd-hero>img.zd-av{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#2a3070;grid-row:1}
+.zd-hero .zd-fl{position:absolute;left:28px;top:28px;width:18px;height:12px;border-radius:2px}
+.zd-mid{display:grid;gap:3px;min-width:0}.zd-mid b{font-size:11.5px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zd-hp,.zd-ult{display:block;height:7px;border-radius:4px;background:rgba(0,0,0,.45);overflow:hidden}.zd-ult{height:4px}
+.zd-hp s,.zd-ult s{display:block;height:100%;width:100%;background:#4cd964;transition:width .2s}.zd-ult s{background:linear-gradient(90deg,#7fd8ff,#f2c14a)}
+.zd-hero.ready .zd-ult s{background:#f2c14a;box-shadow:0 0 8px #f2c14a}
+.zd-gun{font-size:15px;white-space:nowrap}
+.zd-hero.down{opacity:.45;filter:grayscale(1)}.zd-hero.down::after{content:'DOWN';position:absolute;inset:0;display:grid;place-items:center;font-size:13px;color:#ff6a6a}
+html.zd-mode #touch .tgroup{position:fixed!important;right:max(12px,env(safe-area-inset-right,0px))!important;left:auto!important;top:calc(env(safe-area-inset-top,0px) + var(--app-top,0px) + 74px)!important;bottom:auto!important;transform:none!important}
+html.zd-mode #touch .tgroup button{width:48px!important;height:48px!important}
 .f3d-pg{font-size:10.5px;color:var(--gold,#f5c542);min-height:1em;line-height:1}
 </style>
 
@@ -1565,7 +1579,7 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
             <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="zdBtn">🔫 Zombie Defense</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button><button class="d3-pill" id="chalBtn">🎯 Special Challenges</button></div>
             <p class="muted" id="lapHint"></p>
             <p class="muted desk-info">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
-            <p class="muted desk-info">Zombie Defense: you and 3 CPU heroes hold the line while zombies walk in. Your hero fires on their own; tap the road to aim. Shoot the ? boxes for a missile, snow storm, dart storm or landmine.</p>
+            <p class="muted desk-info">Zombie Defense: you and 3 CPU heroes hold the line while the horde walks in. Everyone fires on their own. Swipe ◀ ▶ to swap spots and catch the guns zombies drop (laser, sniper, bazooka, shotgun, minigun). Fill your meter to use your hero's ultimate. Shoot ? boxes for a missile, snow storm, dart storm or landmine. A boss every 5th wave.</p>
             <p class="muted desk-info">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
             <div class="cpu-go"><button class="primary d3-gold" id="startBtn">🏆 Start Race</button></div>
           </div>
@@ -1709,7 +1723,7 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
   <div id="ultBanner" aria-live="polite"></div>
   <div id="svWarn"></div>
   <div id="fcHud" hidden><div class="fc-mine" id="fcMine"></div><div class="fc-clock" id="fcClock"></div><div class="fc-list" id="fcList"></div></div>
-  <div id="zdBar" hidden aria-label="Weapons"></div><div id="zdTip" hidden></div>
+  <div id="zdBar" hidden aria-label="Weapons"></div><div id="zdSquad" hidden aria-label="Your squad"></div>
   <div id="svHud" hidden><div class="sv-lives" id="svLives"></div><div class="sv-score" id="svScore"></div><div class="sv-gap" id="svGap"></div></div>
 </div>
 <div id="flash"></div>
@@ -3386,130 +3400,188 @@ function svUpdate(dt,now){
 /* =========================================================
    ZOMBIE DEFENSE: a squad of 4 heroes holds the line while the horde walks in
    ========================================================= */
-const ZD_LINE=6,ZD_FAR=46,ZD_WAVE_LEN=25;
-const ZD_HP={walker:3,runner:2,brute:12},ZD_SPD={walker:2.1,runner:4.6,brute:1.5};
+const ZD_LINE=6,ZD_FAR=46,ZD_WAVE_LEN=20,ZD_SPOTS=[-3.3,-1.1,1.1,3.3],ZD_HP_MAX=100;
+const ZD_HP={walker:3,runner:2,brute:14,boss:90},ZD_SPD={walker:2.4,runner:5,brute:1.7,boss:1.2},ZD_BITE={walker:12,runner:9,brute:30,boss:60};
+// guns zombies drop: each one swaps your hero's auto-fire for a while
+const ZD_GUNS={
+  pistol:{name:'Pistol',em:'🔫',rate:0.28,dmg:1,col:0xfff07a},
+  laser:{name:'Laser',em:'🔆',rate:0.07,dmg:0.6,col:0xff2a4a,beam:true,time:12},
+  sniper:{name:'Sniper',em:'🎯',rate:0.85,dmg:10,col:0xffffff,beam:true,big:true,time:14},
+  bazooka:{name:'Bazooka',em:'🧨',rate:1.0,dmg:6,col:0xff7a2a,blast:3.6,time:12},
+  shotgun:{name:'Shotgun',em:'💥',rate:0.6,dmg:1.2,col:0xffd27a,pellets:5,time:12},
+  minigun:{name:'Minigun',em:'🌀',rate:0.06,dmg:0.55,col:0xffe14a,time:10}};
+const ZD_GUN_IDS=['laser','sniper','bazooka','shotgun','minigun'];
+// weapons from ? boxes (yours only), aimed for you at the thickest crowd
 const ZD_WEAPONS={
-  missile:{name:'Missile',ic:'item_rocket',em:'🚀',aim:true,tip:'Tap where the missile should land'},
-  snow:{name:'Snow Storm',ic:'item_freeze',em:'❄️',aim:true,tip:'Tap where the snow should fall'},
-  darts:{name:'Dart Storm',ic:'lo_dart',em:'🎯',aim:false},
-  mine:{name:'Landmine',ic:'item_mine',em:'💣',aim:true,tip:'Tap where to bury the landmine'}};
+  missile:{name:'Missile',ic:'item_rocket',em:'🚀'},snow:{name:'Snow Storm',ic:'item_freeze',em:'❄️'},
+  darts:{name:'Dart Storm',ic:'lo_dart',em:'🎯'},mine:{name:'Landmine',ic:'item_mine',em:'💣'}};
 const ZD_IDS=Object.keys(ZD_WEAPONS);
 const zdP=(x,d,h)=>W(x,d,Hf(d)+(h||0));
-const zdShotGeo=new THREE.SphereGeometry(0.13,8,6),zdShotMat=new THREE.MeshBasicMaterial({color:0xfff07a}),zdShotMatCpu=new THREE.MeshBasicMaterial({color:0x9fe0ff}),zdDartMat=new THREE.MeshBasicMaterial({color:0xff6ad5});
+const zdShotGeo=new THREE.SphereGeometry(0.13,8,6),zdShotMats={},zdShotMat=c=>zdShotMats[c]||(zdShotMats[c]=new THREE.MeshBasicMaterial({color:c}));
 const zdFireMat=()=>new THREE.MeshBasicMaterial({color:0xffa030,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false});
-function zdClear(){const z=RACE&&RACE.zd;if(z&&z.en){z.en.forEach(e=>scene.remove(e.m));z.shots.forEach(s=>scene.remove(s.m));z.boxes.forEach(b=>scene.remove(b.m));z.mines.forEach(m=>scene.remove(m.m));if(z.ret)scene.remove(z.ret);}
-  const h=$('hud');if(h)h.classList.remove('sv','zd');const v=$('svHud');if(v)v.hidden=true;const b=$('zdBar');if(b)b.hidden=true;const t=$('zdTip');if(t)t.hidden=true;}
+const zdEmojiTex={};function zdEmoji(em){return zdEmojiTex[em]||(zdEmojiTex[em]=canvasTex(128,128,(c,w,h)=>{c.clearRect(0,0,w,h);c.fillStyle='rgba(10,20,60,.85)';c.beginPath();c.arc(64,64,58,0,TAU);c.fill();c.strokeStyle='#f2c14a';c.lineWidth=8;c.stroke();c.font='70px serif';c.textAlign='center';c.textBaseline='middle';c.fillText(em,64,70);}));}
+function zdClear(){const z=RACE&&RACE.zd;if(z&&z.en){[...z.en,...z.shots,...z.boxes,...z.mines,...z.drops].forEach(o=>scene.remove(o.m));}
+  document.documentElement.classList.remove('zd-mode');const h=$('hud');if(h)h.classList.remove('sv','zd');
+  ['svHud','zdBar','zdSquad'].forEach(id=>{const e=$(id);if(e)e.hidden=true;});}
 function zdInit(){
-  const z=RACE.zd={t:0,wave:1,lives:5,max:5,kills:0,spawnT:2.5,boxT:7,en:[],shots:[],boxes:[],mines:[],weapons:[],arm:null,darts:0,over:false,aim:{x:0,d:ZD_LINE+26}};
-  const spots=[-1.1,1.1,-3.3,3.3];runners.forEach((r,i)=>{r.x=spots[i%4];r.d=ZD_LINE;r.speed=0;r.zdT=rand(0,0.5);});
+  const z=RACE.zd={t:0,wave:1,kills:0,spawnT:2,boxT:6,en:[],shots:[],boxes:[],mines:[],drops:[],weapons:[],darts:0,over:false,boss:0};
+  runners.forEach((r,i)=>{r.zs=i===0?1:[0,2,3][i-1]??i;r.x=ZD_SPOTS[r.zs];r.d=ZD_LINE;r.speed=0;r.zdT=rand(0,0.5);r.hp=ZD_HP_MAX;r.down=false;r.gun='pistol';r.gunT=0;r.charge=0.3;r.ultT=0;});
   boxes.forEach(b=>{b.mesh.visible=false;b.hidden=1e9;});pads.forEach(p=>{if(p.mesh)p.mesh.visible=false;});if(coinIM)coinIM.visible=false;gems.forEach(g=>{g.taken=true;if(g.mesh)g.mesh.visible=false;});
-  obstacles.forEach(o=>{if(o.d<ZD_FAR+20)o.mesh.visible=false;});
-  const ret=z.ret=new THREE.Mesh(new THREE.RingGeometry(0.9,1.15,32),new THREE.MeshBasicMaterial({color:0xff3b30,transparent:true,opacity:0.85,side:THREE.DoubleSide,depthWrite:false}));ret.rotation.x=-Math.PI/2;scene.add(ret);
-  $('hud').classList.add('sv','zd');$('svHud').hidden=false;$('zdBar').hidden=false;zdBarRender();
-  feed('Hold the line! Tap the road to aim. Shoot ? boxes for weapons.','gold');
+  obstacles.forEach(o=>{if(o.d<ZD_FAR+30)o.mesh.visible=false;});
+  document.documentElement.classList.add('zd-mode');$('hud').classList.add('sv','zd');$('svHud').hidden=false;$('zdBar').hidden=false;
+  const sq=$('zdSquad');sq.hidden=false;sq.innerHTML='';
+  runners.forEach(r=>{const row=document.createElement('div');row.className='zd-hero'+(r===player?' me':'');
+    const im=avatarImg(r.char.id+'.'+(r.skin&&r.skin.id||'classic'),r.cc,'zd-av');
+    const fl=document.createElement('img');fl.className='zd-fl';fl.alt='';fl.src=r.flag.url;
+    const mid=document.createElement('div');mid.className='zd-mid';const nm=document.createElement('b');nm.textContent=r===player?'You':r.char.name;
+    const bar=document.createElement('i');bar.className='zd-hp';bar.innerHTML='<s></s>';const ult=document.createElement('i');ult.className='zd-ult';ult.innerHTML='<s></s>';
+    const gun=document.createElement('span');gun.className='zd-gun';mid.append(nm,bar,ult);row.append(im,fl,mid,gun);sq.appendChild(row);r.zdRow={row,hp:bar.firstChild,ult:ult.firstChild,gun};});
+  zdBarRender();
+  feed('Hold the line! Swipe ◀ ▶ to swap spots. Catch the guns zombies drop.','gold');
 }
-const zdScore=()=>{const z=RACE.zd;return z?z.kills*10+(z.wave-1)*50:0;};
-function zdHud(){const z=RACE.zd;if(!z)return;setT('svLives','❤'.repeat(z.lives)+'♡'.repeat(Math.max(0,z.max-z.lives)));setT('svScore',String(zdScore()));setT('svGap',`🧟 ${z.kills} down`);}
+const zdScore=()=>{const z=RACE.zd;return z?z.kills*10+(z.wave-1)*60:0;};
+function zdHud(){const z=RACE.zd;if(!z)return;setT('svLives','');setT('svScore',String(zdScore()));setT('svGap',`🧟 ${z.kills} down`);
+  runners.forEach(r=>{const u=r.zdRow;if(!u)return;u.hp.style.width=Math.max(0,r.hp/ZD_HP_MAX*100)+'%';u.hp.style.background=r.hp>50?'#4cd964':r.hp>25?'#ffcc00':'#ff3b30';
+    u.ult.style.width=(r.charge*100)+'%';u.row.classList.toggle('down',r.down);u.row.classList.toggle('ready',r.charge>=1&&!r.down);
+    const g=ZD_GUNS[r.gun];const t=r.gun!=='pistol'?` ${Math.ceil(r.gunT)}`:'';if(u.gun.textContent!==g.em+t)u.gun.textContent=g.em+t;});}
 function zdBarRender(){const z=RACE.zd,bar=$('zdBar');if(!z||!bar)return;bar.innerHTML='';
-  for(let i=0;i<3;i++){const id=z.weapons[i],b=document.createElement('button');b.className='zd-w'+(id&&z.arm===i?' armed':'')+(id?'':' empty');
-    if(id){const W_=ZD_WEAPONS[id];setIco(b,W_.ic,W_.em);b.setAttribute('aria-label',W_.name);b.title=W_.name;b.onclick=e=>{e.stopPropagation();zdUse(i);};}else b.disabled=true;bar.appendChild(b);}
-  const t=$('zdTip');const a=z.arm!=null&&z.weapons[z.arm];t.hidden=!a;if(a)t.textContent=ZD_WEAPONS[a].tip;}
-function zdUse(i){const z=RACE.zd;if(!z||z.over||state!=='race')return;const id=z.weapons[i];if(!id)return;
-  if(ZD_WEAPONS[id].aim){z.arm=z.arm===i?null:i;sfx.tap();zdBarRender();return;}
-  z.weapons.splice(i,1);z.arm=null;z.darts=6;samp('dart',1)||sfx.use();feed('Dart Storm!','gold');zdBarRender();}
-// tap on the road: aim there, or drop the armed weapon there
-const zdRay=new THREE.Raycaster(),zdV=new THREE.Vector2(),zdHit=new THREE.Vector3();
-function zdTrackAt(cx,cy){zdV.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);zdRay.setFromCamera(zdV,camera);
-  const y=Hf(ZD_LINE+25);if(!zdRay.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-y),zdHit))return null;
-  let best=1e9,bd=ZD_LINE;for(let d=ZD_LINE;d<=ZD_LINE+ZD_FAR+10;d+=0.5){cl(d);const q=(zdHit.x-_w.x)**2+(zdHit.z-_w.z)**2;if(q<best){best=q;bd=d;}}
-  cl(bd);const x=(zdHit.x-_w.x)*Math.cos(_w.t)-(zdHit.z-_w.z)*Math.sin(_w.t);
-  return {x:clamp(x,-HALF,HALF),d:clamp(bd,ZD_LINE+3,ZD_LINE+ZD_FAR)};}
-function zdTap(cx,cy){const z=RACE&&RACE.zd;if(!z||z.over||state!=='race')return;const p=zdTrackAt(cx,cy);if(!p)return;
-  if(z.arm!=null&&z.weapons[z.arm]){const id=z.weapons[z.arm];z.weapons.splice(z.arm,1);z.arm=null;zdBarRender();
-    if(id==='missile')zdMissile(p);else if(id==='snow')zdSnow(p);else if(id==='mine')zdMine(p);return;}
-  z.aim=p;ringFx(p.x,p.d,0xff5a3a,1.2,0.3);}
-window.addEventListener('pointerdown',e=>{if(!RACE||!RACE.zd||state!=='race')return;if(e.target.closest&&e.target.closest('button,input,a,.overlay:not([hidden]),#hud .hud-top'))return;zdTap(e.clientX,e.clientY);});
-// spawning
-function zdSpawn(){const z=RACE.zd,w=z.wave,n=w<3?1:w<6?2:3;
+  for(let i=0;i<3;i++){const id=z.weapons[i],b=document.createElement('button');b.className='zd-w'+(id?'':' empty');
+    if(id){const W_=ZD_WEAPONS[id];setIco(b,W_.ic,W_.em);b.setAttribute('aria-label',W_.name);b.title=W_.name;b.onclick=e=>{e.stopPropagation();zdUse(i);};}else b.disabled=true;bar.appendChild(b);}}
+// the thickest crowd of zombies, for weapons that need a spot
+function zdCrowd(){const z=RACE.zd;let best=null,bn=-1;for(const e of z.en){if(e.d>ZD_LINE+ZD_FAR-3)continue;let n=0;for(const o of z.en)if(Math.hypot(o.x-e.x,o.d-e.d)<6)n+=o.type==='boss'?4:o.type==='brute'?2:1;if(n>bn){bn=n;best=e;}}
+  return best?{x:best.x,d:best.d}:{x:player.x,d:ZD_LINE+22};}
+function zdUse(i){const z=RACE.zd;if(!z||z.over||state!=='race'||player.down)return;const id=z.weapons[i];if(!id)return;z.weapons.splice(i,1);zdBarRender();
+  if(id==='darts'){z.darts=6;samp('dart',1)||sfx.use();feed('Dart Storm!','gold');}
+  else if(id==='mine')zdMine({x:player.x,d:ZD_LINE+9});
+  else{const p=zdCrowd();if(id==='missile')zdMissile(p);else zdSnow(p);}}
+// swipe or arrow keys: swap spots with the hero next to you
+function zdSwap(dir){const z=RACE&&RACE.zd;if(!z||z.over||state!=='race')return;const j=player.zs+dir;if(j<0||j>3)return;const o=runners.find(r=>r.zs===j);if(o)o.zs=player.zs;player.zs=j;sfx.tap();}
+let zdSw=null;
+window.addEventListener('pointerdown',e=>{if(!RACE||!RACE.zd||state!=='race')return;if(e.target.closest&&e.target.closest('button,input,a,.overlay:not([hidden])'))return;zdSw={id:e.pointerId,x:e.clientX,y:e.clientY,done:false};});
+window.addEventListener('pointermove',e=>{if(!zdSw||e.pointerId!==zdSw.id||zdSw.done)return;const dx=e.clientX-zdSw.x;if(Math.abs(dx)>Math.max(26,innerWidth*0.06)){zdSw.done=true;zdSwap(dx>0?1:-1);}});
+['pointerup','pointercancel'].forEach(t=>window.addEventListener(t,e=>{if(zdSw&&e.pointerId===zdSw.id)zdSw=null;}));
+window.addEventListener('keydown',e=>{if(!RACE||!RACE.zd||state!=='race')return;if(e.code==='ArrowLeft'||e.code==='KeyA'){zdSwap(-1);e.preventDefault();}else if(e.code==='ArrowRight'||e.code==='KeyD'){zdSwap(1);e.preventDefault();}
+  else if(e.code==='Digit1'||e.code==='Digit2'||e.code==='Digit3')zdUse(+e.code.slice(5)-1);});
+// spawning: bigger, faster groups each wave, and a boss every 5th wave
+function zdSpawn(){const z=RACE.zd,w=z.wave,n=Math.min(7,1+Math.floor(w/2)+(Math.random()<0.4?1:0));
   for(let k=0;k<n;k++){let type='walker';const r=Math.random();
-    if(w>=4&&r<Math.min(0.25,0.08+(w-4)*0.03))type='brute';else if(w>=2&&r<Math.min(0.5,0.2+(w-2)*0.05))type='runner';
-    const m=makeZombie(type);scene.add(m);const hp=Math.ceil(ZD_HP[type]*(1+(w-1)*0.08));
-    z.en.push({type,m,x:rand(-HALF+0.6,HALF-0.6),d:ZD_LINE+ZD_FAR+rand(0,8),hp,max:hp,ph:rand(0,TAU),frz:0,flash:0});}}
-function zdSpawnBox(){const z=RACE.zd;const m=new THREE.Mesh(boxGeo,boxMat);m.scale.setScalar(1.15);scene.add(m);z.boxes.push({m,x:rand(-HALF+1,HALF-1),d:ZD_LINE+ZD_FAR-rand(0,10),hp:2,spin:rand(0,TAU)});}
+    if(w>=3&&r<Math.min(0.3,0.08+(w-3)*0.03))type='brute';else if(w>=2&&r<Math.min(0.6,0.22+(w-2)*0.06))type='runner';
+    zdAdd(type,rand(-HALF+0.6,HALF-0.6),ZD_LINE+ZD_FAR+rand(0,10));}}
+function zdAdd(type,x,d){const z=RACE.zd,w=z.wave;const m=makeZombie(type==='boss'?'brute':type);scene.add(m);const hp=Math.ceil(ZD_HP[type]*(1+(w-1)*0.12));
+  const e={type,m,x,d,hp,max:hp,ph:rand(0,TAU),frz:0,flash:0,push:0};if(type==='boss'){m.scale.setScalar(3);m.traverse(o=>{if(o.material&&o.material.color)o.material=o.material.clone();});m.traverse(o=>{if(o.material&&o.material.color&&o.material.color.getHex()!==0xff2a1a)o.material.color.lerp(new THREE.Color(0x6a1a1a),0.5);});}
+  z.en.push(e);return e;}
+function zdSpawnBox(){const z=RACE.zd;const m=new THREE.Mesh(boxGeo,boxMat);m.scale.setScalar(1.15);scene.add(m);z.boxes.push({m,x:pick(ZD_SPOTS),d:ZD_LINE+ZD_FAR-rand(0,8),hp:2,spin:rand(0,TAU)});}
+// drops: a gun (or a medkit) that slides to the line; the hero standing in that spot catches it
+function zdDrop(x,d,kind){const z=RACE.zd;const em=kind==='med'?'❤️':ZD_GUNS[kind].em;const m=new THREE.Sprite(new THREE.SpriteMaterial({map:zdEmoji(em),depthWrite:false,transparent:true}));m.scale.setScalar(1.5);scene.add(m);
+  const sx=ZD_SPOTS.reduce((a,s)=>Math.abs(s-x)<Math.abs(a-x)?s:a,ZD_SPOTS[0]);z.drops.push({m,kind,x,tx:sx,d,ph:rand(0,TAU)});}
 // damage
-function zdKill(e,big){const z=RACE.zd,p=zdP(e.x,e.d,1.3);burst(p.x,p.y,p.z,big?22:14,[0.45,0.95,0.3],{max:big?7:5,up:4,grav:9,size:0.32});burst(p.x,p.y,p.z,6,[1,0.9,0.5],{add:true,max:3,grav:2});
-  scene.remove(e.m);z.en.splice(z.en.indexOf(e),1);z.kills+=e.type==='brute'?3:1;tone(220,0.09,'square',0.035,-120);tone(660,0.07,'triangle',0.03,300,0.03);}
-function zdDamage(e,n){if(!RACE.zd.en.includes(e))return;e.hp-=n;e.flash=0.12;if(e.hp<=0)zdKill(e,n>=5);}
-function zdBlast(p,r,dmg,col){const z=RACE.zd;z.en.slice().forEach(e=>{const dd=Math.hypot(e.x-p.x,e.d-p.d);if(dd<r)zdDamage(e,dmg);});
+function zdKill(e,big,by){const z=RACE.zd,p=zdP(e.x,e.d,1.3);burst(p.x,p.y,p.z,big?22:14,[0.45,0.95,0.3],{max:big?7:5,up:4,grav:9,size:0.32});burst(p.x,p.y,p.z,6,[1,0.9,0.5],{add:true,max:3,grav:2});
+  scene.remove(e.m);z.en.splice(z.en.indexOf(e),1);z.kills+=e.type==='boss'?10:e.type==='brute'?3:1;tone(220,0.09,'square',0.035,-120);tone(660,0.07,'triangle',0.03,300,0.03);
+  if(by&&!by.down)by.charge=Math.min(1,by.charge+(e.type==='boss'?0.5:e.type==='brute'?0.15:0.05));
+  const r=Math.random();if(e.type==='boss')zdDrop(e.x,e.d,pick(ZD_GUN_IDS));else if(r<(e.type==='brute'?0.35:0.07))zdDrop(e.x,e.d,pick(ZD_GUN_IDS));else if(r<(e.type==='brute'?0.45:0.1))zdDrop(e.x,e.d,'med');
+  if(e.type==='boss'){showBanner('BOSS DOWN','',[1,0.8,0.2]);sfx.fanfare();}}
+function zdDamage(e,n,by){if(!RACE.zd.en.includes(e))return;e.hp-=n;e.flash=0.12;if(e.hp<=0)zdKill(e,n>=5,by);}
+function zdBlast(p,r,dmg,col,by,quiet){const z=RACE.zd;z.en.slice().forEach(e=>{const dd=Math.hypot(e.x-p.x,e.d-p.d);if(dd<r+(e.type==='boss'?1.5:0))zdDamage(e,dmg,by);});
   z.boxes.slice().forEach(b=>{if(Math.hypot(b.x-p.x,b.d-p.d)<r)zdBoxOpen(b);});
   const c=zdP(p.x,p.d,0.6);
-  // fireball that swells and fades, shock ring, debris, smoke, flash and shake
   const fb=new THREE.Mesh(sharedGeo('zdFire',()=>new THREE.SphereGeometry(1,16,12)),zdFireMat());fb.position.copy(c);scene.add(fb);
   fx.push({m:fb,t:0,dur:0.55,dispose(){fb.material.dispose();},update(k){fb.scale.setScalar(0.4+k*r*0.9);fb.material.opacity=0.95*(1-k);fb.material.color.setHSL(0.09-k*0.07,1,0.6-k*0.25);}});
-  ringFx(p.x,p.d,col||0xffb040,r*1.1,0.5);explode(c.x,c.y,c.z);burst(c.x,c.y,c.z,40,[1,0.55,0.15],{add:true,max:10,up:7,grav:6,size:0.45});burst(c.x,c.y,c.z,20,[0.3,0.28,0.3],{max:4,up:3,grav:-1.2,size:0.9,grow:2,life:1.6});
-  if(!reduceMotion){shake=Math.max(shake,0.7);flashScreen('rgba(255,170,60,.55)');}
-  samp('meteor',1)||sfx.meteor();tone(55,0.7,'sawtooth',0.09,-25,0.02);tone(38,0.9,'square',0.07,-12,0.05);}
+  ringFx(p.x,p.d,col||0xffb040,r*1.1,0.5);explode(c.x,c.y,c.z);burst(c.x,c.y,c.z,quiet?18:40,[1,0.55,0.15],{add:true,max:10,up:7,grav:6,size:0.45});burst(c.x,c.y,c.z,quiet?8:20,[0.3,0.28,0.3],{max:4,up:3,grav:-1.2,size:0.9,grow:2,life:1.6});
+  if(!reduceMotion){shake=Math.max(shake,quiet?0.25:0.7);if(!quiet)flashScreen('rgba(255,170,60,.55)');}
+  if(quiet){tone(70,0.4,'sawtooth',0.06,-30);}else{samp('meteor',1)||sfx.meteor();tone(55,0.7,'sawtooth',0.09,-25,0.02);tone(38,0.9,'square',0.07,-12,0.05);}}
 function zdBoxOpen(b){const z=RACE.zd;const i=z.boxes.indexOf(b);if(i<0)return;z.boxes.splice(i,1);scene.remove(b.m);
   const p=zdP(b.x,b.d,1.2);burst(p.x,p.y,p.z,24,[1,0.85,0.3],{add:true,max:6,up:4,grav:4,size:0.35});
   if(z.weapons.length<3){const id=pick(ZD_IDS);z.weapons.push(id);sfx.itemGet();feed(`${ZD_WEAPONS[id].em} ${ZD_WEAPONS[id].name}! Tap it to use`,'good');zdBarRender();}
-  else{RACE.coins+=5;sfx.coin&&sfx.coin();feed('Weapon slots full: +5 coins','');}}
-// weapons
-function zdMissile(p){const z=RACE.zd,A=wpos(player,2.2),B=zdP(p.x,p.d,0.4),m=new THREE.Mesh(sharedGeo('zdMis',()=>new THREE.ConeGeometry(0.22,0.9,8)),new THREE.MeshBasicMaterial({color:0xff4a2a}));m.position.copy(A);scene.add(m);
+  else{RACE.coins+=5;feed('Weapon slots full: +5 coins','');}}
+// box weapons
+function zdMissile(p){const A=wpos(player,2.2),B=zdP(p.x,p.d,0.4),m=new THREE.Mesh(sharedGeo('zdMis',()=>new THREE.ConeGeometry(0.22,0.9,8)),new THREE.MeshBasicMaterial({color:0xff4a2a}));m.position.copy(A);scene.add(m);
   samp('rocket',1)||sfx.use();let boom=false;const mid=A.clone().lerp(B,0.5);mid.y+=9;
   fx.push({m,t:0,dur:0.75,dispose(){m.material.dispose();},update(k){const a=A.clone().lerp(mid,k),b=mid.clone().lerp(B,k),q=a.lerp(b,k);const dir=q.clone().sub(m.position);m.position.copy(q);if(dir.lengthSq()>1e-6){m.lookAt(q.clone().add(dir));m.rotateX(Math.PI/2);}
     emit(PA,{x:q.x,y:q.y,z:q.z,vy:0.5,life:0.45,size:0.55,c:[1,0.55,0.15]});emit(PN,{x:q.x,y:q.y,z:q.z,vy:0.3,life:0.9,size:0.6,grow:1.2,c:[0.4,0.4,0.42]});
-    if(k>=1&&!boom){boom=true;zdBlast(p,6.5,40);}}});}
+    if(k>=1&&!boom){boom=true;zdBlast(p,6.5,40,null,player);}}});}
 function zdSnow(p){const z=RACE.zd,R=8;samp('freeze',1)||tone(1200,0.5,'sine',0.04,-600);
-  z.en.forEach(e=>{if(Math.hypot(e.x-p.x,e.d-p.d)<R){e.frz=4;zdDamage(e,1);}});
+  z.en.forEach(e=>{if(Math.hypot(e.x-p.x,e.d-p.d)<R){e.frz=4;zdDamage(e,1,player);}});
   const c=zdP(p.x,p.d,3);for(let i=0;i<70;i++)emit(PA,{x:c.x+rand(-R,R)*0.7,y:c.y+rand(0,4),z:c.z+rand(-R,R)*0.7,vx:rand(-0.5,0.5),vy:rand(-3,-1),vz:rand(-0.5,0.5),life:1.6,size:0.32,c:[0.85,0.95,1]});
   ringFx(p.x,p.d,0xbfefff,R,0.7);if(!reduceMotion)flashScreen('rgba(190,235,255,.45)');}
 function zdMine(p){const z=RACE.zd,m=new THREE.Group();const base=new THREE.Mesh(sharedGeo('zdMine',()=>new THREE.CylinderGeometry(0.45,0.5,0.18,14)),new THREE.MeshLambertMaterial({color:0x3a3f2a}));m.add(base);
   const led=new THREE.Mesh(sharedGeo('zdLed',()=>new THREE.SphereGeometry(0.09,8,6)),new THREE.MeshBasicMaterial({color:0xff2a1a}));led.position.y=0.12;m.add(led);
   m.position.copy(zdP(p.x,p.d,0.1));scene.add(m);z.mines.push({m,led,x:p.x,d:p.d,t:0});samp('mine',1)||sfx.use();ringFx(p.x,p.d,0xff3b30,1.5,0.4);}
+// hero ultimates: each hero's race power, turned on the horde
+function zdUlt(r){const z=RACE.zd;if(!z||z.over||r.down||r.charge<1||state!=='race')return;r.charge=0;const id=r.char.id,col=r.char.rgb||[1,1,1];
+  if(r===player){sfx.power();showBanner(r.char.power.toUpperCase(),r.char.name,col);}
+  const live=z.en.filter(e=>e.d<ZD_LINE+ZD_FAR+2);
+  if(id==='samurai'){samp('power_slash',1);for(let i=0;i<5;i++)setTimeout(()=>{if(RACE&&RACE.zd===z)ringFx(r.x,ZD_LINE+4+i*8,0xff5a4a,7,0.35);},i*70);live.forEach(e=>zdDamage(e,12,r));}
+  else if(id==='warrior'){samp('power_thunder',1);live.sort((a,b)=>b.hp-a.hp).slice(0,10).forEach((e,i)=>setTimeout(()=>{if(!z.en.includes(e))return;boltFx({x:e.x,d:e.d+0.01,y:12,m:null},{x:e.x,d:e.d,y:0,m:null});zdDamage(e,16,r);},i*60));if(!reduceMotion)flashScreen('rgba(190,230,255,.6)');}
+  else if(id==='archer'){samp('power_wind',1);live.forEach(e=>{e.push=e.type==='boss'?6:16;zdDamage(e,2,r);});for(let i=0;i<50;i++){const q=zdP(rand(-HALF,HALF),ZD_LINE+rand(4,40),rand(0.3,3));emit(PA,{x:q.x,y:q.y,z:q.z,vx:rand(-1,1),vy:0.3,vz:rand(-1,1),life:0.9,size:0.4,c:[0.8,1,0.95]});}}
+  else if(id==='elf'){samp('power_trees',1);live.forEach(e=>{e.frz=5;zdDamage(e,4,r);const q=zdP(e.x,e.d,0.5);burst(q.x,q.y,q.z,10,[0.4,0.9,0.3],{max:3,up:5,grav:6,size:0.4});});}
+  else{samp('power_quake',1);if(!reduceMotion)shake=1.1;live.forEach(e=>{e.frz=Math.max(e.frz,2);zdDamage(e,7,r);});for(let i=0;i<6;i++)ringFx(rand(-3,3),ZD_LINE+6+i*6,0xffb060,6,0.6);}
+  zdHud();}
 // shooting
-function zdTarget(r,mine){const z=RACE.zd;let best=null,bs=1e9;
-  if(mine){const a=z.aim;for(const e of z.en){const q=Math.hypot(e.x-a.x,e.d-a.d);if(q<4.5&&q<bs){bs=q;best=e;}}for(const b of z.boxes){const q=Math.hypot(b.x-a.x,b.d-a.d);if(q<4&&q<bs){bs=q;best=b;}}if(best)return best;}
-  for(const e of z.en){if(e.d>ZD_LINE+ZD_FAR-2)continue;const q=(e.d-ZD_LINE)+Math.abs(e.x-r.x)*(mine?0.4:1.6);if(q<bs){bs=q;best=e;}}return best;}
-function zdFire(r,tg,dart){const z=RACE.zd,mine=r===player;const A=wpos(r,1.5);const m=new THREE.Mesh(zdShotGeo,dart?zdDartMat:mine?zdShotMat:zdShotMatCpu);m.position.copy(A);if(dart)m.scale.set(0.7,0.7,2);scene.add(m);
-  const sp=dart?(rand(-0.9,0.9)):0;z.shots.push({m,tg,x:r.x,d:r.d,y:1.5,sp,dmg:dart?1:mine?1:1,mine,spd:dart?55:48});
-  if(mine||Math.random()<0.35)tone(dart?1400:mine?880:700,0.05,'square',mine?0.022:0.01,dart?-700:-480);}
+function zdTarget(r){const z=RACE.zd;let best=null,bs=1e9;const sn=ZD_GUNS[r.gun].big;
+  for(const e of z.en){if(e.d>ZD_LINE+ZD_FAR-2)continue;let q=(e.d-ZD_LINE)+Math.abs(e.x-r.x)*1.4;if(sn)q-=e.hp*2;if(q<bs){bs=q;best=e;}}
+  if(r===player)for(const b of z.boxes){if(Math.abs(b.x-r.x)<2.2){const q=(b.d-ZD_LINE)+4;if(q<bs){bs=q;best=b;}}}
+  return best;}
+function zdBeam(r,tg,g){const A=wpos(r,1.5),B=zdP(tg.x,tg.d,1.3),L=A.distanceTo(B);const m=new THREE.Mesh(sharedGeo('zdBeam',()=>{const c=new THREE.CylinderGeometry(1,1,1,6,1,true);c.rotateX(Math.PI/2);c.translate(0,0,0.5);return c;}),new THREE.MeshBasicMaterial({color:g.col,transparent:true,opacity:1,blending:THREE.AdditiveBlending,depthWrite:false}));
+  const w=g.big?0.09:0.06;m.position.copy(A);m.lookAt(B);m.scale.set(w,w,L);scene.add(m);
+  fx.push({m,t:0,dur:g.big?0.3:0.09,dispose(){m.material.dispose();},update(k){m.material.opacity=1-k;m.scale.x=m.scale.y=w*(1-k*0.6);}});burst(B.x,B.y,B.z,g.big?10:3,[1,0.9,0.8],{add:true,max:g.big?5:2,grav:2});}
+function zdFire(r,tg){const z=RACE.zd,g=ZD_GUNS[r.gun],mine=r===player,dart=mine&&z.darts>0;
+  if(g.beam&&!dart){zdBeam(r,tg,g);if(z.boxes.includes(tg)){if(--tg.hp<=0&&mine)zdBoxOpen(tg);}else zdDamage(tg,g.dmg*(mine?1:0.7),r);
+    if(mine||Math.random()<0.3)tone(g.big?180:1600,g.big?0.25:0.04,g.big?'sawtooth':'sine',g.big?0.05:0.015,g.big?-120:-400);return;}
+  const n=dart?2:g.pellets||1;for(let k=0;k<n;k++){const A=wpos(r,1.5);const m=new THREE.Mesh(zdShotGeo,zdShotMat(dart?0xff6ad5:g.col));m.position.copy(A);if(dart||g.blast)m.scale.set(g.blast?1.6:0.7,g.blast?1.6:0.7,2);scene.add(m);
+    z.shots.push({m,tg,x:r.x,d:r.d,y:1.5,sp:n>1?rand(-1.2,1.2):0,dmg:dart?1:g.dmg*(mine?1:0.7),blast:dart?0:g.blast||0,by:r,spd:g.blast?30:dart?55:48});}
+  if(mine||Math.random()<0.3)g.blast?(samp('rocket',0.5)||tone(160,0.2,'sawtooth',0.04,-60)):tone(dart?1400:n>1?260:mine?880:700,n>1?0.12:0.05,'square',mine?0.022:0.01,n>1?-150:dart?-700:-480);}
+function zdHurt(r,n){if(r.down)return;r.hp-=n;const p=wpos(r,1.4);burst(p.x,p.y,p.z,10,[0.9,0.15,0.15],{max:4,up:3,grav:8,size:0.3});
+  if(r===player){sfx.hit();if(!reduceMotion){shake=Math.max(shake,0.45);flashScreen('rgba(220,30,30,.45)');}}
+  if(r.hp<=0){r.hp=0;r.down=true;r.charge=0;r.m.root.visible=false;const q=wpos(r,1);burst(q.x,q.y,q.z,30,[0.8,0.1,0.1],{max:7,up:5,grav:8,size:0.35});
+    feed(r===player?'You are down!':`${r.char.name} is down!`,'bad');if(player.down||runners.every(o=>o.down))zdOver();}}
 function zdUpdate(dt,now){
   const z=RACE.zd;if(!z||z.over)return;
   z.t+=dt;const wv=1+Math.floor(z.t/ZD_WAVE_LEN);
-  if(wv!==z.wave){z.wave=wv;showBanner('WAVE '+wv,wv<2?'':wv<4?'Runners are coming':wv<6?'Brutes! Use your weapons':'The horde never stops',[1,0.35,0.2]);sfx.wave();if(z.lives<z.max&&wv%3===0){z.lives++;feed('Wave bonus: +1 life','good');}}
-  z.spawnT-=dt;if(z.spawnT<=0&&z.en.length<26){z.spawnT=Math.max(0.55,2.4-0.17*(wv-1))*rand(0.8,1.2);zdSpawn();}
-  z.boxT-=dt;if(z.boxT<=0){z.boxT=rand(9,14);if(z.boxes.length<2)zdSpawnBox();}
-  // heroes stand on the line and fire on their own; yours fires at where you aim
+  if(wv!==z.wave){z.wave=wv;showBanner('WAVE '+wv,wv%5===0?'A BOSS IS COMING':wv<3?'Runners are coming':wv<5?'Brutes! Use your ultimate':'The horde never stops',[1,0.35,0.2]);sfx.wave();
+    runners.forEach(r=>{if(!r.down)r.hp=Math.min(ZD_HP_MAX,r.hp+15);});if(wv%5===0)zdAdd('boss',0,ZD_LINE+ZD_FAR+6);}
+  z.spawnT-=dt;if(z.spawnT<=0&&z.en.length<40){z.spawnT=Math.max(0.45,2.0-0.18*(wv-1))*rand(0.8,1.2);zdSpawn();}
+  z.boxT-=dt;if(z.boxT<=0){z.boxT=rand(8,12);if(z.boxes.length<2)zdSpawnBox();}
   z.darts=Math.max(0,z.darts-dt);
-  runners.forEach(r=>{r.d=ZD_LINE;r.speed=0;r.zdT-=dt;if(r.zdT>0)return;const mine=r===player,dart=mine&&z.darts>0;const tg=zdTarget(r,mine);if(!tg)return;
-    r.zdT=dart?0.08:mine?0.28:0.6;zdFire(r,tg,dart);if(dart)zdFire(r,tg,true);});
+  // heroes: slide to their spot, fire on their own, charge and use their ultimate
+  runners.forEach(r=>{r.d=ZD_LINE;r.speed=0;r.x+=(ZD_SPOTS[r.zs]-r.x)*Math.min(1,dt*10);if(r.down)return;
+    r.charge=Math.min(1,r.charge+dt*0.012);if(r!==player&&r.charge>=1&&z.en.length>=4)zdUlt(r);
+    if(r.gun!=='pistol'){r.gunT-=dt;if(r.gunT<=0){r.gun='pistol';if(r===player)feed('Back to your pistol','');}}
+    r.zdT-=dt;if(r.zdT>0)return;const tg=zdTarget(r);if(!tg)return;const g=ZD_GUNS[r.gun];
+    r.zdT=(r===player&&z.darts>0)?0.08:g.rate*(r===player?1:1.6);zdFire(r,tg);});
   for(let i=z.shots.length-1;i>=0;i--){const s=z.shots[i],alive=z.en.includes(s.tg)||z.boxes.includes(s.tg);
-    if(!alive){scene.remove(s.m);z.shots.splice(i,1);continue;}
-    const tx=s.tg.x+s.sp*0.3,td=s.tg.d,dx=tx-s.x,dd=td-s.d,L=Math.hypot(dx,dd),st=s.spd*dt;
+    if(!alive&&!s.blast){scene.remove(s.m);z.shots.splice(i,1);continue;}
+    if(alive){s.tx=s.tg.x+s.sp*0.4;s.td=s.tg.d;}
+    const dx=s.tx-s.x,dd=s.td-s.d,L=Math.hypot(dx,dd),st=s.spd*dt;
     if(L<=st+0.4){scene.remove(s.m);z.shots.splice(i,1);
-      if(s.tg.m&&s.tg.hp!=null&&z.boxes.includes(s.tg)){s.tg.hp--;const p=zdP(s.tg.x,s.tg.d,1.2);burst(p.x,p.y,p.z,5,[1,0.85,0.3],{add:true,max:3});if(s.tg.hp<=0&&s.mine)zdBoxOpen(s.tg);}
-      else{const p=zdP(s.tg.x,s.tg.d,1.4);burst(p.x,p.y,p.z,4,[1,0.95,0.6],{add:true,max:3,grav:2});zdDamage(s.tg,s.dmg);}continue;}
-    s.x+=dx/L*st;s.d+=dd/L*st;s.y+=(1.3-s.y)*Math.min(1,dt*4);s.m.position.copy(zdP(s.x,s.d,s.y));if(s.m.scale.z>1)s.m.lookAt(zdP(tx,td,1.3));}
-  // zombies walk to the line
+      if(s.blast){zdBlast({x:s.tx,d:s.td},s.blast,s.dmg,0xff7a2a,s.by,true);continue;}
+      if(z.boxes.includes(s.tg)){s.tg.hp--;const p=zdP(s.tg.x,s.tg.d,1.2);burst(p.x,p.y,p.z,5,[1,0.85,0.3],{add:true,max:3});if(s.tg.hp<=0&&s.by===player)zdBoxOpen(s.tg);}
+      else{const p=zdP(s.tg.x,s.tg.d,1.4);burst(p.x,p.y,p.z,4,[1,0.95,0.6],{add:true,max:3,grav:2});zdDamage(s.tg,s.dmg,s.by);}continue;}
+    s.x+=dx/L*st;s.d+=dd/L*st;s.y+=(1.3-s.y)*Math.min(1,dt*4);s.m.position.copy(zdP(s.x,s.d,s.y));if(s.m.scale.z>1)s.m.lookAt(zdP(s.tx,s.td,1.3));}
+  // zombies walk to the line; when they reach a hero they bite and die
+  const alive=runners.filter(r=>!r.down);
   for(let i=z.en.length-1;i>=0;i--){const e=z.en[i];if(!z.en.includes(e))continue;e.ph+=dt;e.frz=Math.max(0,e.frz-dt);e.flash=Math.max(0,e.flash-dt);
-    const sp=ZD_SPD[e.type]*(e.frz>0?0.12:1);e.d-=sp*dt;
-    if(e.type==='runner'){const near=runners.reduce((a,r)=>Math.abs(r.x-e.x)<Math.abs(a-e.x)?r.x:a,0);e.x+=clamp(near-e.x,-1,1)*1.2*dt;}
-    for(const mn of z.mines){if(!mn.gone&&Math.hypot(mn.x-e.x,mn.d-e.d)<1.7){mn.gone=true;scene.remove(mn.m);zdBlast({x:mn.x,d:mn.d},4.5,30,0xff6a3a);}}
+    if(e.push>0){const pv=Math.min(e.push,dt*30);e.d+=pv;e.push-=pv;}
+    const sp=ZD_SPD[e.type]*(e.frz>0?0.08:1)*(1+Math.min(0.5,(z.wave-1)*0.04));e.d-=sp*dt;
+    if((e.type==='runner'||e.type==='boss')&&alive.length){const near=alive.reduce((a,r)=>Math.abs(r.x-e.x)<Math.abs(a.x-e.x)?r:a,alive[0]);e.x+=clamp(near.x-e.x,-1,1)*(e.type==='boss'?0.6:1.3)*dt;}
+    for(const mn of z.mines){if(!mn.gone&&Math.hypot(mn.x-e.x,mn.d-e.d)<1.7){mn.gone=true;scene.remove(mn.m);zdBlast({x:mn.x,d:mn.d},4.5,30,0xff6a3a,player);}}
     if(!z.en.includes(e))continue;
-    if(e.d<=ZD_LINE+0.8){const p=zdP(e.x,e.d,1.2);burst(p.x,p.y,p.z,18,[0.8,0.1,0.1],{max:6,up:4,grav:8,size:0.3});scene.remove(e.m);z.en.splice(i,1);
-      z.lives-=e.type==='brute'?2:1;sfx.hit();if(!reduceMotion){shake=Math.max(shake,0.45);flashScreen('rgba(220,30,30,.45)');}
-      if(z.lives<=0){zdOver();return;}feed(e.type==='brute'?'A brute broke through! −2':'A zombie got through!','bad');continue;}
+    if(e.d<=ZD_LINE+0.9){const p=zdP(e.x,e.d,1.2);burst(p.x,p.y,p.z,18,[0.5,0.9,0.3],{max:6,up:4,grav:8,size:0.3});scene.remove(e.m);z.en.splice(i,1);
+      const tg=alive.length?alive.reduce((a,r)=>Math.abs(r.x-e.x)<Math.abs(a.x-e.x)?r:a,alive[0]):null;if(tg){zdHurt(tg,ZD_BITE[e.type]);if(z.over)return;}continue;}
     e.m.position.copy(zdP(e.x,e.d,0));cl(e.d);e.m.rotation.y=_w.t+Math.PI;zdAnimZ(e);}
   z.mines=z.mines.filter(m=>!m.gone);z.mines.forEach(m=>{m.t+=dt;m.led.visible=Math.sin(m.t*8)>0;});
-  z.boxes.forEach(b=>{b.d-=1.4*dt;b.spin+=dt*1.6;b.m.position.copy(zdP(b.x,b.d,1.3+Math.sin(b.spin*2)*0.15));b.m.rotation.y=b.spin;});
+  z.boxes.forEach(b=>{b.d-=1.6*dt;b.spin+=dt*1.6;b.m.position.copy(zdP(b.x,b.d,1.3+Math.sin(b.spin*2)*0.15));b.m.rotation.y=b.spin;});
   z.boxes.filter(b=>b.d<ZD_LINE+2).forEach(b=>{z.boxes.splice(z.boxes.indexOf(b),1);scene.remove(b.m);});
-  z.ret.position.copy(zdP(z.aim.x,z.aim.d,0.14));z.ret.scale.setScalar(1+Math.sin(now/180)*0.08);z.ret.material.color.setHex(z.arm!=null?0x7fd8ff:0xff3b30);
+  for(let i=z.drops.length-1;i>=0;i--){const dp=z.drops[i];dp.ph+=dt;dp.d-=4.5*dt;dp.x+=(dp.tx-dp.x)*Math.min(1,dt*1.5);dp.m.position.copy(zdP(dp.x,dp.d,1.2+Math.sin(dp.ph*4)*0.2));
+    if(dp.d<=ZD_LINE+0.6){scene.remove(dp.m);z.drops.splice(i,1);const who=alive.find(r=>Math.abs(r.x-dp.x)<1.2);if(!who)continue;
+      if(dp.kind==='med'){who.hp=Math.min(ZD_HP_MAX,who.hp+35);if(who===player){sfx.claim();feed('❤️ +35 health','good');}}
+      else{who.gun=dp.kind;who.gunT=ZD_GUNS[dp.kind].time;if(who===player){sfx.equip();feed(`${ZD_GUNS[dp.kind].em} ${ZD_GUNS[dp.kind].name}!`,'gold');}}
+      const p=wpos(who,1.5);burst(p.x,p.y,p.z,16,[1,0.9,0.4],{add:true,max:4,grav:3});}}
   zdHud();
 }
-function zdAnimZ(e){zombieAnim(e.m,e.ph,e.frz>0?1.5:e.type==='runner'?16:e.type==='brute'?6:9);const s=SVT[e.type].sc*1.25*(e.flash>0?1.12:1);e.m.scale.setScalar(s);}
-function zdOver(){const z=RACE.zd;if(z.over)return;z.over=true;z.lives=0;zdHud();
+function zdAnimZ(e){zombieAnim(e.m,e.ph,e.frz>0?1.5:e.type==='runner'?16:e.type==='brute'||e.type==='boss'?6:9);const s=(e.type==='boss'?3:SVT[e.type].sc*1.25)*(e.flash>0?1.1:1);e.m.scale.setScalar(s);}
+function zdOver(){const z=RACE.zd;if(z.over)return;z.over=true;zdHud();
   player.finished=true;player.time=raceTime;state='finished';resultsT=2.6;music.stop(0.5);music.sting(MUS.lose);
-  feed('The horde broke through on wave '+z.wave,'bad');const p=wpos(player,1.5);burst(p.x,p.y,p.z,30,[0.8,0.1,0.1],{max:7,up:5,grav:8,size:0.3});}
+  feed('The horde broke through on wave '+z.wave,'bad');}
 function startZombieDefense(){
   const used=new Set([selChar]),cpus=[];
   for(let i=0;i<3;i++){const ch=shuffle(CHAR_IDS.filter(c=>!used.has(c)))[0]||pick(CHAR_IDS);used.add(ch);const cc=pick(COUNTRIES.filter(c=>c[0]!==selCountry))[0];cpus.push({id:'zd'+i,bot:true,nm:flagCanvas(cc).name,cc,ch,tm:0,sk:'classic'});}
@@ -4038,7 +4110,7 @@ function useItem(r){if(RACE&&RACE.zd)return;
 }
 // move a runner to a new spot on the track without tripping over everything in between
 function placeRunner(r,d,x,lap){r.d=clamp(+d||0,0,TRACK-0.5);r.x=clamp(+x||0,-HALF,HALF);r.vx=0;if(r.ai)r.ai.tx=r.x;if(r.kind==='local'&&touchLane!=null){let bi=0;LANES.forEach((l,i)=>{if(Math.abs(l-r.x)<Math.abs(LANES[bi]-r.x))bi=i;});touchLane=bi;}r.lap=clamp(lap|0,1,RACE?RACE.laps:1);r.oi=0;r.lastWall=null;r.lastPad=null;if(r.ai)r.ai.handled.clear();r.phase=Math.max(r.phase,0.6);r.grace=Math.max(r.grace||0,0.8);}
-function usePower(r){if(RACE&&RACE.zd)return;
+function usePower(r){if(RACE&&RACE.zd){zdUlt(r);return;}
   if(!r||r.charge<1||r.finished||r.stun>0||!canAct())return;
   r.charge=0;r.ai.chargedFor=0;if(r.kind==='local'){sfx.power();raceStat('powers');}
   sendAct(r,{t:'ult'});
