@@ -1488,6 +1488,14 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
 @media (max-width:980px){html,body{overflow-x:hidden;max-width:100vw}html #menu .menu-inner,html #menu .left-col{max-width:100vw;box-sizing:border-box;overflow-x:hidden}html #menu .d3-top{max-width:100%;box-sizing:border-box;min-width:0}html #menu .d3-top>*{min-width:0}}
 @media (max-width:440px){html #menu .d3-top .d3-wallet{display:grid!important;justify-items:end;gap:0!important;padding:2px 7px!important;line-height:1.15;border-radius:10px;font-size:11px!important}html #menu .d3-top .d3-wallet .d3-coin{order:-1}html #menu #deskAcct.d3-acct{width:36px!important;height:36px!important}}
 #acct #d3Id{display:flex;width:100%;margin:0 0 12px;height:52px}#acct #d3Id .d3-id-av{cursor:pointer;width:44px;height:44px}#acct #d3Id .d3-id-av img{width:44px;height:44px}
+#zdBar{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 26%);display:flex;flex-direction:column;gap:10px;z-index:12;pointer-events:auto}
+#zdBar .zd-w{width:64px;height:64px;border-radius:18px;border:3px solid #f2c14a;background:radial-gradient(circle at 50% 35%,#3a4aa0,#141a46);display:grid;place-items:center;padding:6px;box-shadow:0 4px 10px rgba(0,0,0,.45);font-size:30px;touch-action:manipulation}
+#zdBar .zd-w .ico{width:100%;height:100%;object-fit:contain}
+#zdBar .zd-w.empty{opacity:.35;border-style:dashed;border-color:rgba(255,255,255,.5)}
+#zdBar .zd-w.armed{border-color:#7fd8ff;box-shadow:0 0 0 4px rgba(127,216,255,.45),0 0 18px #7fd8ff;animation:zdPulse .7s ease-in-out infinite alternate}
+@keyframes zdPulse{to{transform:scale(1.08)}}
+#zdTip{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 30px);transform:translateX(-50%);z-index:12;padding:8px 16px;border-radius:999px;background:rgba(10,20,60,.85);border:2px solid #7fd8ff;font-size:15px;white-space:nowrap;pointer-events:none}
+#hud.zd #itemSlot,#hud.zd #powerSlot,#hud.zd #atkSlot,#hud.zd #defSlot,#hud.zd #trackBar{display:none!important}
 .f3d-pg{font-size:10.5px;color:var(--gold,#f5c542);min-height:1em;line-height:1}
 </style>
 
@@ -1554,9 +1562,10 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
               <div class="mode-wrap"><div class="seg" id="modeSeg" role="group" aria-label="Race mode"><button data-mode="solo">Solo</button><button data-mode="teams" id="teamsBtn" aria-haspopup="true" aria-expanded="false">Teams ▾</button></div>
               <div class="seg team-sub" id="teamSub" role="group" aria-label="Team size" hidden><button data-tmode="teams">3 v 3</button><button data-tmode="trio">2 v 2 v 2</button></div></div>
             </div>
-            <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button><button class="d3-pill" id="chalBtn">🎯 Special Challenges</button></div>
+            <div class="d3-modes"><button class="d3-pill" id="gpBtn">🏆 Grand Prix</button><button class="d3-pill" id="svBtn">🧟 Survival</button><button class="d3-pill" id="zdBtn">🔫 Zombie Defense</button><button class="d3-pill" id="fcBtn">🚩 Flag Challenge</button><button class="d3-pill" id="chalBtn">🎯 Special Challenges</button></div>
             <p class="muted" id="lapHint"></p>
             <p class="muted desk-info">Flag Challenge: everyone starts with 3 flags. Run into a rival from behind to steal one. Every 15 seconds the runner with the fewest flags is out. Your place at the finish plus the flags you carry make your score.</p>
+            <p class="muted desk-info">Zombie Defense: you and 3 CPU heroes hold the line while zombies walk in. Your hero fires on their own; tap the road to aim. Shoot the ? boxes for a missile, snow storm, dart storm or landmine.</p>
             <p class="muted desk-info">Survival: an endless run. Outrun the horde behind you, dodge the zombies ahead, and last as many waves as you can.</p>
             <div class="cpu-go"><button class="primary d3-gold" id="startBtn">🏆 Start Race</button></div>
           </div>
@@ -1700,6 +1709,7 @@ html,body,button,a,input,label,[role=button],.overlay,#menu{touch-action:manipul
   <div id="ultBanner" aria-live="polite"></div>
   <div id="svWarn"></div>
   <div id="fcHud" hidden><div class="fc-mine" id="fcMine"></div><div class="fc-clock" id="fcClock"></div><div class="fc-list" id="fcList"></div></div>
+  <div id="zdBar" hidden aria-label="Weapons"></div><div id="zdTip" hidden></div>
   <div id="svHud" hidden><div class="sv-lives" id="svLives"></div><div class="sv-score" id="svScore"></div><div class="sv-gap" id="svGap"></div></div>
 </div>
 <div id="flash"></div>
@@ -3122,7 +3132,7 @@ const uid=()=>((NET.myPeer||'off').slice(-4))+'-'+(++uidN);
 
 function courseClear(){pads.forEach(p=>{if(p.type==='boost')p.mesh.geometry.dispose();});while(courseGroup.children.length)courseGroup.remove(courseGroup.children[0]);obstacles=[];boxes=[];patches=[];pads=[];coins=[];gems=[];traps=[];coinIM=null;}
 function clearRace(){
-  clearBubbles();svClear();fcClear();
+  clearBubbles();svClear();zdClear();fcClear();
   runners.forEach(r=>{scene.remove(r.m.root);disposeModel(r.m);});
   bananas.forEach(b=>{courseGroup.remove(b.mesh);if(b.mesh.userData&&b.mesh.userData.dispose)b.mesh.userData.dispose();});rockets.forEach(k=>scene.remove(k.mesh));fx.forEach(f=>{scene.remove(f.m);});fires.forEach(f=>courseGroup.remove(f.mesh));
   runners=[];bananas=[];rockets=[];fx=[];fires=[];traps.forEach(t=>{t.cd=0;t.mesh.visible=true;});runnerMap=new Map();player=null;PN.list.length=0;PA.list.length=0;
@@ -3240,7 +3250,7 @@ function makeRunner(e,idx,n,online){
 function startRaceFromGo(go,online){
   if(plaza.active)plaza.exit();locker.exit();$('menu').classList.remove('over-plaza');
   const laps=clamp(go.laps|0,1,3)||1;
-  RACE={id:String(go.id),fc:null,online,mode:normMode(go.mode),teamNames:Array.isArray(go.tn)?go.tn.slice(0,3).map(x=>cleanName(x).slice(0,10)):null,trk:themeById(go.trk).id,laps,gp:!!go.gp,coins:0,gems:0,rewarded:false,buffs:[],lo:go.lo!==false,st:{},gb:!!go.gb,rules:{},survival:!!go.sv,sv:null};
+  RACE={id:String(go.id),fc:null,online,mode:normMode(go.mode),teamNames:Array.isArray(go.tn)?go.tn.slice(0,3).map(x=>cleanName(x).slice(0,10)):null,trk:themeById(go.trk).id,laps,gp:!!go.gp,coins:0,gems:0,rewarded:false,buffs:[],lo:go.lo!==false,st:{},gb:!!go.gb,rules:{},survival:!!go.sv,zd:!!go.zd,sv:null};
   clearRace();
   const th=themeById(go.trk),lapLen=LAP_LEN[laps];
   if(th!==TH||TRACK!==lapLen){TRACK=lapLen;buildWorld(th);}
@@ -3274,6 +3284,7 @@ function startRaceFromGo(go,online){
   hudCache={};setupMinimap();$('hudLo').hidden=!player.lo;
   if(online)pushPresence({rid:RACE.id,s:null,fin:null,acts:[],bots:null});
   if(RACE.survival)svInit();
+  if(RACE.zd)zdInit();
   if(go.fc)fcInit();
 }
 
@@ -3371,6 +3382,157 @@ function svUpdate(dt,now){
   svHz.forEach(h=>{h.ph+=dt;const dl=pp-sv.gap-h.lag-LO,x=clamp(h.ox+Math.sin(now/500+h.ph)*0.6,-HALF+0.5,HALF-0.5);
     h.m.position.copy(W(x,dl,Hf(dl)));h.m.rotation.y=_w.t;zombieAnim(h.m,h.ph,13);});
   const w=clamp((30-sv.gap)/30,0,1);if(Math.abs(w-sv.warn)>0.03){sv.warn=w;$('svWarn').style.opacity=String(w*0.9);}
+}
+/* =========================================================
+   ZOMBIE DEFENSE: a squad of 4 heroes holds the line while the horde walks in
+   ========================================================= */
+const ZD_LINE=6,ZD_FAR=46,ZD_WAVE_LEN=25;
+const ZD_HP={walker:3,runner:2,brute:12},ZD_SPD={walker:2.1,runner:4.6,brute:1.5};
+const ZD_WEAPONS={
+  missile:{name:'Missile',ic:'item_rocket',em:'🚀',aim:true,tip:'Tap where the missile should land'},
+  snow:{name:'Snow Storm',ic:'item_freeze',em:'❄️',aim:true,tip:'Tap where the snow should fall'},
+  darts:{name:'Dart Storm',ic:'lo_dart',em:'🎯',aim:false},
+  mine:{name:'Landmine',ic:'item_mine',em:'💣',aim:true,tip:'Tap where to bury the landmine'}};
+const ZD_IDS=Object.keys(ZD_WEAPONS);
+const zdP=(x,d,h)=>W(x,d,Hf(d)+(h||0));
+const zdShotGeo=new THREE.SphereGeometry(0.13,8,6),zdShotMat=new THREE.MeshBasicMaterial({color:0xfff07a}),zdShotMatCpu=new THREE.MeshBasicMaterial({color:0x9fe0ff}),zdDartMat=new THREE.MeshBasicMaterial({color:0xff6ad5});
+const zdFireMat=()=>new THREE.MeshBasicMaterial({color:0xffa030,transparent:true,opacity:0.95,blending:THREE.AdditiveBlending,depthWrite:false});
+function zdClear(){const z=RACE&&RACE.zd;if(z&&z.en){z.en.forEach(e=>scene.remove(e.m));z.shots.forEach(s=>scene.remove(s.m));z.boxes.forEach(b=>scene.remove(b.m));z.mines.forEach(m=>scene.remove(m.m));if(z.ret)scene.remove(z.ret);}
+  const h=$('hud');if(h)h.classList.remove('sv','zd');const v=$('svHud');if(v)v.hidden=true;const b=$('zdBar');if(b)b.hidden=true;const t=$('zdTip');if(t)t.hidden=true;}
+function zdInit(){
+  const z=RACE.zd={t:0,wave:1,lives:5,max:5,kills:0,spawnT:2.5,boxT:7,en:[],shots:[],boxes:[],mines:[],weapons:[],arm:null,darts:0,over:false,aim:{x:0,d:ZD_LINE+26}};
+  const spots=[-1.1,1.1,-3.3,3.3];runners.forEach((r,i)=>{r.x=spots[i%4];r.d=ZD_LINE;r.speed=0;r.zdT=rand(0,0.5);});
+  boxes.forEach(b=>{b.mesh.visible=false;b.hidden=1e9;});pads.forEach(p=>{if(p.mesh)p.mesh.visible=false;});if(coinIM)coinIM.visible=false;gems.forEach(g=>{g.taken=true;if(g.mesh)g.mesh.visible=false;});
+  obstacles.forEach(o=>{if(o.d<ZD_FAR+20)o.mesh.visible=false;});
+  const ret=z.ret=new THREE.Mesh(new THREE.RingGeometry(0.9,1.15,32),new THREE.MeshBasicMaterial({color:0xff3b30,transparent:true,opacity:0.85,side:THREE.DoubleSide,depthWrite:false}));ret.rotation.x=-Math.PI/2;scene.add(ret);
+  $('hud').classList.add('sv','zd');$('svHud').hidden=false;$('zdBar').hidden=false;zdBarRender();
+  feed('Hold the line! Tap the road to aim. Shoot ? boxes for weapons.','gold');
+}
+const zdScore=()=>{const z=RACE.zd;return z?z.kills*10+(z.wave-1)*50:0;};
+function zdHud(){const z=RACE.zd;if(!z)return;setT('svLives','❤'.repeat(z.lives)+'♡'.repeat(Math.max(0,z.max-z.lives)));setT('svScore',String(zdScore()));setT('svGap',`🧟 ${z.kills} down`);}
+function zdBarRender(){const z=RACE.zd,bar=$('zdBar');if(!z||!bar)return;bar.innerHTML='';
+  for(let i=0;i<3;i++){const id=z.weapons[i],b=document.createElement('button');b.className='zd-w'+(id&&z.arm===i?' armed':'')+(id?'':' empty');
+    if(id){const W_=ZD_WEAPONS[id];setIco(b,W_.ic,W_.em);b.setAttribute('aria-label',W_.name);b.title=W_.name;b.onclick=e=>{e.stopPropagation();zdUse(i);};}else b.disabled=true;bar.appendChild(b);}
+  const t=$('zdTip');const a=z.arm!=null&&z.weapons[z.arm];t.hidden=!a;if(a)t.textContent=ZD_WEAPONS[a].tip;}
+function zdUse(i){const z=RACE.zd;if(!z||z.over||state!=='race')return;const id=z.weapons[i];if(!id)return;
+  if(ZD_WEAPONS[id].aim){z.arm=z.arm===i?null:i;sfx.tap();zdBarRender();return;}
+  z.weapons.splice(i,1);z.arm=null;z.darts=6;samp('dart',1)||sfx.use();feed('Dart Storm!','gold');zdBarRender();}
+// tap on the road: aim there, or drop the armed weapon there
+const zdRay=new THREE.Raycaster(),zdV=new THREE.Vector2(),zdHit=new THREE.Vector3();
+function zdTrackAt(cx,cy){zdV.set(cx/innerWidth*2-1,-(cy/innerHeight)*2+1);zdRay.setFromCamera(zdV,camera);
+  const y=Hf(ZD_LINE+25);if(!zdRay.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-y),zdHit))return null;
+  let best=1e9,bd=ZD_LINE;for(let d=ZD_LINE;d<=ZD_LINE+ZD_FAR+10;d+=0.5){cl(d);const q=(zdHit.x-_w.x)**2+(zdHit.z-_w.z)**2;if(q<best){best=q;bd=d;}}
+  cl(bd);const x=(zdHit.x-_w.x)*Math.cos(_w.t)-(zdHit.z-_w.z)*Math.sin(_w.t);
+  return {x:clamp(x,-HALF,HALF),d:clamp(bd,ZD_LINE+3,ZD_LINE+ZD_FAR)};}
+function zdTap(cx,cy){const z=RACE&&RACE.zd;if(!z||z.over||state!=='race')return;const p=zdTrackAt(cx,cy);if(!p)return;
+  if(z.arm!=null&&z.weapons[z.arm]){const id=z.weapons[z.arm];z.weapons.splice(z.arm,1);z.arm=null;zdBarRender();
+    if(id==='missile')zdMissile(p);else if(id==='snow')zdSnow(p);else if(id==='mine')zdMine(p);return;}
+  z.aim=p;ringFx(p.x,p.d,0xff5a3a,1.2,0.3);}
+window.addEventListener('pointerdown',e=>{if(!RACE||!RACE.zd||state!=='race')return;if(e.target.closest&&e.target.closest('button,input,a,.overlay:not([hidden]),#hud .hud-top'))return;zdTap(e.clientX,e.clientY);});
+// spawning
+function zdSpawn(){const z=RACE.zd,w=z.wave,n=w<3?1:w<6?2:3;
+  for(let k=0;k<n;k++){let type='walker';const r=Math.random();
+    if(w>=4&&r<Math.min(0.25,0.08+(w-4)*0.03))type='brute';else if(w>=2&&r<Math.min(0.5,0.2+(w-2)*0.05))type='runner';
+    const m=makeZombie(type);scene.add(m);const hp=Math.ceil(ZD_HP[type]*(1+(w-1)*0.08));
+    z.en.push({type,m,x:rand(-HALF+0.6,HALF-0.6),d:ZD_LINE+ZD_FAR+rand(0,8),hp,max:hp,ph:rand(0,TAU),frz:0,flash:0});}}
+function zdSpawnBox(){const z=RACE.zd;const m=new THREE.Mesh(boxGeo,boxMat);m.scale.setScalar(1.15);scene.add(m);z.boxes.push({m,x:rand(-HALF+1,HALF-1),d:ZD_LINE+ZD_FAR-rand(0,10),hp:2,spin:rand(0,TAU)});}
+// damage
+function zdKill(e,big){const z=RACE.zd,p=zdP(e.x,e.d,1.3);burst(p.x,p.y,p.z,big?22:14,[0.45,0.95,0.3],{max:big?7:5,up:4,grav:9,size:0.32});burst(p.x,p.y,p.z,6,[1,0.9,0.5],{add:true,max:3,grav:2});
+  scene.remove(e.m);z.en.splice(z.en.indexOf(e),1);z.kills+=e.type==='brute'?3:1;tone(220,0.09,'square',0.035,-120);tone(660,0.07,'triangle',0.03,300,0.03);}
+function zdDamage(e,n){if(!RACE.zd.en.includes(e))return;e.hp-=n;e.flash=0.12;if(e.hp<=0)zdKill(e,n>=5);}
+function zdBlast(p,r,dmg,col){const z=RACE.zd;z.en.slice().forEach(e=>{const dd=Math.hypot(e.x-p.x,e.d-p.d);if(dd<r)zdDamage(e,dmg);});
+  z.boxes.slice().forEach(b=>{if(Math.hypot(b.x-p.x,b.d-p.d)<r)zdBoxOpen(b);});
+  const c=zdP(p.x,p.d,0.6);
+  // fireball that swells and fades, shock ring, debris, smoke, flash and shake
+  const fb=new THREE.Mesh(sharedGeo('zdFire',()=>new THREE.SphereGeometry(1,16,12)),zdFireMat());fb.position.copy(c);scene.add(fb);
+  fx.push({m:fb,t:0,dur:0.55,dispose(){fb.material.dispose();},update(k){fb.scale.setScalar(0.4+k*r*0.9);fb.material.opacity=0.95*(1-k);fb.material.color.setHSL(0.09-k*0.07,1,0.6-k*0.25);}});
+  ringFx(p.x,p.d,col||0xffb040,r*1.1,0.5);explode(c.x,c.y,c.z);burst(c.x,c.y,c.z,40,[1,0.55,0.15],{add:true,max:10,up:7,grav:6,size:0.45});burst(c.x,c.y,c.z,20,[0.3,0.28,0.3],{max:4,up:3,grav:-1.2,size:0.9,grow:2,life:1.6});
+  if(!reduceMotion){shake=Math.max(shake,0.7);flashScreen('rgba(255,170,60,.55)');}
+  samp('meteor',1)||sfx.meteor();tone(55,0.7,'sawtooth',0.09,-25,0.02);tone(38,0.9,'square',0.07,-12,0.05);}
+function zdBoxOpen(b){const z=RACE.zd;const i=z.boxes.indexOf(b);if(i<0)return;z.boxes.splice(i,1);scene.remove(b.m);
+  const p=zdP(b.x,b.d,1.2);burst(p.x,p.y,p.z,24,[1,0.85,0.3],{add:true,max:6,up:4,grav:4,size:0.35});
+  if(z.weapons.length<3){const id=pick(ZD_IDS);z.weapons.push(id);sfx.itemGet();feed(`${ZD_WEAPONS[id].em} ${ZD_WEAPONS[id].name}! Tap it to use`,'good');zdBarRender();}
+  else{RACE.coins+=5;sfx.coin&&sfx.coin();feed('Weapon slots full: +5 coins','');}}
+// weapons
+function zdMissile(p){const z=RACE.zd,A=wpos(player,2.2),B=zdP(p.x,p.d,0.4),m=new THREE.Mesh(sharedGeo('zdMis',()=>new THREE.ConeGeometry(0.22,0.9,8)),new THREE.MeshBasicMaterial({color:0xff4a2a}));m.position.copy(A);scene.add(m);
+  samp('rocket',1)||sfx.use();let boom=false;const mid=A.clone().lerp(B,0.5);mid.y+=9;
+  fx.push({m,t:0,dur:0.75,dispose(){m.material.dispose();},update(k){const a=A.clone().lerp(mid,k),b=mid.clone().lerp(B,k),q=a.lerp(b,k);const dir=q.clone().sub(m.position);m.position.copy(q);if(dir.lengthSq()>1e-6){m.lookAt(q.clone().add(dir));m.rotateX(Math.PI/2);}
+    emit(PA,{x:q.x,y:q.y,z:q.z,vy:0.5,life:0.45,size:0.55,c:[1,0.55,0.15]});emit(PN,{x:q.x,y:q.y,z:q.z,vy:0.3,life:0.9,size:0.6,grow:1.2,c:[0.4,0.4,0.42]});
+    if(k>=1&&!boom){boom=true;zdBlast(p,6.5,40);}}});}
+function zdSnow(p){const z=RACE.zd,R=8;samp('freeze',1)||tone(1200,0.5,'sine',0.04,-600);
+  z.en.forEach(e=>{if(Math.hypot(e.x-p.x,e.d-p.d)<R){e.frz=4;zdDamage(e,1);}});
+  const c=zdP(p.x,p.d,3);for(let i=0;i<70;i++)emit(PA,{x:c.x+rand(-R,R)*0.7,y:c.y+rand(0,4),z:c.z+rand(-R,R)*0.7,vx:rand(-0.5,0.5),vy:rand(-3,-1),vz:rand(-0.5,0.5),life:1.6,size:0.32,c:[0.85,0.95,1]});
+  ringFx(p.x,p.d,0xbfefff,R,0.7);if(!reduceMotion)flashScreen('rgba(190,235,255,.45)');}
+function zdMine(p){const z=RACE.zd,m=new THREE.Group();const base=new THREE.Mesh(sharedGeo('zdMine',()=>new THREE.CylinderGeometry(0.45,0.5,0.18,14)),new THREE.MeshLambertMaterial({color:0x3a3f2a}));m.add(base);
+  const led=new THREE.Mesh(sharedGeo('zdLed',()=>new THREE.SphereGeometry(0.09,8,6)),new THREE.MeshBasicMaterial({color:0xff2a1a}));led.position.y=0.12;m.add(led);
+  m.position.copy(zdP(p.x,p.d,0.1));scene.add(m);z.mines.push({m,led,x:p.x,d:p.d,t:0});samp('mine',1)||sfx.use();ringFx(p.x,p.d,0xff3b30,1.5,0.4);}
+// shooting
+function zdTarget(r,mine){const z=RACE.zd;let best=null,bs=1e9;
+  if(mine){const a=z.aim;for(const e of z.en){const q=Math.hypot(e.x-a.x,e.d-a.d);if(q<4.5&&q<bs){bs=q;best=e;}}for(const b of z.boxes){const q=Math.hypot(b.x-a.x,b.d-a.d);if(q<4&&q<bs){bs=q;best=b;}}if(best)return best;}
+  for(const e of z.en){if(e.d>ZD_LINE+ZD_FAR-2)continue;const q=(e.d-ZD_LINE)+Math.abs(e.x-r.x)*(mine?0.4:1.6);if(q<bs){bs=q;best=e;}}return best;}
+function zdFire(r,tg,dart){const z=RACE.zd,mine=r===player;const A=wpos(r,1.5);const m=new THREE.Mesh(zdShotGeo,dart?zdDartMat:mine?zdShotMat:zdShotMatCpu);m.position.copy(A);if(dart)m.scale.set(0.7,0.7,2);scene.add(m);
+  const sp=dart?(rand(-0.9,0.9)):0;z.shots.push({m,tg,x:r.x,d:r.d,y:1.5,sp,dmg:dart?1:mine?1:1,mine,spd:dart?55:48});
+  if(mine||Math.random()<0.35)tone(dart?1400:mine?880:700,0.05,'square',mine?0.022:0.01,dart?-700:-480);}
+function zdUpdate(dt,now){
+  const z=RACE.zd;if(!z||z.over)return;
+  z.t+=dt;const wv=1+Math.floor(z.t/ZD_WAVE_LEN);
+  if(wv!==z.wave){z.wave=wv;showBanner('WAVE '+wv,wv<2?'':wv<4?'Runners are coming':wv<6?'Brutes! Use your weapons':'The horde never stops',[1,0.35,0.2]);sfx.wave();if(z.lives<z.max&&wv%3===0){z.lives++;feed('Wave bonus: +1 life','good');}}
+  z.spawnT-=dt;if(z.spawnT<=0&&z.en.length<26){z.spawnT=Math.max(0.55,2.4-0.17*(wv-1))*rand(0.8,1.2);zdSpawn();}
+  z.boxT-=dt;if(z.boxT<=0){z.boxT=rand(9,14);if(z.boxes.length<2)zdSpawnBox();}
+  // heroes stand on the line and fire on their own; yours fires at where you aim
+  z.darts=Math.max(0,z.darts-dt);
+  runners.forEach(r=>{r.d=ZD_LINE;r.speed=0;r.zdT-=dt;if(r.zdT>0)return;const mine=r===player,dart=mine&&z.darts>0;const tg=zdTarget(r,mine);if(!tg)return;
+    r.zdT=dart?0.08:mine?0.28:0.6;zdFire(r,tg,dart);if(dart)zdFire(r,tg,true);});
+  for(let i=z.shots.length-1;i>=0;i--){const s=z.shots[i],alive=z.en.includes(s.tg)||z.boxes.includes(s.tg);
+    if(!alive){scene.remove(s.m);z.shots.splice(i,1);continue;}
+    const tx=s.tg.x+s.sp*0.3,td=s.tg.d,dx=tx-s.x,dd=td-s.d,L=Math.hypot(dx,dd),st=s.spd*dt;
+    if(L<=st+0.4){scene.remove(s.m);z.shots.splice(i,1);
+      if(s.tg.m&&s.tg.hp!=null&&z.boxes.includes(s.tg)){s.tg.hp--;const p=zdP(s.tg.x,s.tg.d,1.2);burst(p.x,p.y,p.z,5,[1,0.85,0.3],{add:true,max:3});if(s.tg.hp<=0&&s.mine)zdBoxOpen(s.tg);}
+      else{const p=zdP(s.tg.x,s.tg.d,1.4);burst(p.x,p.y,p.z,4,[1,0.95,0.6],{add:true,max:3,grav:2});zdDamage(s.tg,s.dmg);}continue;}
+    s.x+=dx/L*st;s.d+=dd/L*st;s.y+=(1.3-s.y)*Math.min(1,dt*4);s.m.position.copy(zdP(s.x,s.d,s.y));if(s.m.scale.z>1)s.m.lookAt(zdP(tx,td,1.3));}
+  // zombies walk to the line
+  for(let i=z.en.length-1;i>=0;i--){const e=z.en[i];if(!z.en.includes(e))continue;e.ph+=dt;e.frz=Math.max(0,e.frz-dt);e.flash=Math.max(0,e.flash-dt);
+    const sp=ZD_SPD[e.type]*(e.frz>0?0.12:1);e.d-=sp*dt;
+    if(e.type==='runner'){const near=runners.reduce((a,r)=>Math.abs(r.x-e.x)<Math.abs(a-e.x)?r.x:a,0);e.x+=clamp(near-e.x,-1,1)*1.2*dt;}
+    for(const mn of z.mines){if(!mn.gone&&Math.hypot(mn.x-e.x,mn.d-e.d)<1.7){mn.gone=true;scene.remove(mn.m);zdBlast({x:mn.x,d:mn.d},4.5,30,0xff6a3a);}}
+    if(!z.en.includes(e))continue;
+    if(e.d<=ZD_LINE+0.8){const p=zdP(e.x,e.d,1.2);burst(p.x,p.y,p.z,18,[0.8,0.1,0.1],{max:6,up:4,grav:8,size:0.3});scene.remove(e.m);z.en.splice(i,1);
+      z.lives-=e.type==='brute'?2:1;sfx.hit();if(!reduceMotion){shake=Math.max(shake,0.45);flashScreen('rgba(220,30,30,.45)');}
+      if(z.lives<=0){zdOver();return;}feed(e.type==='brute'?'A brute broke through! −2':'A zombie got through!','bad');continue;}
+    e.m.position.copy(zdP(e.x,e.d,0));cl(e.d);e.m.rotation.y=_w.t+Math.PI;zdAnimZ(e);}
+  z.mines=z.mines.filter(m=>!m.gone);z.mines.forEach(m=>{m.t+=dt;m.led.visible=Math.sin(m.t*8)>0;});
+  z.boxes.forEach(b=>{b.d-=1.4*dt;b.spin+=dt*1.6;b.m.position.copy(zdP(b.x,b.d,1.3+Math.sin(b.spin*2)*0.15));b.m.rotation.y=b.spin;});
+  z.boxes.filter(b=>b.d<ZD_LINE+2).forEach(b=>{z.boxes.splice(z.boxes.indexOf(b),1);scene.remove(b.m);});
+  z.ret.position.copy(zdP(z.aim.x,z.aim.d,0.14));z.ret.scale.setScalar(1+Math.sin(now/180)*0.08);z.ret.material.color.setHex(z.arm!=null?0x7fd8ff:0xff3b30);
+  zdHud();
+}
+function zdAnimZ(e){zombieAnim(e.m,e.ph,e.frz>0?1.5:e.type==='runner'?16:e.type==='brute'?6:9);const s=SVT[e.type].sc*1.25*(e.flash>0?1.12:1);e.m.scale.setScalar(s);}
+function zdOver(){const z=RACE.zd;if(z.over)return;z.over=true;z.lives=0;zdHud();
+  player.finished=true;player.time=raceTime;state='finished';resultsT=2.6;music.stop(0.5);music.sting(MUS.lose);
+  feed('The horde broke through on wave '+z.wave,'bad');const p=wpos(player,1.5);burst(p.x,p.y,p.z,30,[0.8,0.1,0.1],{max:7,up:5,grav:8,size:0.3});}
+function startZombieDefense(){
+  const used=new Set([selChar]),cpus=[];
+  for(let i=0;i<3;i++){const ch=shuffle(CHAR_IDS.filter(c=>!used.has(c)))[0]||pick(CHAR_IDS);used.add(ch);const cc=pick(COUNTRIES.filter(c=>c[0]!==selCountry))[0];cpus.push({id:'zd'+i,bot:true,nm:flagCanvas(cc).name,cc,ch,tm:0,sk:'classic'});}
+  const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()},...cpus];
+  GP=null;startRaceFromGo({id:'zd'+Date.now(),seed:Math.floor(Math.random()*1e9),trk:selTrack,mode:'solo',laps:1,lo:false,zd:true,roster},false);
+}
+function showZdResults(){
+  state='results';const z=RACE.zd;
+  if((z.wave|0)>(STATS.zdBest|0)){STATS.zdBest=z.wave|0;saveJSON('flagdash-stats',STATS);}
+  $('results').querySelector('.table-wrap').hidden=true;$('teamResult').hidden=true;$('gpBox').hidden=true;
+  $('resEyebrow').textContent=`Zombie Defense · ${TH.name}`;resArt();
+  $('resTitle').textContent=`Held the line ${fmt(player.time)} · Wave ${z.wave}`;
+  const score=zdScore(),key='flagdash-zdbest',best=parseInt(store.get(key))||0;
+  if(score>best){store.set(key,String(score));$('resPB').innerHTML=best?`New best score: <b>${score}</b> (was ${best})`:`Best score set: <b>${score}</b>`;}
+  else $('resPB').innerHTML=`Score <b>${score}</b> · Best: ${best}`;
+  if(!RACE.rewarded){RACE.rewarded=true;
+    const cm=(player.mods&&player.mods.coin)||0,base=RACE.coins+z.wave*12+z.kills*2,extra=Math.round(base*cm),coinsWon=base+extra,gemsWon=(z.wave>=5?1:0)+(z.wave>=10?1:0);
+    wallet.coins+=coinsWon;wallet.gems+=gemsWon;saveWallet();RACE.reward={coinsWon,gemsWon,extra,lv:addXP(10+z.wave*5)};}
+  const rw=RACE.reward;
+  $('resRewards').innerHTML=`You earned ${priceHTML(rw.coinsWon,'coin')}${rw.gemsWon?' '+priceHTML(rw.gemsWon,'gem'):''} <span class="muted">(${z.kills} zombies down, ${z.wave} wave${z.wave>1?'s':''} held${rw.extra?`, ${rw.extra} from coin bonuses`:''})</span>`;
+  chestifyRewards(rw.coinsWon,rw.gemsWon);
+  $('againBtn').textContent='Defend again';$('resRunners').hidden=true;$('changeBtn').textContent='Change setup';resIcons();
+  $('results').hidden=false;$('touch').hidden=true;$('againBtn').focus();
 }
 function startSurvival(){
   const roster=[{id:'me',local:true,nm:myName,cc:selCountry,ch:selChar,tm:0,sk:mySkinId()}];
@@ -3857,7 +4019,7 @@ function giveItem(r){
 }
 function nearestAhead(r,maxD){let best=null,bd=maxD;for(const o of runners){if(o===r||o.finished||sameTeam(o,r))continue;const dd=prog(o)-prog(r);if(dd>0.5&&dd<bd){bd=dd;best=o;}}return best;}
 const canAct=()=>state==='race'||state==='finished';
-function useItem(r){
+function useItem(r){if(RACE&&RACE.zd)return;
   if(!r||!r.item||r.finished||!canAct())return;
   const it=r.item;r.item=null;if(r.kind==='local'){sfx.item(it);raceStat('items');}
   if(it==='banana'){sendAct(r,{t:'ban',id:uid(),x:rnd2(r.x),d:rnd2(r.d-1.8)});;}
@@ -3876,7 +4038,7 @@ function useItem(r){
 }
 // move a runner to a new spot on the track without tripping over everything in between
 function placeRunner(r,d,x,lap){r.d=clamp(+d||0,0,TRACK-0.5);r.x=clamp(+x||0,-HALF,HALF);r.vx=0;if(r.ai)r.ai.tx=r.x;if(r.kind==='local'&&touchLane!=null){let bi=0;LANES.forEach((l,i)=>{if(Math.abs(l-r.x)<Math.abs(LANES[bi]-r.x))bi=i;});touchLane=bi;}r.lap=clamp(lap|0,1,RACE?RACE.laps:1);r.oi=0;r.lastWall=null;r.lastPad=null;if(r.ai)r.ai.handled.clear();r.phase=Math.max(r.phase,0.6);r.grace=Math.max(r.grace||0,0.8);}
-function usePower(r){
+function usePower(r){if(RACE&&RACE.zd)return;
   if(!r||r.charge<1||r.finished||r.stun>0||!canAct())return;
   r.charge=0;r.ai.chargedFor=0;if(r.kind==='local'){sfx.power();raceStat('powers');}
   sendAct(r,{t:'ult'});
@@ -4576,7 +4738,7 @@ function drawMinimap(){
     C(c,p[0],p[1],me?11:8,'#0b0e26');C(c,p[0],p[1],me?8:5.5,me?'#ffffff':(r.team!=null?TEAMS[r.team].col:'#e0654a'));});
 }
 function updateHUD(){
-  if(RACE.survival){setT('placeNum',String(RACE.sv?RACE.sv.wave:1));setT('placeSuf','');setT('placeOf','wave');svHudUpdate();}else{setT('placeNum',String(player.place));setT('placeSuf',suffix(player.place));setT('placeOf',`of ${runners.length}`+(RACE.laps>1?` · Lap ${player.lap}/${RACE.laps}`:''));}setT('hudCoins',String(RACE.coins));setT('hudGems',String(RACE.gems));
+  if(RACE.zd){setT('placeNum',String(RACE.zd.wave));setT('placeSuf','');setT('placeOf','wave');zdHud();}else if(RACE.survival){setT('placeNum',String(RACE.sv?RACE.sv.wave:1));setT('placeSuf','');setT('placeOf','wave');svHudUpdate();}else{setT('placeNum',String(player.place));setT('placeSuf',suffix(player.place));setT('placeOf',`of ${runners.length}`+(RACE.laps>1?` · Lap ${player.lap}/${RACE.laps}`:''));}setT('hudCoins',String(RACE.coins));setT('hudGems',String(RACE.gems));
   setT('clock',fmt(player.finished?player.time:raceTime));
   setT('toGo',String(Math.max(0,Math.ceil(totalLen()-prog(player)))));
   runners.forEach(r=>{r.marker.style.left=(clamp(prog(r)/totalLen(),0,1)*100).toFixed(2)+'%';});
@@ -4625,7 +4787,7 @@ const RES_HEAD=document.querySelector('#results thead tr').innerHTML;
 function showResults(){
   document.querySelector('#results thead tr').innerHTML=RES_HEAD;$('resTabs').hidden=true;$('resRec').hidden=true;
   if(RACE&&RACE.fc){showFlagResults();return;}
-  if(RACE&&RACE.survival){showSurvivalResults();return;}
+  if(RACE&&RACE.zd){showZdResults();return;}if(RACE&&RACE.survival){showSurvivalResults();return;}
   $('results').querySelector('.table-wrap').hidden=false;
   state='results';renderResults();resTab('rank');$('resTabs').hidden=false;
   const key='flagdash-pb-'+TH.id,pb=parseFloat(store.get(key));
@@ -4642,7 +4804,7 @@ function showResults(){
   $('touch').hidden=true;celebrate(resultRows(),place,rw,()=>{if(RACE&&RACE.tut){store.set('flagdash-onboard','done');clearInterval(ONB.iv);$('coach').hidden=true;toMenu('desk');setTimeout(onboardHome,400);return;}$('results').hidden=false;$('againBtn').focus();});
 }
 function renderResults(){
-  if(RACE&&(RACE.survival||RACE.fc))return;
+  if(RACE&&(RACE.survival||RACE.zd||RACE.fc))return;
   const rows=resultRows(),win=rows[0].t,teams=isTeamMode(RACE.mode);
   NET.resultsSig=rows.map(x=>x.r.id+(x.est?'e':'f')).join('|');
   const medal=['var(--gold)','var(--silver)','var(--bronze)'];
@@ -6364,6 +6526,7 @@ function renderLobby(){
 }
 $('startBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startOffline();};
 $('svBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startSurvival();};
+$('zdBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startZombieDefense();};
 $('fcBtn').onclick=()=>{if(plaza.active)leavePlaza();initAudio();if(actx&&actx.state==='suspended')actx.resume();startFlagChallenge();};
 function startOffline(quick){
   const others=shuffle(COUNTRIES.map(c=>c[0]).filter(c=>c!==selCountry)).slice(0,5);
@@ -6375,7 +6538,7 @@ function startOffline(quick){
   if(quick){RACE.quick=true;$('trackLabel').textContent='Quick Race · '+TH.name;}
 }
 let quickLast=null;
-$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online){if(NET.mmRoom){closeRoster();leaveRoom();findRace();}else showLobby();}else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline(RACE&&RACE.quick);};
+$('againBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){if(GP.round<GP.tracks.length-1){GP.round++;gpRace();}else showPodium();}else if(RACE&&RACE.zd)startZombieDefense();else if(RACE&&RACE.survival)startSurvival();else if(RACE&&RACE.online){if(NET.mmRoom){closeRoster();leaveRoom();findRace();}else showLobby();}else if(RACE&&RACE.fc)startFlagChallenge();else if(RACE&&RACE.rival)startRival(rivalById(RACE.rival));else startOffline(RACE&&RACE.quick);};
 $('changeBtn').onclick=()=>{if(GP&&RACE&&RACE.gp){GP=null;toMenu('desk');}else if(RACE&&RACE.online)leaveRoom();else toMenu('desk');};
 $('gpBtn').onclick=()=>{initAudio();if(actx&&actx.state==='suspended')actx.resume();startGP();};
 $('storeBtn').onclick=()=>openStore();
@@ -6450,6 +6613,7 @@ let touchLane=null,sw=null;
 function swipeLane(dir){if(!player||!canAct())return;if(touchLane==null){let best=0;LANES.forEach((lx,i)=>{if(Math.abs(lx-player.x)<Math.abs(LANES[best]-player.x))best=i;});touchLane=best;}touchLane=clamp(touchLane+dir,0,LANES.length-1);}
 window.addEventListener('pointerdown',e=>{
   if(e.pointerType==='mouse'||!player||!(canAct()||state==='countdown'))return;
+  if(RACE&&RACE.zd)return;
   if(e.target.closest('button,input,a,.overlay:not([hidden])'))return;
   sw={id:e.pointerId,x:e.clientX,y:e.clientY,vDone:false};
 });
@@ -6943,14 +7107,15 @@ function followCam(dt){
   const gh=Hf(player.d);const behind=camAng<0.05;
   let dist=10.5,ht=4.6;if(state==='finished'||state==='results'){dist=5.2;ht=2.1;}
   if(state==='countdown'){dist=6;ht=2.3;}
+  if(RACE&&RACE.zd&&state!=='finished'&&state!=='results'){dist=11;ht=12.5;}
   // camera lives in track coordinates (across, back along the course, height) so it follows the curves
   const px=player.x,py=gh+player.y,k=Math.min(1,dt*6);
-  const tx=px*(behind?0.6:1)+Math.sin(camAng)*dist,ty=py+ht+player.y*0.45-(player.slide>0?0.5:0),tb=Math.cos(camAng)*dist;
+  const tx=(RACE&&RACE.zd&&state==='race'?0:px*(behind?0.6:1))+Math.sin(camAng)*dist,ty=py+ht+player.y*0.45-(player.slide>0?0.5:0),tb=Math.cos(camAng)*dist;
   if(camL.init){camL.x=tx;camL.y=ty;camL.b=tb;camL.init=false;}
   camL.x+=(tx-camL.x)*k;camL.y+=(ty-camL.y)*k;camL.b=(behind&&state!=='finished'&&state!=='results')?tb:camL.b+(tb-camL.b)*k;
   W(camL.x,player.d-camL.b,camL.y,camera.position);
   const ahead=Math.max(0,1-camAng/1.2);
-  const a=W(px,player.d,py+1.2),b=W(player.x*0.8,player.d+10,Hf(player.d+10)+1.3+player.y*0.3);
+  const a=W(px,player.d,py+1.2),b=W(RACE&&RACE.zd?0:player.x*0.8,player.d+(RACE&&RACE.zd?17:10),Hf(player.d+(RACE&&RACE.zd?17:10))+(RACE&&RACE.zd?-2:1.3)+player.y*0.3);
   lookAt.copy(a).lerp(b,ahead);
   const fovT=66+(player.boost>0?9:0)+clamp((player.speed-BASE)*0.4,-4,6);camera.fov+=(fovT-camera.fov)*Math.min(1,dt*4);camera.updateProjectionMatrix();
   camera.lookAt(lookAt);
@@ -6982,8 +7147,8 @@ function tick(now){
     if(cd<=0){music.cutSting(MUS.start,0.3);music.sting(MUS.go);music.play(TRACK_MUSIC[TH.id]||'race-to-the-finish',{fade:1.6,delay:0.9});if(TH.id==='streets'||TH.id==='stadium'){crowd.start();crowd.swell();}state='race';camAng=0;if(RACE.buffs.includes('start')){player.boost=2;player.boostMul=1.6;}if(RACE.buffs.length)feed('Buffs active: '+RACE.buffs.map(id=>BUFFS.find(b=>b.id===id).name).join(', '),'gold');runners.forEach(r=>r.pose=null);$('countdown').textContent='GO!';goT=0.8;sfx.countGo();}
   }else if(canAct()){
     raceTime+=dt;
-    for(const r of runners){if(r.owned)stepRunner(r,dt);else updateRemote(r,dt);}
-    separate();updateWorldFx(dt,now);computeRanks();updateCrowdMood(dt);if(RACE.survival&&state==='race')svUpdate(dt,now);if(RACE.fc)fcUpdate(dt);
+    if(!RACE.zd)for(const r of runners){if(r.owned)stepRunner(r,dt);else updateRemote(r,dt);}
+    if(!RACE.zd)separate();updateWorldFx(dt,now);computeRanks();updateCrowdMood(dt);if(RACE.survival&&state==='race')svUpdate(dt,now);if(RACE.zd&&state==='race')zdUpdate(dt,now);if(RACE.fc)fcUpdate(dt);
     if(!RACE.survival&&!RACE.finalMusic&&!player.finished&&totalLen()-prog(player)<FINAL_STRETCH){RACE.finalMusic=true;music.play(MUS.final,{fade:1.2});}
     if(street){for(let i=0;i<3;i++){const s=Math.random()<0.5?-1:1,d=player.d+rand(3,50),p=W(s*rand(7.5,10),d,Hf(d)+rand(5,16));emit(PN,{x:p.x,y:p.y,z:p.z,vx:rand(-0.8,0.8),vy:rand(-0.4,0.3),vz:rand(-0.8,0.8),life:3.2,size:0.14,c:pick(CONF),grav:1.1,drag:0.6});}}
     for(const r of runners)placeModel(r,dt,now);
@@ -6993,7 +7158,7 @@ function tick(now){
     if(RACE.online){NET.sendT-=dt;if(NET.sendT<=0){NET.sendT=0.05;sendState();}}
   }else if(state==='results'){
     raceTime+=dt;
-    for(const r of runners){if(r.owned){if(!r.finished||r.speed>0.1)stepRunner(r,dt);}else updateRemote(r,dt);}
+    if(!RACE.zd)for(const r of runners){if(r.owned){if(!r.finished||r.speed>0.1)stepRunner(r,dt);}else updateRemote(r,dt);}
     if(RACE.fc&&RACE.online&&NET.isHost)fcUpdate(dt);
     updateWorldFx(dt,now);for(const r of runners)placeModel(r,dt,now);if(RACE.fc)runners.forEach(r=>{if(r.out)r.m.root.visible=false;});
     if(RACE.online){NET.sendT-=dt;if(NET.sendT<=0){NET.sendT=0.1;sendState();}}
